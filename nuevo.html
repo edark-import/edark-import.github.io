@@ -1,0 +1,344 @@
+<section>
+    <div class="container-fluid px-5 my-5">
+        <div class="row">
+            <div class="col-sm-3">
+                <div class="sticky-top" style="top: 80px; z-index: 1020;">
+                    <div class="container mt-4">
+                        <div class="sticky-top bg-white py-2 px-3 shadow-sm" style="top: 80px; z-index: 1030;">
+                            <h2>Filtros Aplicados</h2>
+                            <!-- Filtros seleccionados -->
+                            <div id="selected-filters"></div>
+                        </div>
+                        <!-- Contenedor de filtros con desplazamiento -->
+                        <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
+                            <!-- Acordeón de filtros -->
+                            <div class="accordion" id="filterAccordion">
+                                <!-- Categorías -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter">
+                                            Categorías
+                                        </button>
+                                    </h2>
+                                    <div id="categoryFilter" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <div class="accordion" id="subCategoryAccordion">
+                                                <!-- Electrónica -->
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#electronicsSub">
+                                                            Electrónica
+                                                        </button>
+                                                    </h2>
+                                                    <div id="electronicsSub" class="accordion-collapse collapse">
+                                                        <div class="accordion-body">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Celulares" id="subcat1">
+                                                                <label class="form-check-label" for="subcat1">Celulares <span class="text-muted">(1250)</span></label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Laptops" id="subcat2">
+                                                                <label class="form-check-label" for="subcat2">Laptops <span class="text-muted">(1250)</span></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- Ropa -->
+                                                <div class="accordion-item">
+                                                    <h2 class="accordion-header">
+                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clothingSub">
+                                                            Ropa
+                                                        </button>
+                                                    </h2>
+                                                    <div id="clothingSub" class="accordion-collapse collapse">
+                                                        <div class="accordion-body">
+                                                            <div class="form-check">
+                                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Hombres" id="subcat3">
+                                                                <label class="form-check-label" for="subcat3">Hombres <span class="text-muted">(1250)</span></label>
+                                                            </div>
+                                                            <div class="form-check">
+                                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Mujeres" id="subcat4">
+                                                                <label class="form-check-label" for="subcat4">Mujeres <span class="text-muted">(1250)</span></label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div> <!-- Cierre subCategoryAccordion -->
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Marcas -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#brandFilter">
+                                            Marcas
+                                        </button>
+                                    </h2>
+                                    <div id="brandFilter" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <div id="brandList">
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Nike" id="brand1">
+                                                    <label class="form-check-label" for="brand1">Nike <span class="text-muted">(1250)</span></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Samsung" id="brand2">
+                                                    <label class="form-check-label" for="brand2">Samsung <span class="text-muted">(1250)</span></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Huawei" id="brand3">
+                                                    <label class="form-check-label" for="brand3">Huawei <span class="text-muted">(1250)</span></label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Adidas" id="brand4">
+                                                    <label class="form-check-label" for="brand4">Adidas <span class="text-muted">(1250)</span></label>
+                                                </div>
+                                                <!-- Ocultos por defecto -->
+                                                <div class="form-check extra-brand d-none">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Apple" id="brand5">
+                                                    <label class="form-check-label" for="brand5">Apple <span class="text-muted">(1250)</span></label>
+                                                </div>
+                                                <div class="form-check extra-brand d-none">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Puma" id="brand6">
+                                                    <label class="form-check-label" for="brand6">Puma <span class="text-muted">(1250)</span></label>
+                                                </div>
+                                            </div>
+                                            <a href="#" id="toggleBrands" class="text-primary d-block mt-2">Ver más</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Unidad de Medida -->
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uniFilter">
+                                            Unidades de Medidas
+                                        </button>
+                                    </h2>
+                                    <div id="uniFilter" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                            <div class="form-check">
+                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Galón" id="uni1">
+                                                <label class="form-check-label" for="uni1">Galón <span class="text-muted">(1250)</span></label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Kilo" id="uni2">
+                                                <label class="form-check-label" for="uni2">Kilo <span class="text-muted">(1250)</span></label>
+                                            </div>
+                                            <div class="form-check">
+                                                <input class="form-check-input filter-checkbox" type="checkbox" value="Gramo" id="uni3">
+                                                <label class="form-check-label" for="uni3">Gramo <span class="text-muted">(1250)</span></label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+                <div class="col-sm-9">
+                    <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Fancy Product</h5>
+                                        <!-- Product price-->
+                                        $40.00 - $80.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Special Item</h5>
+                                        <!-- Product reviews-->
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        <!-- Product price-->
+                                        <span class="text-muted text-decoration-line-through">$20.00</span>
+                                        $18.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Sale Item</h5>
+                                        <!-- Product price-->
+                                        <span class="text-muted text-decoration-line-through">$50.00</span>
+                                        $25.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Popular Item</h5>
+                                        <!-- Product reviews-->
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        <!-- Product price-->
+                                        $40.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Sale Item</h5>
+                                        <!-- Product price-->
+                                        <span class="text-muted text-decoration-line-through">$50.00</span>
+                                        $25.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Fancy Product</h5>
+                                        <!-- Product price-->
+                                        $120.00 - $280.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Sale badge-->
+                                <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Special Item</h5>
+                                        <!-- Product reviews-->
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        <!-- Product price-->
+                                        <span class="text-muted text-decoration-line-through">$20.00</span>
+                                        $18.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <!-- Product image-->
+                                <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
+                                <!-- Product details-->
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <!-- Product name-->
+                                        <h5 class="fw-bolder">Popular Item</h5>
+                                        <!-- Product reviews-->
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        <!-- Product price-->
+                                        $40.00
+                                    </div>
+                                </div>
+                                <!-- Product actions-->
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+    </div>
+</section>
