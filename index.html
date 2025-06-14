@@ -264,6 +264,18 @@
                 </div>
             </div>
         </section>
+        <!-- Formulario de Registro -->
+        <div class="container my-5" id="registerContainer">
+            <h3>Registro de Administrador</h3>
+            <form id="registerForm">
+                <input type="email" id="registerEmail" placeholder="Correo" required class="form-control mb-2">
+                <input type="password" id="registerPassword" placeholder="Contraseña" required class="form-control mb-2">
+                <button type="submit" class="btn btn-success">Registrarse</button>
+                <div id="registerError" class="text-danger mt-2"></div>
+                <div id="registerSuccess" class="text-success mt-2"></div>
+            </form>
+            <button type="button" class="btn btn-link" onclick="mostrarLogin()">¿Ya tienes cuenta? Inicia sesión</button>
+        </div>
         <!-- Panel de Login y Administrador -->
         <div class="container my-5" id="loginContainer">
             <h3>Iniciar Sesión Administrador</h3>
@@ -375,6 +387,22 @@
             this.reset();
         });
 
+        // Registro de administrador
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('registerEmail').value;
+            const password = document.getElementById('registerPassword').value;
+            auth.createUserWithEmailAndPassword(email, password)
+                .then(() => {
+                    document.getElementById('registerError').textContent = '';
+                    document.getElementById('registerSuccess').textContent = '¡Registro exitoso! Ahora puedes iniciar sesión.';
+                })
+                .catch(err => {
+                    document.getElementById('registerError').textContent = err.message;
+                    document.getElementById('registerSuccess').textContent = '';
+                });
+        });
+
         // Mostrar/ocultar panel según autenticación
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -385,6 +413,17 @@
                 document.getElementById('adminContainer').classList.add('d-none');
             }
         });
+
+        // Mostrar solo el formulario de registro
+        function mostrarRegistro() {
+            document.getElementById('registerContainer').style.display = 'block';
+            document.getElementById('loginContainer').style.display = 'none';
+        }
+        function mostrarLogin() {
+            document.getElementById('registerContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'block';
+        }
+        mostrarLogin(); // Mostrar login por defecto
         </script>
     </body>
 </html>
