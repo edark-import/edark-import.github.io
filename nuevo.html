@@ -208,8 +208,8 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <!-- Tu código JS -->
     <script>
-    // Configuración de Firebase (ajusta con tus datos reales)
     const firebaseConfig = {
         apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
         authDomain: "edark-proyect.firebaseapp.com",
@@ -222,57 +222,121 @@
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
 
-    // Mostrar productos desde Firestore
-    function mostrarProductos(filtros = {}) {
+    let filtrosSeleccionados = {
+        categoria: [],
+        marca: [],
+        unidad: []
+    };
+
+    // Mapea los IDs de los checkboxes a los campos de Firestore
+    const filtroMap = {
+        subcat1: { tipo: 'categoria', valor: 'Celulares' },
+        subcat2: { tipo: 'categoria', valor: 'Laptops' },
+        subcat3: { tipo: 'categoria', valor: 'Hombres' },
+        subcat4: { tipo: 'categoria', valor: 'Mujeres' },
+        brand1: { tipo: 'marca', valor: 'Nike' },
+        brand2: { tipo: 'marca', valor: 'Samsung' },
+        brand3: { tipo: 'marca', valor: 'Huawei' },
+        brand4: { tipo: 'marca', valor: 'Adidas' },
+        brand5: { tipo: 'marca', valor: 'Apple' },
+        brand6: { tipo: 'marca', valor: 'Puma' },
+        uni1: { tipo: 'unidad', valor: 'Galón' },
+        uni2: { tipo: 'unidad', valor: 'Kilo' },
+        uni3: { tipo: 'unidad', valor: 'Gramo' }
+    };
+
+    // Renderiza los productos según los filtros seleccionados
+    function mostrarProductos() {
         let ref = db.collection('productos');
-        // Aquí puedes aplicar filtros dinámicos usando .where() según los filtros seleccionados
-        // Por ahora, muestra todos los productos
+        // Aplica filtros de Firestore solo si hay uno seleccionado por tipo
+        if (filtrosSeleccionados.categoria.length === 1) {
+            ref = ref.where('categoria', '==', filtrosSeleccionados.categoria[0]);
+        }
+        if (filtrosSeleccionados.marca.length === 1) {
+            ref = ref.where('marca', '==', filtrosSeleccionados.marca[0]);
+        }
+        if (filtrosSeleccionados.unidad.length === 1) {
+            ref = ref.where('unidad', '==', filtrosSeleccionados.unidad[0]);
+        }
+        // Si hay más de uno por tipo, filtramos en el frontend
         ref.onSnapshot(snapshot => {
             const contenedor = document.getElementById('productos');
             contenedor.innerHTML = '';
             snapshot.forEach(doc => {
                 const prod = doc.data();
-                contenedor.innerHTML += `
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <img class="card-img-top" src="${prod.imagen || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}" alt="${prod.nombre}" />
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <h5 class="fw-bolder">${prod.nombre || 'Producto'}</h5>
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
+                // Filtro frontend para múltiples opciones
+                if (
+                    (filtrosSeleccionados.categoria.length === 0 || filtrosSeleccionados.categoria.includes(prod.categoria)) &&
+                    (filtrosSeleccionados.marca.length === 0 || filtrosSeleccionados.marca.includes(prod.marca)) &&
+                    (filtrosSeleccionados.unidad.length === 0 || filtrosSeleccionados.unidad.includes(prod.unidad))
+                ) {
+                    contenedor.innerHTML += `
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <img class="card-img-top" src="${prod.imagen || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}" alt="${prod.nombre}" />
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <h5 class="fw-bolder">${prod.nombre || 'Producto'}</h5>
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        s/${prod.precio || '---'}
                                     </div>
-                                    s/${prod.precio || '---'}
+                                </div>
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
                                 </div>
                             </div>
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
-                            </div>
                         </div>
-                    </div>
-                `;
+                    `;
+                }
             });
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+            }
         });
     }
     mostrarProductos();
 
-    // Mostrar/Ocultar marcas extra
-    document.addEventListener('DOMContentLoaded', function() {
+    // Filtros: actualiza filtrosSeleccionados y las badges
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mostrar/Ocultar marcas extra
         const toggleBrands = document.getElementById('toggleBrands');
         if (toggleBrands) {
-            toggleBrands.addEventListener('click', function(e) {
+            toggleBrands.addEventListener('click', function (e) {
                 e.preventDefault();
                 document.querySelectorAll('.extra-brand').forEach(el => el.classList.toggle('d-none'));
                 toggleBrands.textContent = toggleBrands.textContent === 'Ver más' ? 'Ver menos' : 'Ver más';
             });
         }
-    });
 
-    // (Opcional) Aquí puedes agregar lógica JS para aplicar filtros y actualizar productos
-    </script>
-</body>
-</html>
+        // Manejo de filtros
+        document.querySelectorAll('.filter-checkbox').forEach(cb => {
+            cb.addEventListener('change', function () {
+                const id = this.id;
+                const info = filtroMap[id];
+                if (!info) return;
+                if (this.checked) {
+                    if (!filtrosSeleccionados[info.tipo].includes(info.valor)) {
+                        filtrosSeleccionados[info.tipo].push(info.valor);
+                    }
+                } else {
+                    filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
+                }
+                renderBadges();
+                mostrarProductos();
+            });
+        });
+
+        // Quitar filtro desde badge
+        document.getElementById('selected-filters').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-filter')) {
+                const id = e.target.dataset.id;
+                const cb = document.getElementById(id);
+                if (cb) cb.checked = false;
+                const info = filtroMap[id];
+                if
