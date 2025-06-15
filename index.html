@@ -162,6 +162,9 @@
             auth.signInWithEmailAndPassword(email, password)
                 .then(() => {
                     document.getElementById('loginError').textContent = '';
+                    // Opcional: cerrar modal con Bootstrap 5
+                    var modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    if (modal) modal.hide();
                 })
                 .catch(err => {
                     document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
