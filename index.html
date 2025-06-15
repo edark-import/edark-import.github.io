@@ -63,14 +63,6 @@
 
         <!-- Panel de Login y Administrador -->
         <div class="container my-5 d-none" id="adminContainer">
-            <h3>Panel Administrador</h3>
-            <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
-            <form id="adminForm" class="mb-3">
-                <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
-                <input type="text" id="precio" placeholder="Precio" required class="form-control mb-2">
-                <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
-                <button type="submit" class="btn btn-primary">Agregar Producto</button>
-            </form>
         </div>
 
         <!-- Modal de Login Administrador -->
@@ -190,10 +182,8 @@
         // Mostrar/ocultar panel según autenticación
         auth.onAuthStateChanged(user => {
             if (user) {
-                document.getElementById('loginContainer').classList.add('d-none');
                 document.getElementById('adminContainer').classList.remove('d-none');
             } else {
-                document.getElementById('loginContainer').classList.remove('d-none');
                 document.getElementById('adminContainer').classList.add('d-none');
             }
         });
