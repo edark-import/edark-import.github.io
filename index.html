@@ -74,123 +74,7 @@
                             </div>
                             <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
                                 <div class="accordion" id="filterAccordion">
-                                    <!-- Categorías -->
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter">
-                                                Categorías
-                                            </button>
-                                        </h2>
-                                        <div id="categoryFilter" class="accordion-collapse collapse">
-                                            <div class="accordion-body">
-                                                <div class="accordion" id="subCategoryAccordion">
-                                                    <!-- Electrónica -->
-                                                    <div class="accordion-item">
-                                                        <h2 class="accordion-header">
-                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#electronicsSub">
-                                                                Electrónica
-                                                            </button>
-                                                        </h2>
-                                                        <div id="electronicsSub" class="accordion-collapse collapse">
-                                                            <div class="accordion-body">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Celulares" id="subcat1">
-                                                                    <label class="form-check-label" for="subcat1">Celulares</label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Laptops" id="subcat2">
-                                                                    <label class="form-check-label" for="subcat2">Laptops</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    <!-- Ropa -->
-                                                    <div class="accordion-item">
-                                                        <h2 class="accordion-header">
-                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clothingSub">
-                                                                Ropa
-                                                            </button>
-                                                        </h2>
-                                                        <div id="clothingSub" class="accordion-collapse collapse">
-                                                            <div class="accordion-body">
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Hombres" id="subcat3">
-                                                                    <label class="form-check-label" for="subcat3">Hombres</label>
-                                                                </div>
-                                                                <div class="form-check">
-                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Mujeres" id="subcat4">
-                                                                    <label class="form-check-label" for="subcat4">Mujeres</label>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div> <!-- Cierre subCategoryAccordion -->
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Marcas -->
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#brandFilter">
-                                                Marcas
-                                            </button>
-                                        </h2>
-                                        <div id="brandFilter" class="accordion-collapse collapse">
-                                            <div class="accordion-body">
-                                                <div id="brandList">
-                                                    <div class="form-check">
-                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Nike" id="brand1">
-                                                        <label class="form-check-label" for="brand1">Nike</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Samsung" id="brand2">
-                                                        <label class="form-check-label" for="brand2">Samsung</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Huawei" id="brand3">
-                                                        <label class="form-check-label" for="brand3">Huawei</label>
-                                                    </div>
-                                                    <div class="form-check">
-                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Adidas" id="brand4">
-                                                        <label class="form-check-label" for="brand4">Adidas</label>
-                                                    </div>
-                                                    <div class="form-check extra-brand d-none">
-                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Apple" id="brand5">
-                                                        <label class="form-check-label" for="brand5">Apple</label>
-                                                    </div>
-                                                    <div class="form-check extra-brand d-none">
-                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Puma" id="brand6">
-                                                        <label class="form-check-label" for="brand6">Puma</label>
-                                                    </div>
-                                                </div>
-                                                <a href="#" id="toggleBrands" class="text-primary d-block mt-2">Ver más</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <!-- Unidad de Medida -->
-                                    <div class="accordion-item">
-                                        <h2 class="accordion-header">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uniFilter">
-                                                Unidades de Medidas
-                                            </button>
-                                        </h2>
-                                        <div id="uniFilter" class="accordion-collapse collapse">
-                                            <div class="accordion-body">
-                                                <div class="form-check">
-                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Galón" id="uni1">
-                                                    <label class="form-check-label" for="uni1">Galón</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Kilo" id="uni2">
-                                                    <label class="form-check-label" for="uni2">Kilo</label>
-                                                </div>
-                                                <div class="form-check">
-                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Gramo" id="uni3">
-                                                    <label class="form-check-label" for="uni3">Gramo</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <div id="dynamic-filters"></div>
                                 </div>
                             </div>
                         </div>
@@ -270,61 +154,123 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Filtros
-        let filtrosSeleccionados = {
-            categoria: [],
-            subcategoria: [],
-            marca: [],
-            capacidad: [],
-            modelo: [],
-            dimension: [],
-            unidad: []
-        };
+        // Campos a filtrar y su etiqueta
+        const camposFiltro = [
+            { campo: "categoria", label: "Categoría" },
+            { campo: "subcategoria", label: "Subcategoría" },
+            { campo: "marca", label: "Marca" },
+            { campo: "capacidad", label: "Capacidad" },
+            { campo: "modelo", label: "Modelo" },
+            { campo: "dimension", label: "Dimensión" }
+        ];
 
-        const filtroMap = {
-            // Categoría
-            "cat-almacenamiento": { tipo: "categoria", valor: "Almacenamiento" },
-            // Subcategoría
-            "subcat-ssd": { tipo: "subcategoria", valor: "SSD" },
-            // Marca
-            "marca-kingston": { tipo: "marca", valor: "Kingston" },
-            // Capacidad
-            "cap-500gb": { tipo: "capacidad", valor: "500GB" },
-            // Modelo
-            "modelo-a400": { tipo: "modelo", valor: "A400" },
-            // Dimensión
-            "dim-25": { tipo: "dimension", valor: "2.5\"" },
-            // ...agrega los demás filtros igual...
-        };
+        // Guardar los valores únicos de cada filtro
+        let valoresFiltro = {};
+        let filtrosSeleccionados = {};
 
+        // Inicializa los filtros seleccionados vacíos
+        camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
+
+        // 1. Obtiene todos los valores únicos de cada campo desde Firestore
+        async function cargarFiltrosDinamicos() {
+            const snapshot = await db.collection('productos').get();
+            valoresFiltro = {};
+            camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
+            snapshot.forEach(doc => {
+                const prod = doc.data();
+                camposFiltro.forEach(f => {
+                    if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
+                });
+            });
+
+            // Genera el HTML de los filtros
+            let html = '';
+            camposFiltro.forEach(f => {
+                html += `
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${f.campo}">
+                            ${f.label}
+                        </button>
+                    </h2>
+                    <div id="filter-${f.campo}" class="accordion-collapse collapse">
+                        <div class="accordion-body">
+                `;
+                Array.from(valoresFiltro[f.campo]).sort().forEach(valor => {
+                    const id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                    html += `
+                        <div class="form-check">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${f.campo}">
+                            <label class="form-check-label" for="${id}">${valor}</label>
+                        </div>
+                    `;
+                });
+                html += `</div></div></div>`;
+            });
+            document.getElementById('dynamic-filters').innerHTML = html;
+
+            // Asigna eventos a los nuevos checkboxes
+            document.querySelectorAll('.filter-checkbox').forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const campo = this.dataset.campo;
+                    const valor = this.value;
+                    if (this.checked) {
+                        if (!filtrosSeleccionados[campo].includes(valor)) {
+                            filtrosSeleccionados[campo].push(valor);
+                        }
+                    } else {
+                        filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                    }
+                    renderBadges();
+                    mostrarProductos();
+                });
+            });
+        }
+
+        // 2. Renderiza los badges de filtros seleccionados
+        function renderBadges() {
+            const container = document.getElementById('selected-filters');
+            container.innerHTML = '';
+            camposFiltro.forEach(f => {
+                filtrosSeleccionados[f.campo].forEach(valor => {
+                    const id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                    container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
+                });
+            });
+        }
+
+        // 3. Quitar filtro desde badge
+        document.getElementById('selected-filters').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-filter')) {
+                const campo = e.target.dataset.campo;
+                const valor = e.target.dataset.valor;
+                const id = e.target.dataset.id;
+                const cb = document.getElementById(id);
+                if (cb) cb.checked = false;
+                filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                renderBadges();
+                mostrarProductos();
+            }
+        });
+
+        // 4. Mostrar productos filtrados
         let unsubscribe = null;
         function mostrarProductos() {
             if (unsubscribe) unsubscribe();
-            let ref = db.collection('productos');
-            if (filtrosSeleccionados.categoria.length === 1) {
-                ref = ref.where('categoria', '==', filtrosSeleccionados.categoria[0]);
-            }
-            if (filtrosSeleccionados.marca.length === 1) {
-                ref = ref.where('marca', '==', filtrosSeleccionados.marca[0]);
-            }
-            if (filtrosSeleccionados.unidad.length === 1) {
-                ref = ref.where('unidad', '==', filtrosSeleccionados.unidad[0]);
-            }
-            unsubscribe = ref.onSnapshot(snapshot => {
+            unsubscribe = db.collection('productos').onSnapshot(snapshot => {
                 const contenedor = document.getElementById('productos');
-                if (!contenedor) return;
                 contenedor.innerHTML = '';
                 snapshot.forEach(doc => {
                     const prod = doc.data();
-                    if (
-                        (filtrosSeleccionados.categoria.length === 0 || filtrosSeleccionados.categoria.includes(prod.categoria)) &&
-                        (filtrosSeleccionados.subcategoria.length === 0 || filtrosSeleccionados.subcategoria.includes(prod.subcategoria)) &&
-                        (filtrosSeleccionados.marca.length === 0 || filtrosSeleccionados.marca.includes(prod.marca)) &&
-                        (filtrosSeleccionados.capacidad.length === 0 || filtrosSeleccionados.capacidad.includes(prod.capacidad)) &&
-                        (filtrosSeleccionados.modelo.length === 0 || filtrosSeleccionados.modelo.includes(prod.modelo)) &&
-                        (filtrosSeleccionados.dimension.length === 0 || filtrosSeleccionados.dimension.includes(prod.dimension)) &&
-                        (filtrosSeleccionados.unidad.length === 0 || filtrosSeleccionados.unidad.includes(prod.unidad))
-                    ) {
+                    // Filtra por todos los campos seleccionados
+                    let mostrar = true;
+                    for (const campo of camposFiltro.map(f => f.campo)) {
+                        if (filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) {
+                            mostrar = false;
+                            break;
+                        }
+                    }
+                    if (mostrar) {
                         contenedor.innerHTML += `
                             <div class="col mb-5">
                                 <div class="card h-100">
