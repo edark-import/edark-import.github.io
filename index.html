@@ -39,6 +39,9 @@
                             Carrito
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
+                        <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            Admin
+                        </button>
                     </form>
                 </div>
             </div>
@@ -59,15 +62,6 @@
         </div>
 
         <!-- Panel de Login y Administrador -->
-        <div class="container my-5" id="loginContainer">
-            <h3>Iniciar Sesión Administrador</h3>
-            <form id="loginForm">
-                <input type="email" id="loginEmail" placeholder="Correo" required class="form-control mb-2">
-                <input type="password" id="loginPassword" placeholder="Contraseña" required class="form-control mb-2">
-                <button type="submit" class="btn btn-primary">Ingresar</button>
-                <div id="loginError" class="text-danger mt-2"></div>
-            </form>
-        </div>
         <div class="container my-5 d-none" id="adminContainer">
             <h3>Panel Administrador</h3>
             <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
@@ -78,6 +72,27 @@
                 <button type="submit" class="btn btn-primary">Agregar Producto</button>
             </form>
         </div>
+
+        <!-- Modal de Login Administrador -->
+        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión Administrador</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+              </div>
+              <div class="modal-body">
+                <form id="loginForm">
+                  <input type="email" id="loginEmail" placeholder="Correo" required class="form-control mb-2">
+                  <input type="password" id="loginPassword" placeholder="Contraseña" required class="form-control mb-2">
+                  <button type="submit" class="btn btn-primary">Ingresar</button>
+                  <div id="loginError" class="text-danger mt-2"></div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Footer-->
         <footer class="py-5 bg-dark">
             <div class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
