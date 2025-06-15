@@ -70,7 +70,7 @@
         <div class="container my-5 d-none" id="adminContainer">
         </div>
 
-        <!-- Modal de Login -->
+        <!-- Modal de Login Administrador -->
         <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -156,20 +156,22 @@
         mostrarProductos();
 
         // Login
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    document.getElementById('loginError').textContent = '';
-                    // Opcional: cerrar modal con Bootstrap 5
-                    var modal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                    if (modal) modal.hide();
-                })
-                .catch(err => {
-                    document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
-                });
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const email = document.getElementById('loginEmail').value;
+                const password = document.getElementById('loginPassword').value;
+                auth.signInWithEmailAndPassword(email, password)
+                    .then(() => {
+                        document.getElementById('loginError').textContent = '';
+                        // Cierra el modal si es necesario
+                        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                        if (loginModal) loginModal.hide();
+                    })
+                    .catch(err => {
+                        document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
+                    });
+            });
         });
 
         // Logout
