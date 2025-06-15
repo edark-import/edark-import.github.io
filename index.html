@@ -1,415 +1,616 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>eDark</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tienda</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">Todos los productos</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Productos Relevantes</a></li>
-                                <li><a class="dropdown-item" href="#!">Nuevos Productos</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex align-items-center" id="adminNav">
-                        <button class="btn btn-outline-dark" type="button">
-                            <i class="bi-cart-fill me-1"></i>
-                            Carrito
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                        <!-- Botón en navbar -->
-                        <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
-                            Admin
-                        </button>
-                        <span id="userEmail" class="ms-2 text-primary d-none"></span>
-                        <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
-                            Cerrar Sesión
-                        </button>
-                    </form>
-                </div>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>eDark</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+    <style>
+        .filtros-container .form-range::-webkit-slider-thumb {
+            background: #00adb5;
+        }
+        .filtros-container .form-range::-moz-range-thumb {
+            background: #00adb5;
+        }
+        .filtros-container .form-range::-ms-thumb {
+            background: #00adb5;
+        }
+        .filtros-container .form-range:focus::-webkit-slider-thumb {
+            box-shadow: 0 0 0 0.25rem #00adb555;
+        }
+        .ordenar-select {
+            max-width: 220px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tienda</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="#!">Todos los productos</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#!">Productos Relevantes</a></li>
+                            <li><a class="dropdown-item" href="#!">Nuevos Productos</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex align-items-center" id="adminNav">
+                    <button class="btn btn-outline-dark" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Carrito
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                    <!-- Botón en navbar -->
+                    <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Admin
+                    </button>
+                    <span id="userEmail" class="ms-2 text-primary d-none"></span>
+                    <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
+                        Cerrar Sesión
+                    </button>
+                </form>
             </div>
-        </nav>
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Compra con eDark</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Encuenta tus productos favoritos del lado oscuro</p>
-                </div>
+        </div>
+    </nav>
+    <!-- Header-->
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Compra con eDark</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Encuenta tus productos favoritos del lado oscuro</p>
             </div>
-        </header>
+        </div>
+    </header>
 
-        <!-- Filtros y productos -->
-        <div class="container-fluid px-5 my-5">
-            <div class="row">
-                <!-- Filtros -->
-                <div class="col-sm-3">
-                    <div class="sticky-top" style="top: 80px; z-index: 1020;">
-                        <div class="container mt-4">
-                            <div class="sticky-top bg-white py-2 px-3 shadow-sm" style="top: 80px; z-index: 1030;">
-                                <h2>Filtros Aplicados</h2>
-                                <div id="selected-filters"></div>
-                            </div>
-                            <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
-                                <div class="accordion" id="filterAccordion">
-                                    <div id="dynamic-filters"></div>
-                                </div>
+    <!-- Filtros y productos -->
+    <div class="container-fluid px-5 my-5">
+        <div class="row">
+            <!-- Filtros -->
+            <div class="col-sm-3">
+                <div class="sticky-top" style="top: 80px; z-index: 1020;">
+                    <div class="container mt-4">
+                        <div class="sticky-top bg-white py-2 px-3 shadow-sm" style="top: 80px; z-index: 1030;">
+                            <h2>Filtros Aplicados</h2>
+                            <div id="selected-filters"></div>
+                        </div>
+                        <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
+                            <div class="accordion" id="filterAccordion">
+                                <div id="dynamic-filters"></div>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- Productos -->
-                <div class="col-sm-9">
-                    <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+            </div>
+            <!-- Productos -->
+            <div class="col-sm-9">
+                <div class="d-flex justify-content-end align-items-center mb-3">
+                    <label class="me-2 fw-bold" for="ordenarSelect">Ordenar por:</label>
+                    <select id="ordenarSelect" class="form-select ordenar-select">
+                        <option value="">Por defecto</option>
+                        <option value="precio-asc">Precio: Menor a mayor</option>
+                        <option value="precio-desc">Precio: Mayor a menor</option>
+                        <option value="capacidad-asc">Capacidad: Menor a mayor</option>
+                        <option value="capacidad-desc">Capacidad: Mayor a menor</option>
+                    </select>
+                </div>
+                <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Panel de Login y Administrador -->
+    <div class="container my-5 d-none" id="adminContainer">
+        <h3>Panel Administrador</h3>
+        <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
+        <form id="adminForm" class="mb-3">
+            <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
+            <input type="number" id="precioCompra" placeholder="Precio de compra (USD)" required class="form-control mb-2">
+            <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
+            <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">
+            <input type="text" id="subcategoria" placeholder="Subcategoría" required class="form-control mb-2">
+            <input type="text" id="marca" placeholder="Marca" required class="form-control mb-2">
+            <input type="text" id="capacidad" placeholder="Capacidad" class="form-control mb-2">
+            <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">
+            <input type="text" id="dimension" placeholder="Dimensión" class="form-control mb-2">
+            <input type="text" id="precioVenta" placeholder="Precio de venta (S/)" class="form-control mb-2" readonly>
+            <button type="submit" class="btn btn-primary">Agregar Producto</button>
+        </form>
+    </div>
+
+    <!-- Modal de Login Administrador -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión Administrador</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <form id="loginForm">
+              <input type="email" id="loginEmail" placeholder="Correo" required class="form-control mb-2">
+              <input type="password" id="loginPassword" placeholder="Contraseña" required class="form-control mb-2">
+              <button type="submit" class="btn btn-primary">Ingresar</button>
+              <div id="loginError" class="text-danger mt-2"></div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Core theme JS-->
+    <script src="js/scripts.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    <script>
+    // Configuración de Firebase (corrige storageBucket)
+    const firebaseConfig = {
+        apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
+        authDomain: "edark-proyect.firebaseapp.com",
+        projectId: "edark-proyect",
+        storageBucket: "edark-proyect.appspot.com",
+        messagingSenderId: "705929141287",
+        appId: "1:705929141287:web:f16389625de554d6790202",
+        measurementId: "G-V89W8SCSH1"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const auth = firebase.auth();
+
+    // Filtros anidados y filtro de precio
+    const camposFiltro = [
+        { campo: "categoria", label: "Categoría" },
+        { campo: "subcategoria", label: "Subcategoría", parent: "categoria" },
+        { campo: "marca", label: "Marca" },
+        { campo: "capacidad", label: "Capacidad" },
+        { campo: "modelo", label: "Modelo" },
+        { campo: "dimension", label: "Dimensión" }
+    ];
+
+    let valoresFiltro = {};
+    let subcategoriasPorCategoria = {};
+    let filtrosSeleccionados = {};
+    camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
+    // Filtro de precio
+    let precioMin = 0, precioMax = 0, precioFiltroMin = 0, precioFiltroMax = 0;
+
+    // 1. Obtiene todos los valores únicos de cada campo desde Firestore
+    async function cargarFiltrosDinamicos() {
+        const snapshot = await db.collection('productos').get();
+        valoresFiltro = {};
+        subcategoriasPorCategoria = {};
+        camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
+        let precios = [];
+        snapshot.forEach(doc => {
+            const prod = doc.data();
+            camposFiltro.forEach(f => {
+                if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
+            });
+            // Relaciona subcategoría con categoría
+            if (prod.categoria && prod.subcategoria) {
+                if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
+                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
+            }
+            if (typeof prod.precio === "number") precios.push(prod.precio);
+        });
+
+        // Filtro de precio
+        precioMin = Math.min(...precios);
+        precioMax = Math.max(...precios);
+        precioFiltroMin = precioMin;
+        precioFiltroMax = precioMax;
+
+        // Genera el HTML de los filtros
+        let html = '';
+
+        // Filtro de precio
+        html += `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-precio">
+                    Precio (S/)
+                </button>
+            </h2>
+            <div id="filter-precio" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="mb-2">
+                        <label for="precioMin" class="form-label">Mínimo: <span id="precioMinLabel">${precioMin}</span></label>
+                        <input type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMin}" id="precioMin">
+                    </div>
+                    <div>
+                        <label for="precioMax" class="form-label">Máximo: <span id="precioMaxLabel">${precioMax}</span></label>
+                        <input type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMax}" id="precioMax">
+                    </div>
                 </div>
             </div>
         </div>
+        `;
 
-        <!-- Panel de Login y Administrador -->
-        <div class="container my-5 d-none" id="adminContainer">
-            <h3>Panel Administrador</h3>
-            <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
-            <form id="adminForm" class="mb-3">
-                <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
-                <input type="number" id="precioCompra" placeholder="Precio de compra (USD)" required class="form-control mb-2">
-                <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
-                <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">
-                <input type="text" id="subcategoria" placeholder="Subcategoría" required class="form-control mb-2">
-                <input type="text" id="marca" placeholder="Marca" required class="form-control mb-2">
-                <input type="text" id="capacidad" placeholder="Capacidad" class="form-control mb-2">
-                <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">
-                <input type="text" id="dimension" placeholder="Dimensión" class="form-control mb-2">
-                <input type="text" id="precioVenta" placeholder="Precio de venta (S/)" class="form-control mb-2" readonly>
-                <button type="submit" class="btn btn-primary">Agregar Producto</button>
-            </form>
-        </div>
-
-        <!-- Modal de Login Administrador -->
-        <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión Administrador</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-              </div>
-              <div class="modal-body">
-                <form id="loginForm">
-                  <input type="email" id="loginEmail" placeholder="Correo" required class="form-control mb-2">
-                  <input type="password" id="loginPassword" placeholder="Contraseña" required class="form-control mb-2">
-                  <button type="submit" class="btn btn-primary">Ingresar</button>
-                  <div id="loginError" class="text-danger mt-2"></div>
-                </form>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-        <!-- Firebase SDKs -->
-        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-        <script>
-        // Configuración de Firebase (corrige storageBucket)
-        const firebaseConfig = {
-            apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
-            authDomain: "edark-proyect.firebaseapp.com",
-            projectId: "edark-proyect",
-            storageBucket: "edark-proyect.appspot.com",
-            messagingSenderId: "705929141287",
-            appId: "1:705929141287:web:f16389625de554d6790202",
-            measurementId: "G-V89W8SCSH1"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
-        const auth = firebase.auth();
-
-        const camposFiltro = [
-            { campo: "categoria", label: "Categoría" },
-            { campo: "subcategoria", label: "Subcategoría" },
-            { campo: "marca", label: "Marca" },
-            { campo: "capacidad", label: "Capacidad" },
-            { campo: "modelo", label: "Modelo" },
-            { campo: "dimension", label: "Dimensión" }
-        ];
-
-        let valoresFiltro = {};
-        let filtrosSeleccionados = {};
-        camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
-
-        // 1. Obtiene todos los valores únicos de cada campo desde Firestore
-        async function cargarFiltrosDinamicos() {
-            const snapshot = await db.collection('productos').get();
-            valoresFiltro = {};
-            camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
-            snapshot.forEach(doc => {
-                const prod = doc.data();
-                camposFiltro.forEach(f => {
-                    if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
-                });
-            });
-
-            // Genera el HTML de los filtros
-            let html = '';
-            camposFiltro.forEach(f => {
-                html += `
-                <div class="accordion-item">
-                    <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${f.campo}">
-                            ${f.label}
-                        </button>
-                    </h2>
-                    <div id="filter-${f.campo}" class="accordion-collapse collapse">
-                        <div class="accordion-body">
-                `;
-                Array.from(valoresFiltro[f.campo]).sort().forEach(valor => {
-                    const id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+        // Categoría y subcategoría anidados
+        html += `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-categoria">
+                    Categoría
+                </button>
+            </h2>
+            <div id="filter-categoria" class="accordion-collapse collapse">
+                <div class="accordion-body" id="categoria-body">
+        `;
+        Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
+            const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+            html += `
+                <div class="form-check mb-1">
+                    <input class="form-check-input filter-checkbox" type="checkbox" value="${categoria}" id="${catId}" data-campo="categoria">
+                    <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
+                </div>
+            `;
+            // Subcategorías anidadas
+            if (subcategoriasPorCategoria[categoria]) {
+                Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
+                    const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
                     html += `
-                        <div class="form-check">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${f.campo}">
-                            <label class="form-check-label" for="${id}">${valor}</label>
+                        <div class="form-check ms-4">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="${subcat}" id="${subcatId}" data-campo="subcategoria" data-parent="${categoria}">
+                            <label class="form-check-label" for="${subcatId}">${subcat}</label>
                         </div>
                     `;
                 });
-                html += `</div></div></div>`;
+            }
+        });
+        html += `</div></div></div>`;
+
+        // Resto de filtros
+        ["marca", "capacidad", "modelo", "dimension"].forEach(campo => {
+            html += `
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${campo}">
+                        ${camposFiltro.find(f => f.campo === campo).label}
+                    </button>
+                </h2>
+                <div id="filter-${campo}" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+            `;
+            Array.from(valoresFiltro[campo]).sort().forEach(valor => {
+                const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                html += `
+                    <div class="form-check">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
+                        <label class="form-check-label" for="${id}">${valor}</label>
+                    </div>
+                `;
             });
+            html += `</div></div></div>`;
+        });
 
-            document.getElementById('dynamic-filters').innerHTML = html;
+        document.getElementById('dynamic-filters').innerHTML = html;
 
-            // Asigna eventos a los nuevos checkboxes
-            document.querySelectorAll('.filter-checkbox').forEach(cb => {
-                cb.addEventListener('change', function () {
-                    const campo = this.dataset.campo;
-                    const valor = this.value;
-                    if (this.checked) {
-                        if (!filtrosSeleccionados[campo].includes(valor)) {
-                            filtrosSeleccionados[campo].push(valor);
-                        }
-                    } else {
-                        filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+        // Eventos para filtros
+        document.querySelectorAll('.filter-checkbox').forEach(cb => {
+            cb.addEventListener('change', function () {
+                const campo = this.dataset.campo;
+                const valor = this.value;
+                if (this.checked) {
+                    if (!filtrosSeleccionados[campo].includes(valor)) {
+                        filtrosSeleccionados[campo].push(valor);
                     }
-                    renderBadges();
-                    mostrarProductos();
-                });
+                } else {
+                    filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                }
+                renderBadges();
+                mostrarProductos();
             });
-        }
+        });
 
-        function renderBadges() {
-            const container = document.getElementById('selected-filters');
-            container.innerHTML = '';
-            camposFiltro.forEach(f => {
-                filtrosSeleccionados[f.campo].forEach(valor => {
-                    const id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-                    container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
-                });
+        // Filtro de precio
+        document.getElementById('precioMin').addEventListener('input', function () {
+            let min = parseInt(this.value);
+            let max = parseInt(document.getElementById('precioMax').value);
+            if (min > max) {
+                min = max;
+                this.value = min;
+            }
+            precioFiltroMin = min;
+            document.getElementById('precioMinLabel').textContent = min;
+            mostrarProductos();
+        });
+        document.getElementById('precioMax').addEventListener('input', function () {
+            let max = parseInt(this.value);
+            let min = parseInt(document.getElementById('precioMin').value);
+            if (max < min) {
+                max = min;
+                this.value = max;
+            }
+            precioFiltroMax = max;
+            document.getElementById('precioMaxLabel').textContent = max;
+            mostrarProductos();
+        });
+    }
+
+    function renderBadges() {
+        const container = document.getElementById('selected-filters');
+        container.innerHTML = '';
+        camposFiltro.forEach(f => {
+            filtrosSeleccionados[f.campo].forEach(valor => {
+                let id;
+                if (f.campo === "subcategoria") {
+                    // Busca la categoría asociada para el id
+                    let cat = null;
+                    for (const c in subcategoriasPorCategoria) {
+                        if (subcategoriasPorCategoria[c].has(valor)) {
+                            cat = c;
+                            break;
+                        }
+                    }
+                    id = `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}-cat-${cat ? cat.replace(/[^a-zA-Z0-9]/g, '') : ''}`;
+                } else {
+                    id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                }
+                container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
             });
+        });
+        // Badge de precio
+        if (precioFiltroMin > precioMin || precioFiltroMax < precioMax) {
+            container.innerHTML += `<span class="mt-2 badge bg-info me-2 filter-badge" data-id="precio-badge">S/${precioFiltroMin} - S/${precioFiltroMax} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="precio-badge" data-campo="precio"></button></span>`;
         }
+    }
 
-        document.getElementById('selected-filters').addEventListener('click', function (e) {
-            if (e.target.classList.contains('remove-filter')) {
-                const campo = e.target.dataset.campo;
-                const valor = e.target.dataset.valor;
-                const id = e.target.dataset.id;
+    document.getElementById('selected-filters').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-filter')) {
+            const campo = e.target.dataset.campo;
+            const valor = e.target.dataset.valor;
+            const id = e.target.dataset.id;
+            if (campo === "precio") {
+                // Reset precio
+                precioFiltroMin = precioMin;
+                precioFiltroMax = precioMax;
+                document.getElementById('precioMin').value = precioMin;
+                document.getElementById('precioMax').value = precioMax;
+                document.getElementById('precioMinLabel').textContent = precioMin;
+                document.getElementById('precioMaxLabel').textContent = precioMax;
+            } else {
                 const cb = document.getElementById(id);
                 if (cb) cb.checked = false;
                 filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-                renderBadges();
-                mostrarProductos();
             }
-        });
-
-        let unsubscribe = null;
-        function normalizarDimension(valor) {
-            return (valor || '').toString().replace(/["'\s]/g, '').toLowerCase();
-        }
-        function mostrarProductos() {
-            if (unsubscribe) unsubscribe();
-            unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-                const contenedor = document.getElementById('productos');
-                contenedor.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const prod = doc.data();
-                    let mostrar = true;
-                    camposFiltro.forEach(f => {
-                        if (f.campo === "dimension") {
-                            if (
-                                filtrosSeleccionados.dimension.length > 0 &&
-                                !filtrosSeleccionados.dimension.some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-                            ) {
-                                mostrar = false;
-                            }
-                        } else {
-                            if (filtrosSeleccionados[f.campo].length > 0 && !filtrosSeleccionados[f.campo].includes(prod[f.campo])) {
-                                mostrar = false;
-                            }
-                        }
-                    });
-                    if (mostrar) {
-                        contenedor.innerHTML += `
-                            <div class="col mb-5">
-                                <div class="card h-100">
-                                    <img class="card-img-top" src="${prod.imagen || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}" alt="${prod.nombre}" />
-                                    <div class="card-body p-4">
-                                        <div class="text-center">
-                                            <h5 class="fw-bolder">${prod.nombre || 'Producto'}</h5>
-                                            <div class="d-flex justify-content-center small text-warning mb-2">
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                                <div class="bi-star-fill"></div>
-                                            </div>
-                                            s/${prod.precio || '---'}
-                                        </div>
-                                    </div>
-                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
-                                    </div>
-                                </div>
-                            </div>
-                        `;
-                    }
-                });
-                if (contenedor.innerHTML === '') {
-                    contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
-                }
-            });
-        }
-
-        document.addEventListener('DOMContentLoaded', async function () {
-            await cargarFiltrosDinamicos();
             renderBadges();
             mostrarProductos();
-        });
+        }
+    });
 
-        // Login
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('loginForm').addEventListener('submit', function(e) {
-                e.preventDefault();
-                const email = document.getElementById('loginEmail').value;
-                const password = document.getElementById('loginPassword').value;
-                auth.signInWithEmailAndPassword(email, password)
-                    .then(() => {
-                        document.getElementById('loginError').textContent = '';
-                        // Cierra el modal si es necesario
-                        const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                        if (loginModal) loginModal.hide();
-                    })
-                    .catch(err => {
-                        document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
-                    });
+    let unsubscribe = null;
+    let productosCache = [];
+    function normalizarDimension(valor) {
+        return (valor || '').toString().replace(/["'\s]/g, '').toLowerCase();
+    }
+    function parseCapacidad(valor) {
+        // Convierte "256 GB", "1 TB", etc. a número de GB para ordenar
+        if (!valor) return 0;
+        let v = valor.toUpperCase().replace(/\s/g, '');
+        if (v.endsWith("TB")) return parseFloat(v) * 1024;
+        if (v.endsWith("GB")) return parseFloat(v);
+        if (v.endsWith("MB")) return parseFloat(v) / 1024;
+        return parseFloat(v) || 0;
+    }
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
             });
+            renderProductos();
         });
+    }
 
-        // Logout
-        document.getElementById('logoutBtn').addEventListener('click', function() {
-            auth.signOut();
-        });
-
-        // Función para obtener el tipo de cambio SUNAT (último valor)
-        async function obtenerTipoCambioSunat() {
-            try {
-                // API pública de SUNAT (puedes cambiar si tienes otra preferida)
-                const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
-                const data = await res.json();
-                return parseFloat(data.venta); // tipo de cambio de venta
-            } catch (e) {
-                alert('No se pudo obtener el tipo de cambio SUNAT. Usando 3.8 por defecto.');
-                return 3.8; // valor por defecto si falla la API
+    function renderProductos() {
+        let productos = productosCache.filter(prod => {
+            let mostrar = true;
+            // Categoría
+            if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
+            // Subcategoría (solo si la categoría asociada está seleccionada)
+            if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
+                let subcatOk = false;
+                for (const cat of filtrosSeleccionados["categoria"]) {
+                    if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
+                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
+                            subcatOk = true;
+                            break;
+                        }
+                    }
+                }
+                if (!subcatOk) mostrar = false;
             }
+            // Otros campos
+            ["marca", "capacidad", "modelo"].forEach(campo => {
+                if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
+            });
+            // Dimensión robusta
+            if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
+                !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
+            ) mostrar = false;
+            // Filtro de precio
+            if (mostrar && (typeof prod.precio === "number")) {
+                if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
+            }
+            return mostrar;
+        });
+
+        // Ordenamiento
+        const orden = document.getElementById('ordenarSelect').value;
+        if (orden === "precio-asc") {
+            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
+        } else if (orden === "precio-desc") {
+            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
+        } else if (orden === "capacidad-asc") {
+            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
+        } else if (orden === "capacidad-desc") {
+            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
         }
 
-        // Calcula y muestra el precio de venta automáticamente
-        document.getElementById('precioCompra').addEventListener('input', async function() {
-            const precioCompra = parseFloat(this.value);
-            if (isNaN(precioCompra) || precioCompra <= 0) {
-                document.getElementById('precioVenta').value = '';
-                return;
-            }
-            const tc = await obtenerTipoCambioSunat();
-            // Fórmula: precioVenta = precioCompra * tc * 1.18 * 1.45
-            let precioVenta = precioCompra * tc * 1.18 * 1.45;
-            precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
-            document.getElementById('precioVenta').value = precioVenta;
+        const contenedor = document.getElementById('productos');
+        contenedor.innerHTML = '';
+        productos.forEach(prod => {
+            contenedor.innerHTML += `
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="${prod.imagen || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}" alt="${prod.nombre}" />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">${prod.nombre || 'Producto'}</h5>
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                </div>
+                                s/${prod.precio || '---'}
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                        </div>
+                    </div>
+                </div>
+            `;
         });
+        if (contenedor.innerHTML === '') {
+            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+        }
+    }
 
-        // Al registrar el producto, guarda todos los campos
-        document.getElementById('adminForm').addEventListener('submit', async function(e) {
+    document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        await cargarFiltrosDinamicos();
+        renderBadges();
+        mostrarProductos();
+    });
+
+    // Login
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
             e.preventDefault();
-            const nombre = document.getElementById('nombre').value;
-            const precioCompra = parseFloat(document.getElementById('precioCompra').value);
-            const precioVenta = parseFloat(document.getElementById('precioVenta').value);
-            const imagen = document.getElementById('imagen').value;
-            const categoria = document.getElementById('categoria').value;
-            const subcategoria = document.getElementById('subcategoria').value;
-            const marca = document.getElementById('marca').value;
-            const capacidad = document.getElementById('capacidad').value;
-            const modelo = document.getElementById('modelo').value;
-            const dimension = document.getElementById('dimension').value;
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    document.getElementById('loginError').textContent = '';
+                    // Cierra el modal si es necesario
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    if (loginModal) loginModal.hide();
+                })
+                .catch(err => {
+                    document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
+                });
+        });
+    });
 
-            await db.collection('productos').add({
-                nombre,
-                precioCompra,
-                precio: precioVenta, // este es el precio de venta en soles
-                imagen,
-                categoria,
-                subcategoria,
-                marca,
-                capacidad,
-                modelo,
-                dimension
-            });
-            this.reset();
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        auth.signOut();
+    });
+
+    // Función para obtener el tipo de cambio SUNAT (último valor)
+    async function obtenerTipoCambioSunat() {
+        try {
+            // API pública de SUNAT (puedes cambiar si tienes otra preferida)
+            const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+            const data = await res.json();
+            return parseFloat(data.venta); // tipo de cambio de venta
+        } catch (e) {
+            alert('No se pudo obtener el tipo de cambio SUNAT. Usando 3.8 por defecto.');
+            return 3.8; // valor por defecto si falla la API
+        }
+    }
+
+    // Calcula y muestra el precio de venta automáticamente
+    document.getElementById('precioCompra').addEventListener('input', async function() {
+        const precioCompra = parseFloat(this.value);
+        if (isNaN(precioCompra) || precioCompra <= 0) {
             document.getElementById('precioVenta').value = '';
-        });
+            return;
+        }
+        const tc = await obtenerTipoCambioSunat();
+        // Fórmula: precioVenta = precioCompra * tc * 1.18 * 1.45
+        let precioVenta = precioCompra * tc * 1.18 * 1.45;
+        precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
+        document.getElementById('precioVenta').value = precioVenta;
+    });
 
-        // Mostrar/ocultar panel según autenticación
-        auth.onAuthStateChanged(user => {
-            const adminContainer = document.getElementById('adminContainer');
-            if (user) {
-                adminContainer.classList.remove('d-none');
-                // Opcional: Cerrar el modal de login
-                const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                if (loginModal) loginModal.hide();
-            } else {
-                adminContainer.classList.add('d-none');
-            }
-        });
+    // Al registrar el producto, guarda todos los campos
+    document.getElementById('adminForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const precioCompra = parseFloat(document.getElementById('precioCompra').value);
+        const precioVenta = parseFloat(document.getElementById('precioVenta').value);
+        const imagen = document.getElementById('imagen').value;
+        const categoria = document.getElementById('categoria').value;
+        const subcategoria = document.getElementById('subcategoria').value;
+        const marca = document.getElementById('marca').value;
+        const capacidad = document.getElementById('capacidad').value;
+        const modelo = document.getElementById('modelo').value;
+        const dimension = document.getElementById('dimension').value;
 
-        // Botón cerrar sesión en navbar
-        document.getElementById('logoutBtnNav').addEventListener('click', function() {
-            auth.signOut();
+        await db.collection('productos').add({
+            nombre,
+            precioCompra,
+            precio: precioVenta, // este es el precio de venta en soles
+            imagen,
+            categoria,
+            subcategoria,
+            marca,
+            capacidad,
+            modelo,
+            dimension
         });
-        </script>
-    </body>
+        this.reset();
+        document.getElementById('precioVenta').value = '';
+    });
+
+    // Mostrar/ocultar panel según autenticación
+    auth.onAuthStateChanged(user => {
+        const adminContainer = document.getElementById('adminContainer');
+        if (user) {
+            adminContainer.classList.remove('d-none');
+            // Opcional: Cerrar el modal de login
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            if (loginModal) loginModal.hide();
+        } else {
+            adminContainer.classList.add('d-none');
+        }
+    });
+
+    // Botón cerrar sesión en navbar
+    document.getElementById('logoutBtnNav').addEventListener('click', function() {
+        auth.signOut();
+    });
+    </script>
+</body>
 </html>

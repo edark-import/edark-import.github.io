@@ -15,36 +15,78 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <style>
-            .franja-edark {
-                background: #111;
-                color: #fff;
-                padding: 3.5rem 0 3rem 0;
-                position: relative;
-                overflow: hidden;
+            .tarjeta-horizontal {
+                display: flex;
+                align-items: center;
+                background: #fff;
+                border-radius: 1.5rem;
+                box-shadow: 0 4px 24px 0 rgba(34,40,49,0.08);
+                border: 2px solid #e0e0e0;
+                margin-bottom: 2.5rem;
+                padding: 2.5rem 2rem;
+                min-height: 260px;
+                transition: box-shadow 0.3s, transform 0.3s;
+                opacity: 0;
+                transform: translateY(40px);
             }
-            .cat-anim-container {
-                width: 120px;
-                height: 120px;
-                margin: 0 auto 2.5rem auto;
-                position: relative;
-                z-index: 3;
+            .tarjeta-horizontal.visible {
+                opacity: 1;
+                transform: translateY(0);
+                transition: opacity 0.7s, transform 0.7s;
             }
-            .cat-anim {
-                width: 100%;
-                height: 100%;
-                display: block;
-                position: absolute;
-                left: 0; top: 0;
-                animation: cat-bounce 2.5s infinite cubic-bezier(.68,-0.55,.27,1.55);
+            .tarjeta-horizontal:hover, .tarjeta-horizontal.active {
+                box-shadow: 0 8px 32px 0 #00adb533;
+                transform: translateY(-8px) scale(1.03);
+                border-color: #475657;
+                z-index: 2;
             }
-            @keyframes cat-bounce {
-                0%, 100% { transform: translateY(0);}
-                50% { transform: translateY(-18px);}
+            .tarjeta-horizontal .icono-tarjeta {
+                font-size: 3.5rem;
+                margin-right: 2.5rem;
+                color: #616768;
+                flex-shrink: 0;
+                background: #e6f7fa;
+                border-radius: 50%;
+                padding: 1.1rem 1.3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.4s, background 0.3s;
             }
-            .cat-anim svg {
-                width: 100%;
-                height: 100%;
-                display: block;
+            .tarjeta-horizontal .contenido-tarjeta {
+                flex: 1;
+            }
+            .tarjeta-horizontal h2 {
+                font-size: 1.7rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
+                letter-spacing: 0.5px;
+            }
+            .tarjeta-horizontal .subtitulo {
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: #00adb5;
+                margin-bottom: 0.7rem;
+            }
+            .tarjeta-horizontal ul {
+                padding-left: 1.2rem;
+                margin-bottom: 0.5rem;
+            }
+            .tarjeta-horizontal.bg-lightblue {
+                background: #f8fcfd;
+            }
+            .tarjeta-horizontal.bg-white {
+                background: #fff;
+            }
+            @media (max-width: 991px) {
+                .tarjeta-horizontal {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 2rem 1rem;
+                }
+                .tarjeta-horizontal .icono-tarjeta {
+                    margin: 0 0 1.2rem 0;
+                }
             }
         </style>
     </head>
@@ -82,36 +124,10 @@
                 </div>
             </div>
         </nav>
-        <!-- Header: Franja Sobre Nosotros -->
-        <header class="franja-edark">
+        <!-- Header-->
+        <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center">
-                    <div class="cat-anim-container">
-                        <div class="cat-anim">
-                            <!-- SVG Gatito blanco con detalles celestes -->
-                            <svg viewBox="0 0 120 120" fill="none">
-                                <!-- Cuerpo -->
-                                <ellipse cx="60" cy="80" rx="32" ry="28" fill="#fff"/>
-                                <!-- Cabeza -->
-                                <ellipse cx="60" cy="50" rx="24" ry="22" fill="#fff"/>
-                                <!-- Orejas -->
-                                <polygon points="38,38 32,10 54,32" fill="#fff"/>
-                                <polygon points="82,38 88,10 66,32" fill="#fff"/>
-                                <!-- Ojos -->
-                                <ellipse cx="50" cy="54" rx="3.5" ry="5" fill="#00adb5"/>
-                                <ellipse cx="70" cy="54" rx="3.5" ry="5" fill="#00adb5"/>
-                                <!-- Nariz -->
-                                <ellipse cx="60" cy="62" rx="2.2" ry="1.2" fill="#222831"/>
-                                <!-- Boca -->
-                                <path d="M57 66 Q60 69 63 66" stroke="#222831" stroke-width="1.5" fill="none"/>
-                                <!-- Bigotes -->
-                                <path d="M44 62 Q35 64 44 66" stroke="#00adb5" stroke-width="1.2" fill="none"/>
-                                <path d="M76 62 Q85 64 76 66" stroke="#00adb5" stroke-width="1.2" fill="none"/>
-                                <!-- Cola -->
-                                <path d="M92 90 Q110 100 90 110" stroke="#00adb5" stroke-width="4" fill="none" stroke-linecap="round"/>
-                            </svg>
-                        </div>
-                    </div>
+                <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">Sobre Nosotros</h1>
                     <p class="lead fw-normal text-white-50 mb-0">
                         En <b>eDark EIRL</b> nos apasiona la tecnología y la innovación. Somos una empresa peruana dedicada a ofrecer productos electrónicos y servicios tecnológicos de alta calidad, con el compromiso de mejorar la vida de nuestros clientes y acompañarlos en su transformación digital.
@@ -120,10 +136,66 @@
             </div>
         </header>
 
-        <!-- Resto de la página (tarjetas, etc) -->
+        <!-- Tarjetas horizontales con Bootstrap -->
         <section class="py-5">
             <div class="container px-4 px-lg-5">
-                <!-- Aquí puedes colocar el resto de tu contenido como tarjetas horizontales, etc. -->
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-bullseye"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">Nuestra Misión</div>
+                                <h2>Mejorar la vida de nuestros clientes</h2>
+                                <p>
+                                    A través de productos electrónicos de vanguardia y servicios personalizados, brindamos una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-eye"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">Nuestra Visión</div>
+                                <h2>Ser líderes en innovación tecnológica</h2>
+                                <p>
+                                    Queremos ser reconocidos en el mercado peruano por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-gem"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">Nuestros Valores</div>
+                                <h2>Lo que nos define</h2>
+                                <ul>
+                                    <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
+                                    <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
+                                    <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
+                                    <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-box-seam"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">¿Qué Ofrecemos?</div>
+                                <h2>Soluciones y servicios para ti</h2>
+                                <ul>
+                                    <li>Dispositivos móviles y equipos de cómputo</li>
+                                    <li>Accesorios tecnológicos y hogar inteligente</li>
+                                    <li>Consultoría tecnológica y soporte técnico</li>
+                                    <li>Mantenimiento y reparación</li>
+                                </ul>
+                                <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -137,7 +209,7 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <!-- Animación de tarjetas y gatito -->
+        <!-- Animación de tarjetas -->
         <script>
         // Animación de aparición de tarjetas al hacer scroll
         document.addEventListener('DOMContentLoaded', function () {
