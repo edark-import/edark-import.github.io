@@ -156,7 +156,6 @@
 
         const camposFiltro = [
             { campo: "categoria", label: "Categoría" },
-            { campo: "subcategoria", label: "Subcategoría" },
             { campo: "marca", label: "Marca" },
             { campo: "capacidad", label: "Capacidad" },
             { campo: "modelo", label: "Modelo" },
@@ -167,7 +166,7 @@
         let subcategoriasPorCategoria = {};
         let filtrosSeleccionados = {};
         camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
-
+        filtrosSeleccionados["subcategoria"] = [];
 
         // 1. Obtiene todos los valores únicos de cada campo desde Firestore
         async function cargarFiltrosDinamicos() {
@@ -189,7 +188,7 @@
 
             // Genera el HTML de los filtros
             let html = '';
-            // Categoría
+            // Categoría con subcategoría anidada
             html += `
             <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -198,30 +197,8 @@
                     </button>
                 </h2>
                 <div id="filter-categoria" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-            `;
-            Array.from(valoresFiltro["categoria"]).sort().forEach(valor => {
-                const id = `filter-categoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-                html += `
-                    <div class="form-check">
-                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="categoria">
-                        <label class="form-check-label" for="${id}">${valor}</label>
-                    </div>
-                `;
-            });
-            html += `</div></div></div>`;
-
-            // Subcategoría (anidada)
-            html += `
-            <div class="accordion-item">
-                <h2 class="accordion-header">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-subcategoria">
-                        Subcategoría
-                    </button>
-                </h2>
-                <div id="filter-subcategoria" class="accordion-collapse collapse">
-                    <div class="accordion-body" id="subcategoria-body">
-                        <!-- Subcategorías se llenan dinámicamente -->
+                    <div class="accordion-body" id="categoria-body">
+                        <!-- Categorías y subcategorías se llenan dinámicamente -->
                     </div>
                 </div>
             </div>
@@ -253,82 +230,128 @@
 
             document.getElementById('dynamic-filters').innerHTML = html;
 
-            // Asigna eventos a los nuevos checkboxes
-            document.querySelectorAll('.filter-checkbox').forEach(cb => {
-                cb.addEventListener('change', function () {
-                    const campo = this.dataset.campo;
-                    const valor = this.value;
-                    if (this.checked) {
-                        if (!filtrosSeleccionados[campo].includes(valor)) {
-                            filtrosSeleccionados[campo].push(valor);
-                        }
-                    } else {
-                        filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-                    }
-                    if (campo === "categoria") actualizarSubcategorias();
-                    renderBadges();
-                    mostrarProductos();
-                });
-            });
+            // Renderiza categorías y subcategorías anidadas
+            renderCategoriasYSubcategorias();
 
-            actualizarSubcategorias();
+            // Asigna eventos a los nuevos checkboxes (excepto categoría y subcategoría, que se asignan en renderCategoriasYSubcategorias)
+            document.querySelectorAll('.filter-checkbox').forEach(cb => {
+                if (cb.dataset.campo !== "categoria" && cb.dataset.campo !== "subcategoria") {
+                    cb.addEventListener('change', function () {
+                        const campo = this.dataset.campo;
+                        const valor = this.value;
+                        if (this.checked) {
+                            if (!filtrosSeleccionados[campo].includes(valor)) {
+                                filtrosSeleccionados[campo].push(valor);
+                            }
+                        } else {
+                            filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                        }
+                        renderBadges();
+                        mostrarProductos();
+                    });
+                }
+            });
         }
 
-        // Actualiza las subcategorías según la(s) categoría(s) seleccionada(s)
-        function actualizarSubcategorias() {
-            const subcatBody = document.getElementById('subcategoria-body');
-            subcatBody.innerHTML = '';
-            let subcats = new Set();
-            if (filtrosSeleccionados["categoria"].length > 0) {
-                filtrosSeleccionados["categoria"].forEach(cat => {
-                    if (subcategoriasPorCategoria[cat]) {
-                        subcategoriasPorCategoria[cat].forEach(sc => subcats.add(sc));
-                    }
-                });
-            } else {
-                // Si no hay categoría seleccionada, muestra todas las subcategorías
-                Object.values(subcategoriasPorCategoria).forEach(set => set.forEach(sc => subcats.add(sc)));
-            }
-            Array.from(subcats).sort().forEach(valor => {
-                const id = `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-                subcatBody.innerHTML += `
-                    <div class="form-check">
-                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="subcategoria" ${filtrosSeleccionados["categoria"].length === 0 ? 'disabled' : ''}>
-                        <label class="form-check-label" for="${id}">${valor}</label>
+        // Renderiza categorías y subcategorías anidadas
+        function renderCategoriasYSubcategorias() {
+            const catBody = document.getElementById('categoria-body');
+            catBody.innerHTML = '';
+            Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
+                const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+                catBody.innerHTML += `
+                    <div class="form-check mb-1">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${categoria}" id="${catId}" data-campo="categoria">
+                        <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
+                    </div>
+                    <div class="ms-4 mb-2" id="subcat-list-${catId}">
+                        <!-- Subcategorías de esta categoría -->
+                        ${renderSubcategoriasDeCategoria(categoria)}
                     </div>
                 `;
             });
 
-            // Reasigna eventos a los nuevos checkboxes de subcategoría
-            subcatBody.querySelectorAll('.filter-checkbox').forEach(cb => {
+            // Eventos para categoría y subcategoría
+            catBody.querySelectorAll('.filter-checkbox[data-campo="categoria"]').forEach(cb => {
                 cb.addEventListener('change', function () {
-                    const campo = this.dataset.campo;
                     const valor = this.value;
                     if (this.checked) {
-                        if (!filtrosSeleccionados[campo].includes(valor)) {
-                            filtrosSeleccionados[campo].push(valor);
+                        if (!filtrosSeleccionados["categoria"].includes(valor)) {
+                            filtrosSeleccionados["categoria"].push(valor);
                         }
                     } else {
-                        filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                        filtrosSeleccionados["categoria"] = filtrosSeleccionados["categoria"].filter(v => v !== valor);
+                        // Al deseleccionar categoría, deselecciona sus subcategorías
+                        if (subcategoriasPorCategoria[valor]) {
+                            subcategoriasPorCategoria[valor].forEach(subcat => {
+                                filtrosSeleccionados["subcategoria"] = filtrosSeleccionados["subcategoria"].filter(v => v !== subcat);
+                                const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                                const cbSub = document.getElementById(subcatId);
+                                if (cbSub) cbSub.checked = false;
+                            });
+                        }
                     }
                     renderBadges();
                     mostrarProductos();
                 });
             });
+
+            catBody.querySelectorAll('.filter-checkbox[data-campo="subcategoria"]').forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const valor = this.value;
+                    if (this.checked) {
+                        if (!filtrosSeleccionados["subcategoria"].includes(valor)) {
+                            filtrosSeleccionados["subcategoria"].push(valor);
+                        }
+                    } else {
+                        filtrosSeleccionados["subcategoria"] = filtrosSeleccionados["subcategoria"].filter(v => v !== valor);
+                    }
+                    renderBadges();
+                    mostrarProductos();
+                });
+            });
+        }
+
+        // Renderiza subcategorías para una categoría
+        function renderSubcategoriasDeCategoria(categoria) {
+            if (!subcategoriasPorCategoria[categoria]) return '';
+            let html = '';
+            Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
+                const id = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+                html += `
+                    <div class="form-check">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${subcat}" id="${id}" data-campo="subcategoria" ${!filtrosSeleccionados["categoria"].includes(categoria) ? 'disabled' : ''}>
+                        <label class="form-check-label" for="${id}">${subcat}</label>
+                    </div>
+                `;
+            });
+            return html;
         }
 
         function renderBadges() {
             const container = document.getElementById('selected-filters');
             container.innerHTML = '';
-            camposFiltro.forEach(f => {
-                filtrosSeleccionados[f.campo].forEach(valor => {
-                    const id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-                    container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
+            ["categoria", "subcategoria", "marca", "capacidad", "modelo", "dimension"].forEach(campo => {
+                filtrosSeleccionados[campo].forEach(valor => {
+                    let id;
+                    if (campo === "subcategoria") {
+                        // Busca la categoría asociada para el id
+                        let cat = null;
+                        for (const c in subcategoriasPorCategoria) {
+                            if (subcategoriasPorCategoria[c].has(valor)) {
+                                cat = c;
+                                break;
+                            }
+                        }
+                        id = `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}-cat-${cat ? cat.replace(/[^a-zA-Z0-9]/g, '') : ''}`;
+                    } else {
+                        id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                    }
+                    container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${campo}" data-valor="${valor}"></button></span>`;
                 });
             });
         }
 
-        // 3. Quitar filtro desde badge
         document.getElementById('selected-filters').addEventListener('click', function (e) {
             if (e.target.classList.contains('remove-filter')) {
                 const campo = e.target.dataset.campo;
@@ -337,16 +360,14 @@
                 const cb = document.getElementById(id);
                 if (cb) cb.checked = false;
                 filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-                if (campo === "categoria") actualizarSubcategorias();
+                if (campo === "categoria") renderCategoriasYSubcategorias();
                 renderBadges();
                 mostrarProductos();
             }
         });
 
-        // 4. Mostrar productos filtrados
         let unsubscribe = null;
         function normalizarDimension(valor) {
-            // Elimina espacios y comillas para comparar
             return (valor || '').toString().replace(/["'\s]/g, '').toLowerCase();
         }
         function mostrarProductos() {
@@ -357,23 +378,19 @@
                 snapshot.forEach(doc => {
                     const prod = doc.data();
                     let mostrar = true;
-                    for (const campo of camposFiltro.map(f => f.campo)) {
-                        if (campo === "dimension") {
-                            // Comparación robusta para dimensión
-                            if (
-                                filtrosSeleccionados.dimension.length > 0 &&
-                                !filtrosSeleccionados.dimension.some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-                            ) {
-                                mostrar = false;
-                                break;
-                            }
-                        } else {
-                            if (filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) {
-                                mostrar = false;
-                                break;
-                            }
-                        }
-                    }
+                    // Categoría
+                    if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
+                    // Subcategoría
+                    if (mostrar && filtrosSeleccionados["subcategoria"].length > 0 && !filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) mostrar = false;
+                    // Otros campos
+                    ["marca", "capacidad", "modelo"].forEach(campo => {
+                        if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
+                    });
+                    // Dimensión robusta
+                    if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
+                        !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
+                    ) mostrar = false;
+
                     if (mostrar) {
                         contenedor.innerHTML += `
                             <div class="col mb-5">
@@ -405,7 +422,6 @@
                 }
             });
         }
-        mostrarProductos();
 
         document.addEventListener('DOMContentLoaded', async function () {
             await cargarFiltrosDinamicos();
