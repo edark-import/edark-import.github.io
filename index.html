@@ -428,7 +428,7 @@
             productosCache = [];
             snapshot.forEach(doc => {
                 const prod = doc.data();
-                prod.id = doc.id;
+                prod.id = doc.id; // Asigna el id único de Firestore
                 productosCache.push(prod);
             });
             paginaActual = 1;
@@ -588,7 +588,7 @@
             productosCache = [];
             snapshot.forEach(doc => {
                 const prod = doc.data();
-                prod.id = doc.id;
+                prod.id = doc.id; // Asigna el id único de Firestore
                 productosCache.push(prod);
             });
             paginaActual = 1;
@@ -799,9 +799,7 @@
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
             productosCache = [];
             snapshot.forEach(doc => {
-                const prod = doc.data();
-                prod.id = doc.id;
-                productosCache.push(prod);
+                productosCache.push(doc.data());
             });
             paginaActual = 1; // Siempre vuelve a la primera página al filtrar
             renderProductos();
