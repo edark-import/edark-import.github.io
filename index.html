@@ -263,42 +263,135 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Mostrar productos desde Firestore
+        // Filtros
+        let filtrosSeleccionados = {
+            categoria: [],
+            marca: [],
+            unidad: []
+        };
+
+        const filtroMap = {
+            subcat1: { tipo: 'categoria', valor: 'Celulares' },
+            subcat2: { tipo: 'categoria', valor: 'Laptops' },
+            subcat3: { tipo: 'categoria', valor: 'Hombres' },
+            subcat4: { tipo: 'categoria', valor: 'Mujeres' },
+            brand1: { tipo: 'marca', valor: 'Nike' },
+            brand2: { tipo: 'marca', valor: 'Samsung' },
+            brand3: { tipo: 'marca', valor: 'Huawei' },
+            brand4: { tipo: 'marca', valor: 'Adidas' },
+            brand5: { tipo: 'marca', valor: 'Apple' },
+            brand6: { tipo: 'marca', valor: 'Puma' },
+            uni1: { tipo: 'unidad', valor: 'Galón' },
+            uni2: { tipo: 'unidad', valor: 'Kilo' },
+            uni3: { tipo: 'unidad', valor: 'Gramo' }
+        };
+
+        let unsubscribe = null;
         function mostrarProductos() {
-            const productosRef = db.collection('productos');
-            productosRef.onSnapshot(snapshot => {
+            if (unsubscribe) unsubscribe();
+            let ref = db.collection('productos');
+            if (filtrosSeleccionados.categoria.length === 1) {
+                ref = ref.where('categoria', '==', filtrosSeleccionados.categoria[0]);
+            }
+            if (filtrosSeleccionados.marca.length === 1) {
+                ref = ref.where('marca', '==', filtrosSeleccionados.marca[0]);
+            }
+            if (filtrosSeleccionados.unidad.length === 1) {
+                ref = ref.where('unidad', '==', filtrosSeleccionados.unidad[0]);
+            }
+            unsubscribe = ref.onSnapshot(snapshot => {
                 const contenedor = document.getElementById('productos');
-                if (!contenedor) return; // Previene error si el contenedor no existe
+                if (!contenedor) return;
                 contenedor.innerHTML = '';
                 snapshot.forEach(doc => {
                     const prod = doc.data();
-                    contenedor.innerHTML += `
-                        <div class="col mb-5">
-                            <div class="card h-100">
-                                <img class="card-img-top" src="${prod.imagen}" alt="${prod.nombre}" />
-                                <div class="card-body p-4">
-                                    <div class="text-center">
-                                        <h5 class="fw-bolder">${prod.nombre}</h5>
-                                        <div class="d-flex justify-content-center small text-warning mb-2">
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
-                                            <div class="bi-star-fill"></div>
+                    if (
+                        (filtrosSeleccionados.categoria.length === 0 || filtrosSeleccionados.categoria.includes(prod.categoria)) &&
+                        (filtrosSeleccionados.marca.length === 0 || filtrosSeleccionados.marca.includes(prod.marca)) &&
+                        (filtrosSeleccionados.unidad.length === 0 || filtrosSeleccionados.unidad.includes(prod.unidad))
+                    ) {
+                        contenedor.innerHTML += `
+                            <div class="col mb-5">
+                                <div class="card h-100">
+                                    <img class="card-img-top" src="${prod.imagen || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}" alt="${prod.nombre}" />
+                                    <div class="card-body p-4">
+                                        <div class="text-center">
+                                            <h5 class="fw-bolder">${prod.nombre || 'Producto'}</h5>
+                                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                                <div class="bi-star-fill"></div>
+                                                <div class="bi-star-fill"></div>
+                                                <div class="bi-star-fill"></div>
+                                                <div class="bi-star-fill"></div>
+                                                <div class="bi-star-fill"></div>
+                                            </div>
+                                            s/${prod.precio || '---'}
                                         </div>
-                                        s/${prod.precio}
+                                    </div>
+                                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
                                     </div>
                                 </div>
-                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
-                                </div>
                             </div>
-                        </div>
-                    `;
+                        `;
+                    }
                 });
+                if (contenedor.innerHTML === '') {
+                    contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+                }
             });
         }
         mostrarProductos();
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Filtros
+            const toggleBrands = document.getElementById('toggleBrands');
+            if (toggleBrands) {
+                toggleBrands.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelectorAll('.extra-brand').forEach(el => el.classList.toggle('d-none'));
+                    toggleBrands.textContent = toggleBrands.textContent === 'Ver más' ? 'Ver menos' : 'Ver más';
+                });
+            }
+            document.querySelectorAll('.filter-checkbox').forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const id = this.id;
+                    const info = filtroMap[id];
+                    if (!info) return;
+                    if (this.checked) {
+                        if (!filtrosSeleccionados[info.tipo].includes(info.valor)) {
+                            filtrosSeleccionados[info.tipo].push(info.valor);
+                        }
+                    } else {
+                        filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
+                    }
+                    renderBadges();
+                    mostrarProductos();
+                });
+            });
+            document.getElementById('selected-filters').addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-filter')) {
+                    const id = e.target.dataset.id;
+                    const cb = document.getElementById(id);
+                    if (cb) cb.checked = false;
+                    const info = filtroMap[id];
+                    if (info) {
+                        filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
+                    }
+                    renderBadges();
+                    mostrarProductos();
+                }
+            });
+            function renderBadges() {
+                const container = document.getElementById('selected-filters');
+                container.innerHTML = '';
+                Object.keys(filtroMap).forEach(id => {
+                    const info = filtroMap[id];
+                    if (filtrosSeleccionados[info.tipo].includes(info.valor)) {
+                        container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${info.valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}"></button></span>`;
+                    }
+                });
+            }
+        });
 
         // Login
         document.addEventListener('DOMContentLoaded', function() {
