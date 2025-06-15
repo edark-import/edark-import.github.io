@@ -173,6 +173,9 @@ Preferencia de contacto: ${preferencias.join(', ')}`;
         var numeroWhatsApp = "51916907657";
         var url = "https://wa.me/" + numeroWhatsApp + "?text=" + encodeURIComponent(mensaje);
         window.open(url, '_blank');
+
+        // Limpiar el formulario después de abrir WhatsApp
+        form.reset();
     });
     </script>
 </body>
