@@ -203,16 +203,13 @@
         e.preventDefault();
         var form = this;
         var contactMsg = document.getElementById('contactMsg');
-
         var preferencias = [];
         form.querySelectorAll('input[name="preferencia"]:checked').forEach(function(cb){
             preferencias.push(cb.value);
         });
+        var fraseAleatoria = frases[Math.floor(Math.random() * frases.length)];
+        var asunto = generarAsunto(form.nombre.value, form.motivo.value);
 
-        const fraseAleatoria = frases[Math.floor(Math.random() * frases.length)];
-        const asunto = generarAsunto(form.nombre.value, form.motivo.value);
-
-        // Ajusta los nombres según tu plantilla de EmailJS
         var params = {
             nombre: form.nombre.value,
             correo: form.correo.value,
@@ -220,7 +217,8 @@
             motivo: form.motivo.value,
             preferencia: preferencias.join(', '),
             frase: fraseAleatoria,
-            asunto: asunto
+            asunto: asunto,
+            time: new Date().toLocaleString() // si quieres mostrar la hora
         };
 
         emailjs.send('service_96lsn0h', 'template_0z28kwl', params)
