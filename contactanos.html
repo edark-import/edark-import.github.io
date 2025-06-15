@@ -183,6 +183,41 @@
                 document.getElementById('formsubmit-success').style.display = 'block';
             }
         });
+
+        const frases = [
+          '“El progreso y el desarrollo son imposibles si uno sigue haciendo las cosas tal como siempre las ha hecho.” — Nikola Tesla',
+          '“La mente que se abre a una nueva idea jamás volverá a su tamaño original.” — Albert Einstein',
+          '“La ciencia puede divertirnos y fascinarnos, pero es la ingeniería la que cambia el mundo.” — Isaac Asimov',
+          '“Cualquier tecnología suficientemente avanzada es indistinguible de la magia.” — Arthur C. Clarke',
+          '“La innovación es lo que distingue a un líder de los demás.” — Steve Jobs'
+        ];
+
+        document.getElementById('contactForm').addEventListener('submit', function(e){
+            e.preventDefault();
+            var form = this;
+            var preferencias = [];
+            form.querySelectorAll('input[name="preferencia"]:checked').forEach(function(cb){
+                preferencias.push(cb.value);
+            });
+
+            const fraseAleatoria = frases[Math.floor(Math.random() * frases.length)];
+
+            const params = {
+              name: form.nombre.value,
+              correo: form.correo.value,
+              telefono: form.telefono.value,
+              motivo: form.motivo.value,
+              preferencia: preferencias.join(', '),
+              frase: fraseAleatoria
+            };
+
+            emailjs.send('TU_SERVICE_ID', 'TU_TEMPLATE_ID', params)
+              .then(function(response) {
+                // Mensaje de éxito
+              }, function(error) {
+                // Mensaje de error
+              });
+        });
         </script>
     </body>
 </html>
