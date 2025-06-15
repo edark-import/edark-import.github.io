@@ -232,8 +232,8 @@
         let precios = [];
         snapshot.forEach(doc => {
             const prod = doc.data();
-prod.id = doc.id;
-productosCache.push(prod);
+            prod.id = doc.id;
+            productosCache.push(prod);
         });
 
         // Filtro de precio
@@ -428,8 +428,8 @@ productosCache.push(prod);
             productosCache = [];
             snapshot.forEach(doc => {
                 const prod = doc.data();
-prod.id = doc.id;
-productosCache.push(prod);
+                prod.id = doc.id;
+                productosCache.push(prod);
             });
             paginaActual = 1;
             renderProductos();
@@ -588,8 +588,8 @@ productosCache.push(prod);
             productosCache = [];
             snapshot.forEach(doc => {
                 const prod = doc.data();
-prod.id = doc.id;
-productosCache.push(prod);
+                prod.id = doc.id;
+                productosCache.push(prod);
             });
             paginaActual = 1;
             renderProductos();
@@ -799,7 +799,9 @@ productosCache.push(prod);
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
             productosCache = [];
             snapshot.forEach(doc => {
-                productosCache.push(doc.data());
+                const prod = doc.data();
+                prod.id = doc.id;
+                productosCache.push(prod);
             });
             paginaActual = 1; // Siempre vuelve a la primera página al filtrar
             renderProductos();
