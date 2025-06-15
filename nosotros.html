@@ -15,88 +15,13 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <style>
-            body, .bg-edark {
-                background: #111 !important;
+            .franja-edark {
+                background: #111;
                 color: #fff;
+                padding: 3.5rem 0 3rem 0;
+                position: relative;
+                overflow: hidden;
             }
-            .tarjeta-horizontal {
-                display: flex;
-                align-items: center;
-                background: rgba(34,40,49,0.95);
-                border-radius: 1.5rem;
-                box-shadow: 0 4px 24px 0 rgba(0,0,0,0.18);
-                border: 2px solid #222831;
-                margin-bottom: 2.5rem;
-                padding: 2.5rem 2rem;
-                min-height: 260px;
-                transition: box-shadow 0.3s, transform 0.3s;
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            .tarjeta-horizontal.visible {
-                opacity: 1;
-                transform: translateY(0);
-                transition: opacity 0.7s, transform 0.7s;
-            }
-            .tarjeta-horizontal:hover, .tarjeta-horizontal.active {
-                box-shadow: 0 8px 32px 0 #00adb533;
-                transform: translateY(-8px) scale(1.03);
-                border-color: #00adb5;
-                z-index: 2;
-            }
-            .tarjeta-horizontal .icono-tarjeta {
-                font-size: 3.5rem;
-                margin-right: 2.5rem;
-                color: #00adb5;
-                flex-shrink: 0;
-                background: #181b20;
-                border-radius: 50%;
-                padding: 1.1rem 1.3rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: transform 0.4s, background 0.3s;
-            }
-            .tarjeta-horizontal .contenido-tarjeta {
-                flex: 1;
-            }
-            .tarjeta-horizontal h2 {
-                font-size: 1.7rem;
-                font-weight: bold;
-                margin-bottom: 1rem;
-                letter-spacing: 0.5px;
-                color: #fff;
-            }
-            .tarjeta-horizontal .subtitulo {
-                font-size: 1.1rem;
-                font-weight: 500;
-                color: #00adb5;
-                margin-bottom: 0.7rem;
-            }
-            .tarjeta-horizontal ul {
-                padding-left: 1.2rem;
-                margin-bottom: 0.5rem;
-            }
-            .tarjeta-horizontal.bg-lightblue {
-                background: rgba(34,40,49,0.92);
-            }
-            .tarjeta-horizontal.bg-white {
-                background: rgba(34,40,49,0.97);
-            }
-            .tarjeta-horizontal p, .tarjeta-horizontal li, .tarjeta-horizontal ul {
-                color: #e0e0e0;
-            }
-            @media (max-width: 991px) {
-                .tarjeta-horizontal {
-                    flex-direction: column;
-                    text-align: center;
-                    padding: 2rem 1rem;
-                }
-                .tarjeta-horizontal .icono-tarjeta {
-                    margin: 0 0 1.2rem 0;
-                }
-            }
-            /* Animación del gatito */
             .cat-anim-container {
                 width: 120px;
                 height: 120px;
@@ -116,7 +41,6 @@
                 0%, 100% { transform: translateY(0);}
                 50% { transform: translateY(-18px);}
             }
-            /* Gatito SVG blanco con detalles celestes */
             .cat-anim svg {
                 width: 100%;
                 height: 100%;
@@ -124,9 +48,9 @@
             }
         </style>
     </head>
-    <body class="bg-edark">
+    <body>
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
             <div class="container px-4 px-lg-5">
                 <a class="navbar-brand" href="index.html">
                     <img width="80" class="d-flex" alt="eDark Logo" src="img/Logo/logo_2.png">
@@ -149,19 +73,19 @@
                         </li>
                     </ul>
                     <form class="d-flex">
-                        <button class="btn btn-outline-light" type="button" onclick="window.location.href='index.html#carrito'">
+                        <button class="btn btn-outline-dark" type="button" onclick="window.location.href='index.html#carrito'">
                             <i class="bi-cart-fill me-1"></i>
                             Carrito
-                            <span class="badge bg-light text-dark ms-1 rounded-pill">0</span>
+                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
                     </form>
                 </div>
             </div>
         </nav>
-        <!-- Header-->
-        <header class="bg-edark py-5">
+        <!-- Header: Franja Sobre Nosotros -->
+        <header class="franja-edark">
             <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
+                <div class="text-center">
                     <div class="cat-anim-container">
                         <div class="cat-anim">
                             <!-- SVG Gatito blanco con detalles celestes -->
@@ -196,66 +120,10 @@
             </div>
         </header>
 
-        <!-- Tarjetas horizontales -->
+        <!-- Resto de la página (tarjetas, etc) -->
         <section class="py-5">
             <div class="container px-4 px-lg-5">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-bullseye"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">Nuestra Misión</div>
-                                <h2>Mejorar la vida de nuestros clientes</h2>
-                                <p>
-                                    A través de productos electrónicos de vanguardia y servicios personalizados, brindamos una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-eye"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">Nuestra Visión</div>
-                                <h2>Ser líderes en innovación tecnológica</h2>
-                                <p>
-                                    Queremos ser reconocidos en el mercado peruano por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-gem"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">Nuestros Valores</div>
-                                <h2>Lo que nos define</h2>
-                                <ul>
-                                    <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
-                                    <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
-                                    <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
-                                    <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-box-seam"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">¿Qué Ofrecemos?</div>
-                                <h2>Soluciones y servicios para ti</h2>
-                                <ul>
-                                    <li>Dispositivos móviles y equipos de cómputo</li>
-                                    <li>Accesorios tecnológicos y hogar inteligente</li>
-                                    <li>Consultoría tecnológica y soporte técnico</li>
-                                    <li>Mantenimiento y reparación</li>
-                                </ul>
-                                <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <!-- Aquí puedes colocar el resto de tu contenido como tarjetas horizontales, etc. -->
             </div>
         </section>
 
