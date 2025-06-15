@@ -24,6 +24,7 @@
         <div id="carrito-lista"></div>
         <div id="carrito-total" class="mt-4 fw-bold"></div>
         <button id="vaciarCarrito" class="btn btn-danger mt-3">Vaciar carrito</button>
+        <button id="enviarWhatsapp" class="btn btn-success mt-3 ms-2"><i class="bi bi-whatsapp"></i> Enviar pedido por WhatsApp</button>
         <!-- Aquí podrías agregar un botón para continuar con la compra -->
     </div>
     <footer class="py-5 bg-dark">
@@ -104,6 +105,24 @@
             guardarCarrito();
             renderCarrito();
         }
+    });
+
+    document.getElementById('enviarWhatsapp').addEventListener('click', function() {
+        if (carrito.length === 0) {
+            alert('Tu carrito está vacío.');
+            return;
+        }
+        let mensaje = '¡Hola! Quiero hacer un pedido:\n\n';
+        carrito.forEach(item => {
+            mensaje += `• ${item.nombre} x${item.cantidad} (s/${item.precio} c/u)\n`;
+        });
+        const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+        mensaje += `\nTotal: s/${total.toFixed(2)}\n\n¿Me pueden ayudar con la compra?`;
+
+        // Cambia el número por tu número de WhatsApp con código de país, sin signos +
+        const numeroWhatsApp = "51916907657";
+        const url = "https://wa.me/" + numeroWhatsApp + "?text=" + encodeURIComponent(mensaje);
+        window.open(url, '_blank');
     });
 
     function actualizarIconoCarrito() {
