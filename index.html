@@ -39,6 +39,7 @@
                             Carrito
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
+                        <!-- Botón en navbar -->
                         <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
                             Admin
                         </button>
@@ -69,7 +70,7 @@
         <div class="container my-5 d-none" id="adminContainer">
         </div>
 
-        <!-- Modal de Login Administrador -->
+        <!-- Modal de Login -->
         <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -188,19 +189,14 @@
 
         // Mostrar/ocultar panel según autenticación
         auth.onAuthStateChanged(user => {
-            const logoutBtnNav = document.getElementById('logoutBtnNav');
-            const adminBtn = document.getElementById('adminBtn');
-            const userEmail = document.getElementById('userEmail');
+            const adminContainer = document.getElementById('adminContainer');
             if (user) {
-                logoutBtnNav.classList.remove('d-none');
-                userEmail.classList.remove('d-none');
-                userEmail.textContent = user.email;
-                adminBtn.classList.add('d-none');
+                adminContainer.classList.remove('d-none');
+                // Opcional: Cerrar el modal de login
+                const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                if (loginModal) loginModal.hide();
             } else {
-                logoutBtnNav.classList.add('d-none');
-                userEmail.classList.add('d-none');
-                userEmail.textContent = '';
-                adminBtn.classList.remove('d-none');
+                adminContainer.classList.add('d-none');
             }
         });
 
