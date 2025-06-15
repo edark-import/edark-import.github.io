@@ -69,7 +69,7 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                         <li class="nav-item"><a class="nav-link" aria-current="page" href="index.html">Inicio</a></li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios</a>
+                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Contáctanos</a>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a class="dropdown-item" href="#">Consultoría tecnológica</a></li>
                                 <li><a class="dropdown-item" href="#">Soporte técnico</a></li>
@@ -102,11 +102,14 @@
             </div>
         </header>
 
-        <!-- Formulario de contacto con Formspree -->
+        <!-- Formulario de contacto con Formsubmit -->
         <section>
             <div class="contact-form-card shadow">
                 <h2 class="text-center"><i class="bi bi-envelope-paper"></i> Formulario de Contacto</h2>
-                <form id="contactForm" action="https://formspree.io/f/edark-import@gmail.com" method="POST" autocomplete="off">
+                <form id="contactForm" action="https://formsubmit.co/edark-import@gmail.com" method="POST" autocomplete="off">
+                    <!-- Para evitar spam, puedes agregar un campo honeypot oculto -->
+                    <input type="hidden" name="_captcha" value="false">
+                    <input type="hidden" name="_next" value="https://edark-import.github.io/contactanos.html?enviado=1">
                     <div class="mb-3">
                         <label for="nombre" class="form-label">Nombre completo</label>
                         <input type="text" class="form-control" id="nombre" name="nombre" required maxlength="60">
@@ -143,6 +146,9 @@
                     <button type="submit" class="btn btn-primary w-100">Enviar mensaje</button>
                     <div id="contactMsg"></div>
                 </form>
+                <div id="formsubmit-success" class="contact-success text-center" style="display:none;">
+                    ¡Gracias por contactarnos! Te responderemos pronto.
+                </div>
             </div>
         </section>
 
@@ -171,15 +177,11 @@
                     }
                 });
             });
-        });
 
-        // Mensaje de éxito para Formspree
-        document.getElementById('contactForm').addEventListener('submit', function(e){
-            var form = this;
-            setTimeout(function(){
-                form.reset();
-                document.getElementById('contactMsg').innerHTML = '<div class="contact-success">¡Gracias por contactarnos! Te responderemos pronto.</div>';
-            }, 1000);
+            // Mostrar mensaje de éxito si viene de Formsubmit
+            if (window.location.search.includes('enviado=1')) {
+                document.getElementById('formsubmit-success').style.display = 'block';
+            }
         });
         </script>
     </body>
