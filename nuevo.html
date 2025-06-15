@@ -339,4 +339,25 @@
                 const cb = document.getElementById(id);
                 if (cb) cb.checked = false;
                 const info = filtroMap[id];
-                if
+                if (info) {
+                    filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
+                }
+                renderBadges();
+                mostrarProductos();
+            }
+        });
+
+        function renderBadges() {
+            const container = document.getElementById('selected-filters');
+            container.innerHTML = '';
+            Object.keys(filtroMap).forEach(id => {
+                const info = filtroMap[id];
+                if (filtrosSeleccionados[info.tipo].includes(info.valor)) {
+                    container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${info.valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}"></button></span>`;
+                }
+            });
+        }
+    });
+    </script>
+</body>
+</html>
