@@ -208,8 +208,8 @@
     <!-- Firebase SDKs -->
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <!-- Tu código JS -->
     <script>
+    // Configuración de Firebase
     const firebaseConfig = {
         apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
         authDomain: "edark-proyect.firebaseapp.com",
@@ -246,7 +246,9 @@
     };
 
     // Renderiza los productos según los filtros seleccionados
+    let unsubscribe = null;
     function mostrarProductos() {
+        if (unsubscribe) unsubscribe(); // Detiene el listener anterior
         let ref = db.collection('productos');
         // Aplica filtros de Firestore solo si hay uno seleccionado por tipo
         if (filtrosSeleccionados.categoria.length === 1) {
@@ -258,8 +260,7 @@
         if (filtrosSeleccionados.unidad.length === 1) {
             ref = ref.where('unidad', '==', filtrosSeleccionados.unidad[0]);
         }
-        // Si hay más de uno por tipo, filtramos en el frontend
-        ref.onSnapshot(snapshot => {
+        unsubscribe = ref.onSnapshot(snapshot => {
             const contenedor = document.getElementById('productos');
             contenedor.innerHTML = '';
             snapshot.forEach(doc => {

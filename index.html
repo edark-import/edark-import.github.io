@@ -61,9 +61,146 @@
             </div>
         </header>
 
-        <!-- Contenedor de productos -->
-        <div class="container my-5">
-            <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+        <!-- Filtros y productos -->
+        <div class="container-fluid px-5 my-5">
+            <div class="row">
+                <!-- Filtros -->
+                <div class="col-sm-3">
+                    <div class="sticky-top" style="top: 80px; z-index: 1020;">
+                        <div class="container mt-4">
+                            <div class="sticky-top bg-white py-2 px-3 shadow-sm" style="top: 80px; z-index: 1030;">
+                                <h2>Filtros Aplicados</h2>
+                                <div id="selected-filters"></div>
+                            </div>
+                            <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
+                                <div class="accordion" id="filterAccordion">
+                                    <!-- Categorías -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter">
+                                                Categorías
+                                            </button>
+                                        </h2>
+                                        <div id="categoryFilter" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div class="accordion" id="subCategoryAccordion">
+                                                    <!-- Electrónica -->
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#electronicsSub">
+                                                                Electrónica
+                                                            </button>
+                                                        </h2>
+                                                        <div id="electronicsSub" class="accordion-collapse collapse">
+                                                            <div class="accordion-body">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Celulares" id="subcat1">
+                                                                    <label class="form-check-label" for="subcat1">Celulares</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Laptops" id="subcat2">
+                                                                    <label class="form-check-label" for="subcat2">Laptops</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Ropa -->
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clothingSub">
+                                                                Ropa
+                                                            </button>
+                                                        </h2>
+                                                        <div id="clothingSub" class="accordion-collapse collapse">
+                                                            <div class="accordion-body">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Hombres" id="subcat3">
+                                                                    <label class="form-check-label" for="subcat3">Hombres</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Mujeres" id="subcat4">
+                                                                    <label class="form-check-label" for="subcat4">Mujeres</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- Cierre subCategoryAccordion -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Marcas -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#brandFilter">
+                                                Marcas
+                                            </button>
+                                        </h2>
+                                        <div id="brandFilter" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div id="brandList">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Nike" id="brand1">
+                                                        <label class="form-check-label" for="brand1">Nike</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Samsung" id="brand2">
+                                                        <label class="form-check-label" for="brand2">Samsung</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Huawei" id="brand3">
+                                                        <label class="form-check-label" for="brand3">Huawei</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Adidas" id="brand4">
+                                                        <label class="form-check-label" for="brand4">Adidas</label>
+                                                    </div>
+                                                    <div class="form-check extra-brand d-none">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Apple" id="brand5">
+                                                        <label class="form-check-label" for="brand5">Apple</label>
+                                                    </div>
+                                                    <div class="form-check extra-brand d-none">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Puma" id="brand6">
+                                                        <label class="form-check-label" for="brand6">Puma</label>
+                                                    </div>
+                                                </div>
+                                                <a href="#" id="toggleBrands" class="text-primary d-block mt-2">Ver más</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Unidad de Medida -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uniFilter">
+                                                Unidades de Medidas
+                                            </button>
+                                        </h2>
+                                        <div id="uniFilter" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Galón" id="uni1">
+                                                    <label class="form-check-label" for="uni1">Galón</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Kilo" id="uni2">
+                                                    <label class="form-check-label" for="uni2">Kilo</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Gramo" id="uni3">
+                                                    <label class="form-check-label" for="uni3">Gramo</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Productos -->
+                <div class="col-sm-9">
+                    <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+                </div>
+            </div>
         </div>
 
         <!-- Panel de Login y Administrador -->
