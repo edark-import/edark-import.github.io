@@ -229,6 +229,12 @@
                 contactMsg.innerHTML = '<div class="contact-error">Ocurrió un error al enviar el mensaje. Intenta nuevamente.</div>';
             });
     });
+
+    function enviarPorWhatsApp(params) {
+        var mensaje = `Hola, soy ${params.nombre}.\nCorreo: ${params.correo}\nTeléfono: ${params.telefono}\nMotivo: ${params.motivo}\nPreferencia: ${params.preferencia}`;
+        var url = "https://wa.me/51916907657?text=" + encodeURIComponent(mensaje);
+        window.open(url, '_blank');
+    }
     </script>
 </body>
 </html>
