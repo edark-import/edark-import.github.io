@@ -209,8 +209,15 @@
             <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
             <form id="adminForm" class="mb-3">
                 <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
-                <input type="text" id="precio" placeholder="Precio" required class="form-control mb-2">
+                <input type="number" id="precioCompra" placeholder="Precio de compra (USD)" required class="form-control mb-2">
                 <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
+                <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">
+                <input type="text" id="subcategoria" placeholder="Subcategoría" required class="form-control mb-2">
+                <input type="text" id="marca" placeholder="Marca" required class="form-control mb-2">
+                <input type="text" id="capacidad" placeholder="Capacidad" class="form-control mb-2">
+                <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">
+                <input type="text" id="dimension" placeholder="Dimensión" class="form-control mb-2">
+                <input type="text" id="precioVenta" placeholder="Precio de venta (S/)" class="form-control mb-2" readonly>
                 <button type="submit" class="btn btn-primary">Agregar Producto</button>
             </form>
         </div>
@@ -417,14 +424,61 @@
             auth.signOut();
         });
 
-        // Agregar producto
+        // Función para obtener el tipo de cambio SUNAT (último valor)
+        async function obtenerTipoCambioSunat() {
+            try {
+                // API pública de SUNAT (puedes cambiar si tienes otra preferida)
+                const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+                const data = await res.json();
+                return parseFloat(data.venta); // tipo de cambio de venta
+            } catch (e) {
+                alert('No se pudo obtener el tipo de cambio SUNAT. Usando 3.8 por defecto.');
+                return 3.8; // valor por defecto si falla la API
+            }
+        }
+
+        // Calcula y muestra el precio de venta automáticamente
+        document.getElementById('precioCompra').addEventListener('input', async function() {
+            const precioCompra = parseFloat(this.value);
+            if (isNaN(precioCompra) || precioCompra <= 0) {
+                document.getElementById('precioVenta').value = '';
+                return;
+            }
+            const tc = await obtenerTipoCambioSunat();
+            // Fórmula: precioVenta = precioCompra * tc * 1.18 * 1.45
+            let precioVenta = precioCompra * tc * 1.18 * 1.45;
+            precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
+            document.getElementById('precioVenta').value = precioVenta;
+        });
+
+        // Al registrar el producto, guarda todos los campos
         document.getElementById('adminForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const nombre = document.getElementById('nombre').value;
-            const precio = document.getElementById('precio').value;
+            const precioCompra = parseFloat(document.getElementById('precioCompra').value);
+            const precioVenta = parseFloat(document.getElementById('precioVenta').value);
             const imagen = document.getElementById('imagen').value;
-            await db.collection('productos').add({ nombre, precio, imagen });
+            const categoria = document.getElementById('categoria').value;
+            const subcategoria = document.getElementById('subcategoria').value;
+            const marca = document.getElementById('marca').value;
+            const capacidad = document.getElementById('capacidad').value;
+            const modelo = document.getElementById('modelo').value;
+            const dimension = document.getElementById('dimension').value;
+
+            await db.collection('productos').add({
+                nombre,
+                precioCompra,
+                precio: precioVenta, // este es el precio de venta en soles
+                imagen,
+                categoria,
+                subcategoria,
+                marca,
+                capacidad,
+                modelo,
+                dimension
+            });
             this.reset();
+            document.getElementById('precioVenta').value = '';
         });
 
         // Mostrar/ocultar panel según autenticación
