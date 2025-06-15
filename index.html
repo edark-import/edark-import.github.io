@@ -164,47 +164,143 @@
         ];
 
         let valoresFiltro = {};
+        let subcategoriasPorCategoria = {};
         let filtrosSeleccionados = {};
         camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
 
+
+        // 1. Obtiene todos los valores únicos de cada campo desde Firestore
         async function cargarFiltrosDinamicos() {
             const snapshot = await db.collection('productos').get();
             valoresFiltro = {};
+            subcategoriasPorCategoria = {};
             camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
             snapshot.forEach(doc => {
                 const prod = doc.data();
                 camposFiltro.forEach(f => {
                     if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
                 });
+                // Relaciona subcategoría con categoría
+                if (prod.categoria && prod.subcategoria) {
+                    if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
+                    subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
+                }
             });
 
+            // Genera el HTML de los filtros
             let html = '';
-            camposFiltro.forEach(f => {
+            // Categoría
+            html += `
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-categoria">
+                        Categoría
+                    </button>
+                </h2>
+                <div id="filter-categoria" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+            `;
+            Array.from(valoresFiltro["categoria"]).sort().forEach(valor => {
+                const id = `filter-categoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                html += `
+                    <div class="form-check">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="categoria">
+                        <label class="form-check-label" for="${id}">${valor}</label>
+                    </div>
+                `;
+            });
+            html += `</div></div></div>`;
+
+            // Subcategoría (anidada)
+            html += `
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-subcategoria">
+                        Subcategoría
+                    </button>
+                </h2>
+                <div id="filter-subcategoria" class="accordion-collapse collapse">
+                    <div class="accordion-body" id="subcategoria-body">
+                        <!-- Subcategorías se llenan dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            `;
+
+            // Resto de filtros
+            ["marca", "capacidad", "modelo", "dimension"].forEach(campo => {
                 html += `
                 <div class="accordion-item">
                     <h2 class="accordion-header">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${f.campo}">
-                            ${f.label}
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${campo}">
+                            ${camposFiltro.find(f => f.campo === campo).label}
                         </button>
                     </h2>
-                    <div id="filter-${f.campo}" class="accordion-collapse collapse">
+                    <div id="filter-${campo}" class="accordion-collapse collapse">
                         <div class="accordion-body">
                 `;
-                Array.from(valoresFiltro[f.campo]).sort().forEach(valor => {
-                    const id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                Array.from(valoresFiltro[campo]).sort().forEach(valor => {
+                    const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
                     html += `
                         <div class="form-check">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${f.campo}">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
                             <label class="form-check-label" for="${id}">${valor}</label>
                         </div>
                     `;
                 });
                 html += `</div></div></div>`;
             });
+
             document.getElementById('dynamic-filters').innerHTML = html;
 
-            // Eventos de filtros
+            // Asigna eventos a los nuevos checkboxes
             document.querySelectorAll('.filter-checkbox').forEach(cb => {
+                cb.addEventListener('change', function () {
+                    const campo = this.dataset.campo;
+                    const valor = this.value;
+                    if (this.checked) {
+                        if (!filtrosSeleccionados[campo].includes(valor)) {
+                            filtrosSeleccionados[campo].push(valor);
+                        }
+                    } else {
+                        filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                    }
+                    if (campo === "categoria") actualizarSubcategorias();
+                    renderBadges();
+                    mostrarProductos();
+                });
+            });
+
+            actualizarSubcategorias();
+        }
+
+        // Actualiza las subcategorías según la(s) categoría(s) seleccionada(s)
+        function actualizarSubcategorias() {
+            const subcatBody = document.getElementById('subcategoria-body');
+            subcatBody.innerHTML = '';
+            let subcats = new Set();
+            if (filtrosSeleccionados["categoria"].length > 0) {
+                filtrosSeleccionados["categoria"].forEach(cat => {
+                    if (subcategoriasPorCategoria[cat]) {
+                        subcategoriasPorCategoria[cat].forEach(sc => subcats.add(sc));
+                    }
+                });
+            } else {
+                // Si no hay categoría seleccionada, muestra todas las subcategorías
+                Object.values(subcategoriasPorCategoria).forEach(set => set.forEach(sc => subcats.add(sc)));
+            }
+            Array.from(subcats).sort().forEach(valor => {
+                const id = `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                subcatBody.innerHTML += `
+                    <div class="form-check">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="subcategoria" ${filtrosSeleccionados["categoria"].length === 0 ? 'disabled' : ''}>
+                        <label class="form-check-label" for="${id}">${valor}</label>
+                    </div>
+                `;
+            });
+
+            // Reasigna eventos a los nuevos checkboxes de subcategoría
+            subcatBody.querySelectorAll('.filter-checkbox').forEach(cb => {
                 cb.addEventListener('change', function () {
                     const campo = this.dataset.campo;
                     const valor = this.value;
@@ -241,6 +337,7 @@
                 const cb = document.getElementById(id);
                 if (cb) cb.checked = false;
                 filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                if (campo === "categoria") actualizarSubcategorias();
                 renderBadges();
                 mostrarProductos();
             }
@@ -248,6 +345,10 @@
 
         // 4. Mostrar productos filtrados
         let unsubscribe = null;
+        function normalizarDimension(valor) {
+            // Elimina espacios y comillas para comparar
+            return (valor || '').toString().replace(/["'\s]/g, '').toLowerCase();
+        }
         function mostrarProductos() {
             if (unsubscribe) unsubscribe();
             unsubscribe = db.collection('productos').onSnapshot(snapshot => {
@@ -255,12 +356,22 @@
                 contenedor.innerHTML = '';
                 snapshot.forEach(doc => {
                     const prod = doc.data();
-                    // Filtra por todos los campos seleccionados
                     let mostrar = true;
                     for (const campo of camposFiltro.map(f => f.campo)) {
-                        if (filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) {
-                            mostrar = false;
-                            break;
+                        if (campo === "dimension") {
+                            // Comparación robusta para dimensión
+                            if (
+                                filtrosSeleccionados.dimension.length > 0 &&
+                                !filtrosSeleccionados.dimension.some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
+                            ) {
+                                mostrar = false;
+                                break;
+                            }
+                        } else {
+                            if (filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) {
+                                mostrar = false;
+                                break;
+                            }
                         }
                     }
                     if (mostrar) {
