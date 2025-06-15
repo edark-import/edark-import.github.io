@@ -96,7 +96,7 @@
             </div>
             <!-- Productos -->
             <div class="col-sm-9">
-                <div class="d-flex justify-content-end align-items-center mb-3">
+                <div class="d-flex justify-content-end align-items-center mb-3 flex-wrap gap-2">
                     <label class="me-2 fw-bold" for="ordenarSelect">Ordenar por:</label>
                     <select id="ordenarSelect" class="form-select ordenar-select">
                         <option value="">Por defecto</option>
@@ -105,6 +105,7 @@
                         <option value="capacidad-asc">Capacidad: Menor a mayor</option>
                         <option value="capacidad-desc">Capacidad: Mayor a menor</option>
                     </select>
+                    <input type="text" id="buscadorProductos" class="form-control ms-2" style="max-width: 250px;" placeholder="Buscar producto...">
                 </div>
                 <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
             </div>
@@ -439,6 +440,16 @@
         });
     }
 
+    let textoBusqueda = "";
+
+    // Evento para el buscador
+    document.getElementById('buscadorProductos').addEventListener('input', function() {
+        textoBusqueda = this.value.trim().toLowerCase();
+        paginaActual = 1;
+        renderProductos();
+    });
+
+    // Modifica renderProductosPaginados para filtrar por búsqueda
     function renderProductosPaginados() {
         let productos = productosCache.filter(prod => {
             let mostrar = true;
@@ -468,6 +479,17 @@
             // Filtro de precio
             if (mostrar && (typeof prod.precio === "number")) {
                 if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
+            }
+            // Filtro de búsqueda por nombre, marca o modelo
+            if (mostrar && textoBusqueda) {
+                const campos = [
+                    prod.nombre || "",
+                    prod.marca || "",
+                    prod.modelo || "",
+                    prod.categoria || "",
+                    prod.subcategoria || ""
+                ].join(" ").toLowerCase();
+                if (!campos.includes(textoBusqueda)) mostrar = false;
             }
             return mostrar;
         });
