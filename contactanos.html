@@ -158,15 +158,51 @@
     document.getElementById('contactForm').addEventListener('submit', function(e){
         e.preventDefault();
         var form = this;
+
+        // Sanitizar entradas para evitar inyección de código
+        function sanitize(input) {
+            return input.replace(/[<>&"'`]/g, function (c) {
+                return ({
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '&': '&amp;',
+                    '"': '&quot;',
+                    "'": '&#39;',
+                    '`': '&#96;'
+                })[c];
+            });
+        }
+
         var preferencias = [];
         form.querySelectorAll('input[name="preferencia"]:checked').forEach(function(cb){
-            preferencias.push(cb.value);
+            preferencias.push(sanitize(cb.value));
         });
 
-        var mensaje = `Hola, soy ${form.nombre.value}.
-Correo: ${form.correo.value}
-Teléfono: ${form.telefono.value}
-Motivo de contacto: ${form.motivo.value}
+        var nombre = sanitize(form.nombre.value.trim());
+        var correo = sanitize(form.correo.value.trim());
+        var telefono = sanitize(form.telefono.value.trim());
+        var motivo = sanitize(form.motivo.value.trim());
+
+        // Validación básica de correo
+        var correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!correoRegex.test(correo)) {
+            alert("Por favor, ingresa un correo electrónico válido.");
+            form.correo.focus();
+            return;
+        }
+
+        // Validación básica de teléfono (solo números y +)
+        var telefonoRegex = /^[0-9+ ]{7,20}$/;
+        if (telefono && !telefonoRegex.test(telefono)) {
+            alert("Por favor, ingresa un número de teléfono válido.");
+            form.telefono.focus();
+            return;
+        }
+
+        var mensaje = `Hola, soy ${nombre}.
+Correo: ${correo}
+Teléfono: ${telefono}
+Motivo de contacto: ${motivo}
 Preferencia de contacto: ${preferencias.join(', ')}`;
 
         // Cambia el número por tu número de WhatsApp con código de país, sin signos +
