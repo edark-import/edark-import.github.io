@@ -232,16 +232,21 @@
         let precios = [];
         snapshot.forEach(doc => {
             const prod = doc.data();
-            camposFiltro.forEach(f => {
-                if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
-            });
-            // Relaciona subcategoría con categoría
-            if (prod.categoria && prod.subcategoria) {
-                if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
-                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
-            }
-            if (typeof prod.precio === "number") precios.push(prod.precio);
+            prod.id = doc.id;
+            productosCache.push(prod);
         });
+        // snapshot.forEach(doc => {
+        //     const prod = doc.data();
+        //     camposFiltro.forEach(f => {
+        //         if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
+        //     });
+        //     // Relaciona subcategoría con categoría
+        //     if (prod.categoria && prod.subcategoria) {
+        //         if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
+        //         subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
+        //     }
+        //     if (typeof prod.precio === "number") precios.push(prod.precio);
+        // });
 
         // Filtro de precio
         precioMin = Math.min(...precios);
@@ -434,7 +439,9 @@
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
             productosCache = [];
             snapshot.forEach(doc => {
-                productosCache.push(doc.data());
+                const prod = doc.data();
+                prod.id = doc.id;
+                productosCache.push(prod);
             });
             paginaActual = 1;
             renderProductos();
@@ -535,7 +542,11 @@
                             </div>
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                            <div class="text-center">
+                                <button class="btn btn-primary btn-agregar-carrito mt-auto" data-id="${sanitize(prod.id || prod.nombre)}">
+                                    <i class="bi bi-cart-plus"></i> Agregar al carrito
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -588,7 +599,9 @@
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
             productosCache = [];
             snapshot.forEach(doc => {
-                productosCache.push(doc.data());
+                const prod = doc.data();
+                prod.id = doc.id;
+                productosCache.push(prod);
             });
             paginaActual = 1;
             renderProductos();
@@ -879,7 +892,11 @@
                             </div>
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                            <div class="text-center">
+                                <button class="btn btn-primary btn-agregar-carrito mt-auto" data-id="${sanitize(prod.id || prod.nombre)}">
+                                    <i class="bi bi-cart-plus"></i> Agregar al carrito
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
