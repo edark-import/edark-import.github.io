@@ -33,14 +33,18 @@
                             </ul>
                         </li>
                     </ul>
-                    <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
+                    <form class="d-flex align-items-center" id="adminNav">
+                        <button class="btn btn-outline-dark" type="button">
                             <i class="bi-cart-fill me-1"></i>
                             Carrito
                             <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
                         </button>
-                        <button class="btn btn-outline-primary ms-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
                             Admin
+                        </button>
+                        <span id="userEmail" class="ms-2 text-primary d-none"></span>
+                        <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
+                            Cerrar Sesión
                         </button>
                     </form>
                 </div>
@@ -183,9 +187,19 @@
         auth.onAuthStateChanged(user => {
             if (user) {
                 document.getElementById('adminContainer').classList.remove('d-none');
+                document.getElementById('userEmail').textContent = user.email;
+                document.getElementById('userEmail').classList.remove('d-none');
+                document.getElementById('logoutBtnNav').classList.remove('d-none');
             } else {
                 document.getElementById('adminContainer').classList.add('d-none');
+                document.getElementById('userEmail').classList.add('d-none');
+                document.getElementById('logoutBtnNav').classList.add('d-none');
             }
+        });
+
+        // Logout desde el navbar
+        document.getElementById('logoutBtnNav').addEventListener('click', function() {
+            auth.signOut();
         });
         </script>
     </body>
