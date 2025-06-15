@@ -273,24 +273,28 @@
         // Filtros
         let filtrosSeleccionados = {
             categoria: [],
+            subcategoria: [],
             marca: [],
+            capacidad: [],
+            modelo: [],
+            dimension: [],
             unidad: []
         };
 
         const filtroMap = {
-            subcat1: { tipo: 'categoria', valor: 'Celulares' },
-            subcat2: { tipo: 'categoria', valor: 'Laptops' },
-            subcat3: { tipo: 'categoria', valor: 'Hombres' },
-            subcat4: { tipo: 'categoria', valor: 'Mujeres' },
-            brand1: { tipo: 'marca', valor: 'Nike' },
-            brand2: { tipo: 'marca', valor: 'Samsung' },
-            brand3: { tipo: 'marca', valor: 'Huawei' },
-            brand4: { tipo: 'marca', valor: 'Adidas' },
-            brand5: { tipo: 'marca', valor: 'Apple' },
-            brand6: { tipo: 'marca', valor: 'Puma' },
-            uni1: { tipo: 'unidad', valor: 'Galón' },
-            uni2: { tipo: 'unidad', valor: 'Kilo' },
-            uni3: { tipo: 'unidad', valor: 'Gramo' }
+            // Categoría
+            "cat-almacenamiento": { tipo: "categoria", valor: "Almacenamiento" },
+            // Subcategoría
+            "subcat-ssd": { tipo: "subcategoria", valor: "SSD" },
+            // Marca
+            "marca-kingston": { tipo: "marca", valor: "Kingston" },
+            // Capacidad
+            "cap-500gb": { tipo: "capacidad", valor: "500GB" },
+            // Modelo
+            "modelo-a400": { tipo: "modelo", valor: "A400" },
+            // Dimensión
+            "dim-25": { tipo: "dimension", valor: "2.5\"" },
+            // ...agrega los demás filtros igual...
         };
 
         let unsubscribe = null;
@@ -314,7 +318,11 @@
                     const prod = doc.data();
                     if (
                         (filtrosSeleccionados.categoria.length === 0 || filtrosSeleccionados.categoria.includes(prod.categoria)) &&
+                        (filtrosSeleccionados.subcategoria.length === 0 || filtrosSeleccionados.subcategoria.includes(prod.subcategoria)) &&
                         (filtrosSeleccionados.marca.length === 0 || filtrosSeleccionados.marca.includes(prod.marca)) &&
+                        (filtrosSeleccionados.capacidad.length === 0 || filtrosSeleccionados.capacidad.includes(prod.capacidad)) &&
+                        (filtrosSeleccionados.modelo.length === 0 || filtrosSeleccionados.modelo.includes(prod.modelo)) &&
+                        (filtrosSeleccionados.dimension.length === 0 || filtrosSeleccionados.dimension.includes(prod.dimension)) &&
                         (filtrosSeleccionados.unidad.length === 0 || filtrosSeleccionados.unidad.includes(prod.unidad))
                     ) {
                         contenedor.innerHTML += `
