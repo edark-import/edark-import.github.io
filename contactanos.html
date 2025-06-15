@@ -229,7 +229,7 @@
             asunto: asunto
         };
 
-        emailjs.send('service_96lsn0h', 'template_0z28kwl', params)
+        emailjs.send('default_service', 'template_0z28kwl', params)
             .then(function(response) {
                 contactMsg.innerHTML = '<div class="contact-success">¡Gracias por contactarnos! Te responderemos pronto.</div>';
                 form.reset();
