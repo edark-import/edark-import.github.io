@@ -952,7 +952,22 @@
         });
     }
 
-    // ...resto del código igual...
+    // Solo muestra productos a todos y el botón de admin solo a administradores
+    
+        // Mostrar productos siempre al cargar la página
+        mostrarProductos();
+
+        // Mostrar/ocultar botón de administración según el usuario
+        auth.onAuthStateChanged(user => {
+            const btnAdmin = document.getElementById('btn-agregar-producto');
+            if (!btnAdmin) return;
+            // Cambia el email por el de tu admin real
+            if (user && user.email === 'melvin23453@gmail.com') {
+                btnAdmin.style.display = '';
+            } else {
+                btnAdmin.style.display = 'none';
+            }
+        });
     </script>
 </body>
 </html>
