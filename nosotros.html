@@ -13,36 +13,74 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <style>
-            /* Extiende los recuadros y mejora visualmente */
-            .card.mision-vision {
-                min-height: 350px;
-                transition: box-shadow 0.3s, transform 0.3s;
-                border-radius: 1.5rem;
-                border: 2px solid #222831;
-                background: #fff;
-                box-shadow: 0 4px 24px 0 rgba(34,40,49,0.08);
+            .franja-edark {
+                min-height: 320px;
+                display: flex;
+                align-items: center;
+                padding: 3rem 0;
+                transition: background 0.4s;
             }
-            .card.mision-vision:hover, .card.mision-vision.active {
-                box-shadow: 0 8px 32px 0 #22283133;
-                transform: translateY(-8px) scale(1.03);
-                border-color: #00adb5;
-                z-index: 2;
+            .franja-edark:nth-child(even) {
+                background: #222831;
+                color: #fff;
             }
-            .card.mision-vision .card-body {
-                padding: 2.5rem 2rem;
+            .franja-edark:nth-child(odd) {
+                background: #f8f9fa;
+                color: #222831;
             }
-            .card.mision-vision h4 {
-                font-size: 1.5rem;
+            .franja-edark .icono-franja {
+                font-size: 3.5rem;
+                margin-right: 2rem;
+                color: #00adb5;
+                flex-shrink: 0;
+                transition: transform 0.4s;
+            }
+            .franja-edark .icono-franja.bg {
+                color: #fff;
+                background: #00adb5;
+                border-radius: 50%;
+                padding: 0.7rem;
+            }
+            .franja-edark .contenido-franja {
+                flex: 1;
+            }
+            .franja-edark h2 {
+                font-size: 2.1rem;
+                font-weight: bold;
+                margin-bottom: 1rem;
                 letter-spacing: 0.5px;
             }
-            .card.mision-vision ul {
+            .franja-edark ul {
                 padding-left: 1.2rem;
+                margin-bottom: 0.5rem;
             }
-            /* Colores eDark */
-            .text-edark-primary { color: #00adb5; }
-            .text-edark-dark { color: #222831; }
-            .bg-edark-dark { background: #222831; }
-            .border-edark { border-color: #00adb5 !important; }
+            .franja-edark .subtitulo {
+                font-size: 1.1rem;
+                font-weight: 500;
+                color: #00adb5;
+                margin-bottom: 0.7rem;
+            }
+            /* Animación de aparición */
+            .franja-edark {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            .franja-edark.visible {
+                opacity: 1;
+                transform: translateY(0);
+                transition: opacity 0.7s, transform 0.7s;
+            }
+            /* Responsive */
+            @media (max-width: 768px) {
+                .franja-edark {
+                    flex-direction: column;
+                    text-align: center;
+                    padding: 2rem 0.5rem;
+                }
+                .franja-edark .icono-franja {
+                    margin: 0 0 1rem 0;
+                }
+            }
         </style>
     </head>
     <body>
@@ -91,82 +129,53 @@
             </div>
         </header>
 
-        <!-- Section: Nuestra Empresa -->
-        <section class="py-5 bg-light">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-4 gx-lg-5 align-items-center">
-                    <div class="col-md-6 mb-4 mb-md-0">
-                        <img src="img/Logo/logo_2.png" alt="Equipo eDark" class="img-fluid rounded shadow-sm" style="max-width: 350px;">
-                    </div>
-                    <div class="col-md-6">
-                        <h2 class="fw-bold mb-3">¿Quiénes somos?</h2>
-                        <p class="mb-2">
-                            Fundada con el propósito de acercar la tecnología a todos, <b>eDark EIRL</b> se ha consolidado como un referente en el mercado peruano gracias a su enfoque en la calidad, la atención personalizada y la innovación constante.
-                        </p>
-                        <p>
-                            Nos especializamos en la venta de dispositivos electrónicos, accesorios, soluciones para el hogar inteligente y servicios de soporte técnico, siempre buscando superar las expectativas de nuestros clientes.
-                        </p>
-                    </div>
+        <!-- Franjas horizontales -->
+        <section>
+            <div class="franja-edark">
+                <div class="icono-franja"><i class="bi bi-bullseye"></i></div>
+                <div class="contenido-franja">
+                    <div class="subtitulo">Nuestra Misión</div>
+                    <h2>Mejorar la vida de nuestros clientes</h2>
+                    <p>
+                        A través de productos electrónicos de vanguardia y servicios personalizados, brindamos una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
+                    </p>
                 </div>
             </div>
-        </section>
-
-        <!-- Section: Misión, Visión, Valores, Ofrecemos -->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5">
-                <div class="row gx-5 gy-4 row-cols-1 row-cols-md-2 row-cols-xl-4 justify-content-center">
-                    <div class="col mb-4">
-                        <div class="card h-100 shadow-sm border-0 mision-vision" data-anim="true">
-                            <div class="card-body">
-                                <h4 class="fw-bolder mb-3 text-edark-primary"><i class="bi bi-bullseye"></i> Nuestra Misión</h4>
-                                <p>
-                                    Mejorar la vida de nuestros clientes a través de productos electrónicos de vanguardia y servicios personalizados, brindando una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-4">
-                        <div class="card h-100 shadow-sm border-0 mision-vision" data-anim="true">
-                            <div class="card-body">
-                                <h4 class="fw-bolder mb-3 text-success"><i class="bi bi-eye"></i> Nuestra Visión</h4>
-                                <p>
-                                    Ser líderes en el mercado peruano de productos electrónicos, reconocidos por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-4">
-                        <div class="card h-100 shadow-sm border-0 mision-vision" data-anim="true">
-                            <div class="card-body">
-                                <h4 class="fw-bolder mb-3 text-warning"><i class="bi bi-gem"></i> Nuestros Valores</h4>
-                                <ul class="mb-0">
-                                    <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
-                                    <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
-                                    <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
-                                    <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-4">
-                        <div class="card h-100 shadow-sm border-0 mision-vision" data-anim="true">
-                            <div class="card-body">
-                                <h4 class="fw-bolder mb-3 text-info"><i class="bi bi-box-seam"></i> ¿Qué Ofrecemos?</h4>
-                                <ul>
-                                    <li>Dispositivos móviles</li>
-                                    <li>Equipos de cómputo</li>
-                                    <li>Accesorios tecnológicos</li>
-                                    <li>Soluciones de hogar inteligente</li>
-                                </ul>
-                                <ul>
-                                    <li>Consultoría tecnológica</li>
-                                    <li>Mantenimiento y reparación</li>
-                                    <li>Soporte técnico personalizado</li>
-                                </ul>
-                                <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
-                            </div>
-                        </div>
-                    </div>
+            <div class="franja-edark">
+                <div class="icono-franja bg"><i class="bi bi-eye"></i></div>
+                <div class="contenido-franja">
+                    <div class="subtitulo">Nuestra Visión</div>
+                    <h2>Ser líderes en innovación tecnológica</h2>
+                    <p>
+                        Queremos ser reconocidos en el mercado peruano por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
+                    </p>
+                </div>
+            </div>
+            <div class="franja-edark">
+                <div class="icono-franja"><i class="bi bi-gem"></i></div>
+                <div class="contenido-franja">
+                    <div class="subtitulo">Nuestros Valores</div>
+                    <h2>Lo que nos define</h2>
+                    <ul>
+                        <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
+                        <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
+                        <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
+                        <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="franja-edark">
+                <div class="icono-franja bg"><i class="bi bi-box-seam"></i></div>
+                <div class="contenido-franja">
+                    <div class="subtitulo">¿Qué Ofrecemos?</div>
+                    <h2>Soluciones y servicios para ti</h2>
+                    <ul>
+                        <li>Dispositivos móviles y equipos de cómputo</li>
+                        <li>Accesorios tecnológicos y hogar inteligente</li>
+                        <li>Consultoría tecnológica y soporte técnico</li>
+                        <li>Mantenimiento y reparación</li>
+                    </ul>
+                    <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
                 </div>
             </div>
         </section>
@@ -181,37 +190,33 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <!-- Animación de tarjetas -->
+        <!-- Animación de franjas -->
         <script>
-        // Animación de tarjetas al pasar el mouse y al hacer scroll
+        // Animación de aparición de franjas al hacer scroll
         document.addEventListener('DOMContentLoaded', function () {
-            // Efecto de resalte al pasar el mouse
-            document.querySelectorAll('.mision-vision[data-anim]').forEach(card => {
-                card.addEventListener('mouseenter', () => card.classList.add('active'));
-                card.addEventListener('mouseleave', () => card.classList.remove('active'));
-            });
-
-            // Efecto de aparición al hacer scroll (fade in)
             function isInViewport(el) {
                 const rect = el.getBoundingClientRect();
                 return (
                     rect.top < window.innerHeight - 50 && rect.bottom > 0
                 );
             }
-            function animateCardsOnScroll() {
-                document.querySelectorAll('.mision-vision[data-anim]').forEach(card => {
-                    if (isInViewport(card)) {
-                        card.style.opacity = 1;
-                        card.style.transform = "translateY(0)";
-                        card.style.transition = "opacity 0.6s, transform 0.6s";
+            function animateFranjasOnScroll() {
+                document.querySelectorAll('.franja-edark').forEach(franja => {
+                    if (isInViewport(franja)) {
+                        franja.classList.add('visible');
                     } else {
-                        card.style.opacity = 0;
-                        card.style.transform = "translateY(20px)";
+                        franja.classList.remove('visible');
                     }
                 });
             }
-            animateCardsOnScroll();
-            window.addEventListener('scroll', animateCardsOnScroll);
+            window.addEventListener('scroll', animateFranjasOnScroll);
+            animateFranjasOnScroll();
+
+            // Efecto de icono al pasar mouse
+            document.querySelectorAll('.franja-edark .icono-franja').forEach(icono => {
+                icono.addEventListener('mouseenter', () => icono.style.transform = 'scale(1.18) rotate(-8deg)');
+                icono.addEventListener('mouseleave', () => icono.style.transform = '');
+            });
         });
         </script>
     </body>
