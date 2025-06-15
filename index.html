@@ -185,19 +185,23 @@
 
         // Mostrar/ocultar panel según autenticación
         auth.onAuthStateChanged(user => {
+            const logoutBtnNav = document.getElementById('logoutBtnNav');
+            const adminBtn = document.getElementById('adminBtn');
+            const userEmail = document.getElementById('userEmail');
             if (user) {
-                document.getElementById('adminContainer').classList.remove('d-none');
-                document.getElementById('userEmail').textContent = user.email;
-                document.getElementById('userEmail').classList.remove('d-none');
-                document.getElementById('logoutBtnNav').classList.remove('d-none');
+                logoutBtnNav.classList.remove('d-none');
+                userEmail.classList.remove('d-none');
+                userEmail.textContent = user.email;
+                adminBtn.classList.add('d-none');
             } else {
-                document.getElementById('adminContainer').classList.add('d-none');
-                document.getElementById('userEmail').classList.add('d-none');
-                document.getElementById('logoutBtnNav').classList.add('d-none');
+                logoutBtnNav.classList.add('d-none');
+                userEmail.classList.add('d-none');
+                userEmail.textContent = '';
+                adminBtn.classList.remove('d-none');
             }
         });
 
-        // Logout desde el navbar
+        // Botón cerrar sesión en navbar
         document.getElementById('logoutBtnNav').addEventListener('click', function() {
             auth.signOut();
         });
