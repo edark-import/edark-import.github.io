@@ -1,43 +1,22 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
+    <meta name="description" content="Catálogo de productos eDark" />
+    <meta name="author" content="eDark EIRL" />
     <title>eDark</title>
-    <!-- Favicon-->
     <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
-    <!-- Bootstrap icons-->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-    <!-- Core theme CSS (includes Bootstrap)-->
     <link href="css/styles.css" rel="stylesheet" />
     <style>
-        .filtros-container .form-range::-webkit-slider-thumb {
-            background: #00adb5;
-        }
-        .filtros-container .form-range::-moz-range-thumb {
-            background: #00adb5;
-        }
-        .filtros-container .form-range::-ms-thumb {
-            background: #00adb5;
-        }
-        .filtros-container .form-range:focus::-webkit-slider-thumb {
-            box-shadow: 0 0 0 0.25rem #00adb555;
-        }
-        .ordenar-select {
-            max-width: 220px;
-        }
-        /* Submenú para Bootstrap 5 */
-        .dropdown-submenu {
-            position: relative;
-        }
-        .dropdown-submenu > .dropdown-menu {
-            top: 0;
-            left: 100%;
-            margin-left: 0.1rem;
-            margin-right: 0.1rem;
-        }
+        .filtros-container .form-range::-webkit-slider-thumb { background: #00adb5; }
+        .filtros-container .form-range::-moz-range-thumb { background: #00adb5; }
+        .filtros-container .form-range::-ms-thumb { background: #00adb5; }
+        .filtros-container .form-range:focus::-webkit-slider-thumb { box-shadow: 0 0 0 0.25rem #00adb555; }
+        .ordenar-select { max-width: 220px; }
+        .dropdown-submenu { position: relative; }
+        .dropdown-submenu > .dropdown-menu { top: 0; left: 100%; margin-left: 0.1rem; margin-right: 0.1rem; }
     </style>
 </head>
 <body>
@@ -184,7 +163,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script>
-    // Configuración de Firebase (corrige storageBucket)
+    // --- CONFIGURACIÓN FIREBASE ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
         authDomain: "edark-proyect.firebaseapp.com",
@@ -194,11 +173,37 @@
         appId: "1:705929141287:web:f16389625de554d6790202",
         measurementId: "G-V89W8SCSH1"
     };
-
     firebase.initializeApp(firebaseConfig);
     const db = firebase.firestore();
     const auth = firebase.auth();
 
+    // --- SEGURIDAD Y VALIDACIONES ---
+    function sanitize(str) {
+        return String(str).replace(/[<>&"'`]/g, c => ({
+            '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;', '`': '&#96;'
+        })[c]);
+    }
+    function safeImageUrl(url) {
+        try {
+            const u = new URL(url, window.location.origin);
+            if (u.protocol === "http:" || u.protocol === "https:") return url;
+        } catch { }
+        return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
+    }
+    // Forzar HTTPS
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+        location.href = 'https://' + location.hostname + location.pathname + location.search;
+    }
+    // Protección clickjacking
+    if (window.top !== window.self) window.top.location = window.self.location;
+
+    // --- VARIABLES GLOBALES ---
+    // let productosCache = [];
+    let paginaActual = 1;
+    const productosPorPagina = 16;
+    let unsubscribe = null;
+
+    // --- FUNCIONES DE FILTROS Y PAGINACIÓN ---
     // Filtros anidados y filtro de precio
     const camposFiltro = [
         { campo: "categoria", label: "Categoría" },
@@ -421,20 +426,7 @@
         }
     });
 
-    let unsubscribe = null;
-    let productosCache = [];
-    function normalizarDimension(valor) {
-        return (valor || '').toString().replace(/["'\s]/g, '').toLowerCase();
-    }
-    function parseCapacidad(valor) {
-        // Convierte "256 GB", "1 TB", etc. a número de GB para ordenar
-        if (!valor) return 0;
-        let v = valor.toUpperCase().replace(/\s/g, '');
-        if (v.endsWith("TB")) return parseFloat(v) * 1024;
-        if (v.endsWith("GB")) return parseFloat(v);
-        if (v.endsWith("MB")) return parseFloat(v) / 1024;
-        return parseFloat(v) || 0;
-    }
+    // --- MOSTRAR PRODUCTOS CON PAGINACIÓN Y SEGURIDAD ---
     function mostrarProductos() {
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
@@ -442,17 +434,17 @@
             snapshot.forEach(doc => {
                 productosCache.push(doc.data());
             });
-            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
+            paginaActual = 1;
             renderProductos();
         });
     }
 
-    function renderProductos() {
+    function renderProductosPaginados() {
         let productos = productosCache.filter(prod => {
             let mostrar = true;
             // Categoría
             if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría (solo si la categoría asociada está seleccionada)
+            // Subcategoría
             if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
                 let subcatOk = false;
                 for (const cat of filtrosSeleccionados["categoria"]) {
@@ -567,13 +559,30 @@
         renderProductosPaginados();
     }
 
-    document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
+    // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
+            });
+            paginaActual = 1;
+            renderProductos();
+        });
+    }
 
-    document.addEventListener('DOMContentLoaded', async function () {
-        await cargarFiltrosDinamicos();
-        renderBadges();
-        mostrarProductos();
-    });
+    // --- REGLA DE SEGURIDAD FIRESTORE (configura en la consola de Firebase) ---
+    /*
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /productos/{document} {
+          allow read: if true;
+          allow write: if request.auth != null && request.auth.token.admin == true;
+        }
+      }
+    }
+    */
 
     // Login
     document.addEventListener('DOMContentLoaded', function() {
@@ -759,16 +768,27 @@
 
     // 8. Limita la cantidad de productos por página (ya está en 16)
     let productosCache = [];
-    let paginaActual = 1;
-    const productosPorPagina = 16;
+    // let paginaActual = 1; // Eliminado para evitar redeclaración
+    // const productosPorPagina = 16; // Eliminado para evitar redeclaración
 
-    function renderProductosPaginados() {
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
+            });
+            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
+            renderProductos();
+        });
+    }
+
+    function renderProductos() {
         let productos = productosCache.filter(prod => {
             let mostrar = true;
-            // ...filtros igual que antes...
             // Categoría
             if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría
+            // Subcategoría (solo si la categoría asociada está seleccionada)
             if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
                 let subcatOk = false;
                 for (const cat of filtrosSeleccionados["categoria"]) {
@@ -882,6 +902,14 @@
     function renderProductos() {
         renderProductosPaginados();
     }
+
+    document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        await cargarFiltrosDinamicos();
+        renderBadges();
+        mostrarProductos();
+    });
 
     // --- HTTPS enforcement (solo si tienes backend o service worker) ---
     if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
