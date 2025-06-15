@@ -232,21 +232,9 @@
         let precios = [];
         snapshot.forEach(doc => {
             const prod = doc.data();
-            prod.id = doc.id; // <--- Esto es clave
-            productosCache.push(prod);
+prod.id = doc.id;
+productosCache.push(prod);
         });
-        // snapshot.forEach(doc => {
-        //     const prod = doc.data();
-        //     camposFiltro.forEach(f => {
-        //         if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
-        //     });
-        //     // Relaciona subcategoría con categoría
-        //     if (prod.categoria && prod.subcategoria) {
-        //         if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
-        //         subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
-        //     }
-        //     if (typeof prod.precio === "number") precios.push(prod.precio);
-        // });
 
         // Filtro de precio
         precioMin = Math.min(...precios);
@@ -440,8 +428,8 @@
             productosCache = [];
             snapshot.forEach(doc => {
                 const prod = doc.data();
-                prod.id = doc.id; // <--- Esto es clave
-                productosCache.push(prod);
+prod.id = doc.id;
+productosCache.push(prod);
             });
             paginaActual = 1;
             renderProductos();
@@ -600,8 +588,8 @@
             productosCache = [];
             snapshot.forEach(doc => {
                 const prod = doc.data();
-                prod.id = doc.id; // <--- Esto es clave
-                productosCache.push(prod);
+prod.id = doc.id;
+productosCache.push(prod);
             });
             paginaActual = 1;
             renderProductos();
