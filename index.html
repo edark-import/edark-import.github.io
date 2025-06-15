@@ -97,900 +97,901 @@
             <!-- Productos -->
             <div class="col-sm-9">
                 <div class="d-flex justify-content-end align-items-center mb-3 flex-wrap gap-2">
-                    <label class="me-2 fw-bold" for="ordenarSelect">Ordenar por:</label>
-                    <select id="ordenarSelect" class="form-select ordenar-select">
-                        <option value="">Por defecto</option>
+                    <label class="me-2 fw-bold" for="ordenarSelect">Ordenar por:</label> gap-2">
+                    <select id="ordenarSelect" class="form-select ordenar-select">label>
+                        <option value="">Por defecto</option>lect ordenar-select">
                         <option value="precio-asc">Precio: Menor a mayor</option>
                         <option value="precio-desc">Precio: Mayor a menor</option>
                         <option value="capacidad-asc">Capacidad: Menor a mayor</option>
                         <option value="capacidad-desc">Capacidad: Mayor a menor</option>
-                    </select>
+                    </select>on value="capacidad-desc">Capacidad: Mayor a menor</option>
                     <input type="text" id="buscadorProductos" class="form-control ms-2" style="max-width: 250px;" placeholder="Buscar producto...">
-                </div>
+                </div>nput type="text" id="buscadorProductos" class="form-control ms-2" style="max-width: 250px;" placeholder="Buscar producto...">
                 <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
-            </div>
-        </div>
+            </div>iv id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+        </div>div>
+    </div>div>
     </div>
-
     <!-- Panel de Login y Administrador -->
     <div class="container my-5 d-none" id="adminContainer">
-        <h3>Panel Administrador</h3>
+        <h3>Panel Administrador</h3>e" id="adminContainer">
         <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
-        <form id="adminForm" class="mb-3">
+        <form id="adminForm" class="mb-3">btn-danger mb-3">Cerrar Sesión</button>
             <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
             <input type="number" id="precioCompra" placeholder="Precio de compra (USD)" required class="form-control mb-2">
-            <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
-            <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">
+            <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">control mb-2">
+            <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">-2">
             <input type="text" id="subcategoria" placeholder="Subcategoría" required class="form-control mb-2">
-            <input type="text" id="marca" placeholder="Marca" required class="form-control mb-2">
-            <input type="text" id="capacidad" placeholder="Capacidad" class="form-control mb-2">
-            <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">
+            <input type="text" id="marca" placeholder="Marca" required class="form-control mb-2">control mb-2">
+            <input type="text" id="capacidad" placeholder="Capacidad" class="form-control mb-2">>
+            <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">mb-2">
             <input type="text" id="dimension" placeholder="Dimensión" class="form-control mb-2">
             <input type="text" id="precioVenta" placeholder="Precio de venta (S/)" class="form-control mb-2" readonly>
-            <button type="submit" class="btn btn-primary">Agregar Producto</button>
-        </form>
+            <button type="submit" class="btn btn-primary">Agregar Producto</button>class="form-control mb-2" readonly>
+        </form>tton type="submit" class="btn btn-primary">Agregar Producto</button>
+    </div>form>
     </div>
-
     <!-- Modal de Login Administrador -->
     <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
+      <div class="modal-dialog">loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión Administrador</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
+          </div>ton type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
           <div class="modal-body">
-            <form id="loginForm">
+            <form id="loginForm">>
               <input type="email" id="loginEmail" placeholder="Correo" required class="form-control mb-2">
               <input type="password" id="loginPassword" placeholder="Contraseña" required class="form-control mb-2">
-              <button type="submit" class="btn btn-primary">Ingresar</button>
-              <div id="loginError" class="text-danger mt-2"></div>
-            </form>
-          </div>
-        </div>
-      </div>
+              <button type="submit" class="btn btn-primary">Ingresar</button>ña" required class="form-control mb-2">
+              <div id="loginError" class="text-danger mt-2"></div>ar</button>
+            </form>id="loginError" class="text-danger mt-2"></div>
+          </div>rm>
+        </div>v>
+      </div>v>
+    </div>v>
     </div>
-
     <!-- Footer-->
     <footer class="py-5 bg-dark">
         <div class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
-    </footer>
+    </footer>class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
     <!-- Bootstrap core JS-->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Core theme JS-->
+    <!-- Core theme JS-->cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/scripts.js"></script>
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDKs -->s.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
-    <script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>ript>
+    <script>src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     // --- CONFIGURACIÓN FIREBASE ---
-    const firebaseConfig = {
+    const firebaseConfig = {EBASE ---
         apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
-        authDomain: "edark-proyect.firebaseapp.com",
-        projectId: "edark-proyect",
+        authDomain: "edark-proyect.firebaseapp.com",uvx4",
+        projectId: "edark-proyect",firebaseapp.com",
         storageBucket: "edark-proyect.appspot.com",
-        messagingSenderId: "705929141287",
+        messagingSenderId: "705929141287",pot.com",
         appId: "1:705929141287:web:f16389625de554d6790202",
-        measurementId: "G-V89W8SCSH1"
-    };
+        measurementId: "G-V89W8SCSH1"6389625de554d6790202",
+    };  measurementId: "G-V89W8SCSH1"
     firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const db = firebase.firestore();onfig);
+    const auth = firebase.auth();();
     const auth = firebase.auth();
-
     // --- SEGURIDAD Y VALIDACIONES ---
-    function sanitize(str) {
+    function sanitize(str) {ACIONES ---
         return String(str).replace(/[<>&"'`]/g, c => ({
             '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;', '`': '&#96;'
-        })[c]);
-    }
+        })[c]);: '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;', '`': '&#96;'
+    }   })[c]);
     function safeImageUrl(url) {
-        try {
+        try {safeImageUrl(url) {
             const u = new URL(url, window.location.origin);
             if (u.protocol === "http:" || u.protocol === "https:") return url;
-        } catch { }
+        } catch { }rotocol === "http:" || u.protocol === "https:") return url;
         return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
-    }
+    }   return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
     // Forzar HTTPS
     if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
         location.href = 'https://' + location.hostname + location.pathname + location.search;
-    }
+    }   location.href = 'https://' + location.hostname + location.pathname + location.search;
     // Protección clickjacking
     if (window.top !== window.self) window.top.location = window.self.location;
-
+    if (window.top !== window.self) window.top.location = window.self.location;
     // --- VARIABLES GLOBALES ---
-    // let productosCache = [];
-    let paginaActual = 1;
+    // let productosCache = [];--
+    let paginaActual = 1; = [];
     const productosPorPagina = 15;
+    let unsubscribe = null;a = 15;
     let unsubscribe = null;
-
     // --- FUNCIONES DE FILTROS Y PAGINACIÓN ---
-    // Filtros anidados y filtro de precio
-    const camposFiltro = [
+    // Filtros anidados y filtro de precioÓN ---
+    const camposFiltro = [filtro de precio
         { campo: "categoria", label: "Categoría" },
         { campo: "subcategoria", label: "Subcategoría", parent: "categoria" },
-        { campo: "marca", label: "Marca" },
+        { campo: "marca", label: "Marca" },bcategoría", parent: "categoria" },
         { campo: "capacidad", label: "Capacidad" },
-        { campo: "modelo", label: "Modelo" },
+        { campo: "modelo", label: "Modelo" },ad" },
         { campo: "dimension", label: "Dimensión" }
+    ];  { campo: "dimension", label: "Dimensión" }
     ];
-
     let valoresFiltro = {};
     let subcategoriasPorCategoria = {};
-    let filtrosSeleccionados = {};
+    let filtrosSeleccionados = {};= {};
     camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
-    // Filtro de precio
+    // Filtro de precioh(f => filtrosSeleccionados[f.campo] = []);
     let precioMin = 0, precioMax = 0, precioFiltroMin = 0, precioFiltroMax = 0;
-
+    let precioMin = 0, precioMax = 0, precioFiltroMin = 0, precioFiltroMax = 0;
     // 1. Obtiene todos los valores únicos de cada campo desde Firestore
-    async function cargarFiltrosDinamicos() {
+    async function cargarFiltrosDinamicos() { cada campo desde Firestore
         const snapshot = await db.collection('productos').get();
-        valoresFiltro = {};
+        valoresFiltro = {};ait db.collection('productos').get();
         subcategoriasPorCategoria = {};
         camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
-        let precios = [];
+        let precios = [];ach(f => valoresFiltro[f.campo] = new Set());
         snapshot.forEach(doc => {
             const prod = doc.data();
             camposFiltro.forEach(f => {
                 if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
-            });
+            }); if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
             // Relaciona subcategoría con categoría
             if (prod.categoria && prod.subcategoria) {
                 if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
-                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
-            }
+                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);ategoria[prod.categoria] = new Set();
+            }   subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
             if (typeof prod.precio === "number") precios.push(prod.precio);
+        }); if (typeof prod.precio === "number") precios.push(prod.precio);
         });
-
         // Filtro de precio
         precioMin = Math.min(...precios);
         precioMax = Math.max(...precios);
-        precioFiltroMin = precioMin;
+        precioFiltroMin = precioMin;ios);
         precioFiltroMax = precioMax;
-
+        precioFiltroMax = precioMax;
         // Genera el HTML de los filtros
+        let html = '';TML de los filtros
         let html = '';
-
         // Filtro de precio
-        html += `
+        html += ` de precio
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-precio">
-                    Precio (S/)
-                </button>
-            </h2>
+                    Precio (S/)accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-precio">
+                </button>o (S/)
+            </h2>/button>
             <div id="filter-precio" class="accordion-collapse collapse">
-                <div class="accordion-body">
-                    <div class="mb-2">
+                <div class="accordion-body">ccordion-collapse collapse">
+                    <div class="mb-2">body">
                         <label for="precioMin" class="form-label">Mínimo: <span id="precioMinLabel">${precioMin}</span></label>
                         <input type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMin}" id="precioMin">
-                    </div>
-                    <div>
+                    </div>nput type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMin}" id="precioMin">
+                    <div>>
                         <label for="precioMax" class="form-label">Máximo: <span id="precioMaxLabel">${precioMax}</span></label>
                         <input type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMax}" id="precioMax">
-                    </div>
-                </div>
-            </div>
-        </div>
+                    </div>nput type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMax}" id="precioMax">
+                </div>div>
+            </div>div>
+        </div>div>
+        `;div>
         `;
-
         // Categoría y subcategoría anidados
-        html += `
+        html += `ría y subcategoría anidados
         <div class="accordion-item">
             <h2 class="accordion-header">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-categoria">
-                    Categoría
-                </button>
-            </h2>
+                    Categoría="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-categoria">
+                </button>oría
+            </h2>/button>
             <div id="filter-categoria" class="accordion-collapse collapse">
-                <div class="accordion-body" id="categoria-body">
-        `;
+                <div class="accordion-body" id="categoria-body"> collapse">
+        `;      <div class="accordion-body" id="categoria-body">
         Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
             const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
-            html += `
+            html += `Id = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
                 <div class="form-check mb-1">
                     <input class="form-check-input filter-checkbox" type="checkbox" value="${categoria}" id="${catId}" data-campo="categoria">
-                    <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
-                </div>
-            `;
+                    <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>tegoria}" id="${catId}" data-campo="categoria">
+                </div>abel class="form-check-label fw-bold" for="${catId}">${categoria}</label>
+            `;  </div>
             // Subcategorías anidadas
             if (subcategoriasPorCategoria[categoria]) {
                 Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
                     const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
-                    html += `
+                    html += `catId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
                         <div class="form-check ms-4">
                             <input class="form-check-input filter-checkbox" type="checkbox" value="${subcat}" id="${subcatId}" data-campo="subcategoria" data-parent="${categoria}">
-                            <label class="form-check-label" for="${subcatId}">${subcat}</label>
-                        </div>
-                    `;
-                });
-            }
-        });
+                            <label class="form-check-label" for="${subcatId}">${subcat}</label>ue="${subcat}" id="${subcatId}" data-campo="subcategoria" data-parent="${categoria}">
+                        </div>abel class="form-check-label" for="${subcatId}">${subcat}</label>
+                    `;  </div>
+                }); `;
+            }   });
+        }); }
         html += `</div></div></div>`;
-
+        html += `</div></div></div>`;
         // Resto de filtros
         ["marca", "capacidad", "modelo", "dimension"].forEach(campo => {
-            html += `
+            html += `pacidad", "modelo", "dimension"].forEach(campo => {
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${campo}">
-                        ${camposFiltro.find(f => f.campo === campo).label}
-                    </button>
-                </h2>
+                        ${camposFiltro.find(f => f.campo === campo).label}n" data-bs-toggle="collapse" data-bs-target="#filter-${campo}">
+                    </button>posFiltro.find(f => f.campo === campo).label}
+                </h2>/button>
                 <div id="filter-${campo}" class="accordion-collapse collapse">
-                    <div class="accordion-body">
-            `;
+                    <div class="accordion-body">"accordion-collapse collapse">
+            `;      <div class="accordion-body">
             Array.from(valoresFiltro[campo]).sort().forEach(valor => {
                 const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-                html += `
+                html += `= `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
                     <div class="form-check">
                         <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
-                        <label class="form-check-label" for="${id}">${valor}</label>
-                    </div>
-                `;
-            });
+                        <label class="form-check-label" for="${id}">${valor}</label>ox" value="${valor}" id="${id}" data-campo="${campo}">
+                    </div>abel class="form-check-label" for="${id}">${valor}</label>
+                `;  </div>
+            }); `;
             html += `</div></div></div>`;
+        }); html += `</div></div></div>`;
         });
-
         document.getElementById('dynamic-filters').innerHTML = html;
-
+        document.getElementById('dynamic-filters').innerHTML = html;
         // Eventos para filtros
         document.querySelectorAll('.filter-checkbox').forEach(cb => {
-            cb.addEventListener('change', function () {
-                const campo = this.dataset.campo;
-                const valor = this.value;
-                if (this.checked) {
+            cb.addEventListener('change', function () {orEach(cb => {
+                const campo = this.dataset.campo;n () {
+                const valor = this.value;t.campo;
+                if (this.checked) {value;
                     if (!filtrosSeleccionados[campo].includes(valor)) {
-                        filtrosSeleccionados[campo].push(valor);
-                    }
+                        filtrosSeleccionados[campo].push(valor);lor)) {
+                    }   filtrosSeleccionados[campo].push(valor);
                 } else {
                     filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-                }
+                }   filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
                 renderBadges();
                 mostrarProductos();
-            });
+            }); mostrarProductos();
+        }); });
         });
-
         // Filtro de precio
         document.getElementById('precioMin').addEventListener('input', function () {
-            let min = parseInt(this.value);
+            let min = parseInt(this.value);).addEventListener('input', function () {
             let max = parseInt(document.getElementById('precioMax').value);
-            if (min > max) {
-                min = max;
+            if (min > max) {nt(document.getElementById('precioMax').value);
+                min = max; {
                 this.value = min;
-            }
+            }   this.value = min;
             precioFiltroMin = min;
             document.getElementById('precioMinLabel').textContent = min;
-            mostrarProductos();
-        });
+            mostrarProductos();ById('precioMinLabel').textContent = min;
+        }); mostrarProductos();
         document.getElementById('precioMax').addEventListener('input', function () {
-            let max = parseInt(this.value);
+            let max = parseInt(this.value);).addEventListener('input', function () {
             let min = parseInt(document.getElementById('precioMin').value);
-            if (max < min) {
-                max = min;
+            if (max < min) {nt(document.getElementById('precioMin').value);
+                max = min; {
                 this.value = max;
-            }
+            }   this.value = max;
             precioFiltroMax = max;
             document.getElementById('precioMaxLabel').textContent = max;
-            mostrarProductos();
-        });
+            mostrarProductos();ById('precioMaxLabel').textContent = max;
+        }); mostrarProductos();
+    }   });
     }
-
     function renderBadges() {
         const container = document.getElementById('selected-filters');
-        container.innerHTML = '';
+        container.innerHTML = '';t.getElementById('selected-filters');
         camposFiltro.forEach(f => {
             filtrosSeleccionados[f.campo].forEach(valor => {
-                let id;
+                let id;ccionados[f.campo].forEach(valor => {
                 if (f.campo === "subcategoria") {
                     // Busca la categoría asociada para el id
-                    let cat = null;
+                    let cat = null;egoría asociada para el id
                     for (const c in subcategoriasPorCategoria) {
                         if (subcategoriasPorCategoria[c].has(valor)) {
-                            cat = c;
-                            break;
-                        }
-                    }
+                            cat = c;oriasPorCategoria[c].has(valor)) {
+                            break;c;
+                        }   break;
+                    }   }
                     id = `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}-cat-${cat ? cat.replace(/[^a-zA-Z0-9]/g, '') : ''}`;
-                } else {
+                } else { `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}-cat-${cat ? cat.replace(/[^a-zA-Z0-9]/g, '') : ''}`;
                     id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-                }
+                }   id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
                 container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
-            });
-        });
+            }); container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
+        }); });
         // Badge de precio
         if (precioFiltroMin > precioMin || precioFiltroMax < precioMax) {
             container.innerHTML += `<span class="mt-2 badge bg-info me-2 filter-badge" data-id="precio-badge">S/${precioFiltroMin} - S/${precioFiltroMax} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="precio-badge" data-campo="precio"></button></span>`;
-        }
+        }   container.innerHTML += `<span class="mt-2 badge bg-info me-2 filter-badge" data-id="precio-badge">S/${precioFiltroMin} - S/${precioFiltroMax} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="precio-badge" data-campo="precio"></button></span>`;
+    }   }
     }
-
     document.getElementById('selected-filters').addEventListener('click', function (e) {
-        if (e.target.classList.contains('remove-filter')) {
-            const campo = e.target.dataset.campo;
+        if (e.target.classList.contains('remove-filter')) {tener('click', function (e) {
+            const campo = e.target.dataset.campo;ilter')) {
             const valor = e.target.dataset.valor;
-            const id = e.target.dataset.id;
-            if (campo === "precio") {
-                // Reset precio
+            const id = e.target.dataset.id;valor;
+            if (campo === "precio") {et.id;
+                // Reset precioio") {
                 precioFiltroMin = precioMin;
                 precioFiltroMax = precioMax;
                 document.getElementById('precioMin').value = precioMin;
                 document.getElementById('precioMax').value = precioMax;
                 document.getElementById('precioMinLabel').textContent = precioMin;
                 document.getElementById('precioMaxLabel').textContent = precioMax;
-            } else {
+            } else {ment.getElementById('precioMaxLabel').textContent = precioMax;
                 const cb = document.getElementById(id);
-                if (cb) cb.checked = false;
+                if (cb) cb.checked = false;entById(id);
                 filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-            }
+            }   filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
             renderBadges();
             mostrarProductos();
-        }
+        }   mostrarProductos();
+    }); }
     });
-
     // --- MOSTRAR PRODUCTOS CON PAGINACIÓN Y SEGURIDAD ---
-    function mostrarProductos() {
+    function mostrarProductos() {PAGINACIÓN Y SEGURIDAD ---
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
+            productosCache = [];ion('productos').onSnapshot(snapshot => {
             snapshot.forEach(doc => {
                 productosCache.push(doc.data());
-            });
+            }); productosCache.push(doc.data());
             paginaActual = 1;
             renderProductos();
-        });
+        }); renderProductos();
+    }   });
     }
-
     let textoBusqueda = "";
-
+    let textoBusqueda = "";
     // Evento para el buscador
     document.getElementById('buscadorProductos').addEventListener('input', function() {
-        textoBusqueda = this.value.trim().toLowerCase();
-        paginaActual = 1;
+        textoBusqueda = this.value.trim().toLowerCase();tListener('input', function() {
+        paginaActual = 1;his.value.trim().toLowerCase();
         renderProductos();
+    }); renderProductos();
     });
-
     // Modifica renderProductosPaginados para filtrar por búsqueda
-    function renderProductosPaginados() {
+    function renderProductosPaginados() {para filtrar por búsqueda
         let productos = productosCache.filter(prod => {
-            let mostrar = true;
-            // Categoría
+            let mostrar = true;osCache.filter(prod => {
+            // Categoría= true;
             if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría
+            // Subcategoríaccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
             if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
-                let subcatOk = false;
+                let subcatOk = false;eccionados["subcategoria"].length > 0) {
                 for (const cat of filtrosSeleccionados["categoria"]) {
                     if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
-                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
-                            subcatOk = true;
-                            break;
-                        }
-                    }
-                }
+                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {od.subcategoria)) {
+                            subcatOk = true;ados["subcategoria"].includes(prod.subcategoria)) {
+                            break;Ok = true;
+                        }   break;
+                    }   }
+                }   }
                 if (!subcatOk) mostrar = false;
-            }
+            }   if (!subcatOk) mostrar = false;
             // Otros campos
             ["marca", "capacidad", "modelo"].forEach(campo => {
                 if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
-            });
+            }); if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
             // Dimensión robusta
             if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
                 !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-            ) mostrar = false;
+            ) mostrar = false;ionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
             // Filtro de precio
             if (mostrar && (typeof prod.precio === "number")) {
                 if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
-            }
+            }   if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
             // Filtro de búsqueda por nombre, marca o modelo
-            if (mostrar && textoBusqueda) {
-                const campos = [
+            if (mostrar && textoBusqueda) {e, marca o modelo
+                const campos = [Busqueda) {
                     prod.nombre || "",
-                    prod.marca || "",
+                    prod.marca || "",,
                     prod.modelo || "",
                     prod.categoria || "",
                     prod.subcategoria || ""
-                ].join(" ").toLowerCase();
+                ].join(" ").toLowerCase();"
                 if (!campos.includes(textoBusqueda)) mostrar = false;
-            }
+            }   if (!campos.includes(textoBusqueda)) mostrar = false;
             return mostrar;
+        }); return mostrar;
         });
-
         // Ordenamiento
         const orden = document.getElementById('ordenarSelect').value;
-        if (orden === "precio-asc") {
+        if (orden === "precio-asc") {mentById('ordenarSelect').value;
             productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
-        } else if (orden === "precio-desc") {
+        } else if (orden === "precio-desc") {o || 0) - (b.precio || 0));
             productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
-        } else if (orden === "capacidad-asc") {
+        } else if (orden === "capacidad-asc") {|| 0) - (a.precio || 0));
             productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
-        } else if (orden === "capacidad-desc") {
+        } else if (orden === "capacidad-desc") {dad(a.capacidad) - parseCapacidad(b.capacidad));
             productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
+        }   productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
         }
-
         // PAGINACIÓN
         const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
-        const inicio = (paginaActual - 1) * productosPorPagina;
-        const fin = inicio + productosPorPagina;
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;na);
+        const inicio = (paginaActual - 1) * productosPorPagina;ginas || 1;
+        const fin = inicio + productosPorPagina;uctosPorPagina;
         const productosPagina = productos.slice(inicio, fin);
-
+        const productosPagina = productos.slice(inicio, fin);
         const contenedor = document.getElementById('productos');
-        contenedor.innerHTML = '';
+        contenedor.innerHTML = '';t.getElementById('productos');
         productosPagina.forEach(prod => {
-            contenedor.innerHTML += `
+            contenedor.innerHTML += `=> {
                 <div class="col mb-5">
                     <div class="card h-100">
                         <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                        <div class="card-body p-4">
+                        <div class="card-body p-4">rc="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
                             <div class="text-center">
                                 <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
                                 <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>enter small text-warning mb-2">
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
+                                </div>iv class="bi-star-fill"></div>
                                 s/${sanitize(prod.precio || '---')}
-                            </div>
-                        </div>
+                            </div>${sanitize(prod.precio || '---')}
+                        </div>div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
+                        </div>iv class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                    </div>div>
+                </div>div>
+            `;  </div>
+        }); `;
         if (contenedor.innerHTML === '') {
             contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+        }   contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
         }
-
         // Renderiza paginación
         renderPaginacion(totalPaginas);
+    }   renderPaginacion(totalPaginas);
     }
-
     function renderPaginacion(totalPaginas) {
-        let paginacionHtml = '';
-        if (totalPaginas > 1) {
+        let paginacionHtml = '';talPaginas) {
+        if (totalPaginas > 1) {;
             paginacionHtml += `<nav aria-label="Paginación productos"><ul class="pagination justify-content-center">`;
-            for (let i = 1; i <= totalPaginas; i++) {
+            for (let i = 1; i <= totalPaginas; i++) {ación productos"><ul class="pagination justify-content-center">`;
                 paginacionHtml += `<li class="page-item${i === paginaActual ? ' active' : ''}">
-                    <button class="page-link" data-pagina="${i}">${i}</button>
-                </li>`;
-            }
+                    <button class="page-link" data-pagina="${i}">${i}</button>' active' : ''}">
+                </li>`;tton class="page-link" data-pagina="${i}">${i}</button>
+            }   </li>`;
             paginacionHtml += `</ul></nav>`;
-        }
+        }   paginacionHtml += `</ul></nav>`;
         let paginacionCont = document.getElementById('paginacion-productos');
-        if (!paginacionCont) {
+        if (!paginacionCont) {ocument.getElementById('paginacion-productos');
             paginacionCont = document.createElement('div');
-            paginacionCont.id = 'paginacion-productos';
+            paginacionCont.id = 'paginacion-productos';v');
             document.getElementById('productos').parentElement.appendChild(paginacionCont);
-        }
+        }   document.getElementById('productos').parentElement.appendChild(paginacionCont);
         paginacionCont.innerHTML = paginacionHtml;
-
+        paginacionCont.innerHTML = paginacionHtml;
         // Eventos de paginación
         paginacionCont.querySelectorAll('.page-link').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function() {forEach(btn => {
                 paginaActual = parseInt(this.dataset.pagina);
-                renderProductosPaginados();
-            });
-        });
+                renderProductosPaginados();s.dataset.pagina);
+            }); renderProductosPaginados();
+        }); });
+    }   });
     }
-
     // Sobrescribe renderProductos para usar paginación
-    function renderProductos() {
+    function renderProductos() {os para usar paginación
         renderProductosPaginados();
+    }   renderProductosPaginados();
     }
-
     // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
-    function mostrarProductos() {
+    function mostrarProductos() {UALIZA PRODUCTOS ---
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
+            productosCache = [];ion('productos').onSnapshot(snapshot => {
             snapshot.forEach(doc => {
                 productosCache.push(doc.data());
-            });
+            }); productosCache.push(doc.data());
             paginaActual = 1;
             renderProductos();
-        });
+        }); renderProductos();
+    }   });
     }
-
     // --- REGLA DE SEGURIDAD FIRESTORE (configura en la consola de Firebase) ---
-    /*
+    /* --- REGLA DE SEGURIDAD FIRESTORE (configura en la consola de Firebase) ---
     service cloud.firestore {
       match /databases/{database}/documents {
-        match /productos/{document} {
-          allow read: if true;
+        match /productos/{document} {uments {
+          allow read: if true;ment} {
           allow write: if request.auth != null && request.auth.token.admin == true;
-        }
-      }
-    }
+        } allow write: if request.auth != null && request.auth.token.admin == true;
+      } }
+    } }
     */
-
+    */
     // Login
     document.addEventListener('DOMContentLoaded', function() {
         document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+            e.preventDefault();('loginForm').addEventListener('submit', function(e) {
             const email = document.getElementById('loginEmail').value;
             const password = document.getElementById('loginPassword').value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
+            auth.signInWithEmailAndPassword(email, password)assword').value;
+                .then(() => {ailAndPassword(email, password)
                     document.getElementById('loginError').textContent = '';
-                    // Cierra el modal si es necesario
+                    // Cierra el modal si es necesarior').textContent = '';
                     const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                    if (loginModal) loginModal.hide();
-                })
+                    if (loginModal) loginModal.hide();.getInstance(document.getElementById('loginModal'));
+                })  if (loginModal) loginModal.hide();
                 .catch(err => {
                     document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
-                });
-        });
+                }); document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
+        });     });
+    }); });
     });
-
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', function() {
-        auth.signOut();
+        auth.signOut();ById('logoutBtn').addEventListener('click', function() {
+    }); auth.signOut();
     });
-
     // Función para obtener el tipo de cambio SUNAT (último valor)
-    async function obtenerTipoCambioSunat() {
-        try {
+    async function obtenerTipoCambioSunat() { SUNAT (último valor)
+        try {ction obtenerTipoCambioSunat() {
             // API pública de SUNAT (puedes cambiar si tienes otra preferida)
             const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
-            const data = await res.json();
+            const data = await res.json();://api.apis.net.pe/v1/tipo-cambio-sunat');
             return parseFloat(data.venta); // tipo de cambio de venta
-        } catch (e) {
+        } catch (e) {rseFloat(data.venta); // tipo de cambio de venta
             alert('No se pudo obtener el tipo de cambio SUNAT. Usando 3.8 por defecto.');
-            return 3.8; // valor por defecto si falla la API
-        }
+            return 3.8; // valor por defecto si falla la APIT. Usando 3.8 por defecto.');
+        }   return 3.8; // valor por defecto si falla la API
+    }   }
     }
-
     // Calcula y muestra el precio de venta automáticamente
     document.getElementById('precioCompra').addEventListener('input', async function() {
-        const precioCompra = parseFloat(this.value);
+        const precioCompra = parseFloat(this.value);Listener('input', async function() {
         if (isNaN(precioCompra) || precioCompra <= 0) {
             document.getElementById('precioVenta').value = '';
-            return;
-        }
+            return;t.getElementById('precioVenta').value = '';
+        }   return;
         const tc = await obtenerTipoCambioSunat();
         // Fórmula: precioVenta = precioCompra * tc * 1.18 * 1.45
-        let precioVenta = precioCompra * tc * 1.18 * 1.45;
+        let precioVenta = precioCompra * tc * 1.18 * 1.45; * 1.45
         precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
-        document.getElementById('precioVenta').value = precioVenta;
+        document.getElementById('precioVenta').value = precioVenta;iba
+    }); document.getElementById('precioVenta').value = precioVenta;
     });
-
     // Al registrar el producto, guarda todos los campos
     document.getElementById('adminForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
+        e.preventDefault();('adminForm').addEventListener('submit', async function(e) {
         const nombre = document.getElementById('nombre').value;
         const precioCompra = parseFloat(document.getElementById('precioCompra').value);
-        const precioVenta = parseFloat(document.getElementById('precioVenta').value);
-        const imagen = document.getElementById('imagen').value;
+        const precioVenta = parseFloat(document.getElementById('precioVenta').value););
+        const imagen = document.getElementById('imagen').value;'precioVenta').value);
         const categoria = document.getElementById('categoria').value;
         const subcategoria = document.getElementById('subcategoria').value;
-        const marca = document.getElementById('marca').value;
+        const marca = document.getElementById('marca').value;goria').value;
         const capacidad = document.getElementById('capacidad').value;
-        const modelo = document.getElementById('modelo').value;
+        const modelo = document.getElementById('modelo').value;value;
         const dimension = document.getElementById('dimension').value;
-
+        const dimension = document.getElementById('dimension').value;
         await db.collection('productos').add({
-            nombre,
+            nombre,llection('productos').add({
             precioCompra,
             precio: precioVenta, // este es el precio de venta en soles
-            imagen,
+            imagen, precioVenta, // este es el precio de venta en soles
             categoria,
             subcategoria,
-            marca,
+            marca,egoria,
             capacidad,
-            modelo,
+            modelo,ad,
             dimension
-        });
+        }); dimension
         this.reset();
         document.getElementById('precioVenta').value = '';
+    }); document.getElementById('precioVenta').value = '';
     });
-
     // Mostrar/ocultar panel según autenticación
-    auth.onAuthStateChanged(user => {
+    auth.onAuthStateChanged(user => {tenticación
         const adminContainer = document.getElementById('adminContainer');
-        if (user) {
+        if (user) {Container = document.getElementById('adminContainer');
             adminContainer.classList.remove('d-none');
-            // Opcional: Cerrar el modal de login
+            // Opcional: Cerrar el modal de loginne');
             const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-            if (loginModal) loginModal.hide();
-        } else {
+            if (loginModal) loginModal.hide();.getInstance(document.getElementById('loginModal'));
+        } else {loginModal) loginModal.hide();
             adminContainer.classList.add('d-none');
-        }
+        }   adminContainer.classList.add('d-none');
+    }); }
     });
-
     // Botón cerrar sesión en navbar
     document.getElementById('logoutBtnNav').addEventListener('click', function() {
-        auth.signOut();
+        auth.signOut();ById('logoutBtnNav').addEventListener('click', function() {
+    }); auth.signOut();
     });
-
     // Soporte para submenús en Bootstrap 5
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
-            element.addEventListener('mouseenter', function(e){
-                let submenu = element.nextElementSibling;
+            element.addEventListener('mouseenter', function(e){ach(function(element){
+                let submenu = element.nextElementSibling;on(e){
                 if(submenu && submenu.classList.contains('dropdown-menu')) {
-                    submenu.classList.add('show');
-                }
-            });
+                    submenu.classList.add('show');ntains('dropdown-menu')) {
+                }   submenu.classList.add('show');
+            }); }
             element.parentElement.addEventListener('mouseleave', function(e){
-                let submenu = element.nextElementSibling;
+                let submenu = element.nextElementSibling;leave', function(e){
                 if(submenu && submenu.classList.contains('dropdown-menu')) {
-                    submenu.classList.remove('show');
-                }
-            });
-        });
+                    submenu.classList.remove('show');ins('dropdown-menu')) {
+                }   submenu.classList.remove('show');
+            }); }
+        }); });
+    }); });
     });
-
     // --- SEGURIDAD Y VALIDACIONES AVANZADAS ---
-
+    // --- SEGURIDAD Y VALIDACIONES AVANZADAS ---
     // 1. Sanitiza los datos antes de mostrar en el DOM para evitar XSS
-    function sanitize(str) {
+    function sanitize(str) { antes de mostrar en el DOM para evitar XSS
         return String(str).replace(/[<>&"'`]/g, function (c) {
-            return ({
+            return ({(str).replace(/[<>&"'`]/g, function (c) {
                 '<': '&lt;',
                 '>': '&gt;',
                 '&': '&amp;',
                 '"': '&quot;',
-                "'": '&#39;',
-                '`': '&#96;'
-            })[c];
-        });
+                "'": '&#39;',,
+                '`': '&#96;',
+            })[c];': '&#96;'
+        }); })[c];
+    }   });
     }
-
     // 2. Valida URLs de imágenes para evitar inyección de scripts
-    function safeImageUrl(url) {
-        try {
+    function safeImageUrl(url) {s para evitar inyección de scripts
+        try {safeImageUrl(url) {
             const u = new URL(url, window.location.origin);
             if (u.protocol === "http:" || u.protocol === "https:") return url;
-        } catch {
+        } catch {.protocol === "http:" || u.protocol === "https:") return url;
             // Si no es una URL válida, retorna imagen dummy
-        }
+        }   // Si no es una URL válida, retorna imagen dummy
         return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
+    }   return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
     }
-
     // 3. Limita la subida de productos solo a usuarios autenticados y con rol admin
     // (Esto debe estar en tu backend o reglas de Firebase, pero aquí puedes ocultar el botón en frontend)
-    function isAdmin() {
+    function isAdmin() {en tu backend o reglas de Firebase, pero aquí puedes ocultar el botón en frontend)
         // Suponiendo que guardas el rol en localStorage tras login
-        return localStorage.getItem('user_role') === 'admin';
-    }
+        return localStorage.getItem('user_role') === 'admin'; login
+    }   return localStorage.getItem('user_role') === 'admin';
     document.addEventListener('DOMContentLoaded', function() {
         const adminBtn = document.getElementById('btn-agregar-producto');
-        if (adminBtn && !isAdmin()) {
+        if (adminBtn && !isAdmin()) {ElementById('btn-agregar-producto');
             adminBtn.style.display = 'none';
-        }
+        }   adminBtn.style.display = 'none';
+    }); }
     });
-
     // 4. No muestres mensajes de error detallados al usuario final
-    function mostrarErrorGenerico() {
+    function mostrarErrorGenerico() {or detallados al usuario final
         alert("Ocurrió un error. Intenta nuevamente más tarde.");
+    }   alert("Ocurrió un error. Intenta nuevamente más tarde.");
     }
-
     // 5. No expongas claves privadas ni tokens en el frontend (solo public keys de Firebase)
+    // (Asegúrate de no tener claves privadas en tu código)end (solo public keys de Firebase)
     // (Asegúrate de no tener claves privadas en tu código)
-
     // 6. Validación de formularios (si tienes formularios de contacto, registro, etc.)
-    function validarFormularioProducto(producto) {
-        // Ejemplo de validación básica
+    function validarFormularioProducto(producto) {mularios de contacto, registro, etc.)
+        // Ejemplo de validación básicaproducto) {
         if (!producto.nombre || producto.nombre.trim().length < 2) return false;
         if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) return false;
         if (producto.imagen && !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(producto.imagen)) return false;
-        return true;
+        return true;.imagen && !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(producto.imagen)) return false;
+    }   return true;
     }
-
     // 7. Protección contra bots (honeypot)
     // Agrega un campo oculto en tus formularios:
     // <input type="text" name="website" style="display:none">
-    // Y en JS:
+    // Y en JS:ype="text" name="website" style="display:none">
     function esBot(form) {
         return form.website && form.website.value !== "";
+    }   return form.website && form.website.value !== "";
     }
-
     // 8. Limita la cantidad de productos por página (ya está en 16)
-    let productosCache = [];
+    let productosCache = []; de productos por página (ya está en 16)
     // let paginaActual = 1; // Eliminado para evitar redeclaración
     // const productosPorPagina = 16; // Eliminado para evitar redeclaración
-
+    // const productosPorPagina = 16; // Eliminado para evitar redeclaración
     function mostrarProductos() {
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
+            productosCache = [];ion('productos').onSnapshot(snapshot => {
             snapshot.forEach(doc => {
                 productosCache.push(doc.data());
-            });
+            }); productosCache.push(doc.data());
             paginaActual = 1; // Siempre vuelve a la primera página al filtrar
-            renderProductos();
-        });
+            renderProductos();// Siempre vuelve a la primera página al filtrar
+        }); renderProductos();
+    }   });
     }
-
     function renderProductos() {
         let productos = productosCache.filter(prod => {
-            let mostrar = true;
-            // Categoría
+            let mostrar = true;osCache.filter(prod => {
+            // Categoría= true;
             if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría (solo si la categoría asociada está seleccionada)
+            // Subcategoría (solo si la categoría asociada está seleccionada)cionados["categoria"].includes(prod.categoria)) mostrar = false;
             if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
-                let subcatOk = false;
+                let subcatOk = false;eccionados["subcategoria"].length > 0) {
                 for (const cat of filtrosSeleccionados["categoria"]) {
                     if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
-                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
-                            subcatOk = true;
-                            break;
-                        }
-                    }
-                }
+                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {od.subcategoria)) {
+                            subcatOk = true;ados["subcategoria"].includes(prod.subcategoria)) {
+                            break;Ok = true;
+                        }   break;
+                    }   }
+                }   }
                 if (!subcatOk) mostrar = false;
-            }
+            }   if (!subcatOk) mostrar = false;
             // Otros campos
             ["marca", "capacidad", "modelo"].forEach(campo => {
                 if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
-            });
+            }); if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
             // Dimensión robusta
             if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
                 !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-            ) mostrar = false;
+            ) mostrar = false;ionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
             // Filtro de precio
             if (mostrar && (typeof prod.precio === "number")) {
                 if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
-            }
+            }   if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
             return mostrar;
+        }); return mostrar;
         });
-
         // Ordenamiento
         const orden = document.getElementById('ordenarSelect').value;
-        if (orden === "precio-asc") {
+        if (orden === "precio-asc") {mentById('ordenarSelect').value;
             productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
-        } else if (orden === "precio-desc") {
+        } else if (orden === "precio-desc") {o || 0) - (b.precio || 0));
             productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
-        } else if (orden === "capacidad-asc") {
+        } else if (orden === "capacidad-asc") {|| 0) - (a.precio || 0));
             productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
-        } else if (orden === "capacidad-desc") {
+        } else if (orden === "capacidad-desc") {dad(a.capacidad) - parseCapacidad(b.capacidad));
             productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
+        }   productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
         }
-
         // PAGINACIÓN
         const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
-        const inicio = (paginaActual - 1) * productosPorPagina;
-        const fin = inicio + productosPorPagina;
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;na);
+        const inicio = (paginaActual - 1) * productosPorPagina;ginas || 1;
+        const fin = inicio + productosPorPagina;uctosPorPagina;
         const productosPagina = productos.slice(inicio, fin);
-
+        const productosPagina = productos.slice(inicio, fin);
         const contenedor = document.getElementById('productos');
-        contenedor.innerHTML = '';
+        contenedor.innerHTML = '';t.getElementById('productos');
         productosPagina.forEach(prod => {
-            contenedor.innerHTML += `
+            contenedor.innerHTML += `=> {
                 <div class="col mb-5">
                     <div class="card h-100">
                         <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                        <div class="card-body p-4">
+                        <div class="card-body p-4">rc="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
                             <div class="text-center">
                                 <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
                                 <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>enter small text-warning mb-2">
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
                                     <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
+                                </div>iv class="bi-star-fill"></div>
                                 s/${sanitize(prod.precio || '---')}
-                            </div>
-                        </div>
+                            </div>${sanitize(prod.precio || '---')}
+                        </div>div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                             <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
+                        </div>iv class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                    </div>div>
+                </div>div>
+            `;  </div>
+        }); `;
         if (contenedor.innerHTML === '') {
             contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+        }   contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
         }
-
         // Renderiza paginación
         renderPaginacion(totalPaginas);
+    }   renderPaginacion(totalPaginas);
     }
-
     function renderPaginacion(totalPaginas) {
-        let paginacionHtml = '';
-        if (totalPaginas > 1) {
+        let paginacionHtml = '';talPaginas) {
+        if (totalPaginas > 1) {;
             paginacionHtml += `<nav aria-label="Paginación productos"><ul class="pagination justify-content-center">`;
-            for (let i = 1; i <= totalPaginas; i++) {
+            for (let i = 1; i <= totalPaginas; i++) {ación productos"><ul class="pagination justify-content-center">`;
                 paginacionHtml += `<li class="page-item${i === paginaActual ? ' active' : ''}">
-                    <button class="page-link" data-pagina="${i}">${i}</button>
-                </li>`;
-            }
+                    <button class="page-link" data-pagina="${i}">${i}</button>' active' : ''}">
+                </li>`;tton class="page-link" data-pagina="${i}">${i}</button>
+            }   </li>`;
             paginacionHtml += `</ul></nav>`;
-        }
+        }   paginacionHtml += `</ul></nav>`;
         let paginacionCont = document.getElementById('paginacion-productos');
-        if (!paginacionCont) {
+        if (!paginacionCont) {ocument.getElementById('paginacion-productos');
             paginacionCont = document.createElement('div');
-            paginacionCont.id = 'paginacion-productos';
+            paginacionCont.id = 'paginacion-productos';v');
             document.getElementById('productos').parentElement.appendChild(paginacionCont);
-        }
+        }   document.getElementById('productos').parentElement.appendChild(paginacionCont);
         paginacionCont.innerHTML = paginacionHtml;
-
+        paginacionCont.innerHTML = paginacionHtml;
         // Eventos de paginación
         paginacionCont.querySelectorAll('.page-link').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.addEventListener('click', function() {forEach(btn => {
                 paginaActual = parseInt(this.dataset.pagina);
-                renderProductosPaginados();
-            });
-        });
+                renderProductosPaginados();s.dataset.pagina);
+            }); renderProductosPaginados();
+        }); });
+    }   });
     }
-
     // Sobrescribe renderProductos para usar paginación
-    function renderProductos() {
+    function renderProductos() {os para usar paginación
         renderProductosPaginados();
+    }   renderProductosPaginados();
     }
-
     document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
-
+    document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
     document.addEventListener('DOMContentLoaded', async function () {
-        await cargarFiltrosDinamicos();
-        renderBadges();
+        await cargarFiltrosDinamicos();ntLoaded', async function () {
+        renderBadges();trosDinamicos();
         mostrarProductos();
+    }); mostrarProductos();
     });
-
     // --- HTTPS enforcement (solo si tienes backend o service worker) ---
     if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
         location.href = 'https://' + location.hostname + location.pathname + location.search;
+    }   location.href = 'https://' + location.hostname + location.pathname + location.search;
     }
-
     // --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
-    /*
+    /* --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
     service cloud.firestore {
       match /databases/{database}/documents {
-        match /productos/{document} {
-          allow read: if true;
+        match /productos/{document} {uments {
+          allow read: if true;ment} {
           allow write: if request.auth != null && request.auth.token.admin == true;
-        }
-      }
-    }
+        } allow write: if request.auth != null && request.auth.token.admin == true;
+      } }
+    } }
     */
-
+    */
     // --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
+    // Limita intentos de login, usa reCAPTCHA en formularios públicos.ckend) ---
     // Limita intentos de login, usa reCAPTCHA en formularios públicos.
-
     // --- Protección contra clickjacking ---
-    if (window.top !== window.self) {
+    if (window.top !== window.self) {king ---
         window.top.location = window.self.location;
+    }   window.top.location = window.self.location;
     }
-
     // --- Protección básica contra bots en formularios ---
     // Si tienes formularios, agrega un campo honeypot oculto y verifica que esté vacío antes de procesar.
-
+    // Si tienes formularios, agrega un campo honeypot oculto y verifica que esté vacío antes de procesar.
     // En onSnapshot:
     function mostrarProductos() {
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
+            productosCache = [];ion('productos').onSnapshot(snapshot => {
             snapshot.forEach(doc => {
                 productosCache.push(doc.data());
-            });
+            }); productosCache.push(doc.data());
             paginaActual = 1; // Siempre vuelve a la primera página al filtrar
-            renderProductos();
-        });
+            renderProductos();// Siempre vuelve a la primera página al filtrar
+        }); renderProductos();
+    }   });
     }
-
     // Solo muestra productos a todos y el botón de admin solo a administradores
-    
+    // Solo muestra productos a todos y el botón de admin solo a administradores
         // Mostrar productos siempre al cargar la página
+        mostrarProductos();s siempre al cargar la página
         mostrarProductos();
-
         // Mostrar/ocultar botón de administración según el usuario
-        auth.onAuthStateChanged(user => {
+        auth.onAuthStateChanged(user => {istración según el usuario
             const btnAdmin = document.getElementById('btn-agregar-producto');
-            if (!btnAdmin) return;
+            if (!btnAdmin) return;ent.getElementById('btn-agregar-producto');
             // Cambia el email por el de tu admin real
             if (user && user.email === 'melvin23453@gmail.com') {
-                btnAdmin.style.display = '';
-            } else {
+                btnAdmin.style.display = '';in23453@gmail.com') {
+            } else {dmin.style.display = '';
                 btnAdmin.style.display = 'none';
-            }
-        });
+            }   btnAdmin.style.display = 'none';
+        }); }
     </script>
-</body>
+</body>cript>
+</html>
 </html>
 
