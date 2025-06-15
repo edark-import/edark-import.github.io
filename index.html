@@ -200,7 +200,7 @@
     if (window.top !== window.self) window.top.location = window.self.location;
 
     // --- VARIABLES GLOBALES ---
-    // let productosCache = [];
+    let productosCache = [];
     let paginaActual = 1;
     const productosPorPagina = 15;
     let unsubscribe = null;
@@ -803,7 +803,6 @@
     }
 
     // 8. Limita la cantidad de productos por página (ya está en 16)
-    let productosCache = [];
     // let paginaActual = 1; // Eliminado para evitar redeclaración
     // const productosPorPagina = 16; // Eliminado para evitar redeclaración
 
