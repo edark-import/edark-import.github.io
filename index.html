@@ -52,19 +52,12 @@
                 </div>
             </div>
         </header>
-        <!-- Formulario de Registro -->
-        <!--<div class="container my-5" id="registerContainer">
-            <h3>Registro de Administrador</h3>
-            <form id="registerForm">
-                <input type="email" id="registerEmail" placeholder="Correo" required class="form-control mb-2">
-                <input type="password" id="registerPassword" placeholder="Contraseña" required class="form-control mb-2">
-                <button type="submit" class="btn btn-success">Registrarse</button>
-                <div id="registerError" class="text-danger mt-2"></div>
-                <div id="registerSuccess" class="text-success mt-2"></div>
-            </form>
-            <button type="button" class="btn btn-link" onclick="mostrarLogin()">¿Ya tienes cuenta? Inicia sesión</button>
-                        <button type="button" class="btn btn-link" onclick="mostrarRegistro()">¿No tienes cuenta? Regístrate</button>
-        </div>-->
+
+        <!-- Contenedor de productos -->
+        <div class="container my-5">
+            <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+        </div>
+
         <!-- Panel de Login y Administrador -->
         <div class="container my-5" id="loginContainer">
             <h3>Iniciar Sesión Administrador</h3>
@@ -117,7 +110,8 @@
         function mostrarProductos() {
             const productosRef = db.collection('productos');
             productosRef.onSnapshot(snapshot => {
-                const contenedor = document.querySelector('.row.gx-4');
+                const contenedor = document.getElementById('productos');
+                if (!contenedor) return; // Previene error si el contenedor no existe
                 contenedor.innerHTML = '';
                 snapshot.forEach(doc => {
                     const prod = doc.data();
@@ -178,21 +172,6 @@
             this.reset();
         });
 
-        // Registro de administrador
-        /*document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('registerEmail').value;
-            const password = document.getElementById('registerPassword').value;
-            auth.createUserWithEmailAndPassword(email, password)
-                .then(() => {
-                    document.getElementById('registerError').textContent = '';
-                    document.getElementById('registerSuccess').textContent = 'Registro exitoso. Puedes iniciar sesión.';
-                })
-                .catch(err => {
-                    document.getElementById('registerError').textContent = 'Error en el registro. Inténtalo de nuevo.';
-                });
-        });*/
-
         // Mostrar/ocultar panel según autenticación
         auth.onAuthStateChanged(user => {
             if (user) {
@@ -203,16 +182,6 @@
                 document.getElementById('adminContainer').classList.add('d-none');
             }
         });
-
-        function mostrarLogin() {
-            document.getElementById('registerContainer').classList.add('d-none');
-            document.getElementById('loginContainer').classList.remove('d-none');
-        }
-
-        function mostrarRegistro() {
-            document.getElementById('registerContainer').classList.remove('d-none');
-            document.getElementById('loginContainer').classList.add('d-none');
-        }
         </script>
     </body>
 </html>
