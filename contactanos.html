@@ -218,10 +218,10 @@
             preferencia: preferencias.join(', '),
             frase: fraseAleatoria,
             asunto: asunto,
-            time: new Date().toLocaleString() // si quieres mostrar la hora
+            time: new Date().toLocaleString() // Solo si usas {{time}}
         };
 
-        emailjs.sendForm('service_96lsn0h', 'template_0z28kwl', params)
+        emailjs.send('service_96lsn0h', 'template_0z28kwl', params)
             .then(function(response) {
                 contactMsg.innerHTML = '<div class="contact-success">¡Gracias por contactarnos! Te responderemos pronto.</div>';
                 form.reset();
