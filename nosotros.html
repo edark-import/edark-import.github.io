@@ -10,75 +10,82 @@
         <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
         <!-- Bootstrap icons-->
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Bootstrap CSS-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <style>
-            .franja-edark {
-                min-height: 320px;
+            .tarjeta-horizontal {
                 display: flex;
                 align-items: center;
-                padding: 3rem 0;
-                transition: background 0.4s;
+                background: #fff;
+                border-radius: 1.5rem;
+                box-shadow: 0 4px 24px 0 rgba(34,40,49,0.08);
+                border: 2px solid #e0e0e0;
+                margin-bottom: 2.5rem;
+                padding: 2.5rem 2rem;
+                min-height: 260px;
+                transition: box-shadow 0.3s, transform 0.3s;
+                opacity: 0;
+                transform: translateY(40px);
             }
-            .franja-edark:nth-child(even) {
-                background: #222831;
-                color: #fff;
+            .tarjeta-horizontal.visible {
+                opacity: 1;
+                transform: translateY(0);
+                transition: opacity 0.7s, transform 0.7s;
             }
-            .franja-edark:nth-child(odd) {
-                background: #f8f9fa;
-                color: #222831;
+            .tarjeta-horizontal:hover, .tarjeta-horizontal.active {
+                box-shadow: 0 8px 32px 0 #00adb533;
+                transform: translateY(-8px) scale(1.03);
+                border-color: #00adb5;
+                z-index: 2;
             }
-            .franja-edark .icono-franja {
+            .tarjeta-horizontal .icono-tarjeta {
                 font-size: 3.5rem;
-                margin-right: 2rem;
+                margin-right: 2.5rem;
                 color: #00adb5;
                 flex-shrink: 0;
-                transition: transform 0.4s;
-            }
-            .franja-edark .icono-franja.bg {
-                color: #fff;
-                background: #00adb5;
+                background: #e6f7fa;
                 border-radius: 50%;
-                padding: 0.7rem;
+                padding: 1.1rem 1.3rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                transition: transform 0.4s, background 0.3s;
             }
-            .franja-edark .contenido-franja {
+            .tarjeta-horizontal .contenido-tarjeta {
                 flex: 1;
             }
-            .franja-edark h2 {
-                font-size: 2.1rem;
+            .tarjeta-horizontal h2 {
+                font-size: 1.7rem;
                 font-weight: bold;
                 margin-bottom: 1rem;
                 letter-spacing: 0.5px;
             }
-            .franja-edark ul {
-                padding-left: 1.2rem;
-                margin-bottom: 0.5rem;
-            }
-            .franja-edark .subtitulo {
+            .tarjeta-horizontal .subtitulo {
                 font-size: 1.1rem;
                 font-weight: 500;
                 color: #00adb5;
                 margin-bottom: 0.7rem;
             }
-            /* Animación de aparición */
-            .franja-edark {
-                opacity: 0;
-                transform: translateY(40px);
+            .tarjeta-horizontal ul {
+                padding-left: 1.2rem;
+                margin-bottom: 0.5rem;
             }
-            .franja-edark.visible {
-                opacity: 1;
-                transform: translateY(0);
-                transition: opacity 0.7s, transform 0.7s;
+            .tarjeta-horizontal.bg-lightblue {
+                background: #f8fcfd;
             }
-            /* Responsive */
-            @media (max-width: 768px) {
-                .franja-edark {
+            .tarjeta-horizontal.bg-white {
+                background: #fff;
+            }
+            @media (max-width: 991px) {
+                .tarjeta-horizontal {
                     flex-direction: column;
                     text-align: center;
-                    padding: 2rem 0.5rem;
+                    padding: 2rem 1rem;
                 }
-                .franja-edark .icono-franja {
-                    margin: 0 0 1rem 0;
+                .tarjeta-horizontal .icono-tarjeta {
+                    margin: 0 0 1.2rem 0;
                 }
             }
         </style>
@@ -129,53 +136,65 @@
             </div>
         </header>
 
-        <!-- Franjas horizontales -->
-        <section>
-            <div class="franja-edark">
-                <div class="icono-franja"><i class="bi bi-bullseye"></i></div>
-                <div class="contenido-franja">
-                    <div class="subtitulo">Nuestra Misión</div>
-                    <h2>Mejorar la vida de nuestros clientes</h2>
-                    <p>
-                        A través de productos electrónicos de vanguardia y servicios personalizados, brindamos una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
-                    </p>
-                </div>
-            </div>
-            <div class="franja-edark">
-                <div class="icono-franja bg"><i class="bi bi-eye"></i></div>
-                <div class="contenido-franja">
-                    <div class="subtitulo">Nuestra Visión</div>
-                    <h2>Ser líderes en innovación tecnológica</h2>
-                    <p>
-                        Queremos ser reconocidos en el mercado peruano por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
-                    </p>
-                </div>
-            </div>
-            <div class="franja-edark">
-                <div class="icono-franja"><i class="bi bi-gem"></i></div>
-                <div class="contenido-franja">
-                    <div class="subtitulo">Nuestros Valores</div>
-                    <h2>Lo que nos define</h2>
-                    <ul>
-                        <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
-                        <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
-                        <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
-                        <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
-                    </ul>
-                </div>
-            </div>
-            <div class="franja-edark">
-                <div class="icono-franja bg"><i class="bi bi-box-seam"></i></div>
-                <div class="contenido-franja">
-                    <div class="subtitulo">¿Qué Ofrecemos?</div>
-                    <h2>Soluciones y servicios para ti</h2>
-                    <ul>
-                        <li>Dispositivos móviles y equipos de cómputo</li>
-                        <li>Accesorios tecnológicos y hogar inteligente</li>
-                        <li>Consultoría tecnológica y soporte técnico</li>
-                        <li>Mantenimiento y reparación</li>
-                    </ul>
-                    <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
+        <!-- Tarjetas horizontales con Bootstrap -->
+        <section class="py-5">
+            <div class="container px-4 px-lg-5">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-bullseye"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">Nuestra Misión</div>
+                                <h2>Mejorar la vida de nuestros clientes</h2>
+                                <p>
+                                    A través de productos electrónicos de vanguardia y servicios personalizados, brindamos una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-eye"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">Nuestra Visión</div>
+                                <h2>Ser líderes en innovación tecnológica</h2>
+                                <p>
+                                    Queremos ser reconocidos en el mercado peruano por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-gem"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">Nuestros Valores</div>
+                                <h2>Lo que nos define</h2>
+                                <ul>
+                                    <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
+                                    <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
+                                    <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
+                                    <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
+                            <div class="icono-tarjeta"><i class="bi bi-box-seam"></i></div>
+                            <div class="contenido-tarjeta">
+                                <div class="subtitulo">¿Qué Ofrecemos?</div>
+                                <h2>Soluciones y servicios para ti</h2>
+                                <ul>
+                                    <li>Dispositivos móviles y equipos de cómputo</li>
+                                    <li>Accesorios tecnológicos y hogar inteligente</li>
+                                    <li>Consultoría tecnológica y soporte técnico</li>
+                                    <li>Mantenimiento y reparación</li>
+                                </ul>
+                                <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </section>
@@ -190,9 +209,9 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="js/scripts.js"></script>
-        <!-- Animación de franjas -->
+        <!-- Animación de tarjetas -->
         <script>
-        // Animación de aparición de franjas al hacer scroll
+        // Animación de aparición de tarjetas al hacer scroll
         document.addEventListener('DOMContentLoaded', function () {
             function isInViewport(el) {
                 const rect = el.getBoundingClientRect();
@@ -200,20 +219,20 @@
                     rect.top < window.innerHeight - 50 && rect.bottom > 0
                 );
             }
-            function animateFranjasOnScroll() {
-                document.querySelectorAll('.franja-edark').forEach(franja => {
-                    if (isInViewport(franja)) {
-                        franja.classList.add('visible');
+            function animateTarjetasOnScroll() {
+                document.querySelectorAll('.tarjeta-horizontal').forEach(card => {
+                    if (isInViewport(card)) {
+                        card.classList.add('visible');
                     } else {
-                        franja.classList.remove('visible');
+                        card.classList.remove('visible');
                     }
                 });
             }
-            window.addEventListener('scroll', animateFranjasOnScroll);
-            animateFranjasOnScroll();
+            window.addEventListener('scroll', animateTarjetasOnScroll);
+            animateTarjetasOnScroll();
 
             // Efecto de icono al pasar mouse
-            document.querySelectorAll('.franja-edark .icono-franja').forEach(icono => {
+            document.querySelectorAll('.tarjeta-horizontal .icono-tarjeta').forEach(icono => {
                 icono.addEventListener('mouseenter', () => icono.style.transform = 'scale(1.18) rotate(-8deg)');
                 icono.addEventListener('mouseleave', () => icono.style.transform = '');
             });
