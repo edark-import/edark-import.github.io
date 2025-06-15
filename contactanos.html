@@ -183,10 +183,9 @@
     // 5. Reemplaza abajo los valores correspondientes
 
     (function(){
-        emailjs.init('pCFP4qXQGXU68FViV'); // <-- Reemplaza con tu public key de EmailJS
+        emailjs.init('pCFP4qXQGXU68FViV'); // Tu public key
     })();
 
-    // Frases inspiradoras
     const frases = [
       '“El progreso y el desarrollo son imposibles si uno sigue haciendo las cosas tal como siempre las ha hecho.” — Nikola Tesla',
       '“La mente que se abre a una nueva idea jamás volverá a su tamaño original.” — Albert Einstein',
@@ -195,7 +194,6 @@
       '“La innovación es lo que distingue a un líder de los demás.” — Steve Jobs'
     ];
 
-    // Sugerencia de asunto
     function generarAsunto(nombre, motivo) {
         if (motivo && motivo.length > 40) motivo = motivo.substring(0, 40) + '...';
         return `Nuevo contacto de ${nombre} - eDark: ${motivo || 'Consulta'}`;
@@ -206,19 +204,15 @@
         var form = this;
         var contactMsg = document.getElementById('contactMsg');
 
-        // Junta las preferencias seleccionadas en un solo string
         var preferencias = [];
         form.querySelectorAll('input[name="preferencia"]:checked').forEach(function(cb){
             preferencias.push(cb.value);
         });
 
-        // Frase aleatoria
         const fraseAleatoria = frases[Math.floor(Math.random() * frases.length)];
-
-        // Asunto sugerido
         const asunto = generarAsunto(form.nombre.value, form.motivo.value);
 
-        // Prepara los parámetros para EmailJS
+        // Ajusta los nombres según tu plantilla de EmailJS
         var params = {
             nombre: form.nombre.value,
             correo: form.correo.value,
@@ -229,7 +223,7 @@
             asunto: asunto
         };
 
-        emailjs.sendForm('default_service', 'template_0z28kwl', params)
+        emailjs.send('service_96lsn0h', 'template_0z28kwl', params)
             .then(function(response) {
                 contactMsg.innerHTML = '<div class="contact-success">¡Gracias por contactarnos! Te responderemos pronto.</div>';
                 form.reset();
