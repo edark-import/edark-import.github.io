@@ -154,7 +154,6 @@
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // Campos a filtrar y su etiqueta
         const camposFiltro = [
             { campo: "categoria", label: "Categoría" },
             { campo: "subcategoria", label: "Subcategoría" },
@@ -164,14 +163,10 @@
             { campo: "dimension", label: "Dimensión" }
         ];
 
-        // Guardar los valores únicos de cada filtro
         let valoresFiltro = {};
         let filtrosSeleccionados = {};
-
-        // Inicializa los filtros seleccionados vacíos
         camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
 
-        // 1. Obtiene todos los valores únicos de cada campo desde Firestore
         async function cargarFiltrosDinamicos() {
             const snapshot = await db.collection('productos').get();
             valoresFiltro = {};
@@ -183,7 +178,6 @@
                 });
             });
 
-            // Genera el HTML de los filtros
             let html = '';
             camposFiltro.forEach(f => {
                 html += `
@@ -209,7 +203,7 @@
             });
             document.getElementById('dynamic-filters').innerHTML = html;
 
-            // Asigna eventos a los nuevos checkboxes
+            // Eventos de filtros
             document.querySelectorAll('.filter-checkbox').forEach(cb => {
                 cb.addEventListener('change', function () {
                     const campo = this.dataset.campo;
@@ -227,7 +221,6 @@
             });
         }
 
-        // 2. Renderiza los badges de filtros seleccionados
         function renderBadges() {
             const container = document.getElementById('selected-filters');
             container.innerHTML = '';
@@ -303,55 +296,10 @@
         }
         mostrarProductos();
 
-        document.addEventListener('DOMContentLoaded', function () {
-            // Filtros
-            const toggleBrands = document.getElementById('toggleBrands');
-            if (toggleBrands) {
-                toggleBrands.addEventListener('click', function (e) {
-                    e.preventDefault();
-                    document.querySelectorAll('.extra-brand').forEach(el => el.classList.toggle('d-none'));
-                    toggleBrands.textContent = toggleBrands.textContent === 'Ver más' ? 'Ver menos' : 'Ver más';
-                });
-            }
-            document.querySelectorAll('.filter-checkbox').forEach(cb => {
-                cb.addEventListener('change', function () {
-                    const id = this.id;
-                    const info = filtroMap[id];
-                    if (!info) return;
-                    if (this.checked) {
-                        if (!filtrosSeleccionados[info.tipo].includes(info.valor)) {
-                            filtrosSeleccionados[info.tipo].push(info.valor);
-                        }
-                    } else {
-                        filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
-                    }
-                    renderBadges();
-                    mostrarProductos();
-                });
-            });
-            document.getElementById('selected-filters').addEventListener('click', function (e) {
-                if (e.target.classList.contains('remove-filter')) {
-                    const id = e.target.dataset.id;
-                    const cb = document.getElementById(id);
-                    if (cb) cb.checked = false;
-                    const info = filtroMap[id];
-                    if (info) {
-                        filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
-                    }
-                    renderBadges();
-                    mostrarProductos();
-                }
-            });
-            function renderBadges() {
-                const container = document.getElementById('selected-filters');
-                container.innerHTML = '';
-                Object.keys(filtroMap).forEach(id => {
-                    const info = filtroMap[id];
-                    if (filtrosSeleccionados[info.tipo].includes(info.valor)) {
-                        container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${info.valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}"></button></span>`;
-                    }
-                });
-            }
+        document.addEventListener('DOMContentLoaded', async function () {
+            await cargarFiltrosDinamicos();
+            renderBadges();
+            mostrarProductos();
         });
 
         // Login
