@@ -28,6 +28,16 @@
         .ordenar-select {
             max-width: 220px;
         }
+        /* Submenú para Bootstrap 5 */
+        .dropdown-submenu {
+            position: relative;
+        }
+        .dropdown-submenu > .dropdown-menu {
+            top: 0;
+            left: 100%;
+            margin-left: 0.1rem;
+            margin-right: 0.1rem;
+        }
     </style>
 </head>
 <body>
@@ -38,15 +48,22 @@
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tienda</a>
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Contáctanos</a>
                         <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="#!">Todos los productos</a></li>
-                            <li><hr class="dropdown-divider" /></li>
-                            <li><a class="dropdown-item" href="#!">Productos Relevantes</a></li>
-                            <li><a class="dropdown-item" href="#!">Nuevos Productos</a></li>
+                            <li><a class="dropdown-item" href="#">Consultoría tecnológica</a></li>
+                            <li><a class="dropdown-item" href="#">Soporte técnico</a></li>
+                            <li>
+                                <a class="dropdown-item dropdown-toggle" href="#" id="asesoramientoDropdown" data-bs-toggle="dropdown" aria-expanded="false">Asesoramiento Tecnológico</a>
+                                <ul class="dropdown-menu dropdown-submenu" aria-labelledby="asesoramientoDropdown">
+                                    <li><a class="dropdown-item" href="#">Hogar</a></li>
+                                    <li><a class="dropdown-item" href="#">Empresa</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="dropdown-item" href="#">Mantenimiento y reparación</a></li>
+                            <li><a class="dropdown-item" href="#">Recicla tecnología</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -610,6 +627,24 @@
     // Botón cerrar sesión en navbar
     document.getElementById('logoutBtnNav').addEventListener('click', function() {
         auth.signOut();
+    });
+
+    // Soporte para submenús en Bootstrap 5
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
+            element.addEventListener('mouseenter', function(e){
+                let submenu = element.nextElementSibling;
+                if(submenu && submenu.classList.contains('dropdown-menu')) {
+                    submenu.classList.add('show');
+                }
+            });
+            element.parentElement.addEventListener('mouseleave', function(e){
+                let submenu = element.nextElementSibling;
+                if(submenu && submenu.classList.contains('dropdown-menu')) {
+                    submenu.classList.remove('show');
+                }
+            });
+        });
     });
     </script>
 </body>
