@@ -449,9 +449,8 @@
     function renderProductosPaginados() {
         let productos = productosCache.filter(prod => {
             let mostrar = true;
-            // Categoría
+            // Filtros existentes...
             if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría
             if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
                 let subcatOk = false;
                 for (const cat of filtrosSeleccionados["categoria"]) {
@@ -464,15 +463,12 @@
                 }
                 if (!subcatOk) mostrar = false;
             }
-            // Otros campos
             ["marca", "capacidad", "modelo"].forEach(campo => {
                 if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
             });
-            // Dimensión robusta
             if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
                 !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
             ) mostrar = false;
-            // Filtro de precio
             if (mostrar && (typeof prod.precio === "number")) {
                 if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
             }
