@@ -48,10 +48,9 @@
                     <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
                 </ul>
                 <form class="d-flex align-items-center" id="adminNav">
-                    <button class="btn btn-outline-dark" type="button">
-                        <i class="bi-cart-fill me-1"></i>
-                        Carrito
-                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    <button class="btn btn-outline-dark" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
+                        <i class="bi-currency-exchange me-1"></i>
+                        <span id="tipoCambioText">S/ 3.8</span>
                     </button>
                     <!-- Botón en navbar -->
                     <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -933,24 +932,38 @@
         mostrarProductos();
     });
 
-    // --- HTTPS enforcement (solo si tienes backend o service worker) ---
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-        location.href = 'https://' + location.hostname + location.pathname + location.search;
-    }
-
-    // --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
-    /*
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /productos/{document} {
-          allow read: if true;
-          allow write: if request.auth != null && request.auth.token.admin == true;
+    // Mostrar tipo de cambio en el navbar
+async function mostrarTipoCambioNavbar() {
+    let tipoCambio = 3.8;
+    try {
+        const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+        const data = await res.json();
+        if (data && data.venta) {
+            tipoCambio = parseFloat(data.venta);
         }
-      }
-    }
-    */
+    } catch {}
+    document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambio}`;
+}
+document.addEventListener('DOMContentLoaded', mostrarTipoCambioNavbar);
 
-    // --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
+// --- HTTPS enforcement (solo si tienes backend o service worker) ---
+if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    location.href = 'https://' + location.hostname + location.pathname + location.search;
+}
+
+// --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
+/*
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /productos/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}
+*/
+
+// --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
     // Limita intentos de login, usa reCAPTCHA en formularios públicos.
 
     // --- Protección contra clickjacking ---
