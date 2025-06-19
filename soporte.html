@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Soporte Técnico | eDark</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <style>
+        .icono-servicio {
+            font-size: 2.5rem;
+            color: #00adb5;
+        }
+        .paso {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .paso .bi {
+            font-size: 2rem;
+            color: #393e46;
+        }
+        .paso-num {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00adb5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="consultoria.html">Consultoría tecnológica</a></li>
+                            <li><a class="dropdown-item" href="soporte.html">Soporte técnico</a></li>
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="asesoramientoDropdown" data-bs-toggle="dropdown" aria-expanded="false">Asesoramiento Tecnológico</a>
+                                <ul class="dropdown-menu" aria-labelledby="asesoramientoDropdown">
+                                    <li><a class="dropdown-item" href="asesoramiento-hogar.html">Hogar</a></li>
+                                    <li><a class="dropdown-item" href="asesoramiento-empresa.html">Empresa</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="dropdown-item" href="mantenimiento.html">Mantenimiento y reparación</a></li>
+                            <li><a class="dropdown-item" href="recicla.html">Recicla tecnología</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
+                </ul>
+                <form class="d-flex align-items-center" id="adminNav">
+                    <button class="btn btn-outline-dark" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Carrito
+                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="carrito-contador">0</span>
+                    </button>
+                    <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Admin
+                    </button>
+                    <span id="userEmail" class="ms-2 text-primary d-none"></span>
+                    <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
+                        Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <main class="container my-5">
+        <div class="text-center mb-5">
+            <span class="icono-servicio d-block mb-2"><i class="bi bi-tools"></i></span>
+            <h1 class="fw-bold">Soporte Técnico Inmediato</h1>
+            <p class="lead mt-3">
+                <i class="bi bi-lightning-charge-fill text-warning"></i>
+                En eDark, nuestro servicio de soporte técnico es como un <strong>bombero digital</strong>: siempre listos para atender cualquier emergencia tecnológica que se presente en tu hogar o empresa.
+            </p>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="paso">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="paso-num me-2"><i class="bi bi-bell-fill"></i> Paso 1</span>
+                        <span class="fw-bold">¡Emergencia tecnológica?</span>
+                    </div>
+                    <p>
+                        ¿Tu computadora no enciende? ¿Tu red se cayó? ¿Un virus amenaza tus archivos? <br>
+                        <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+                        <strong>No te preocupes</strong>, nuestro equipo está preparado para responder con rapidez ante cualquier incidente.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="paso">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="paso-num me-2"><i class="bi bi-telephone-fill"></i> Paso 2</span>
+                        <span class="fw-bold">Contáctanos de inmediato</span>
+                    </div>
+                    <p>
+                        Puedes comunicarte por teléfono, WhatsApp o correo electrónico. <br>
+                        <i class="bi bi-whatsapp text-success"></i> <i class="bi bi-envelope-fill text-primary"></i>
+                        <br>
+                        Nuestro equipo te atenderá con amabilidad y eficiencia, guiándote paso a paso para entender tu situación.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="paso">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="paso-num me-2"><i class="bi bi-person-check-fill"></i> Paso 3</span>
+                        <span class="fw-bold">Diagnóstico y solución</span>
+                    </div>
+                    <p>
+                        Realizamos un diagnóstico rápido y preciso, ya sea de manera remota o presencial. <br>
+                        <i class="bi bi-laptop"></i> <i class="bi bi-house-door-fill"></i>
+                        <br>
+                        Te explicamos el problema y te ofrecemos la mejor solución, siempre pensando en tu tranquilidad y seguridad.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="paso">
+                    <div class="d-flex align-items-center mb-2">
+                        <span class="paso-num me-2"><i class="bi bi-emoji-smile-fill"></i> Paso 4</span>
+                        <span class="fw-bold">¡Problema resuelto!</span>
+                    </div>
+                    <p>
+                        Nos aseguramos de que todo funcione correctamente y te damos recomendaciones para evitar futuros inconvenientes. <br>
+                        <i class="bi bi-shield-check text-success"></i> <i class="bi bi-lightbulb-fill text-warning"></i>
+                        <br>
+                        ¡Tu satisfacción es nuestra prioridad!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5">
+            <h3 class="mb-3"><i class="bi bi-headset"></i> ¿Por qué elegir nuestro soporte técnico?</h3>
+            <ul class="list-unstyled fs-5">
+                <li><i class="bi bi-check-circle-fill text-success"></i> Atención inmediata y personalizada</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Técnicos certificados y con experiencia</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Soluciones remotas y presenciales</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Confidencialidad y seguridad garantizadas</li>
+                <li><i class="bi bi-check-circle-fill text-success"></i> Soporte para computadoras, redes, impresoras, software y más</li>
+            </ul>
+            <a href="contactanos.html" class="btn btn-primary btn-lg mt-4">
+                <i class="bi bi-telephone-fill"></i> ¡Contáctanos ahora!
+            </a>
+        </div>
+    </main>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Soporte para submenús en Bootstrap 5
+        document.querySelectorAll('.dropdown-submenu').forEach(function (submenu) {
+            submenu.addEventListener('mouseenter', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.add('show');
+            });
+            submenu.addEventListener('mouseleave', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            });
+        });
+    });
+    </script>
+</body>
+</html>

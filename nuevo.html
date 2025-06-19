@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Explora los productos de eDark con filtros avanzados por categoría, marca y más." />
+    <meta name="author" content="eDark EIRL" />
+    <title>Nueva Tienda | eDark</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <!-- Bootstrap icons-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle active" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tienda</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="index.html#productos">Todos los productos</a></li>
+                            <li><hr class="dropdown-divider" /></li>
+                            <li><a class="dropdown-item" href="#">Productos Relevantes</a></li>
+                            <li><a class="dropdown-item" href="#">Nuevos Productos</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form class="d-flex">
+                    <button class="btn btn-outline-dark" type="button" onclick="window.location.href='index.html#carrito'">
+                        <i class="bi-cart-fill me-1"></i>
+                        Carrito
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <!-- Header-->
+    <header class="bg-dark py-5">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder">Tienda eDark</h1>
+                <p class="lead fw-normal text-white-50 mb-0">Explora y filtra nuestros productos destacados</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Section -->
+    <section>
+        <div class="container-fluid px-5 my-5">
+            <div class="row">
+                <!-- Filtros -->
+                <div class="col-sm-3">
+                    <div class="sticky-top" style="top: 80px; z-index: 1020;">
+                        <div class="container mt-4">
+                            <div class="sticky-top bg-white py-2 px-3 shadow-sm" style="top: 80px; z-index: 1030;">
+                                <h2>Filtros Aplicados</h2>
+                                <div id="selected-filters"></div>
+                            </div>
+                            <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
+                                <div class="accordion" id="filterAccordion">
+                                    <!-- Categorías -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#categoryFilter">
+                                                Categorías
+                                            </button>
+                                        </h2>
+                                        <div id="categoryFilter" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div class="accordion" id="subCategoryAccordion">
+                                                    <!-- Electrónica -->
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#electronicsSub">
+                                                                Electrónica
+                                                            </button>
+                                                        </h2>
+                                                        <div id="electronicsSub" class="accordion-collapse collapse">
+                                                            <div class="accordion-body">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Celulares" id="subcat1">
+                                                                    <label class="form-check-label" for="subcat1">Celulares</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Laptops" id="subcat2">
+                                                                    <label class="form-check-label" for="subcat2">Laptops</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Ropa -->
+                                                    <div class="accordion-item">
+                                                        <h2 class="accordion-header">
+                                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#clothingSub">
+                                                                Ropa
+                                                            </button>
+                                                        </h2>
+                                                        <div id="clothingSub" class="accordion-collapse collapse">
+                                                            <div class="accordion-body">
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Hombres" id="subcat3">
+                                                                    <label class="form-check-label" for="subcat3">Hombres</label>
+                                                                </div>
+                                                                <div class="form-check">
+                                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Mujeres" id="subcat4">
+                                                                    <label class="form-check-label" for="subcat4">Mujeres</label>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> <!-- Cierre subCategoryAccordion -->
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Marcas -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#brandFilter">
+                                                Marcas
+                                            </button>
+                                        </h2>
+                                        <div id="brandFilter" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div id="brandList">
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Nike" id="brand1">
+                                                        <label class="form-check-label" for="brand1">Nike</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Samsung" id="brand2">
+                                                        <label class="form-check-label" for="brand2">Samsung</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Huawei" id="brand3">
+                                                        <label class="form-check-label" for="brand3">Huawei</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Adidas" id="brand4">
+                                                        <label class="form-check-label" for="brand4">Adidas</label>
+                                                    </div>
+                                                    <div class="form-check extra-brand d-none">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Apple" id="brand5">
+                                                        <label class="form-check-label" for="brand5">Apple</label>
+                                                    </div>
+                                                    <div class="form-check extra-brand d-none">
+                                                        <input class="form-check-input filter-checkbox" type="checkbox" value="Puma" id="brand6">
+                                                        <label class="form-check-label" for="brand6">Puma</label>
+                                                    </div>
+                                                </div>
+                                                <a href="#" id="toggleBrands" class="text-primary d-block mt-2">Ver más</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- Unidad de Medida -->
+                                    <div class="accordion-item">
+                                        <h2 class="accordion-header">
+                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#uniFilter">
+                                                Unidades de Medidas
+                                            </button>
+                                        </h2>
+                                        <div id="uniFilter" class="accordion-collapse collapse">
+                                            <div class="accordion-body">
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Galón" id="uni1">
+                                                    <label class="form-check-label" for="uni1">Galón</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Kilo" id="uni2">
+                                                    <label class="form-check-label" for="uni2">Kilo</label>
+                                                </div>
+                                                <div class="form-check">
+                                                    <input class="form-check-input filter-checkbox" type="checkbox" value="Gramo" id="uni3">
+                                                    <label class="form-check-label" for="uni3">Gramo</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Productos -->
+                <div class="col-sm-9">
+                    <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+                        <!-- Los productos se cargarán aquí dinámicamente desde Firestore -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
+    </footer>
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Firebase SDKs -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script>
+    // Configuración de Firebase
+    const firebaseConfig = {
+        apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
+        authDomain: "edark-proyect.firebaseapp.com",
+        projectId: "edark-proyect",
+        storageBucket: "edark-proyect.appspot.com",
+        messagingSenderId: "705929141287",
+        appId: "1:705929141287:web:f16389625de554d6790202",
+        measurementId: "G-V89W8SCSH1"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
+    let filtrosSeleccionados = {
+        categoria: [],
+        marca: [],
+        unidad: []
+    };
+
+    // Mapea los IDs de los checkboxes a los campos de Firestore
+    const filtroMap = {
+        subcat1: { tipo: 'categoria', valor: 'Celulares' },
+        subcat2: { tipo: 'categoria', valor: 'Laptops' },
+        subcat3: { tipo: 'categoria', valor: 'Hombres' },
+        subcat4: { tipo: 'categoria', valor: 'Mujeres' },
+        brand1: { tipo: 'marca', valor: 'Nike' },
+        brand2: { tipo: 'marca', valor: 'Samsung' },
+        brand3: { tipo: 'marca', valor: 'Huawei' },
+        brand4: { tipo: 'marca', valor: 'Adidas' },
+        brand5: { tipo: 'marca', valor: 'Apple' },
+        brand6: { tipo: 'marca', valor: 'Puma' },
+        uni1: { tipo: 'unidad', valor: 'Galón' },
+        uni2: { tipo: 'unidad', valor: 'Kilo' },
+        uni3: { tipo: 'unidad', valor: 'Gramo' }
+    };
+
+    // Renderiza los productos según los filtros seleccionados
+    let unsubscribe = null;
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe(); // Detiene el listener anterior
+        let ref = db.collection('productos');
+        // Aplica filtros de Firestore solo si hay uno seleccionado por tipo
+        if (filtrosSeleccionados.categoria.length === 1) {
+            ref = ref.where('categoria', '==', filtrosSeleccionados.categoria[0]);
+        }
+        if (filtrosSeleccionados.marca.length === 1) {
+            ref = ref.where('marca', '==', filtrosSeleccionados.marca[0]);
+        }
+        if (filtrosSeleccionados.unidad.length === 1) {
+            ref = ref.where('unidad', '==', filtrosSeleccionados.unidad[0]);
+        }
+        unsubscribe = ref.onSnapshot(snapshot => {
+            const contenedor = document.getElementById('productos');
+            contenedor.innerHTML = '';
+            snapshot.forEach(doc => {
+                const prod = doc.data();
+                // Filtro frontend para múltiples opciones
+                if (
+                    (filtrosSeleccionados.categoria.length === 0 || filtrosSeleccionados.categoria.includes(prod.categoria)) &&
+                    (filtrosSeleccionados.marca.length === 0 || filtrosSeleccionados.marca.includes(prod.marca)) &&
+                    (filtrosSeleccionados.unidad.length === 0 || filtrosSeleccionados.unidad.includes(prod.unidad))
+                ) {
+                    contenedor.innerHTML += `
+                        <div class="col mb-5">
+                            <div class="card h-100">
+                                <img class="card-img-top" src="${prod.imagen || 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg'}" alt="${prod.nombre}" />
+                                <div class="card-body p-4">
+                                    <div class="text-center">
+                                        <h5 class="fw-bolder">${prod.nombre || 'Producto'}</h5>
+                                        <div class="d-flex justify-content-center small text-warning mb-2">
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                            <div class="bi-star-fill"></div>
+                                        </div>
+                                        s/${prod.precio || '---'}
+                                    </div>
+                                </div>
+                                <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                                    <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                }
+            });
+            if (contenedor.innerHTML === '') {
+                contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+            }
+        });
+    }
+    mostrarProductos();
+
+    // Filtros: actualiza filtrosSeleccionados y las badges
+    document.addEventListener('DOMContentLoaded', function () {
+        // Mostrar/Ocultar marcas extra
+        const toggleBrands = document.getElementById('toggleBrands');
+        if (toggleBrands) {
+            toggleBrands.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelectorAll('.extra-brand').forEach(el => el.classList.toggle('d-none'));
+                toggleBrands.textContent = toggleBrands.textContent === 'Ver más' ? 'Ver menos' : 'Ver más';
+            });
+        }
+
+        // Manejo de filtros
+        document.querySelectorAll('.filter-checkbox').forEach(cb => {
+            cb.addEventListener('change', function () {
+                const id = this.id;
+                const info = filtroMap[id];
+                if (!info) return;
+                if (this.checked) {
+                    if (!filtrosSeleccionados[info.tipo].includes(info.valor)) {
+                        filtrosSeleccionados[info.tipo].push(info.valor);
+                    }
+                } else {
+                    filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
+                }
+                renderBadges();
+                mostrarProductos();
+            });
+        });
+
+        // Quitar filtro desde badge
+        document.getElementById('selected-filters').addEventListener('click', function (e) {
+            if (e.target.classList.contains('remove-filter')) {
+                const id = e.target.dataset.id;
+                const cb = document.getElementById(id);
+                if (cb) cb.checked = false;
+                const info = filtroMap[id];
+                if (info) {
+                    filtrosSeleccionados[info.tipo] = filtrosSeleccionados[info.tipo].filter(v => v !== info.valor);
+                }
+                renderBadges();
+                mostrarProductos();
+            }
+        });
+
+        function renderBadges() {
+            const container = document.getElementById('selected-filters');
+            container.innerHTML = '';
+            Object.keys(filtroMap).forEach(id => {
+                const info = filtroMap[id];
+                if (filtrosSeleccionados[info.tipo].includes(info.valor)) {
+                    container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${info.valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}"></button></span>`;
+                }
+            });
+        }
+    });
+    </script>
+        <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Soporte para submenús en Bootstrap 5
+        document.querySelectorAll('.dropdown-submenu').forEach(function (submenu) {
+            submenu.addEventListener('mouseenter', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.add('show');
+            });
+            submenu.addEventListener('mouseleave', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            });
+        });
+    });
+    </script>
+</body>
+</html>

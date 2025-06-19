@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carrito de compras | eDark</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html"><img width="80" alt="edark_logo" src="img/Logo/logo_2.png"></a>
+            <a href="carrito.html" class="btn btn-outline-dark ms-auto">
+                <i class="bi bi-cart"></i> <span id="carrito-contador">0</span>
+            </a>
+        </div>    
+    </nav>
+    <div class="container my-5">
+        <h2 class="mb-4">Carrito de compras</h2>
+        <div id="carrito-vacio" class="alert alert-info d-none">Tu carrito está vacío.</div>
+        <div id="carrito-lista"></div>
+        <div id="carrito-total" class="mt-4 fw-bold"></div>
+        <button id="vaciarCarrito" class="btn btn-danger mt-3">Vaciar carrito</button>
+        <button id="enviarWhatsapp" class="btn btn-success mt-3 ms-2"><i class="bi bi-whatsapp"></i> Enviar pedido por WhatsApp</button>
+        <!-- Aquí podrías agregar un botón para continuar con la compra -->
+    </div>
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+    // Lee el carrito de localStorage
+    let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+    function guardarCarrito() {
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+    }
+
+    function renderCarrito() {
+        const lista = document.getElementById('carrito-lista');
+        const vacio = document.getElementById('carrito-vacio');
+        const totalDiv = document.getElementById('carrito-total');
+        lista.innerHTML = '';
+        if (carrito.length === 0) {
+            vacio.classList.remove('d-none');
+            totalDiv.textContent = '';
+            return;
+        }
+        vacio.classList.add('d-none');
+        let total = 0;
+        lista.innerHTML = `
+            <table class="table align-middle">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Precio</th>
+                        <th>Cantidad</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${carrito.map((item, idx) => `
+                        <tr>
+                            <td>${item.nombre}</td>
+                            <td>s/${item.precio}</td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-secondary me-1" onclick="cambiarCantidad(${idx}, -1)">-</button>
+                                ${item.cantidad}
+                                <button class="btn btn-sm btn-outline-secondary ms-1" onclick="cambiarCantidad(${idx}, 1)">+</button>
+                            </td>
+                            <td>s/${(item.precio * item.cantidad).toFixed(2)}</td>
+                            <td><button class="btn btn-sm btn-danger" onclick="eliminarDelCarrito(${idx})">Eliminar</button></td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            </table>
+        `;
+        total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+        totalDiv.textContent = `Total: s/${total.toFixed(2)}`;
+        actualizarIconoCarrito();
+    }
+
+    function cambiarCantidad(idx, delta) {
+        carrito[idx].cantidad += delta;
+        if (carrito[idx].cantidad < 1) carrito[idx].cantidad = 1;
+        guardarCarrito();
+        renderCarrito();
+    }
+
+    function eliminarDelCarrito(idx) {
+        carrito.splice(idx, 1);
+        guardarCarrito();
+        renderCarrito();
+    }
+
+    document.getElementById('vaciarCarrito').addEventListener('click', function() {
+        if (confirm('¿Seguro que deseas vaciar el carrito?')) {
+            carrito = [];
+            guardarCarrito();
+            renderCarrito();
+        }
+    });
+
+    document.getElementById('enviarWhatsapp').addEventListener('click', function() {
+        if (carrito.length === 0) {
+            alert('Tu carrito está vacío.');
+            return;
+        }
+        let mensaje = '¡Hola! Quiero hacer un pedido:\n\n';
+        carrito.forEach(item => {
+            mensaje += `• ${item.nombre} x${item.cantidad} (s/${item.precio} c/u)\n`;
+        });
+        const total = carrito.reduce((sum, item) => sum + item.precio * item.cantidad, 0);
+        mensaje += `\nTotal: s/${total.toFixed(2)}\n\n¿Me pueden ayudar con la compra?`;
+
+        // Cambia el número por tu número de WhatsApp con código de país, sin signos +
+        const numeroWhatsApp = "51916907657";
+        const url = "https://wa.me/" + numeroWhatsApp + "?text=" + encodeURIComponent(mensaje);
+        window.open(url, '_blank');
+    });
+
+    function actualizarIconoCarrito() {
+        const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+        const icono = document.getElementById('carrito-contador');
+        if (icono) icono.textContent = total;
+    }
+
+    // Inicializa
+    renderCarrito();
+    </script>
+        <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Soporte para submenús en Bootstrap 5
+        document.querySelectorAll('.dropdown-submenu').forEach(function (submenu) {
+            submenu.addEventListener('mouseenter', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.add('show');
+            });
+            submenu.addEventListener('mouseleave', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            });
+        });
+    });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>    
+</body>
+</html>

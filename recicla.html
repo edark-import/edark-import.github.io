@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>Recicla Tecnología | eDark</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <style>
+        .icono-servicio {
+            font-size: 2.5rem;
+            color: #00adb5;
+        }
+        .area {
+            background: #f8f9fa;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        }
+        .area .bi {
+            font-size: 2rem;
+            color: #393e46;
+        }
+        .area-titulo {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #00adb5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Inicio</a></li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios</a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" href="consultoria.html">Consultoría tecnológica</a></li>
+                            <li><a class="dropdown-item" href="soporte.html">Soporte técnico</a></li>
+                            <li class="dropdown-submenu">
+                                <a class="dropdown-item dropdown-toggle" href="#" id="asesoramientoDropdown" data-bs-toggle="dropdown" aria-expanded="false">Asesoramiento Tecnológico</a>
+                                <ul class="dropdown-menu" aria-labelledby="asesoramientoDropdown">
+                                    <li><a class="dropdown-item" href="asesoramiento-hogar.html">Hogar</a></li>
+                                    <li><a class="dropdown-item" href="asesoramiento-empresa.html">Empresa</a></li>
+                                </ul>
+                            </li>
+                            <li><a class="dropdown-item" href="mantenimiento.html">Mantenimiento y reparación</a></li>
+                            <li><a class="dropdown-item" href="recicla.html">Recicla tecnología</a></li>
+                        </ul>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
+                </ul>
+                <form class="d-flex align-items-center" id="adminNav">
+                    <button class="btn btn-outline-dark" type="button">
+                        <i class="bi-cart-fill me-1"></i>
+                        Carrito
+                        <span class="badge bg-dark text-white ms-1 rounded-pill" id="carrito-contador">0</span>
+                    </button>
+                    <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
+                        Admin
+                    </button>
+                    <span id="userEmail" class="ms-2 text-primary d-none"></span>
+                    <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
+                        Cerrar Sesión
+                    </button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <main class="container my-5">
+        <div class="text-center mb-5">
+            <span class="icono-servicio d-block mb-2"><i class="bi bi-recycle"></i></span>
+            <h1 class="fw-bold">Recicla Tecnología con eDark</h1>
+            <p class="lead mt-3">
+                <i class="bi bi-globe2 text-success"></i>
+                En <strong>eDark</strong> estamos comprometidos con el medio ambiente y la economía circular. Como empresa en proceso de certificación <b>R2v3</b>, seguimos los más altos estándares internacionales para el reciclaje responsable de equipos electrónicos, buscando un impacto positivo y sostenible en nuestra comunidad y el planeta.
+            </p>
+        </div>
+        <div class="row mb-4">
+            <div class="col-md-4">
+                <div class="area text-center">
+                    <div class="mb-2"><i class="bi bi-laptop"></i></div>
+                    <div class="area-titulo mb-1">Recepción de Equipos</div>
+                    <p>
+                        <i class="bi bi-box-arrow-in-down text-primary"></i> <i class="bi bi-pc-display text-secondary"></i>
+                        <br>
+                        Recibimos computadoras, laptops, impresoras, celulares y otros dispositivos en desuso. <br>
+                        Clasificamos y evaluamos cada equipo para su reutilización, reciclaje o disposición segura.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="area text-center">
+                    <div class="mb-2"><i class="bi bi-shield-lock-fill"></i></div>
+                    <div class="area-titulo mb-1">Procesos Certificados R2v3</div>
+                    <p>
+                        <i class="bi bi-award-fill text-success"></i> <i class="bi bi-shield-check text-success"></i>
+                        <br>
+                        Aplicamos procesos de reciclaje y manejo de residuos electrónicos bajo la normativa <b>R2v3</b>, garantizando trazabilidad, seguridad de datos y protección ambiental.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="area text-center">
+                    <div class="mb-2"><i class="bi bi-tree-fill"></i></div>
+                    <div class="area-titulo mb-1">Impacto Ambiental Positivo</div>
+                    <p>
+                        <i class="bi bi-emoji-sunglasses text-success"></i> <i class="bi bi-droplet-half text-info"></i>
+                        <br>
+                        Reducimos la contaminación, promovemos la reutilización y fomentamos la conciencia ecológica en empresas y hogares. <br>
+                        ¡Juntos construimos un futuro más verde!
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="my-5">
+            <h3 class="mb-3 text-center"><i class="bi bi-people-fill"></i> ¿Por qué reciclar con eDark?</h3>
+            <ul class="list-group list-group-flush fs-5 mb-4">
+                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Cumplimos con estándares internacionales R2v3 para reciclaje seguro.</li>
+                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Garantizamos la destrucción segura de datos y la protección de tu información.</li>
+                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Contribuyes a la economía circular y al cuidado del planeta.</li>
+                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Recibes constancia de reciclaje y puedes ser parte de nuestros programas ecológicos.</li>
+            </ul>
+            <div class="text-center">
+                <a href="contactanos.html" class="btn btn-success btn-lg mt-3"><i class="bi bi-recycle"></i> Quiero Reciclar con eDark</a>
+            </div>
+        </div>
+    </main>
+    <!-- Footer-->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Soporte para submenús en Bootstrap 5
+        document.querySelectorAll('.dropdown-submenu').forEach(function (submenu) {
+            submenu.addEventListener('mouseenter', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.add('show');
+            });
+            submenu.addEventListener('mouseleave', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
