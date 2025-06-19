@@ -217,7 +217,7 @@
     // --- OBTENER Y MOSTRAR TIPO DE CAMBIO SUNAT UNA SOLA VEZ ---
     async function inicializarTipoCambioSunat() {
         try {
-            const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+            const res = await fetch('https://corsproxy.io/?https://api.apis.net.pe/v1/tipo-cambio-sunat');
             const data = await res.json();
             if (data && data.venta) {
                 tipoCambioGlobal = parseFloat(data.venta);
