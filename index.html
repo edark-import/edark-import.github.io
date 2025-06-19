@@ -215,7 +215,7 @@
         } catch (e) {
             tipoCambioGlobal = 3.8;
         }
-        document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambioGlobal}`;
+        document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
     }
     document.addEventListener('DOMContentLoaded', async function () {
         await inicializarTipoCambioSunat();
