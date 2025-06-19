@@ -117,7 +117,17 @@
         <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
         <form id="adminForm" class="mb-3">
             <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
-            <input type="number" id="precioCompra" placeholder="Precio de compra (USD)" required class="form-control mb-2">
+            <input type="number" id="precioCompra" placeholder="Precio de compra" required class="form-control mb-2" step="any">
+            <div class="input-group mb-2">
+              <label class="input-group-text" for="monedaCompra">Moneda</label>
+              <select id="monedaCompra" class="form-select">
+                <option value="USD" selected>Dólares (USD)</option>
+                <option value="PEN">Soles (S/)</option>
+              </select>
+            </div>
+            <div class="alert alert-info py-2 px-3 mb-2" id="infoTipoCambio" style="font-size:0.95em;">
+              <strong>Tipo de cambio SUNAT:</strong> <span id="tipoCambioValor">-</span> <span id="tipoCambioMoneda">USD/PEN</span> <span id="tipoCambioFecha"></span> <span id="tipoCambioOrigen"></span>
+            </div>
             <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
             <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">
             <input type="text" id="subcategoria" placeholder="Subcategoría" required class="form-control mb-2">
@@ -211,9 +221,17 @@
             const data = await res.json();
             if (data && data.venta) {
                 tipoCambioGlobal = parseFloat(data.venta);
+                document.getElementById('tipoCambioValor').textContent = tipoCambioGlobal.toFixed(3);
+                document.getElementById('tipoCambioMoneda').textContent = `${data.moneda ? data.moneda : 'USD/PEN'}`;
+                document.getElementById('tipoCambioFecha').textContent = data.fecha ? `(${data.fecha})` : '';
+                document.getElementById('tipoCambioOrigen').textContent = data.origen ? `- ${data.origen}` : '';
             }
         } catch (e) {
             tipoCambioGlobal = 3.8;
+            document.getElementById('tipoCambioValor').textContent = tipoCambioGlobal.toFixed(2);
+            document.getElementById('tipoCambioMoneda').textContent = 'USD/PEN';
+            document.getElementById('tipoCambioFecha').textContent = '';
+            document.getElementById('tipoCambioOrigen').textContent = '- Local';
         }
         document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
     }
@@ -653,17 +671,24 @@
     // Calcula y muestra el precio de venta automáticamente
     // Usa tipoCambioGlobal en vez de llamar a la API cada vez
 
-    document.getElementById('precioCompra').addEventListener('input', function() {
-        const precioCompra = parseFloat(this.value);
+    document.getElementById('precioCompra').addEventListener('input', calcularPrecioVenta);
+    document.getElementById('monedaCompra').addEventListener('change', calcularPrecioVenta);
+    function calcularPrecioVenta() {
+        const precioCompra = parseFloat(document.getElementById('precioCompra').value);
+        const moneda = document.getElementById('monedaCompra').value;
         if (isNaN(precioCompra) || precioCompra <= 0) {
             document.getElementById('precioVenta').value = '';
             return;
         }
-        // Fórmula: precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45
-        let precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45;
-        precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
+        let precioVenta;
+        if (moneda === 'USD') {
+            precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45;
+        } else {
+            precioVenta = precioCompra * 1.18 * 1.45;
+        }
+        precioVenta = Math.ceil(precioVenta);
         document.getElementById('precioVenta').value = precioVenta;
-    });
+    }
 
     // Al registrar el producto, guarda todos los campos
     document.getElementById('adminForm').addEventListener('submit', async function(e) {
