@@ -690,34 +690,46 @@
         document.getElementById('precioVenta').value = precioVenta;
     }
 
-    // Al registrar el producto, guarda todos los campos
     document.getElementById('adminForm').addEventListener('submit', async function(e) {
         e.preventDefault();
-        const nombre = document.getElementById('nombre').value;
+        const nombre = document.getElementById('nombre').value.trim();
         const precioCompra = parseFloat(document.getElementById('precioCompra').value);
         const precioVenta = parseFloat(document.getElementById('precioVenta').value);
-        const imagen = document.getElementById('imagen').value;
-        const categoria = document.getElementById('categoria').value;
-        const subcategoria = document.getElementById('subcategoria').value;
-        const marca = document.getElementById('marca').value;
-        const capacidad = document.getElementById('capacidad').value;
-        const modelo = document.getElementById('modelo').value;
-        const dimension = document.getElementById('dimension').value;
+        const imagen = document.getElementById('imagen').value.trim();
+        const categoria = document.getElementById('categoria').value.trim();
+        const subcategoria = document.getElementById('subcategoria').value.trim();
+        const marca = document.getElementById('marca').value.trim();
+        const capacidad = document.getElementById('capacidad').value.trim();
+        const modelo = document.getElementById('modelo').value.trim();
+        const dimension = document.getElementById('dimension').value.trim();
+        const moneda = document.getElementById('monedaCompra').value;
 
-        await db.collection('productos').add({
-            nombre,
-            precioCompra,
-            precio: precioVenta, // este es el precio de venta en soles
-            imagen,
-            categoria,
-            subcategoria,
-            marca,
-            capacidad,
-            modelo,
-            dimension
-        });
-        this.reset();
-        document.getElementById('precioVenta').value = '';
+        // Validación básica
+        if (!nombre || isNaN(precioCompra) || precioCompra <= 0 || isNaN(precioVenta) || precioVenta <= 0 || !imagen || !categoria || !subcategoria || !marca) {
+            alert('Por favor, completa todos los campos obligatorios y asegúrate de que los precios sean válidos.');
+            return;
+        }
+
+        try {
+            await db.collection('productos').add({
+                nombre,
+                precioCompra,
+                precio: precioVenta, // este es el precio de venta en soles
+                imagen,
+                categoria,
+                subcategoria,
+                marca,
+                capacidad,
+                modelo,
+                dimension,
+                moneda
+            });
+            this.reset();
+            document.getElementById('precioVenta').value = '';
+            document.getElementById('monedaCompra').value = 'USD';
+        } catch (err) {
+            alert('Error al registrar el producto. Intenta nuevamente.');
+        }
     });
 
     // Mostrar/ocultar panel según autenticación
@@ -867,6 +879,17 @@
             // Filtro de precio
             if (mostrar && (typeof prod.precio === "number")) {
                 if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
+            }
+            // Filtro de búsqueda por nombre, marca o modelo
+            if (mostrar && textoBusqueda) {
+                const campos = [
+                    prod.nombre || "",
+                    prod.marca || "",
+                    prod.modelo || "",
+                    prod.categoria || "",
+                    prod.subcategoria || ""
+                ].join(" ").toLowerCase();
+                if (!campos.includes(textoBusqueda)) mostrar = false;
             }
             return mostrar;
         });
