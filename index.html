@@ -50,7 +50,7 @@
                 <form class="d-flex align-items-center" id="adminNav">
                     <button class="btn btn-outline-dark" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
                         <i class="bi-currency-exchange me-1"></i>
-                        <span id="tipoCambioText">S/ 3.8 TC</span>
+                        <span id="tipoCambioText">S/ 3.8</span>
                     </button>
                     <!-- Botón en navbar -->
                     <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
@@ -178,18 +178,16 @@
     const auth = firebase.auth();
 
     // --- SEGURIDAD Y VALIDACIONES ---
-    // Sanitiza texto para evitar XSS
     function sanitize(str) {
-        return String(str).replace(/[<>&"'`]/g, function (c) {
-            return ({'<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;', '`': '&#96;'})[c];
-        });
+        return String(str).replace(/[<>&"'`]/g, c => ({
+            '<': '&lt;', '>': '&gt;', '&': '&amp;', '"': '&quot;', "'": '&#39;', '`': '&#96;'
+        })[c]);
     }
-    // Valida URLs de imágenes para evitar inyección de scripts
     function safeImageUrl(url) {
         try {
             const u = new URL(url, window.location.origin);
             if (u.protocol === "http:" || u.protocol === "https:") return url;
-        } catch {}
+        } catch { }
         return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
     }
     // Forzar HTTPS
@@ -198,61 +196,829 @@
     }
     // Protección clickjacking
     if (window.top !== window.self) window.top.location = window.self.location;
-    // Honeypot para bots en formularios
-    function esBot(form) { return form.website && form.website.value !== ""; }
-    // Validación de producto
+
+    // --- VARIABLES GLOBALES ---
+    // let productosCache = [];
+    let paginaActual = 1;
+    const productosPorPagina = 15;
+    let unsubscribe = null;
+
+    // --- FUNCIONES DE FILTROS Y PAGINACIÓN ---
+    // Filtros anidados y filtro de precio
+    const camposFiltro = [
+        { campo: "categoria", label: "Categoría" },
+        { campo: "subcategoria", label: "Subcategoría", parent: "categoria" },
+        { campo: "marca", label: "Marca" },
+        { campo: "capacidad", label: "Capacidad" },
+        { campo: "modelo", label: "Modelo" },
+        { campo: "dimension", label: "Dimensión" }
+    ];
+
+    let valoresFiltro = {};
+    let subcategoriasPorCategoria = {};
+    let filtrosSeleccionados = {};
+    camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
+    // Filtro de precio
+    let precioMin = 0, precioMax = 0, precioFiltroMin = 0, precioFiltroMax = 0;
+
+    // 1. Obtiene todos los valores únicos de cada campo desde Firestore
+    async function cargarFiltrosDinamicos() {
+        const snapshot = await db.collection('productos').get();
+        valoresFiltro = {};
+        subcategoriasPorCategoria = {};
+        camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
+        let precios = [];
+        snapshot.forEach(doc => {
+            const prod = doc.data();
+            camposFiltro.forEach(f => {
+                if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
+            });
+            // Relaciona subcategoría con categoría
+            if (prod.categoria && prod.subcategoria) {
+                if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
+                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
+            }
+            if (typeof prod.precio === "number") precios.push(prod.precio);
+        });
+
+        // Filtro de precio
+        precioMin = Math.min(...precios);
+        precioMax = Math.max(...precios);
+        precioFiltroMin = precioMin;
+        precioFiltroMax = precioMax;
+
+        // Genera el HTML de los filtros
+        let html = '';
+
+        // Filtro de precio
+        html += `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-precio">
+                    Precio (S/)
+                </button>
+            </h2>
+            <div id="filter-precio" class="accordion-collapse collapse">
+                <div class="accordion-body">
+                    <div class="mb-2">
+                        <label for="precioMin" class="form-label">Mínimo: <span id="precioMinLabel">${precioMin}</span></label>
+                        <input type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMin}" id="precioMin">
+                    </div>
+                    <div>
+                        <label for="precioMax" class="form-label">Máximo: <span id="precioMaxLabel">${precioMax}</span></label>
+                        <input type="range" class="form-range" min="${precioMin}" max="${precioMax}" value="${precioMax}" id="precioMax">
+                    </div>
+                </div>
+            </div>
+        </div>
+        `;
+
+        // Categoría y subcategoría anidados
+        html += `
+        <div class="accordion-item">
+            <h2 class="accordion-header">
+                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-categoria">
+                    Categoría
+                </button>
+            </h2>
+            <div id="filter-categoria" class="accordion-collapse collapse">
+                <div class="accordion-body" id="categoria-body">
+        `;
+        Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
+            const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+            html += `
+                <div class="form-check mb-1">
+                    <input class="form-check-input filter-checkbox" type="checkbox" value="${categoria}" id="${catId}" data-campo="categoria">
+                    <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
+                </div>
+            `;
+            // Subcategorías anidadas
+            if (subcategoriasPorCategoria[categoria]) {
+                Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
+                    const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+                    html += `
+                        <div class="form-check ms-4">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="${subcat}" id="${subcatId}" data-campo="subcategoria" data-parent="${categoria}">
+                            <label class="form-check-label" for="${subcatId}">${subcat}</label>
+                        </div>
+                    `;
+                });
+            }
+        });
+        html += `</div></div></div>`;
+
+        // Resto de filtros
+        ["marca", "capacidad", "modelo", "dimension"].forEach(campo => {
+            html += `
+            <div class="accordion-item">
+                <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${campo}">
+                        ${camposFiltro.find(f => f.campo === campo).label}
+                    </button>
+                </h2>
+                <div id="filter-${campo}" class="accordion-collapse collapse">
+                    <div class="accordion-body">
+            `;
+            Array.from(valoresFiltro[campo]).sort().forEach(valor => {
+                const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                html += `
+                    <div class="form-check">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
+                        <label class="form-check-label" for="${id}">${valor}</label>
+                    </div>
+                `;
+            });
+            html += `</div></div></div>`;
+        });
+
+        document.getElementById('dynamic-filters').innerHTML = html;
+
+        // Eventos para filtros
+        document.querySelectorAll('.filter-checkbox').forEach(cb => {
+            cb.addEventListener('change', function () {
+                const campo = this.dataset.campo;
+                const valor = this.value;
+                if (this.checked) {
+                    if (!filtrosSeleccionados[campo].includes(valor)) {
+                        filtrosSeleccionados[campo].push(valor);
+                    }
+                } else {
+                    filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                }
+                renderBadges();
+                mostrarProductos();
+            });
+        });
+
+        // Filtro de precio
+        document.getElementById('precioMin').addEventListener('input', function () {
+            let min = parseInt(this.value);
+            let max = parseInt(document.getElementById('precioMax').value);
+            if (min > max) {
+                min = max;
+                this.value = min;
+            }
+            precioFiltroMin = min;
+            document.getElementById('precioMinLabel').textContent = min;
+            mostrarProductos();
+        });
+        document.getElementById('precioMax').addEventListener('input', function () {
+            let max = parseInt(this.value);
+            let min = parseInt(document.getElementById('precioMin').value);
+            if (max < min) {
+                max = min;
+                this.value = max;
+            }
+            precioFiltroMax = max;
+            document.getElementById('precioMaxLabel').textContent = max;
+            mostrarProductos();
+        });
+    }
+
+    function renderBadges() {
+        const container = document.getElementById('selected-filters');
+        container.innerHTML = '';
+        camposFiltro.forEach(f => {
+            filtrosSeleccionados[f.campo].forEach(valor => {
+                let id;
+                if (f.campo === "subcategoria") {
+                    // Busca la categoría asociada para el id
+                    let cat = null;
+                    for (const c in subcategoriasPorCategoria) {
+                        if (subcategoriasPorCategoria[c].has(valor)) {
+                            cat = c;
+                            break;
+                        }
+                    }
+                    id = `filter-subcategoria-${valor.replace(/[^a-zA-Z0-9]/g, '')}-cat-${cat ? cat.replace(/[^a-zA-Z0-9]/g, '') : ''}`;
+                } else {
+                    id = `filter-${f.campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                }
+                container.innerHTML += `<span class="mt-2 badge bg-primary me-2 filter-badge" data-id="${id}">${valor} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="${id}" data-campo="${f.campo}" data-valor="${valor}"></button></span>`;
+            });
+        });
+        // Badge de precio
+        if (precioFiltroMin > precioMin || precioFiltroMax < precioMax) {
+            container.innerHTML += `<span class="mt-2 badge bg-info me-2 filter-badge" data-id="precio-badge">S/${precioFiltroMin} - S/${precioFiltroMax} <button type="button" class="btn-close btn-close-white ms-1 remove-filter" aria-label="Close" data-id="precio-badge" data-campo="precio"></button></span>`;
+        }
+    }
+
+    document.getElementById('selected-filters').addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-filter')) {
+            const campo = e.target.dataset.campo;
+            const valor = e.target.dataset.valor;
+            const id = e.target.dataset.id;
+            if (campo === "precio") {
+                // Reset precio
+                precioFiltroMin = precioMin;
+                precioFiltroMax = precioMax;
+                document.getElementById('precioMin').value = precioMin;
+                document.getElementById('precioMax').value = precioMax;
+                document.getElementById('precioMinLabel').textContent = precioMin;
+                document.getElementById('precioMaxLabel').textContent = precioMax;
+            } else {
+                const cb = document.getElementById(id);
+                if (cb) cb.checked = false;
+                filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+            }
+            renderBadges();
+            mostrarProductos();
+        }
+    });
+
+    // --- MOSTRAR PRODUCTOS CON PAGINACIÓN Y SEGURIDAD ---
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
+            });
+            paginaActual = 1;
+            renderProductos();
+        });
+    }
+
+    let textoBusqueda = "";
+
+    // Evento para el buscador
+    document.getElementById('buscadorProductos').addEventListener('input', function() {
+        textoBusqueda = this.value.trim().toLowerCase();
+        paginaActual = 1;
+        renderProductos();
+    });
+
+    // Modifica renderProductosPaginados para filtrar por búsqueda
+    function renderProductosPaginados() {
+        let productos = productosCache.filter(prod => {
+            let mostrar = true;
+            // Categoría
+            if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
+            // Subcategoría
+            if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
+                let subcatOk = false;
+                for (const cat of filtrosSeleccionados["categoria"]) {
+                    if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
+                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
+                            subcatOk = true;
+                            break;
+                        }
+                    }
+                }
+                if (!subcatOk) mostrar = false;
+            }
+            // Otros campos
+            ["marca", "capacidad", "modelo"].forEach(campo => {
+                if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
+            });
+            // Dimensión robusta
+            if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
+                !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
+            ) mostrar = false;
+            // Filtro de precio
+            if (mostrar && (typeof prod.precio === "number")) {
+                if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
+            }
+            // Filtro de búsqueda por nombre, marca o modelo
+            if (mostrar && textoBusqueda) {
+                const campos = [
+                    prod.nombre || "",
+                    prod.marca || "",
+                    prod.modelo || "",
+                    prod.categoria || "",
+                    prod.subcategoria || ""
+                ].join(" ").toLowerCase();
+                if (!campos.includes(textoBusqueda)) mostrar = false;
+            }
+            return mostrar;
+        });
+
+        // Ordenamiento
+        const orden = document.getElementById('ordenarSelect').value;
+        if (orden === "precio-asc") {
+            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
+        } else if (orden === "precio-desc") {
+            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
+        } else if (orden === "capacidad-asc") {
+            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
+        } else if (orden === "capacidad-desc") {
+            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
+        }
+
+        // PAGINACIÓN
+        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
+        const inicio = (paginaActual - 1) * productosPorPagina;
+        const fin = inicio + productosPorPagina;
+        const productosPagina = productos.slice(inicio, fin);
+
+        const contenedor = document.getElementById('productos');
+        contenedor.innerHTML = '';
+        productosPagina.forEach(prod => {
+            contenedor.innerHTML += `
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                </div>
+                                s/${sanitize(prod.precio || '---')}
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        if (contenedor.innerHTML === '') {
+            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+        }
+
+        // Renderiza paginación
+        renderPaginacion(totalPaginas);
+    }
+
+    function renderPaginacion(totalPaginas) {
+        let paginacionHtml = '';
+        if (totalPaginas > 1) {
+            paginacionHtml += `<nav aria-label="Paginación productos"><ul class="pagination justify-content-center">`;
+            for (let i = 1; i <= totalPaginas; i++) {
+                paginacionHtml += `<li class="page-item${i === paginaActual ? ' active' : ''}">
+                    <button class="page-link" data-pagina="${i}">${i}</button>
+                </li>`;
+            }
+            paginacionHtml += `</ul></nav>`;
+        }
+        let paginacionCont = document.getElementById('paginacion-productos');
+        if (!paginacionCont) {
+            paginacionCont = document.createElement('div');
+            paginacionCont.id = 'paginacion-productos';
+            document.getElementById('productos').parentElement.appendChild(paginacionCont);
+        }
+        paginacionCont.innerHTML = paginacionHtml;
+
+        // Eventos de paginación
+        paginacionCont.querySelectorAll('.page-link').forEach(btn => {
+            btn.addEventListener('click', function() {
+                paginaActual = parseInt(this.dataset.pagina);
+                renderProductosPaginados();
+            });
+        });
+    }
+
+    // Sobrescribe renderProductos para usar paginación
+    function renderProductos() {
+        renderProductosPaginados();
+    }
+
+    // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
+            });
+            paginaActual = 1;
+            renderProductos();
+        });
+    }
+
+    // --- REGLA DE SEGURIDAD FIRESTORE (configura en la consola de Firebase) ---
+    /*
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /productos/{document} {
+          allow read: if true;
+          allow write: if request.auth != null && request.auth.token.admin == true;
+        }
+      }
+    }
+    */
+
+    // Login
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            auth.signInWithEmailAndPassword(email, password)
+                .then(() => {
+                    document.getElementById('loginError').textContent = '';
+                    // Cierra el modal si es necesario
+                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+                    if (loginModal) loginModal.hide();
+                })
+                .catch(err => {
+                    document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
+                });
+        });
+    });
+
+    // Logout
+    document.getElementById('logoutBtn').addEventListener('click', function() {
+        auth.signOut();
+    });
+
+    // Función para obtener el tipo de cambio SUNAT (último valor)
+    async function obtenerTipoCambioSunat() {
+        try {
+            // API pública de SUNAT (puedes cambiar si tienes otra preferida)
+            const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+            const data = await res.json();
+            return parseFloat(data.venta); // tipo de cambio de venta
+        } catch (e) {
+            alert('No se pudo obtener el tipo de cambio SUNAT. Usando 3.8 por defecto.');
+            return 3.8; // valor por defecto si falla la API
+        }
+    }
+
+    // Calcula y muestra el precio de venta automáticamente
+    document.getElementById('precioCompra').addEventListener('input', async function() {
+        const precioCompra = parseFloat(this.value);
+        if (isNaN(precioCompra) || precioCompra <= 0) {
+            document.getElementById('precioVenta').value = '';
+            return;
+        }
+        const tc = await obtenerTipoCambioSunat();
+        // Fórmula: precioVenta = precioCompra * tc * 1.18 * 1.45
+        let precioVenta = precioCompra * tc * 1.18 * 1.45;
+        precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
+        document.getElementById('precioVenta').value = precioVenta;
+    });
+
+    // Al registrar el producto, guarda todos los campos
+    document.getElementById('adminForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const nombre = document.getElementById('nombre').value;
+        const precioCompra = parseFloat(document.getElementById('precioCompra').value);
+        const precioVenta = parseFloat(document.getElementById('precioVenta').value);
+        const imagen = document.getElementById('imagen').value;
+        const categoria = document.getElementById('categoria').value;
+        const subcategoria = document.getElementById('subcategoria').value;
+        const marca = document.getElementById('marca').value;
+        const capacidad = document.getElementById('capacidad').value;
+        const modelo = document.getElementById('modelo').value;
+        const dimension = document.getElementById('dimension').value;
+
+        await db.collection('productos').add({
+            nombre,
+            precioCompra,
+            precio: precioVenta, // este es el precio de venta en soles
+            imagen,
+            categoria,
+            subcategoria,
+            marca,
+            capacidad,
+            modelo,
+            dimension
+        });
+        this.reset();
+        document.getElementById('precioVenta').value = '';
+    });
+
+    // Mostrar/ocultar panel según autenticación
+    auth.onAuthStateChanged(user => {
+        const adminContainer = document.getElementById('adminContainer');
+        if (user) {
+            adminContainer.classList.remove('d-none');
+            // Opcional: Cerrar el modal de login
+            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
+            if (loginModal) loginModal.hide();
+        } else {
+            adminContainer.classList.add('d-none');
+        }
+    });
+
+    // Botón cerrar sesión en navbar
+    document.getElementById('logoutBtnNav').addEventListener('click', function() {
+        auth.signOut();
+    });
+
+    // Soporte para submenús en Bootstrap 5
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
+            element.addEventListener('mouseenter', function(e){
+                let submenu = element.nextElementSibling;
+                if(submenu && submenu.classList.contains('dropdown-menu')) {
+                    submenu.classList.add('show');
+                }
+            });
+            element.parentElement.addEventListener('mouseleave', function(e){
+                let submenu = element.nextElementSibling;
+                if(submenu && submenu.classList.contains('dropdown-menu')) {
+                    submenu.classList.remove('show');
+                }
+            });
+        });
+    });
+
+    // --- SEGURIDAD Y VALIDACIONES AVANZADAS ---
+
+    // 1. Sanitiza los datos antes de mostrar en el DOM para evitar XSS
+    function sanitize(str) {
+        return String(str).replace(/[<>&"'`]/g, function (c) {
+            return ({
+                '<': '&lt;',
+                '>': '&gt;',
+                '&': '&amp;',
+                '"': '&quot;',
+                "'": '&#39;',
+                '`': '&#96;'
+            })[c];
+        });
+    }
+
+    // 2. Valida URLs de imágenes para evitar inyección de scripts
+    function safeImageUrl(url) {
+        try {
+            const u = new URL(url, window.location.origin);
+            if (u.protocol === "http:" || u.protocol === "https:") return url;
+        } catch {
+            // Si no es una URL válida, retorna imagen dummy
+        }
+        return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
+    }
+
+    // 3. Limita la subida de productos solo a usuarios autenticados y con rol admin
+    // (Esto debe estar en tu backend o reglas de Firebase, pero aquí puedes ocultar el botón en frontend)
+    function isAdmin() {
+        // Suponiendo que guardas el rol en localStorage tras login
+        return localStorage.getItem('user_role') === 'admin';
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        const adminBtn = document.getElementById('btn-agregar-producto');
+        if (adminBtn && !isAdmin()) {
+            adminBtn.style.display = 'none';
+        }
+    });
+
+    // 4. No muestres mensajes de error detallados al usuario final
+    function mostrarErrorGenerico() {
+        alert("Ocurrió un error. Intenta nuevamente más tarde.");
+    }
+
+    // 5. No expongas claves privadas ni tokens en el frontend (solo public keys de Firebase)
+    // (Asegúrate de no tener claves privadas en tu código)
+
+    // 6. Validación de formularios (si tienes formularios de contacto, registro, etc.)
     function validarFormularioProducto(producto) {
+        // Ejemplo de validación básica
         if (!producto.nombre || producto.nombre.trim().length < 2) return false;
         if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) return false;
         if (producto.imagen && !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(producto.imagen)) return false;
         return true;
     }
-    // --- OFUSCACIÓN BÁSICA (eval, btoa) ---
-    (function(){
-        var _0x1a2b=['d2luZG93','dG9w','c2VsZg==','bG9jYXRpb24=','cHJvdG9jb2w=','aG9zdG5hbWU=','aHR0cHM6Ly8=','cGF0aG5hbWU=','c2VhcmNo','bGVuZ3Ro','bG9jYXRpb24=','aW5kZXhPZg=='];
-        (function(_0x4e2c7d,_0x1a2b2b){var _0x2e2c7d=function(_0x3e2c7d){while(--_0x3e2c7d){_0x4e2c7d['push'](_0x4e2c7d['shift']());}};_0x2e2c7d(++_0x1a2b2b);}(_0x1a2b,0x1b));var _0x2a2b=function(_0x4e2c7d,_0x1a2b2b){_0x4e2c7d=_0x4e2c7d-0x0;var _0x2e2c7d=_0x1a2b[_0x4e2c7d];return _0x2e2c7d;};if(window[atob(_0x2a2b('0'))][atob(_0x2a2b('1'))]!==window[atob(_0x2a2b('2'))][atob(_0x2a2b('3'))]){window[atob(_0x2a2b('0'))][atob(_0x2a2b('1'))]=window[atob(_0x2a2b('2'))][atob(_0x2a2b('3'))];}if(window[atob(_0x2a2b('4'))][atob(_0x2a2b('5'))]!==atob(_0x2a2b('6'))&&window[atob(_0x2a2b('4'))][atob(_0x2a2b('7'))].indexOf(atob(_0x2a2b('8')))!==-1){window[atob(_0x2a2b('4'))][atob(_0x2a2b('5'))]=atob(_0x2a2b('6'))+window[atob(_0x2a2b('4'))][atob(_0x2a2b('7'))]+window[atob(_0x2a2b('4'))][atob(_0x2a2b('9'))];}})();
-    // --- FILTRO DIMENSIÓN Y LÓGICA DE FILTROS ---
-    function normalizarDimension(str) {
-        if (!str) return '';
-        return str.toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/\s+/g, '');
+
+    // 7. Protección contra bots (honeypot)
+    // Agrega un campo oculto en tus formularios:
+    // <input type="text" name="website" style="display:none">
+    // Y en JS:
+    function esBot(form) {
+        return form.website && form.website.value !== "";
     }
-    function renderProductosPaginados() {
+
+    // 8. Limita la cantidad de productos por página (ya está en 16)
+    let productosCache = [];
+    // let paginaActual = 1; // Eliminado para evitar redeclaración
+    // const productosPorPagina = 16; // Eliminado para evitar redeclaración
+
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
+            });
+            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
+            renderProductos();
+        });
+    }
+
+    function renderProductos() {
         let productos = productosCache.filter(prod => {
             let mostrar = true;
-            ["categoria", "marca", "capacidad", "modelo", "dimension", "subcategoria"].forEach(campo => {
-                if (mostrar && filtrosSeleccionados[campo] && filtrosSeleccionados[campo].length > 0) {
-                    if (campo === "dimension") {
-                        if (!filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))) {
-                            mostrar = false;
+            // Categoría
+            if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
+            // Subcategoría (solo si la categoría asociada está seleccionada)
+            if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
+                let subcatOk = false;
+                for (const cat of filtrosSeleccionados["categoria"]) {
+                    if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
+                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
+                            subcatOk = true;
+                            break;
                         }
-                    } else if (campo === "subcategoria") {
-                        if (filtrosSeleccionados["categoria"].length > 0) {
-                            let subcatOk = false;
-                            for (const cat of filtrosSeleccionados["categoria"]) {
-                                if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
-                                    if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
-                                        subcatOk = true;
-                                        break;
-                                    }
-                                }
-                            }
-                            if (!subcatOk) mostrar = false;
-                        } else {
-                            if (!filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) mostrar = false;
-                        }
-                    } else {
-                        if (!filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
                     }
                 }
+                if (!subcatOk) mostrar = false;
+            }
+            // Otros campos
+            ["marca", "capacidad", "modelo"].forEach(campo => {
+                if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
             });
+            // Dimensión robusta
+            if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
+                !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
+            ) mostrar = false;
+            // Filtro de precio
             if (mostrar && (typeof prod.precio === "number")) {
                 if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
             }
-            if (mostrar && textoBusqueda) {
-                const campos = [prod.nombre || "", prod.marca || "", prod.modelo || "", prod.categoria || "", prod.subcategoria || ""].join(" ").toLowerCase();
-                if (!campos.includes(textoBusqueda)) mostrar = false;
-            }
             return mostrar;
         });
-        let totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        // ...existing code...
+
+        // Ordenamiento
+        const orden = document.getElementById('ordenarSelect').value;
+        if (orden === "precio-asc") {
+            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
+        } else if (orden === "precio-desc") {
+            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
+        } else if (orden === "capacidad-asc") {
+            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
+        } else if (orden === "capacidad-desc") {
+            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
+        }
+
+        // PAGINACIÓN
+        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
+        const inicio = (paginaActual - 1) * productosPorPagina;
+        const fin = inicio + productosPorPagina;
+        const productosPagina = productos.slice(inicio, fin);
+
+        const contenedor = document.getElementById('productos');
+        contenedor.innerHTML = '';
+        productosPagina.forEach(prod => {
+            contenedor.innerHTML += `
+                <div class="col mb-5">
+                    <div class="card h-100">
+                        <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
+                        <div class="card-body p-4">
+                            <div class="text-center">
+                                <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
+                                <div class="d-flex justify-content-center small text-warning mb-2">
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                    <div class="bi-star-fill"></div>
+                                </div>
+                                s/${sanitize(prod.precio || '---')}
+                            </div>
+                        </div>
+                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        if (contenedor.innerHTML === '') {
+            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+        }
+
+        // Renderiza paginación
+        renderPaginacion(totalPaginas);
+    }
+
+    function renderPaginacion(totalPaginas) {
+        let paginacionHtml = '';
+        if (totalPaginas > 1) {
+            paginacionHtml += `<nav aria-label="Paginación productos"><ul class="pagination justify-content-center">`;
+            for (let i = 1; i <= totalPaginas; i++) {
+                paginacionHtml += `<li class="page-item${i === paginaActual ? ' active' : ''}">
+                    <button class="page-link" data-pagina="${i}">${i}</button>
+                </li>`;
+            }
+            paginacionHtml += `</ul></nav>`;
+        }
+        let paginacionCont = document.getElementById('paginacion-productos');
+        if (!paginacionCont) {
+            paginacionCont = document.createElement('div');
+            paginacionCont.id = 'paginacion-productos';
+            document.getElementById('productos').parentElement.appendChild(paginacionCont);
+        }
+        paginacionCont.innerHTML = paginacionHtml;
+
+        // Eventos de paginación
+        paginacionCont.querySelectorAll('.page-link').forEach(btn => {
+            btn.addEventListener('click', function() {
+                paginaActual = parseInt(this.dataset.pagina);
+                renderProductosPaginados();
+            });
+        });
+    }
+
+    // Sobrescribe renderProductos para usar paginación
+    function renderProductos() {
+        renderProductosPaginados();
+    }
+
+    document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        await cargarFiltrosDinamicos();
+        renderBadges();
+        mostrarProductos();
+    });
+
+    // Mostrar tipo de cambio en el navbar
+async function mostrarTipoCambioNavbar() {
+    let tipoCambio = 3.8;
+    try {
+        const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+        const data = await res.json();
+        if (data && data.venta) {
+            tipoCambio = parseFloat(data.venta);
+        }
+    } catch {}
+    document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambio}`;
+}
+document.addEventListener('DOMContentLoaded', mostrarTipoCambioNavbar);
+
+// --- HTTPS enforcement (solo si tienes backend o service worker) ---
+if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+    location.href = 'https://' + location.hostname + location.pathname + location.search;
+}
+
+// --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
+/*
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /productos/{document} {
+      allow read: if true;
+      allow write: if request.auth != null && request.auth.token.admin == true;
+    }
+  }
+}
+*/
+
+// --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
+    // Limita intentos de login, usa reCAPTCHA en formularios públicos.
+
+    // --- Protección contra clickjacking ---
+    if (window.top !== window.self) {
+        window.top.location = window.self.location;
+    }
+
+    // --- Protección básica contra bots en formularios ---
+    // Si tienes formularios, agrega un campo honeypot oculto y verifica que esté vacío antes de procesar.
+
+    // En onSnapshot:
+    function mostrarProductos() {
+        if (unsubscribe) unsubscribe();
+        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+            productosCache = [];
+            snapshot.forEach(doc => {
+                productosCache.push(doc.data());
+            });
+            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
+            renderProductos();
+        });
+    }
+
+    // Solo muestra productos a todos y el botón de admin solo a administradores
+    
+        // Mostrar productos siempre al cargar la página
+        mostrarProductos();
+
+        // Mostrar/ocultar botón de administración según el usuario
+        auth.onAuthStateChanged(user => {
+            const btnAdmin = document.getElementById('btn-agregar-producto');
+            if (!btnAdmin) return;
+            // Cambia el email por el de tu admin real
+            if (user && user.email === 'melvin23453@gmail.com') {
+                btnAdmin.style.display = '';
+            } else {
+                btnAdmin.style.display = 'none';
+            }
+        });
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Soporte para submenús en Bootstrap 5
+        document.querySelectorAll('.dropdown-submenu').forEach(function (submenu) {
+            submenu.addEventListener('mouseenter', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.add('show');
+            });
+            submenu.addEventListener('mouseleave', function () {
+                let menu = submenu.querySelector('.dropdown-menu');
+                if (menu) menu.classList.remove('show');
+            });
+        });
+    });
+    </script>
+</body>
+</html>
