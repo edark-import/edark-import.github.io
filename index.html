@@ -198,10 +198,31 @@
     if (window.top !== window.self) window.top.location = window.self.location;
 
     // --- VARIABLES GLOBALES ---
+    let tipoCambioGlobal = 3.8; // Tipo de cambio SUNAT global
     // let productosCache = [];
     let paginaActual = 1;
     const productosPorPagina = 15;
     let unsubscribe = null;
+
+    // --- OBTENER Y MOSTRAR TIPO DE CAMBIO SUNAT UNA SOLA VEZ ---
+    async function inicializarTipoCambioSunat() {
+        try {
+            const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
+            const data = await res.json();
+            if (data && data.venta) {
+                tipoCambioGlobal = parseFloat(data.venta);
+            }
+        } catch (e) {
+            tipoCambioGlobal = 3.8;
+        }
+        document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambioGlobal}`;
+    }
+    document.addEventListener('DOMContentLoaded', async function () {
+        await inicializarTipoCambioSunat();
+        await cargarFiltrosDinamicos();
+        renderBadges();
+        mostrarProductos();
+    });
 
     // --- FUNCIONES DE FILTROS Y PAGINACIÓN ---
     // Filtros anidados y filtro de precio
@@ -629,29 +650,17 @@
         auth.signOut();
     });
 
-    // Función para obtener el tipo de cambio SUNAT (último valor)
-    async function obtenerTipoCambioSunat() {
-        try {
-            // API pública de SUNAT (puedes cambiar si tienes otra preferida)
-            const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
-            const data = await res.json();
-            return parseFloat(data.venta); // tipo de cambio de venta
-        } catch (e) {
-            alert('No se pudo obtener el tipo de cambio SUNAT. Usando 3.8 por defecto.');
-            return 3.8; // valor por defecto si falla la API
-        }
-    }
-
     // Calcula y muestra el precio de venta automáticamente
-    document.getElementById('precioCompra').addEventListener('input', async function() {
+    // Usa tipoCambioGlobal en vez de llamar a la API cada vez
+
+    document.getElementById('precioCompra').addEventListener('input', function() {
         const precioCompra = parseFloat(this.value);
         if (isNaN(precioCompra) || precioCompra <= 0) {
             document.getElementById('precioVenta').value = '';
             return;
         }
-        const tc = await obtenerTipoCambioSunat();
-        // Fórmula: precioVenta = precioCompra * tc * 1.18 * 1.45
-        let precioVenta = precioCompra * tc * 1.18 * 1.45;
+        // Fórmula: precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45
+        let precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45;
         precioVenta = Math.ceil(precioVenta); // Redondea hacia arriba
         document.getElementById('precioVenta').value = precioVenta;
     });
@@ -932,38 +941,24 @@
         mostrarProductos();
     });
 
-    // Mostrar tipo de cambio en el navbar
-async function mostrarTipoCambioNavbar() {
-    let tipoCambio = 3.8;
-    try {
-        const res = await fetch('https://api.apis.net.pe/v1/tipo-cambio-sunat');
-        const data = await res.json();
-        if (data && data.venta) {
-            tipoCambio = parseFloat(data.venta);
-        }
-    } catch {}
-    document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambio}`;
-}
-document.addEventListener('DOMContentLoaded', mostrarTipoCambioNavbar);
-
-// --- HTTPS enforcement (solo si tienes backend o service worker) ---
-if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-    location.href = 'https://' + location.hostname + location.pathname + location.search;
-}
-
-// --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
-/*
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /productos/{document} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.token.admin == true;
+    // --- HTTPS enforcement (solo si tienes backend o service worker) ---
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+        location.href = 'https://' + location.hostname + location.pathname + location.search;
     }
-  }
-}
-*/
 
-// --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
+    // --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
+    /*
+    service cloud.firestore {
+      match /databases/{database}/documents {
+        match /productos/{document} {
+          allow read: if true;
+          allow write: if request.auth != null && request.auth.token.admin == true;
+        }
+      }
+    }
+    */
+
+    // --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
     // Limita intentos de login, usa reCAPTCHA en formularios públicos.
 
     // --- Protección contra clickjacking ---
