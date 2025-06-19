@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My E-Commerce Shop{% endblock %}</title>
+    <!-- Attempt to link to a general static css file, assuming it might exist -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+    <!-- Link to a specific shop css file, can be created later -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/shop_style.css') }}">
+    <style>
+        body { font-family: 'Arial', sans-serif; margin: 0; padding: 0; background-color: #f8f8f8; color: #333; }
+        header { background-color: #333; color: white; padding: 1em 0; text-align: center; }
+        header h1 { margin: 0; font-size: 2.5em; }
+        header a { color: white; text-decoration: none; }
+        nav { background-color: #444; padding: 0.5em 0; }
+        nav ul { list-style: none; padding: 0; margin: 0 auto; text-align: center; max-width: 1200px; }
+        nav ul li { display: inline-block; margin: 0 15px; }
+        nav ul li a { color: white; text-decoration: none; font-size: 1.1em; padding: 0.5em 1em; }
+        nav ul li a:hover { background-color: #555; border-radius: 4px; }
+        .container { width: 90%; max-width: 1200px; margin: 20px auto; padding: 20px; background-color: #fff; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        footer { text-align: center; padding: 20px 0; margin-top: 30px; background-color: #333; color: white; }
+        .alert { padding: 15px; margin-bottom: 20px; border: 1px solid transparent; border-radius: 4px; }
+        .alert-success { color: #155724; background-color: #d4edda; border-color: #c3e6cb; }
+        .alert-danger { color: #721c24; background-color: #f8d7da; border-color: #f5c6cb; }
+        .alert-info { color: #0c5460; background-color: #d1ecf1; border-color: #bee5eb; }
+
+        /* Product Grid Basic Styles */
+        .product-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+        .product-card { border: 1px solid #ddd; border-radius: 8px; padding: 15px; width: 280px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-align: center; background-color: #fff; }
+        .product-card img { max-width: 100%; height: 200px; object-fit: cover; border-bottom: 1px solid #eee; margin-bottom: 10px; }
+        .product-card h3 { font-size: 1.4em; margin: 10px 0; }
+        .product-card p { font-size: 1.2em; color: #007bff; margin: 10px 0; }
+        .product-card .btn { display: inline-block; margin-top: 10px; padding: 10px 20px; background-color: #007bff; color: white; text-decoration: none; border-radius: 5px; }
+        .product-card .btn:hover { background-color: #0056b3; }
+
+        /* Product Detail Styles */
+        .product-detail-container { display: flex; gap: 30px; flex-wrap: wrap; }
+        .product-detail-image { flex: 1 1 400px; text-align: center; }
+        .product-detail-image img { max-width: 100%; max-height: 500px; border-radius: 8px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); }
+        .product-detail-info { flex: 1 1 400px; }
+        .product-detail-info h1 { font-size: 2.5em; margin-bottom: 0.5em; }
+        .product-detail-info .price { font-size: 2em; color: #007bff; margin-bottom: 1em; }
+        .product-detail-info .description { font-size: 1.1em; line-height: 1.6; margin-bottom: 1em; }
+        .product-detail-info .stock { font-size: 1.1em; margin-bottom: 1em; }
+        .product-detail-info .btn-add-to-cart { display: inline-block; padding: 15px 30px; background-color: #28a745; color: white; text-decoration: none; font-size: 1.2em; border-radius: 5px; }
+        .product-detail-info .btn-add-to-cart:hover { background-color: #218838; }
+
+    </style>
+</head>
+<body>
+    <header>
+        <a href="{{ url_for('shop.list_products') }}"><h1>My E-Commerce Shop</h1></a>
+    </header>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('shop.list_products') }}">Home</a></li>
+            <li><a href="{{ url_for('shop.list_products') }}">Products</a></li>
+            <!-- More links like "Categories", "About Us", "Contact" can be added here -->
+            <li><a href="{{ url_for('admin.get_products') }}">Admin Panel</a></li> {# Quick link to admin for testing #}
+        </ul>
+    </nav>
+    <div class="container">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </div>
+    <footer>
+        <p>&copy; {{ "now"|date("Y") }} My E-Commerce Shop. All rights reserved.</p>
+    </footer>
+    {% block scripts %}{% endblock %}
+</body>
+</html>
