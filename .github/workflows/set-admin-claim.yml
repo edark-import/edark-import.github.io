@@ -1,0 +1,23 @@
+name: Asignar claim admin Firebase
+
+description: 'Asigna el claim admin: true a un usuario de Firebase Auth usando GitHub Actions.'
+
+on:
+  workflow_dispatch:
+    inputs:
+      admin_email:
+        description: 'Correo del usuario a convertir en admin'
+        required: true
+
+jobs:
+  set-claim:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar dependencias
+        run: npm install firebase-admin
+      - name: Asignar claim admin
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          ADMIN_EMAIL: ${{ github.event.inputs.admin_email }}
+        run: node setAdminClaim.js
