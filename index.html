@@ -644,38 +644,29 @@
         renderPaginacion(totalPaginas);
     }
 
-    function renderPaginacion(totalPaginas) {
-        let paginacionHtml = '';
-        if (totalPaginas > 1) {
-            paginacionHtml += `<nav aria-label="Paginación productos"><ul class="pagination justify-content-center">`;
-            for (let i = 1; i <= totalPaginas; i++) {
-                paginacionHtml += `<li class="page-item${i === paginaActual ? ' active' : ''}">
-                    <button class="page-link" data-pagina="${i}">${i}</button>
-                </li>`;
-            }
-            paginacionHtml += `</ul></nav>`;
+    // --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
+    function parseCapacidad(valor) {
+        if (!valor) return 0;
+        valor = valor.toString().trim().toUpperCase();
+        // Extrae número y unidad
+        const match = valor.match(/([\d,.]+)\s*(TB|GB|MB|KB)?/i);
+        if (!match) return 0;
+        let num = parseFloat(match[1].replace(',', '.'));
+        let unidad = match[2] || 'GB';
+        if (isNaN(num)) return 0;
+        switch (unidad) {
+            case 'TB': return num * 1024;
+            case 'GB': return num;
+            case 'MB': return num / 1024;
+            case 'KB': return num / (1024 * 1024);
+            default: return num;
         }
-        let paginacionCont = document.getElementById('paginacion-productos');
-        if (!paginacionCont) {
-            paginacionCont = document.createElement('div');
-            paginacionCont.id = 'paginacion-productos';
-            document.getElementById('productos').parentElement.appendChild(paginacionCont);
-        }
-        paginacionCont.innerHTML = paginacionHtml;
-
-        // Eventos de paginación
-        paginacionCont.querySelectorAll('.page-link').forEach(btn => {
-            btn.addEventListener('click', function() {
-                paginaActual = parseInt(this.dataset.pagina);
-                renderProductosPaginados();
-            });
-        });
     }
 
-    // Sobrescribe renderProductos para usar paginación
-    function renderProductos() {
-        renderProductosPaginados();
-    }
+    // --- EVENTO PARA ORDENAR ---
+    document.getElementById('ordenarSelect').addEventListener('change', function() {
+        renderProductos();
+    });
 
     // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
     function mostrarProductos() {
