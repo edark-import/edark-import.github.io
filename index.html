@@ -547,50 +547,8 @@
 
     // Modifica renderProductosPaginados para filtrar por búsqueda
     function renderProductosPaginados() {
-        let productos = productosCache.filter(prod => {
-            let mostrar = true;
-            // Categoría
-            if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría
-            if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
-                let subcatOk = false;
-                for (const cat of filtrosSeleccionados["categoria"]) {
-                    if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
-                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
-                            subcatOk = true;
-                            break;
-                        }
-                    }
-                }
-                if (!subcatOk) mostrar = false;
-            }
-            // Otros campos
-            ["marca", "capacidad", "modelo"].forEach(campo => {
-                if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
-            });
-            // Dimensión robusta
-            if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
-                !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-            ) mostrar = false;
-            // Filtro de precio
-            if (mostrar && (typeof prod.precio === "number")) {
-                if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
-            }
-            // Filtro de búsqueda por nombre, marca o modelo
-            if (mostrar && textoBusqueda) {
-                const campos = [
-                    prod.nombre || "",
-                    prod.marca || "",
-                    prod.modelo || "",
-                    prod.categoria || "",
-                    prod.subcategoria || ""
-                ].join(" ").toLowerCase();
-                if (!campos.includes(textoBusqueda)) mostrar = false;
-            }
-            return mostrar;
-        });
-
-        // Ordenamiento
+        let productos = productosCache.filter(productoCoincideFiltros);
+        // ...ordenamiento y paginación...
         const orden = document.getElementById('ordenarSelect').value;
         if (orden === "precio-asc") {
             productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
@@ -601,14 +559,11 @@
         } else if (orden === "capacidad-desc") {
             productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
         }
-
-        // PAGINACIÓN
         const totalPaginas = Math.ceil(productos.length / productosPorPagina);
         if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
         const inicio = (paginaActual - 1) * productosPorPagina;
         const fin = inicio + productosPorPagina;
         const productosPagina = productos.slice(inicio, fin);
-
         const contenedor = document.getElementById('productos');
         contenedor.innerHTML = '';
         productosPagina.forEach((prod, idx) => {
@@ -639,11 +594,13 @@
         if (contenedor.innerHTML === '') {
             contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
         }
-
-        // Renderiza paginación
         renderPaginacion(totalPaginas);
+        asignarEventosProductos();
     }
-
+    // Si tienes renderProductos sin paginación, igual:
+    function renderProductos() {
+        renderProductosPaginados();
+    }
     // --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
     function parseCapacidad(valor) {
         if (!valor) return 0;
