@@ -992,7 +992,7 @@
                             </div>
                         </div>
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Detalles</a></div>
+                            <div class="text-center"><button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button></div>
                         </div>
                     </div>
                 </div>
@@ -1039,70 +1039,79 @@
         renderProductosPaginados();
     }
 
-    document.getElementById('ordenarSelect').addEventListener('change', renderProductos);
-
-    document.addEventListener('DOMContentLoaded', async function () {
-        await cargarFiltrosDinamicos();
-        renderBadges();
-        mostrarProductos();
-    });
-
-    // --- HTTPS enforcement (solo si tienes backend o service worker) ---
-    if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
-        location.href = 'https://' + location.hostname + location.pathname + location.search;
-    }
-
-    // --- Firebase reglas de seguridad (esto es solo referencia, configúralo en la consola de Firebase) ---
-    /*
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /productos/{document} {
-          allow read: if true;
-          allow write: if request.auth != null && request.auth.token.admin == true;
-        }
-      }
-    }
-    */
-
-    // --- Protección contra ataques de fuerza bruta (solo si tienes backend) ---
-    // Limita intentos de login, usa reCAPTCHA en formularios públicos.
-
-    // --- Protección contra clickjacking ---
-    if (window.top !== window.self) {
-        window.top.location = window.self.location;
-    }
-
-    // --- Protección básica contra bots en formularios ---
-    // Si tienes formularios, agrega un campo honeypot oculto y verifica que esté vacío antes de procesar.
-
-    // En onSnapshot:
-    function mostrarProductos() {
-        if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
-            snapshot.forEach(doc => {
-                productosCache.push(doc.data());
+    // --- EVENTOS PARA MODAL DE DETALLES Y CARRITO ---
+    // Asigna eventos después de renderizar productos
+    function asignarEventosProductos() {
+        // Botón Ver Detalles
+        document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const idx = parseInt(this.dataset.idx);
+                const prod = productosCache[idx];
+                if (!prod) return;
+                document.getElementById('detalleImagen').src = safeImageUrl(prod.imagen || '');
+                document.getElementById('detalleNombre').textContent = prod.nombre || '';
+                document.getElementById('detallePrecio').textContent = prod.precio || '';
+                document.getElementById('detalleMarca').textContent = prod.marca || '';
+                document.getElementById('detalleModelo').textContent = prod.modelo || '';
+                document.getElementById('detalleCapacidad').textContent = prod.capacidad || '';
+                document.getElementById('detalleDimension').textContent = prod.dimension || '';
+                document.getElementById('detalleCategoria').textContent = prod.categoria || '';
+                document.getElementById('detalleSubcategoria').textContent = prod.subcategoria || '';
+                // Guarda el índice del producto actual para el botón agregar al carrito
+                document.getElementById('btnAgregarAlCarritoModal').dataset.idx = idx;
+                // Abre el modal
+                const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
+                modal.show();
             });
-            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
-            renderProductos();
         });
     }
 
-    // Solo muestra productos a todos y el botón de admin solo a administradores
-        // Mostrar productos siempre al cargar la página
-        mostrarProductos();
+    // Llama a asignarEventosProductos después de renderizar productos
+    const _renderProductosPaginados = renderProductosPaginados;
+    renderProductosPaginados = function() {
+        _renderProductosPaginados();
+        asignarEventosProductos();
+    };
+    // Si usas renderProductos sin paginación, también puedes asignar eventos ahí
+    const _renderProductos = renderProductos;
+    renderProductos = function() {
+        _renderProductos();
+        asignarEventosProductos();
+    };
 
-        // Mostrar/ocultar botón de administración según el usuario
-        auth.onAuthStateChanged(user => {
-            const btnAdmin = document.getElementById('btn-agregar-producto');
-            if (!btnAdmin) return;
-            // Cambia el email por el de tu admin real
-            if (user && user.email === 'melvin23453@gmail.com') {
-                btnAdmin.style.display = '';
-            } else {
-                btnAdmin.style.display = 'none';
-            }
-        });
+    // --- LÓGICA DE CARRITO ---
+    // Carrito en localStorage
+    function getCarrito() {
+        return JSON.parse(localStorage.getItem('carrito') || '[]');
+    }
+    function setCarrito(carrito) {
+        localStorage.setItem('carrito', JSON.stringify(carrito));
+        actualizarContadorCarrito();
+    }
+    function actualizarContadorCarrito() {
+        const carrito = getCarrito();
+        document.getElementById('cartCount').textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    }
+    // Botón agregar al carrito en modal
+    document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', function() {
+        const idx = parseInt(this.dataset.idx);
+        const prod = productosCache[idx];
+        if (!prod) return;
+        let carrito = getCarrito();
+        const existe = carrito.find(item => item.nombre === prod.nombre);
+        if (existe) {
+            existe.cantidad += 1;
+        } else {
+            carrito.push({ nombre: prod.nombre, precio: prod.precio, cantidad: 1 });
+        }
+        setCarrito(carrito);
+        // Mensaje de éxito
+        this.textContent = '¡Agregado!';
+        setTimeout(() => { this.textContent = 'Agregar al carrito'; }, 1200);
+    });
+    // Inicializa contador al cargar
+    document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
+    // --- FIN FIREBASE ---
     </script>
 
     <script>
