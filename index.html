@@ -968,11 +968,10 @@ function renderCarrito() {
             <div>
                 <img src="${safeImageUrl(item.imagen)}" alt="${sanitize(item.nombre)}" style="width:50px;height:50px;object-fit:cover;" class="me-2 rounded">
                 <span class="fw-bold">${sanitize(item.nombre)}</span><br>
-                <small>S/ ${item.precio} x ${item.cantidad}</small>
+                <small>S/ ${item.precio} x </small>
+                <input type="number" min="1" class="form-control d-inline-block cantidad-input" data-idx="${idx}" value="${item.cantidad}" style="width:70px;display:inline-block;">
             </div>
             <div>
-                <button class="btn btn-sm btn-outline-secondary me-1 btn-restar" data-idx="${idx}">-</button>
-                <button class="btn btn-sm btn-outline-secondary me-1 btn-sumar" data-idx="${idx}">+</button>
                 <button class="btn btn-sm btn-danger btn-eliminar" data-idx="${idx}"><i class="bi bi-trash"></i></button>
             </div>
         </li>`;
@@ -980,23 +979,18 @@ function renderCarrito() {
     html += '</ul>';
     html += `<div class="text-end fw-bold">Total: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}</div>`;
     cont.innerHTML = html;
-    // Eventos sumar/restar/eliminar
-    cont.querySelectorAll('.btn-restar').forEach(btn => {
-        btn.addEventListener('click', function() {
+    // Evento para cambiar cantidad
+    cont.querySelectorAll('.cantidad-input').forEach(input => {
+        input.addEventListener('change', function() {
             const idx = parseInt(this.dataset.idx);
-            if (carrito[idx].cantidad > 1) carrito[idx].cantidad--;
+            let val = parseInt(this.value);
+            if (isNaN(val) || val < 1) val = 1;
+            carrito[idx].cantidad = val;
             guardarCarrito();
             renderCarrito();
         });
     });
-    cont.querySelectorAll('.btn-sumar').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const idx = parseInt(this.dataset.idx);
-            carrito[idx].cantidad++;
-            guardarCarrito();
-            renderCarrito();
-        });
-    });
+    // Evento eliminar
     cont.querySelectorAll('.btn-eliminar').forEach(btn => {
         btn.addEventListener('click', function() {
             const idx = parseInt(this.dataset.idx);
