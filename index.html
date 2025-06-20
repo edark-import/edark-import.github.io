@@ -997,38 +997,50 @@
         renderPaginacion(totalPaginas);
     }
 
-    function renderPaginacion(totalPaginas) {
-        let paginacionHtml = '';
-        if (totalPaginas > 1) {
-            paginacionHtml += `<nav aria-label="Paginación productos"><ul class="pagination justify-content-center">`;
-            for (let i = 1; i <= totalPaginas; i++) {
-                paginacionHtml += `<li class="page-item${i === paginaActual ? ' active' : ''}">
-                    <button class="page-link" data-pagina="${i}">${i}</button>
-                </li>`;
-            }
-            paginacionHtml += `</ul></nav>`;
+    function productoCoincideFiltros(prod) {
+        // Filtro de categoría y subcategoría mejorado
+        const cats = filtrosSeleccionados["categoria"];
+        const subcats = filtrosSeleccionados["subcategoria"];
+        let ok = true;
+        if (cats.length && subcats.length) {
+            // Si ambos seleccionados, debe coincidir con ambos
+            ok = cats.includes(prod.categoria) && subcats.includes(prod.subcategoria);
+        } else if (cats.length) {
+            ok = cats.includes(prod.categoria);
+        } else if (subcats.length) {
+            ok = subcats.includes(prod.subcategoria);
         }
-        let paginacionCont = document.getElementById('paginacion-productos');
-        if (!paginacionCont) {
-            paginacionCont = document.createElement('div');
-            paginacionCont.id = 'paginacion-productos';
-            document.getElementById('productos').parentElement.appendChild(paginacionCont);
-        }
-        paginacionCont.innerHTML = paginacionHtml;
-
-        // Eventos de paginación
-        paginacionCont.querySelectorAll('.page-link').forEach(btn => {
-            btn.addEventListener('click', function() {
-                paginaActual = parseInt(this.dataset.pagina);
-                renderProductosPaginados();
-            });
+        if (!ok) return false;
+        // Otros campos
+        ["marca", "capacidad", "modelo"].forEach(campo => {
+            if (ok && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) ok = false;
         });
+        // Dimensión robusta
+        if (ok && filtrosSeleccionados["dimension"].length > 0 &&
+            !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
+        ) ok = false;
+        // Filtro de precio
+        if (ok && (typeof prod.precio === "number")) {
+            if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) ok = false;
+        }
+        // Filtro de búsqueda por nombre, marca o modelo
+        if (ok && textoBusqueda) {
+            const campos = [
+                prod.nombre || "",
+                prod.marca || "",
+                prod.modelo || "",
+                prod.categoria || "",
+                prod.subcategoria || ""
+            ].join(" ").toLowerCase();
+            if (!campos.includes(textoBusqueda)) ok = false;
+        }
+        return ok;
     }
 
-    // Sobrescribe renderProductos para usar paginación
-    function renderProductos() {
-        renderProductosPaginados();
-    }
+    // Usar productoCoincideFiltros en renderProductosPaginados y renderProductos
+    // ...en la función de renderizado...
+    // let productos = productosCache.filter(productoCoincideFiltros);
+    // ...existing code...
 
     // --- EVENTOS PARA MODAL DE DETALLES Y CARRITO (CORREGIDO) ---
     function asignarEventosProductos() {
