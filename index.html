@@ -862,6 +862,50 @@ function renderPaginacion(totalPaginas) {
             });
         });
     });
+
+    // --- FUNCIÓN PARA FILTRAR PRODUCTOS SEGÚN LOS FILTROS SELECCIONADOS ---
+function productoCoincideFiltros(producto) {
+    // Filtros por campos
+    for (const campo of Object.keys(filtrosSeleccionados)) {
+        const valores = filtrosSeleccionados[campo];
+        if (valores && valores.length > 0) {
+            if (campo === 'subcategoria') {
+                if (!valores.includes(producto.subcategoria)) {
+                    return false;
+                }
+            } else if (campo === 'categoria') {
+                if (!valores.includes(producto.categoria)) {
+                    return false;
+                }
+            } else {
+                if (!valores.includes(producto[campo])) {
+                    return false;
+                }
+            }
+        }
+    }
+    // Filtro de precio
+    if (typeof producto.precio === 'number') {
+        if (producto.precio < precioFiltroMin || producto.precio > precioFiltroMax) {
+            return false;
+        }
+    }
+    // Filtro de búsqueda
+    if (textoBusqueda) {
+        const texto = (
+            (producto.nombre || '') + ' ' +
+            (producto.categoria || '') + ' ' +
+            (producto.subcategoria || '') + ' ' +
+            (producto.marca || '') + ' ' +
+            (producto.capacidad || '') + ' ' +
+            (producto.modelo || '')
+        ).toLowerCase();
+        if (!texto.includes(textoBusqueda)) {
+            return false;
+        }
+    }
+    return true;
+}
     </script>
 </body>
 </html>
