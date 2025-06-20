@@ -112,6 +112,8 @@
                     <input type="text" id="buscadorProductos" class="form-control ms-2" style="max-width: 250px;" placeholder="Buscar producto...">
                 </div>
                 <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center"></div>
+                <!-- Paginación -->
+                <div id="paginacionProductos" class="mt-4"></div>
             </div>
         </div>
     </div>
@@ -601,7 +603,35 @@
     function renderProductos() {
         renderProductosPaginados();
     }
-    // --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
+    // --- FUNCIÓN PARA RENDERIZAR PAGINACIÓN ---
+function renderPaginacion(totalPaginas) {
+    const paginacionContainer = document.getElementById('paginacionProductos');
+    if (!paginacionContainer) return;
+    paginacionContainer.innerHTML = '';
+    if (totalPaginas <= 1) return;
+    let html = '<nav aria-label="Paginación de productos"><ul class="pagination justify-content-center">';
+    // Botón anterior
+    html += `<li class="page-item${paginaActual === 1 ? ' disabled' : ''}"><button class="page-link" data-page="${paginaActual - 1}" ${paginaActual === 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>Anterior</button></li>`;
+    // Números de página
+    for (let i = 1; i <= totalPaginas; i++) {
+        html += `<li class="page-item${paginaActual === i ? ' active' : ''}"><button class="page-link" data-page="${i}">${i}</button></li>`;
+    }
+    // Botón siguiente
+    html += `<li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}"><button class="page-link" data-page="${paginaActual + 1}" ${paginaActual === totalPaginas ? 'tabindex="-1" aria-disabled="true"' : ''}>Siguiente</button></li>`;
+    html += '</ul></nav>';
+    paginacionContainer.innerHTML = html;
+    // Eventos de paginación
+    paginacionContainer.querySelectorAll('.page-link').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const page = parseInt(this.dataset.page);
+            if (!isNaN(page) && page >= 1 && page <= totalPaginas && page !== paginaActual) {
+                paginaActual = page;
+                renderProductos();
+            }
+        });
+    });
+}
+// --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
     function parseCapacidad(valor) {
         if (!valor) return 0;
         valor = valor.toString().trim().toUpperCase();
@@ -1468,6 +1498,7 @@
                     document.body.classList.remove('modal-open');
                     document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
                     modalEl.removeEventListener('hidden.bs.modal', handler);
+
                 });
             };
         });
