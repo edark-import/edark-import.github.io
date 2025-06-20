@@ -910,7 +910,7 @@ function productoCoincideFiltros(producto) {
 
 // --- EVENTO DE BÚSQUEDA ---
 document.addEventListener('DOMContentLoaded', function () {
-    const inputBusqueda = document.getElementById('inputBusqueda');
+    const inputBusqueda = document.getElementById('buscadorProductos');
     if (inputBusqueda) {
         inputBusqueda.addEventListener('input', function () {
             textoBusqueda = this.value.trim().toLowerCase();
@@ -919,31 +919,105 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// --- MODO OSCURO ---
-document.addEventListener('DOMContentLoaded', function () {
-    const darkModeSwitch = document.getElementById('darkModeSwitch');
-    const body = document.body;
-    // Inicializar modo oscuro desde localStorage
-    const darkMode = localStorage.getItem('darkMode') === 'true';
-    if (darkMode) {
-        body.classList.add('dark-mode');
-        if (darkModeSwitch) darkModeSwitch.checked = true;
-    } else {
-        body.classList.remove('dark-mode');
-        if (darkModeSwitch) darkModeSwitch.checked = false;
-    }
-    if (darkModeSwitch) {
-        darkModeSwitch.addEventListener('change', function () {
-            if (this.checked) {
-                body.classList.add('dark-mode');
-                localStorage.setItem('darkMode', 'true');
+// --- ASIGNAR EVENTOS A BOTONES "VER DETALLES" ---
+function asignarEventosProductos() {
+    document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const idx = parseInt(this.getAttribute('data-idx'));
+            const producto = productosCache[idx];
+            if (!producto) return;
+            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
+            document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
+            document.getElementById('detallePrecio').textContent = producto.precio || '';
+            document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
+            document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
+            document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
+            document.getElementById('detalleDimension').textContent = sanitize(producto.dimension || '');
+            document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
+            document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
+            modal.show();
+        });
+    });
+}
+    // --- FUNCIÓN PARA FILTRAR PRODUCTOS SEGÚN LOS FILTROS SELECCIONADOS ---
+function productoCoincideFiltros(producto) {
+    // Filtros por campos
+    for (const campo of Object.keys(filtrosSeleccionados)) {
+        const valores = filtrosSeleccionados[campo];
+        if (valores && valores.length > 0) {
+            if (campo === 'subcategoria') {
+                if (!valores.includes(producto.subcategoria)) {
+                    return false;
+                }
+            } else if (campo === 'categoria') {
+                if (!valores.includes(producto.categoria)) {
+                    return false;
+                }
             } else {
-                body.classList.remove('dark-mode');
-                localStorage.setItem('darkMode', 'false');
+                if (!valores.includes(producto[campo])) {
+                    return false;
+                }
             }
+        }
+    }
+    // Filtro de precio
+    if (typeof producto.precio === 'number') {
+        if (producto.precio < precioFiltroMin || producto.precio > precioFiltroMax) {
+            return false;
+        }
+    }
+    // Filtro de búsqueda
+    if (textoBusqueda) {
+        const texto = (
+            (producto.nombre || '') + ' ' +
+            (producto.categoria || '') + ' ' +
+            (producto.subcategoria || '') + ' ' +
+            (producto.marca || '') + ' ' +
+            (producto.capacidad || '') + ' ' +
+            (producto.modelo || '')
+        ).toLowerCase();
+        if (!texto.includes(textoBusqueda)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+// --- EVENTO DE BÚSQUEDA ---
+document.addEventListener('DOMContentLoaded', function () {
+    const inputBusqueda = document.getElementById('buscadorProductos');
+    if (inputBusqueda) {
+        inputBusqueda.addEventListener('input', function () {
+            textoBusqueda = this.value.trim().toLowerCase();
+            renderProductos();
         });
     }
 });
+
+// --- ASIGNAR EVENTOS A BOTONES "VER DETALLES" ---
+function asignarEventosProductos() {
+    document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const idx = parseInt(this.getAttribute('data-idx'));
+            const producto = productosCache[idx];
+            if (!producto) return;
+            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
+            document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
+            document.getElementById('detallePrecio').textContent = producto.precio || '';
+            document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
+            document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
+            document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
+            document.getElementById('detalleDimension').textContent = sanitize(producto.dimension || '');
+            document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
+            document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
+            modal.show();
+        });
+    });
+}
     </script>
 </body>
 </html>
