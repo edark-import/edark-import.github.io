@@ -1017,7 +1017,7 @@ document.getElementById('btnEnviarWhatsapp').addEventListener('click', function(
     if (carrito.length === 0) return;
     let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
     carrito.forEach(item => {
-        mensaje += `- ${item.nombre} (S/ ${item.precio} x ${item.cantidad})%0A`;
+        mensaje += `• ${item.nombre} %0A(S/ ${item.precio} x ${item.cantidad} UND)%0A`;
     });
     mensaje += `%0ATotal: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}`;
     window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
