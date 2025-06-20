@@ -17,6 +17,69 @@
         .ordenar-select { max-width: 220px; }
         .dropdown-submenu { position: relative; }
         .dropdown-submenu > .dropdown-menu { top: 0; left: 100%; margin-left: 0.1rem; margin-right: 0.1rem; }
+
+        /* Modo oscuro */
+        body.modo-oscuro {
+            background-color: #181a1b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .bg-light {
+            background-color: #23272b !important;
+        }
+        body.modo-oscuro .navbar, body.modo-oscuro .dropdown-menu {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .card {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+            border-color: #444 !important;
+        }
+        body.modo-oscuro .modal-content {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .form-control, body.modo-oscuro .form-select {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+            border-color: #444 !important;
+        }
+        body.modo-oscuro .accordion-button {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .accordion-item {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .bg-dark {
+            background-color: #181a1b !important;
+        }
+        body.modo-oscuro .bg-white {
+            background-color: #23272b !important;
+        }
+        body.modo-oscuro .pagination .page-link {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+            border-color: #444 !important;
+        }
+        body.modo-oscuro .page-item.active .page-link {
+            background-color: #00adb5 !important;
+            color: #fff !important;
+            border-color: #00adb5 !important;
+        }
+        body.modo-oscuro .btn-outline-dark {
+            color: #e0e0e0 !important;
+            border-color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .btn-outline-dark:hover {
+            background-color: #00adb5 !important;
+            color: #fff !important;
+            border-color: #00adb5 !important;
+        }
+        body.modo-oscuro .shadow-sm {
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.5)!important;
+        }
     </style>
 </head>
 <body>
@@ -54,7 +117,7 @@
                     </button>
                     <!-- Botón en navbar -->
                     <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        Admin
+                        <i class="bi bi-person-fill"></i>  
                     </button>
                     <!-- Botón de Carrito en Navbar -->
                     <button class="btn btn-success ms-2 position-relative" type="button" id="cartBtn">
@@ -65,6 +128,11 @@
                     <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
                         Cerrar Sesión
                     </button>
+                    <!-- Switch modo oscuro/claro -->
+                    <div class="form-check form-switch ms-3">
+                        <input class="form-check-input" type="checkbox" id="modoOscuroSwitch">
+                        <label class="form-check-label" for="modoOscuroSwitch" id="modoOscuroLabel"><i class="bi bi-moon"></i></label>
+                    </div>
                 </form>
             </div>
         </div>
@@ -231,7 +299,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     <script>
-    // --- CONFIGURACIÓN FIREBASE ---
+    // --- CONFIGURACIÓN FIREBASE Y LÓGICA PRINCIPAL (SOLO UNA VEZ) ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
         authDomain: "edark-proyect.firebaseapp.com",
@@ -538,15 +606,6 @@
         });
     }
 
-    let textoBusqueda = "";
-
-    // Evento para el buscador
-    document.getElementById('buscadorProductos').addEventListener('input', function() {
-        textoBusqueda = this.value.trim().toLowerCase();
-        paginaActual = 1;
-        renderProductos();
-    });
-
     // Modifica renderProductosPaginados para filtrar por búsqueda
     function renderProductosPaginados() {
         let productos = productosCache.filter(productoCoincideFiltros);
@@ -788,842 +847,6 @@ function renderPaginacion(totalPaginas) {
 
     // Soporte para submenús en Bootstrap 5
     document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
-            element.addEventListener('mouseenter', function(e){
-                let submenu = element.nextElementSibling;
-                if(submenu && submenu.classList.contains('dropdown-menu')) {
-                    submenu.classList.add('show');
-                }
-            });
-            element.parentElement.addEventListener('mouseleave', function(e){
-                let submenu = element.nextElementSibling;
-                if(submenu && submenu.classList.contains('dropdown-menu')) {
-                    submenu.classList.remove('show');
-                }
-            });
-        });
-    });
-
-    // --- SEGURIDAD Y VALIDACIONES AVANZADAS ---
-
-    // 1. Sanitiza los datos antes de mostrar en el DOM para evitar XSS
-    function sanitize(str) {
-        return String(str).replace(/[<>&"'`]/g, function (c) {
-            return ({
-                '<': '&lt;',
-                '>': '&gt;',
-                '&': '&amp;',
-                '"': '&quot;',
-                "'": '&#39;',
-                '`': '&#96;'
-            })[c];
-        });
-    }
-
-    // 2. Valida URLs de imágenes para evitar inyección de scripts
-    function safeImageUrl(url) {
-        try {
-            const u = new URL(url, window.location.origin);
-            if (u.protocol === "http:" || u.protocol === "https:") return url;
-        } catch {
-            // Si no es una URL válida, retorna imagen dummy
-        }
-        return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
-    }
-
-    // 3. Limita la subida de productos solo a usuarios autenticados y con rol admin
-    // (Esto debe estar en tu backend o reglas de Firebase, pero aquí puedes ocultar el botón en frontend)
-    function isAdmin() {
-        // Suponiendo que guardas el rol en localStorage tras login
-        return localStorage.getItem('user_role') === 'admin';
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const adminBtn = document.getElementById('btn-agregar-producto');
-        if (adminBtn && !isAdmin()) {
-            adminBtn.style.display = 'none';
-        }
-    });
-
-    // 4. No muestres mensajes de error detallados al usuario final
-    function mostrarErrorGenerico() {
-        alert("Ocurrió un error. Intenta nuevamente más tarde.");
-    }
-
-    // 5. No expongas claves privadas ni tokens en el frontend (solo public keys de Firebase)
-    // (Asegúrate de no tener claves privadas en tu código)
-
-    // 6. Validación de formularios (si tienes formularios de contacto, registro, etc.)
-    function validarFormularioProducto(producto) {
-        // Ejemplo de validación básica
-        if (!producto.nombre || producto.nombre.trim().length < 2) return false;
-        if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) return false;
-        if (producto.imagen && !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(producto.imagen)) return false;
-        return true;
-    }
-
-    // 7. Protección contra bots (honeypot)
-    // Agrega un campo oculto en tus formularios:
-    // <input type="text" name="website" style="display:none">
-    // Y en JS:
-    function esBot(form) {
-        return form.website && form.website.value !== "";
-    }
-
-    // 8. Limita la cantidad de productos por página (ya está en 16)
-    // let productosCache = []; // Eliminado para evitar redeclaración
-
-    function mostrarProductos() {
-        if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
-            snapshot.forEach(doc => {
-                productosCache.push(doc.data());
-            });
-            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
-            renderProductos();
-        });
-    }
-
-    function renderProductos() {
-        let productos = productosCache.filter(prod => {
-            let mostrar = true;
-            // Categoría
-            if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría (solo si la categoría asociada está seleccionada)
-            if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
-                let subcatOk = false;
-                for (const cat of filtrosSeleccionados["categoria"]) {
-                    if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
-                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
-                            subcatOk = true;
-                            break;
-                        }
-                    }
-                }
-                if (!subcatOk) mostrar = false;
-            }
-            // Otros campos
-            ["marca", "capacidad", "modelo"].forEach(campo => {
-                if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
-            });
-            // Dimensión robusta
-            if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
-                !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-            ) mostrar = false;
-            // Filtro de precio
-            if (mostrar && (typeof prod.precio === "number")) {
-                if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
-            }
-            // Filtro de búsqueda por nombre, marca o modelo
-            if (mostrar && textoBusqueda) {
-                const campos = [
-                    prod.nombre || "",
-                    prod.marca || "",
-                    prod.modelo || "",
-                    prod.categoria || "",
-                    prod.subcategoria || ""
-                ].join(" ").toLowerCase();
-                if (!campos.includes(textoBusqueda)) mostrar = false;
-            }
-            return mostrar;
-        });
-
-        // Ordenamiento
-        const orden = document.getElementById('ordenarSelect').value;
-        if (orden === "precio-asc") {
-            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
-        } else if (orden === "precio-desc") {
-            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
-        } else if (orden === "capacidad-asc") {
-            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
-        } else if (orden === "capacidad-desc") {
-            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
-        }
-
-        // PAGINACIÓN
-        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
-        const inicio = (paginaActual - 1) * productosPorPagina;
-        const fin = inicio + productosPorPagina;
-        const productosPagina = productos.slice(inicio, fin);
-
-        const contenedor = document.getElementById('productos');
-        contenedor.innerHTML = '';
-        productosPagina.forEach(prod => {
-            contenedor.innerHTML += `
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                s/${sanitize(prod.precio || '---')}
-                            </div>
-                        </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        if (contenedor.innerHTML === '') {
-            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
-        }
-
-        // Renderiza paginación
-        renderPaginacion(totalPaginas);
-    }
-
-    // --- FILTRO DE PRODUCTOS ---
-    function productoCoincideFiltros(producto) {
-        // Filtros por campos
-        for (const campo of Object.keys(filtrosSeleccionados)) {
-            const valores = filtrosSeleccionados[campo];
-            if (valores.length > 0) {
-                if (campo === 'subcategoria') {
-                    // Permitir filtrar por subcategoría aunque no haya categoría seleccionada
-                    if (!valores.includes(producto.subcategoria)) {
-                        return false;
-                    }
-                } else if (campo === 'categoria') {
-                    if (!valores.includes(producto.categoria)) {
-                        return false;
-                    }
-                } else {
-                    if (!valores.includes(producto[campo])) {
-                        return false;
-                    }
-                }
-            }
-        }
-        // Filtro de precio
-        if (typeof producto.precio === 'number') {
-            if (producto.precio < precioFiltroMin || producto.precio > precioFiltroMax) {
-                return false;
-            }
-        }
-        // Filtro de búsqueda
-        if (textoBusqueda) {
-            const texto = (
-                (producto.nombre || '') + ' ' +
-                (producto.categoria || '') + ' ' +
-                (producto.subcategoria || '') + ' ' +
-                (producto.marca || '') + ' ' +
-                (producto.capacidad || '') + ' ' +
-                (producto.modelo || '')
-            ).toLowerCase();
-            if (!texto.includes(textoBusqueda)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    // --- ASIGNAR EVENTOS A BOTONES DE VER DETALLES ---
-    function asignarEventosProductos() {
-        document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
-            btn.removeEventListener('click', handleVerDetalles);
-            btn.addEventListener('click', handleVerDetalles);
-        });
-    }
-    function handleVerDetalles(e) {
-        const idx = parseInt(e.currentTarget.dataset.idx);
-        const producto = productosCache[idx];
-        if (!producto) return;
-        mostrarModalDetalles(producto);
-    }
-
-    // --- MODAL DE DETALLES DE PRODUCTO ---
-    function mostrarModalDetalles(producto) {
-        const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
-        const body = document.querySelector('#modalDetallesProducto .modal-body');
-        const header = document.querySelector('#modalDetallesProducto .modal-header');
-        header.innerHTML = `<h5 class="modal-title">${sanitize(producto.nombre || 'Producto')}</h5><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>`;
-        body.innerHTML = `
-            <div class="row">
-                <div class="col-md-5 text-center">
-                    <img src="${safeImageUrl(producto.imagen || '')}" alt="${sanitize(producto.nombre)}" class="img-fluid mb-3" style="max-height:260px;">
-                </div>
-                <div class="col-md-7">
-                    <ul class="list-group list-group-flush mb-3">
-                        <li class="list-group-item"><b>Precio:</b> S/ ${sanitize(producto.precio || '---')}</li>
-                        <li class="list-group-item"><b>Categoría:</b> ${sanitize(producto.categoria || '')}</li>
-                        <li class="list-group-item"><b>Subcategoría:</b> ${sanitize(producto.subcategoria || '')}</li>
-                        <li class="list-group-item"><b>Marca:</b> ${sanitize(producto.marca || '')}</li>
-                        <li class="list-group-item"><b>Capacidad:</b> ${sanitize(producto.capacidad || '')}</li>
-                        <li class="list-group-item"><b>Modelo:</b> ${sanitize(producto.modelo || '')}</li>
-                        <li class="list-group-item"><b>Dimensión:</b> ${sanitize(producto.dimension || '')}</li>
-                    </ul>
-                </div>
-            </div>
-        `;
-        modal.show();
-    }
-
-    // --- MODIFICAR renderProductosPaginados PARA USAR FILTRO Y ASIGNAR EVENTOS ---
-    function renderProductosPaginados() {
-        let productos = productosCache.filter(productoCoincideFiltros);
-        // ...ordenamiento y paginación...
-        const orden = document.getElementById('ordenarSelect').value;
-        if (orden === "precio-asc") {
-            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
-        } else if (orden === "precio-desc") {
-            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
-        } else if (orden === "capacidad-asc") {
-            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
-        } else if (orden === "capacidad-desc") {
-            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
-        }
-        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
-        const inicio = (paginaActual - 1) * productosPorPagina;
-        const fin = inicio + productosPorPagina;
-        const productosPagina = productos.slice(inicio, fin);
-        const contenedor = document.getElementById('productos');
-        contenedor.innerHTML = '';
-        productosPagina.forEach((prod, idx) => {
-            contenedor.innerHTML += `
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                s/${sanitize(prod.precio || '---')}
-                            </div>
-                        </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        if (contenedor.innerHTML === '') {
-            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
-        }
-        renderPaginacion(totalPaginas);
-        asignarEventosProductos();
-    }
-    // --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
-    function parseCapacidad(valor) {
-        if (!valor) return 0;
-        valor = valor.toString().trim().toUpperCase();
-        // Extrae número y unidad
-        const match = valor.match(/([\d,.]+)\s*(TB|GB|MB|KB)?/i);
-        if (!match) return 0;
-        let num = parseFloat(match[1].replace(',', '.'));
-        let unidad = match[2] || 'GB';
-        if (isNaN(num)) return 0;
-        switch (unidad) {
-            case 'TB': return num * 1024;
-            case 'GB': return num;
-            case 'MB': return num / 1024;
-            case 'KB': return num / (1024 * 1024);
-            default: return num;
-        }
-    }
-
-    // --- EVENTO PARA ORDENAR ---
-    document.getElementById('ordenarSelect').addEventListener('change', function() {
-        renderProductos();
-    });
-
-    // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
-    function mostrarProductos() {
-        if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
-            snapshot.forEach(doc => {
-                productosCache.push(doc.data());
-            });
-            paginaActual = 1;
-            renderProductos();
-        });
-    }
-
-    // --- REGLA DE SEGURIDAD FIRESTORE (configura en la consola de Firebase) ---
-    /*
-    service cloud.firestore {
-      match /databases/{database}/documents {
-        match /productos/{document} {
-          allow read: if true;
-          allow write: if request.auth != null && request.auth.token.admin == true;
-        }
-      }
-    }
-    */
-
-    // Login
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    document.getElementById('loginError').textContent = '';
-                    // Cierra el modal si es necesario
-                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                    if (loginModal) loginModal.hide();
-                })
-                .catch(err => {
-                    document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
-                });
-        });
-    });
-
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        auth.signOut();
-    });
-
-    // Calcula y muestra el precio de venta automáticamente
-    // Usa tipoCambioGlobal en vez de llamar a la API cada vez
-
-    document.getElementById('precioCompra').addEventListener('input', calcularPrecioVenta);
-    document.getElementById('monedaCompra').addEventListener('change', calcularPrecioVenta);
-    function calcularPrecioVenta() {
-        const precioCompra = parseFloat(document.getElementById('precioCompra').value);
-        const moneda = document.getElementById('monedaCompra').value;
-        if (isNaN(precioCompra) || precioCompra <= 0) {
-            document.getElementById('precioVenta').value = '';
-            return;
-        }
-        let precioVenta;
-        if (moneda === 'USD') {
-            precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45;
-        } else {
-            precioVenta = precioCompra * 1.18 * 1.45;
-        }
-        precioVenta = Math.ceil(precioVenta);
-        document.getElementById('precioVenta').value = precioVenta;
-    }
-
-    document.getElementById('adminForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        const nombre = document.getElementById('nombre').value.trim();
-        const precioCompra = parseFloat(document.getElementById('precioCompra').value);
-        const precioVenta = parseFloat(document.getElementById('precioVenta').value);
-        const imagen = document.getElementById('imagen').value.trim();
-        const categoria = document.getElementById('categoria').value.trim();
-        const subcategoria = document.getElementById('subcategoria').value.trim();
-        const marca = document.getElementById('marca').value.trim();
-        const capacidad = document.getElementById('capacidad').value.trim();
-        const modelo = document.getElementById('modelo').value.trim();
-        const dimension = document.getElementById('dimension').value.trim();
-        const moneda = document.getElementById('monedaCompra').value;
-
-        // Validación básica
-        if (!nombre || isNaN(precioCompra) || precioCompra <= 0 || isNaN(precioVenta) || precioVenta <= 0 || !imagen || !categoria || !subcategoria || !marca) {
-            alert('Por favor, completa todos los campos obligatorios y asegúrate de que los precios sean válidos.');
-            return;
-        }
-
-        try {
-            await db.collection('productos').add({
-                nombre,
-                precioCompra,
-                precio: precioVenta, // este es el precio de venta en soles
-                imagen,
-                categoria,
-                subcategoria,
-                marca,
-                capacidad,
-                modelo,
-                dimension,
-                moneda
-            });
-            this.reset();
-            document.getElementById('precioVenta').value = '';
-            document.getElementById('monedaCompra').value = 'USD';
-        } catch (err) {
-            alert('Error al registrar el producto. Intenta nuevamente.');
-        }
-    });
-
-    // Mostrar/ocultar panel según autenticación
-    auth.onAuthStateChanged(user => {
-        const adminContainer = document.getElementById('adminContainer');
-        if (user) {
-            adminContainer.classList.remove('d-none');
-            // Opcional: Cerrar el modal de login
-            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-            if (loginModal) loginModal.hide();
-        } else {
-            adminContainer.classList.add('d-none');
-        }
-    });
-
-    // Botón cerrar sesión en navbar
-    document.getElementById('logoutBtnNav').addEventListener('click', function() {
-        auth.signOut();
-    });
-
-    // Soporte para submenús en Bootstrap 5
-    document.addEventListener('DOMContentLoaded', function () {
-        document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
-            element.addEventListener('mouseenter', function(e){
-                let submenu = element.nextElementSibling;
-                if(submenu && submenu.classList.contains('dropdown-menu')) {
-                    submenu.classList.add('show');
-                }
-            });
-            element.parentElement.addEventListener('mouseleave', function(e){
-                let submenu = element.nextElementSibling;
-                if(submenu && submenu.classList.contains('dropdown-menu')) {
-                    submenu.classList.remove('show');
-                }
-            });
-        });
-    });
-
-    // --- SEGURIDAD Y VALIDACIONES AVANZADAS ---
-
-    // 1. Sanitiza los datos antes de mostrar en el DOM para evitar XSS
-    function sanitize(str) {
-        return String(str).replace(/[<>&"'`]/g, function (c) {
-            return ({
-                '<': '&lt;',
-                '>': '&gt;',
-                '&': '&amp;',
-                '"': '&quot;',
-                "'": '&#39;',
-                '`': '&#96;'
-            })[c];
-        });
-    }
-
-    // 2. Valida URLs de imágenes para evitar inyección de scripts
-    function safeImageUrl(url) {
-        try {
-            const u = new URL(url, window.location.origin);
-            if (u.protocol === "http:" || u.protocol === "https:") return url;
-        } catch {
-            // Si no es una URL válida, retorna imagen dummy
-        }
-        return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
-    }
-
-    // 3. Limita la subida de productos solo a usuarios autenticados y con rol admin
-    // (Esto debe estar en tu backend o reglas de Firebase, pero aquí puedes ocultar el botón en frontend)
-    function isAdmin() {
-        // Suponiendo que guardas el rol en localStorage tras login
-        return localStorage.getItem('user_role') === 'admin';
-    }
-    document.addEventListener('DOMContentLoaded', function() {
-        const adminBtn = document.getElementById('btn-agregar-producto');
-        if (adminBtn && !isAdmin()) {
-            adminBtn.style.display = 'none';
-        }
-    });
-
-    // 4. No muestres mensajes de error detallados al usuario final
-    function mostrarErrorGenerico() {
-        alert("Ocurrió un error. Intenta nuevamente más tarde.");
-    }
-
-    // 5. No expongas claves privadas ni tokens en el frontend (solo public keys de Firebase)
-    // (Asegúrate de no tener claves privadas en tu código)
-
-    // 6. Validación de formularios (si tienes formularios de contacto, registro, etc.)
-    function validarFormularioProducto(producto) {
-        // Ejemplo de validación básica
-        if (!producto.nombre || producto.nombre.trim().length < 2) return false;
-        if (!producto.precio || isNaN(producto.precio) || producto.precio <= 0) return false;
-        if (producto.imagen && !/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/i.test(producto.imagen)) return false;
-        return true;
-    }
-
-    // 7. Protección contra bots (honeypot)
-    // Agrega un campo oculto en tus formularios:
-    // <input type="text" name="website" style="display:none">
-    // Y en JS:
-    function esBot(form) {
-        return form.website && form.website.value !== "";
-    }
-
-    // 8. Limita la cantidad de productos por página (ya está en 16)
-    // let productosCache = []; // Eliminado para evitar redeclaración
-
-    function mostrarProductos() {
-        if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
-            snapshot.forEach(doc => {
-                productosCache.push(doc.data());
-            });
-            paginaActual = 1; // Siempre vuelve a la primera página al filtrar
-            renderProductos();
-        });
-    }
-
-    function renderProductos() {
-        let productos = productosCache.filter(prod => {
-            let mostrar = true;
-            // Categoría
-            if (filtrosSeleccionados["categoria"].length > 0 && !filtrosSeleccionados["categoria"].includes(prod.categoria)) mostrar = false;
-            // Subcategoría (solo si la categoría asociada está seleccionada)
-            if (mostrar && filtrosSeleccionados["subcategoria"].length > 0) {
-                let subcatOk = false;
-                for (const cat of filtrosSeleccionados["categoria"]) {
-                    if (subcategoriasPorCategoria[cat] && subcategoriasPorCategoria[cat].has(prod.subcategoria)) {
-                        if (filtrosSeleccionados["subcategoria"].includes(prod.subcategoria)) {
-                            subcatOk = true;
-                            break;
-                        }
-                    }
-                }
-                if (!subcatOk) mostrar = false;
-            }
-            // Otros campos
-            ["marca", "capacidad", "modelo"].forEach(campo => {
-                if (mostrar && filtrosSeleccionados[campo].length > 0 && !filtrosSeleccionados[campo].includes(prod[campo])) mostrar = false;
-            });
-            // Dimensión robusta
-            if (mostrar && filtrosSeleccionados["dimension"].length > 0 &&
-                !filtrosSeleccionados["dimension"].some(val => normalizarDimension(val) === normalizarDimension(prod.dimension))
-            ) mostrar = false;
-            // Filtro de precio
-            if (mostrar && (typeof prod.precio === "number")) {
-                if (prod.precio < precioFiltroMin || prod.precio > precioFiltroMax) mostrar = false;
-            }
-            // Filtro de búsqueda por nombre, marca o modelo
-            if (mostrar && textoBusqueda) {
-                const campos = [
-                    prod.nombre || "",
-                    prod.marca || "",
-                    prod.modelo || "",
-                    prod.categoria || "",
-                    prod.subcategoria || ""
-                ].join(" ").toLowerCase();
-                if (!campos.includes(textoBusqueda)) mostrar = false;
-            }
-            return mostrar;
-        });
-
-        // Ordenamiento
-        const orden = document.getElementById('ordenarSelect').value;
-        if (orden === "precio-asc") {
-            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
-        } else if (orden === "precio-desc") {
-            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
-        } else if (orden === "capacidad-asc") {
-            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
-        } else if (orden === "capacidad-desc") {
-            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
-        }
-
-        // PAGINACIÓN
-        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
-        const inicio = (paginaActual - 1) * productosPorPagina;
-        const fin = inicio + productosPorPagina;
-        const productosPagina = productos.slice(inicio, fin);
-
-        const contenedor = document.getElementById('productos');
-        contenedor.innerHTML = '';
-        productosPagina.forEach(prod => {
-            contenedor.innerHTML += `
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                s/${sanitize(prod.precio || '---')}
-                            </div>
-                        </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button></div>
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        if (contenedor.innerHTML === '') {
-            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
-        }
-
-        // Renderiza paginación
-        renderPaginacion(totalPaginas);
-    }
-
-    // --- EVENTOS PARA MODAL DE DETALLES Y CARRITO (CORREGIDO) ---
-    function asignarEventosProductos() {
-        // Botón Ver Detalles
-        document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
-            btn.onclick = function() {
-                const idx = parseInt(this.dataset.idx);
-                const prod = productosCache[idx];
-                if (!prod) return;
-                document.getElementById('detalleImagen').src = safeImageUrl(prod.imagen || '');
-                document.getElementById('detalleNombre').textContent = prod.nombre || '';
-                document.getElementById('detallePrecio').textContent = prod.precio || '';
-                document.getElementById('detalleMarca').textContent = prod.marca || '';
-                document.getElementById('detalleModelo').textContent = prod.modelo || '';
-                document.getElementById('detalleCapacidad').textContent = prod.capacidad || '';
-                document.getElementById('detalleDimension').textContent = prod.dimension || '';
-                document.getElementById('detalleCategoria').textContent = prod.categoria || '';
-                document.getElementById('detalleSubcategoria').textContent = prod.subcategoria || '';
-                document.getElementById('btnAgregarAlCarritoModal').dataset.idx = idx;
-                // Usa la instancia existente del modal
-                const modalEl = document.getElementById('modalDetallesProducto');
-                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
-                modal.show();
-                // Corrige backdrop si se cierra mal
-                modalEl.addEventListener('hidden.bs.modal', function handler() {
-                    document.body.classList.remove('modal-open');
-                    document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
-                    modalEl.removeEventListener('hidden.bs.modal', handler);
-
-                });
-            };
-        });
-    }
-
-    // Llama a asignarEventosProductos después de renderizar productos (sin recursión infinita)
-    function renderProductosPaginadosConEventos() {
-        renderProductosPaginados_original();
-        asignarEventosProductos();
-    }
-    function renderProductosConEventos() {
-        renderProductos_original();
-        asignarEventosProductos();
-    }
-    // Guarda las funciones originales
-    const renderProductosPaginados_original = renderProductosPaginados;
-    const renderProductos_original = renderProductos;
-    // Reemplaza las funciones públicas
-    renderProductosPaginados = renderProductosPaginadosConEventos;
-    renderProductos = renderProductosConEventos;
-
-    // --- LÓGICA DE CARRITO Y MODAL CARRITO ---
-    function getCarrito() {
-        return JSON.parse(localStorage.getItem('carrito') || '[]');
-    }
-    function setCarrito(carrito) {
-        localStorage.setItem('carrito', JSON.stringify(carrito));
-        actualizarContadorCarrito();
-    }
-    function actualizarContadorCarrito() {
-        const carrito = getCarrito();
-        document.getElementById('cartCount').textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
-    }
-    // Botón agregar al carrito en modal
-    document.getElementById('btnAgregarAlCarritoModal').onclick = function() {
-        const idx = parseInt(this.dataset.idx);
-        const prod = productosCache[idx];
-        if (!prod) return;
-        let carrito = getCarrito();
-        const existe = carrito.find(item => item.nombre === prod.nombre);
-        if (existe) {
-            existe.cantidad += 1;
-        } else {
-            carrito.push({ nombre: prod.nombre, precio: prod.precio, cantidad: 1 });
-        }
-        setCarrito(carrito);
-        this.textContent = '¡Agregado!';
-        setTimeout(() => { this.textContent = 'Agregar al carrito'; }, 1200);
-    };
-    document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
-
-    // Mostrar modal carrito y su contenido
-    document.getElementById('cartBtn').onclick = function() {
-        renderCarritoContenido();
-        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCarrito'));
-        modal.show();
-    };
-    function renderCarritoContenido() {
-        const carrito = getCarrito();
-        const cont = document.getElementById('carritoContenido');
-        if (!carrito.length) {
-            cont.innerHTML = '<div class="text-center text-muted">El carrito está vacío.</div>';
-            return;
-        }
-        let html = '<table class="table table-sm"><thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th><th></th></tr></thead><tbody>';
-        carrito.forEach((item, i) => {
-            html += `<tr><td>${sanitize(item.nombre)}</td><td><input type="number" min="1" value="${item.cantidad}" data-idx="${i}" class="form-control form-control-sm input-cantidad" style="width:60px"></td><td>S/ ${item.precio}</td><td>S/ ${item.precio * item.cantidad}</td><td><button class="btn btn-danger btn-sm btn-eliminar-item" data-idx="${i}">&times;</button></td></tr>`;
-        });
-        html += '</tbody></table>';
-        cont.innerHTML = html;
-        // Eventos para cambiar cantidad
-        cont.querySelectorAll('.input-cantidad').forEach(input => {
-            input.onchange = function() {
-                let carrito = getCarrito();
-                const idx = parseInt(this.dataset.idx);
-                let val = parseInt(this.value);
-                if (isNaN(val) || val < 1) val = 1;
-                carrito[idx].cantidad = val;
-                setCarrito(carrito);
-                renderCarritoContenido();
-            };
-        });
-        // Eventos para eliminar
-        cont.querySelectorAll('.btn-eliminar-item').forEach(btn => {
-            btn.onclick = function() {
-                let carrito = getCarrito();
-                carrito.splice(parseInt(this.dataset.idx), 1);
-                setCarrito(carrito);
-                renderCarritoContenido();
-            };
-        });
-    }
-    // Vaciar carrito
-    document.getElementById('btnVaciarCarrito').onclick = function() {
-        if (confirm('¿Vaciar el carrito?')) {
-            setCarrito([]);
-            renderCarritoContenido();
-        }
-    };
-    // Enviar pedido por WhatsApp
-    document.getElementById('btnEnviarWhatsapp').onclick = function() {
-        const carrito = getCarrito();
-        if (!carrito.length) {
-            alert('El carrito está vacío.');
-            return;
-        }
-        let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
-        carrito.forEach(item => {
-            mensaje += `- ${item.nombre} x${item.cantidad} (S/ ${item.precio * item.cantidad})%0A`;
-        });
-        mensaje += `%0ATotal: S/ ` + carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
-        window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
-    };
-    // Corrige backdrop del modal carrito si se cierra mal
-    document.getElementById('modalCarrito').addEventListener('hidden.bs.modal', function handler() {
-        document.body.classList.remove('modal-open');
-        document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
-        this.removeEventListener('hidden.bs.modal', handler);
-    });
-    // --- FIN FIREBASE ---
-    </script>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Soporte para submenús en Bootstrap 5
         document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
             element.addEventListener('mouseenter', function(e){
                 let submenu = element.nextElementSibling;
