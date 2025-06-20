@@ -941,83 +941,122 @@ function asignarEventosProductos() {
         });
     });
 }
-    // --- FUNCIÓN PARA FILTRAR PRODUCTOS SEGÚN LOS FILTROS SELECCIONADOS ---
-function productoCoincideFiltros(producto) {
-    // Filtros por campos
-    for (const campo of Object.keys(filtrosSeleccionados)) {
-        const valores = filtrosSeleccionados[campo];
-        if (valores && valores.length > 0) {
-            if (campo === 'subcategoria') {
-                if (!valores.includes(producto.subcategoria)) {
-                    return false;
-                }
-            } else if (campo === 'categoria') {
-                if (!valores.includes(producto.categoria)) {
-                    return false;
-                }
-            } else {
-                if (!valores.includes(producto[campo])) {
-                    return false;
-                }
-            }
-        }
-    }
-    // Filtro de precio
-    if (typeof producto.precio === 'number') {
-        if (producto.precio < precioFiltroMin || producto.precio > precioFiltroMax) {
-            return false;
-        }
-    }
-    // Filtro de búsqueda
-    if (textoBusqueda) {
-        const texto = (
-            (producto.nombre || '') + ' ' +
-            (producto.categoria || '') + ' ' +
-            (producto.subcategoria || '') + ' ' +
-            (producto.marca || '') + ' ' +
-            (producto.capacidad || '') + ' ' +
-            (producto.modelo || '')
-        ).toLowerCase();
-        if (!texto.includes(textoBusqueda)) {
-            return false;
-        }
-    }
-    return true;
+    // --- CARRITO DE COMPRAS ---
+let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+function guardarCarrito() {
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+    actualizarContadorCarrito();
 }
 
-// --- EVENTO DE BÚSQUEDA ---
-document.addEventListener('DOMContentLoaded', function () {
-    const inputBusqueda = document.getElementById('buscadorProductos');
-    if (inputBusqueda) {
-        inputBusqueda.addEventListener('input', function () {
-            textoBusqueda = this.value.trim().toLowerCase();
-            renderProductos();
-        });
-    }
-});
+function actualizarContadorCarrito() {
+    const count = carrito.reduce((acc, item) => acc + item.cantidad, 0);
+    const badge = document.getElementById('cartCount');
+    if (badge) badge.textContent = count;
+}
 
-// --- ASIGNAR EVENTOS A BOTONES "VER DETALLES" ---
-function asignarEventosProductos() {
-    document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const idx = parseInt(this.getAttribute('data-idx'));
-            const producto = productosCache[idx];
-            if (!producto) return;
-            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
-            document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
-            document.getElementById('detallePrecio').textContent = producto.precio || '';
-            document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
-            document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
-            document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
-            document.getElementById('detalleDimension').textContent = sanitize(producto.dimension || '');
-            document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
-            document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
-            // Mostrar modal
-            const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
-            modal.show();
+function renderCarrito() {
+    const cont = document.getElementById('carritoContenido');
+    if (!cont) return;
+    if (carrito.length === 0) {
+        cont.innerHTML = '<div class="text-center text-muted">El carrito está vacío.</div>';
+        return;
+    }
+    let html = '<ul class="list-group mb-3">';
+    carrito.forEach((item, idx) => {
+        html += `<li class="list-group-item d-flex justify-content-between align-items-center">
+            <div>
+                <img src="${safeImageUrl(item.imagen)}" alt="${sanitize(item.nombre)}" style="width:50px;height:50px;object-fit:cover;" class="me-2 rounded">
+                <span class="fw-bold">${sanitize(item.nombre)}</span><br>
+                <small>S/ ${item.precio} x ${item.cantidad}</small>
+            </div>
+            <div>
+                <button class="btn btn-sm btn-outline-secondary me-1 btn-restar" data-idx="${idx}">-</button>
+                <button class="btn btn-sm btn-outline-secondary me-1 btn-sumar" data-idx="${idx}">+</button>
+                <button class="btn btn-sm btn-danger btn-eliminar" data-idx="${idx}"><i class="bi bi-trash"></i></button>
+            </div>
+        </li>`;
+    });
+    html += '</ul>';
+    html += `<div class="text-end fw-bold">Total: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}</div>`;
+    cont.innerHTML = html;
+    // Eventos sumar/restar/eliminar
+    cont.querySelectorAll('.btn-restar').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const idx = parseInt(this.dataset.idx);
+            if (carrito[idx].cantidad > 1) carrito[idx].cantidad--;
+            guardarCarrito();
+            renderCarrito();
+        });
+    });
+    cont.querySelectorAll('.btn-sumar').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const idx = parseInt(this.dataset.idx);
+            carrito[idx].cantidad++;
+            guardarCarrito();
+            renderCarrito();
+        });
+    });
+    cont.querySelectorAll('.btn-eliminar').forEach(btn => {
+        btn.addEventListener('click', function() {
+            const idx = parseInt(this.dataset.idx);
+            carrito.splice(idx, 1);
+            guardarCarrito();
+            renderCarrito();
         });
     });
 }
+
+document.getElementById('cartBtn').addEventListener('click', function() {
+    renderCarrito();
+    const modal = new bootstrap.Modal(document.getElementById('modalCarrito'));
+    modal.show();
+});
+
+document.getElementById('btnVaciarCarrito').addEventListener('click', function() {
+    carrito = [];
+    guardarCarrito();
+    renderCarrito();
+});
+
+document.getElementById('btnEnviarWhatsapp').addEventListener('click', function() {
+    if (carrito.length === 0) return;
+    let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
+    carrito.forEach(item => {
+        mensaje += `- ${item.nombre} (S/ ${item.precio} x ${item.cantidad})%0A`;
+    });
+    mensaje += `%0ATotal: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}`;
+    window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+});
+
+// --- AGREGAR AL CARRITO DESDE EL MODAL ---
+document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', function() {
+    const nombre = document.getElementById('detalleNombre').textContent;
+    const precio = parseFloat(document.getElementById('detallePrecio').textContent);
+    const imagen = document.getElementById('detalleImagen').src;
+    // Buscar en productosCache el producto exacto
+    const producto = productosCache.find(p => sanitize(p.nombre) === nombre && p.precio == precio);
+    if (!producto) return;
+    const idx = carrito.findIndex(item => item.nombre === producto.nombre && item.precio === producto.precio);
+    if (idx >= 0) {
+        carrito[idx].cantidad++;
+    } else {
+        carrito.push({
+            nombre: producto.nombre,
+            precio: producto.precio,
+            imagen: producto.imagen,
+            cantidad: 1
+        });
+    }
+    guardarCarrito();
+    // Opcional: cerrar modal
+    const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
+    if (modal) modal.hide();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    actualizarContadorCarrito();
+});
     </script>
 </body>
 </html>
