@@ -1051,6 +1051,31 @@ document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', fu
 document.addEventListener('DOMContentLoaded', function() {
     actualizarContadorCarrito();
 });
+    // --- MODO OSCURO ---
+document.addEventListener('DOMContentLoaded', function () {
+    const switchOscuro = document.getElementById('modoOscuroSwitch');
+    const body = document.body;
+    // Inicializar desde localStorage
+    const dark = localStorage.getItem('modoOscuro') === 'true';
+    if (dark) {
+        body.classList.add('modo-oscuro');
+        if (switchOscuro) switchOscuro.checked = true;
+    } else {
+        body.classList.remove('modo-oscuro');
+        if (switchOscuro) switchOscuro.checked = false;
+    }
+    if (switchOscuro) {
+        switchOscuro.addEventListener('change', function () {
+            if (this.checked) {
+                body.classList.add('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'true');
+            } else {
+                body.classList.remove('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'false');
+            }
+        });
+    }
+});
     </script>
 </body>
 </html>
