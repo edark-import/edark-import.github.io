@@ -1039,12 +1039,11 @@
         renderProductosPaginados();
     }
 
-    // --- EVENTOS PARA MODAL DE DETALLES Y CARRITO ---
-    // Asigna eventos después de renderizar productos
+    // --- EVENTOS PARA MODAL DE DETALLES Y CARRITO (CORREGIDO) ---
     function asignarEventosProductos() {
         // Botón Ver Detalles
         document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
-            btn.addEventListener('click', function() {
+            btn.onclick = function() {
                 const idx = parseInt(this.dataset.idx);
                 const prod = productosCache[idx];
                 if (!prod) return;
@@ -1057,30 +1056,38 @@
                 document.getElementById('detalleDimension').textContent = prod.dimension || '';
                 document.getElementById('detalleCategoria').textContent = prod.categoria || '';
                 document.getElementById('detalleSubcategoria').textContent = prod.subcategoria || '';
-                // Guarda el índice del producto actual para el botón agregar al carrito
                 document.getElementById('btnAgregarAlCarritoModal').dataset.idx = idx;
-                // Abre el modal
-                const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
+                // Usa la instancia existente del modal
+                const modalEl = document.getElementById('modalDetallesProducto');
+                const modal = bootstrap.Modal.getOrCreateInstance(modalEl);
                 modal.show();
-            });
+                // Corrige backdrop si se cierra mal
+                modalEl.addEventListener('hidden.bs.modal', function handler() {
+                    document.body.classList.remove('modal-open');
+                    document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
+                    modalEl.removeEventListener('hidden.bs.modal', handler);
+                });
+            };
         });
     }
 
-    // Llama a asignarEventosProductos después de renderizar productos
-    const _renderProductosPaginados = renderProductosPaginados;
-    renderProductosPaginados = function() {
-        _renderProductosPaginados();
+    // Llama a asignarEventosProductos después de renderizar productos (sin recursión infinita)
+    function renderProductosPaginadosConEventos() {
+        renderProductosPaginados_original();
         asignarEventosProductos();
-    };
-    // Si usas renderProductos sin paginación, también puedes asignar eventos ahí
-    const _renderProductos = renderProductos;
-    renderProductos = function() {
-        _renderProductos();
+    }
+    function renderProductosConEventos() {
+        renderProductos_original();
         asignarEventosProductos();
-    };
+    }
+    // Guarda las funciones originales
+    const renderProductosPaginados_original = renderProductosPaginados;
+    const renderProductos_original = renderProductos;
+    // Reemplaza las funciones públicas
+    renderProductosPaginados = renderProductosPaginadosConEventos;
+    renderProductos = renderProductosConEventos;
 
-    // --- LÓGICA DE CARRITO ---
-    // Carrito en localStorage
+    // --- LÓGICA DE CARRITO Y MODAL CARRITO ---
     function getCarrito() {
         return JSON.parse(localStorage.getItem('carrito') || '[]');
     }
@@ -1093,7 +1100,7 @@
         document.getElementById('cartCount').textContent = carrito.reduce((acc, item) => acc + item.cantidad, 0);
     }
     // Botón agregar al carrito en modal
-    document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', function() {
+    document.getElementById('btnAgregarAlCarritoModal').onclick = function() {
         const idx = parseInt(this.dataset.idx);
         const prod = productosCache[idx];
         if (!prod) return;
@@ -1105,12 +1112,79 @@
             carrito.push({ nombre: prod.nombre, precio: prod.precio, cantidad: 1 });
         }
         setCarrito(carrito);
-        // Mensaje de éxito
         this.textContent = '¡Agregado!';
         setTimeout(() => { this.textContent = 'Agregar al carrito'; }, 1200);
-    });
-    // Inicializa contador al cargar
+    };
     document.addEventListener('DOMContentLoaded', actualizarContadorCarrito);
+
+    // Mostrar modal carrito y su contenido
+    document.getElementById('cartBtn').onclick = function() {
+        renderCarritoContenido();
+        const modal = bootstrap.Modal.getOrCreateInstance(document.getElementById('modalCarrito'));
+        modal.show();
+    };
+    function renderCarritoContenido() {
+        const carrito = getCarrito();
+        const cont = document.getElementById('carritoContenido');
+        if (!carrito.length) {
+            cont.innerHTML = '<div class="text-center text-muted">El carrito está vacío.</div>';
+            return;
+        }
+        let html = '<table class="table table-sm"><thead><tr><th>Producto</th><th>Cantidad</th><th>Precio</th><th>Total</th><th></th></tr></thead><tbody>';
+        carrito.forEach((item, i) => {
+            html += `<tr><td>${sanitize(item.nombre)}</td><td><input type="number" min="1" value="${item.cantidad}" data-idx="${i}" class="form-control form-control-sm input-cantidad" style="width:60px"></td><td>S/ ${item.precio}</td><td>S/ ${item.precio * item.cantidad}</td><td><button class="btn btn-danger btn-sm btn-eliminar-item" data-idx="${i}">&times;</button></td></tr>`;
+        });
+        html += '</tbody></table>';
+        cont.innerHTML = html;
+        // Eventos para cambiar cantidad
+        cont.querySelectorAll('.input-cantidad').forEach(input => {
+            input.onchange = function() {
+                let carrito = getCarrito();
+                const idx = parseInt(this.dataset.idx);
+                let val = parseInt(this.value);
+                if (isNaN(val) || val < 1) val = 1;
+                carrito[idx].cantidad = val;
+                setCarrito(carrito);
+                renderCarritoContenido();
+            };
+        });
+        // Eventos para eliminar
+        cont.querySelectorAll('.btn-eliminar-item').forEach(btn => {
+            btn.onclick = function() {
+                let carrito = getCarrito();
+                carrito.splice(parseInt(this.dataset.idx), 1);
+                setCarrito(carrito);
+                renderCarritoContenido();
+            };
+        });
+    }
+    // Vaciar carrito
+    document.getElementById('btnVaciarCarrito').onclick = function() {
+        if (confirm('¿Vaciar el carrito?')) {
+            setCarrito([]);
+            renderCarritoContenido();
+        }
+    };
+    // Enviar pedido por WhatsApp
+    document.getElementById('btnEnviarWhatsapp').onclick = function() {
+        const carrito = getCarrito();
+        if (!carrito.length) {
+            alert('El carrito está vacío.');
+            return;
+        }
+        let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
+        carrito.forEach(item => {
+            mensaje += `- ${item.nombre} x${item.cantidad} (S/ ${item.precio * item.cantidad})%0A`;
+        });
+        mensaje += `%0ATotal: S/ ` + carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+        window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+    };
+    // Corrige backdrop del modal carrito si se cierra mal
+    document.getElementById('modalCarrito').addEventListener('hidden.bs.modal', function handler() {
+        document.body.classList.remove('modal-open');
+        document.querySelectorAll('.modal-backdrop').forEach(e => e.remove());
+        this.removeEventListener('hidden.bs.modal', handler);
+    });
     // --- FIN FIREBASE ---
     </script>
 
