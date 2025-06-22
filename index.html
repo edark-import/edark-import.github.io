@@ -91,21 +91,25 @@ fetch('footer.html')
 </script>
 <body>
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <a class="navbar-brand" href="index.html">
+                <img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_1.png">
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                     <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Inicio</a></li> 
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="consultoria.html">Consultoría tecnológica</a></li>
                             <li><a class="dropdown-item" href="soporte.html">Soporte técnico</a></li>
                             <li class="dropdown-submenu">
                                 <a class="dropdown-item dropdown-toggle" href="#" id="asesoramientoDropdown" data-bs-toggle="dropdown" aria-expanded="false">Asesoramiento Tecnológico</a>
-                                <ul class="dropdown-menu" aria-labelledby="asesoramientoDropdown">
+                                <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="asesoramientoDropdown">
                                     <li><a class="dropdown-item" href="asesoramiento-hogar.html">Hogar</a></li>
                                     <li><a class="dropdown-item" href="asesoramiento-empresa.html">Empresa</a></li>
                                 </ul>
@@ -118,7 +122,7 @@ fetch('footer.html')
                     <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
                 </ul>
                 <form class="d-flex align-items-center" id="adminNav">
-                    <button class="btn btn-outline-dark" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
+                    <button class="btn btn-outline-light" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
                         <i class="bi-currency-exchange me-1"></i>
                         <span id="tipoCambioText">S/ 3.8</span>
                     </button>
@@ -138,7 +142,7 @@ fetch('footer.html')
                     <!-- Switch modo oscuro/claro -->
                     <div class="form-check form-switch ms-3">
                         <input class="form-check-input" type="checkbox" id="modoOscuroSwitch">
-                        <label class="form-check-label" for="modoOscuroSwitch" id="modoOscuroLabel"><i class="bi bi-moon"></i></label>
+                        <label class="form-check-label text-light" for="modoOscuroSwitch" id="modoOscuroLabel"><i class="bi bi-moon"></i></label>
                     </div>
                 </form>
             </div>
