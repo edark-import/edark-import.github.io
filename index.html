@@ -636,6 +636,10 @@ fetch('footer.html')
 
     // --- MOSTRAR PRODUCTOS CON PAGINACIÓN Y SEGURIDAD ---
     function mostrarProductos() {
+        // Mostrar loader y ocultar productos
+        document.getElementById('loaderProductos').style.display = 'block';
+        document.getElementById('productos').style.display = 'none';
+
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
             productosCache = [];
@@ -644,6 +648,10 @@ fetch('footer.html')
             });
             paginaActual = 1;
             renderProductos();
+
+            // Ocultar loader y mostrar productos
+            document.getElementById('loaderProductos').style.display = 'none';
+            document.getElementById('productos').style.display = '';
         });
     }
 
@@ -757,6 +765,10 @@ function renderPaginacion(totalPaginas) {
 
     // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
     function mostrarProductos() {
+        // Mostrar loader y ocultar productos
+        document.getElementById('loaderProductos').style.display = 'block';
+        document.getElementById('productos').style.display = 'none';
+
         if (unsubscribe) unsubscribe();
         unsubscribe = db.collection('productos').onSnapshot(snapshot => {
             productosCache = [];
@@ -765,6 +777,10 @@ function renderPaginacion(totalPaginas) {
             });
             paginaActual = 1;
             renderProductos();
+
+            // Ocultar loader y mostrar productos
+            document.getElementById('loaderProductos').style.display = 'none';
+            document.getElementById('productos').style.display = '';
         });
     }
 
