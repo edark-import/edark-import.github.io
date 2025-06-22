@@ -671,87 +671,135 @@ fetch('footer.html')
     }
 
     // Modifica renderProductosPaginados para filtrar por búsqueda
-    function renderProductosPaginados() {
-        let productos = productosCache.filter(productoCoincideFiltros);
-        // ...ordenamiento y paginación...
-        const orden = document.getElementById('ordenarSelect').value;
-        if (orden === "precio-asc") {
-            productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
-        } else if (orden === "precio-desc") {
-            productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
-        } else if (orden === "capacidad-asc") {
-            productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
-        } else if (orden === "capacidad-desc") {
-            productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
-        }
-        const totalPaginas = Math.ceil(productos.length / productosPorPagina);
-        if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
-        const inicio = (paginaActual - 1) * productosPorPagina;
-        const fin = inicio + productosPorPagina;
-        const productosPagina = productos.slice(inicio, fin);
-        const contenedor = document.getElementById('productos');
-        contenedor.innerHTML = '';
-        productosPagina.forEach((prod, idx) => {
-            contenedor.innerHTML += `
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                    <div class="bi-star-fill"></div>
-                                </div>
-                                s/${sanitize(prod.precio || '---')}
+    // --- RENDERIZA LOS PRODUCTOS Y AGREGA BOTÓN EDITAR SOLO PARA ADMIN ---
+function renderProductosPaginados() {
+    let productos = productosCache.filter(productoCoincideFiltros);
+    // Ordenamiento y paginación
+    const orden = document.getElementById('ordenarSelect').value;
+    if (orden === "precio-asc") {
+        productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
+    } else if (orden === "precio-desc") {
+        productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
+    } else if (orden === "capacidad-asc") {
+        productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
+    } else if (orden === "capacidad-desc") {
+        productos.sort((a, b) => parseCapacidad(b.capacidad) - parseCapacidad(a.capacidad));
+    }
+    const totalPaginas = Math.ceil(productos.length / productosPorPagina);
+    if (paginaActual > totalPaginas) paginaActual = totalPaginas || 1;
+    const inicio = (paginaActual - 1) * productosPorPagina;
+    const fin = inicio + productosPorPagina;
+    const productosPagina = productos.slice(inicio, fin);
+    const contenedor = document.getElementById('productos');
+    contenedor.innerHTML = '';
+
+    // Detecta si el usuario está autenticado (admin)
+    const user = firebase.auth().currentUser;
+
+    productosPagina.forEach((prod, idx) => {
+        contenedor.innerHTML += `
+            <div class="col mb-5">
+                <div class="card h-100">
+                    <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
+                    <div class="card-body p-4">
+                        <div class="text-center">
+                            <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
+                            <div class="d-flex justify-content-center small text-warning mb-2">
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
+                                <div class="bi-star-fill"></div>
                             </div>
+                            s/${sanitize(prod.precio || '---')}
                         </div>
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button></div>
+                    </div>
+                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+                        <div class="text-center">
+                            <button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button>
+                            ${user ? `<button class="btn btn-outline-primary mt-auto ms-2 btn-editar-producto" data-id="${prod.id}">Editar</button>` : ''}
                         </div>
                     </div>
                 </div>
-            `;
+            </div>
+        `;
+    });
+    if (contenedor.innerHTML === '') {
+        contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+    }
+    renderPaginacion(totalPaginas);
+    asignarEventosProductos();
+}
+
+// --- AGREGA EVENTO PARA BOTÓN EDITAR SOLO PARA ADMIN ---
+function asignarEventosProductos() {
+    document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const idx = parseInt(this.getAttribute('data-idx'));
+            const producto = productosCache[idx];
+            if (!producto) return;
+            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
+            document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
+            document.getElementById('detallePrecio').textContent = producto.precio || '';
+            document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
+            document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
+            document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
+            document.getElementById('detalleDimension').textContent = sanitize(producto.dimension || '');
+            document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
+            document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
+            document.getElementById('detalleEspecificaciones').textContent = producto.especificaciones || 'No especificado';
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
+            modal.show();
         });
-        if (contenedor.innerHTML === '') {
-            contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
-        }
-        renderPaginacion(totalPaginas);
-        asignarEventosProductos();
-    }
-    // Si tienes renderProductos sin paginación, igual:
-    function renderProductos() {
-        renderProductosPaginados();
-    }
-    // --- FUNCIÓN PARA RENDERIZAR PAGINACIÓN ---
-function renderPaginacion(totalPaginas) {
-    const paginacionContainer = document.getElementById('paginacionProductos');
-    if (!paginacionContainer) return;
-    paginacionContainer.innerHTML = '';
-    if (totalPaginas <= 1) return;
-    let html = '<nav aria-label="Paginación de productos"><ul class="pagination justify-content-center">';
-    // Botón anterior
-    html += `<li class="page-item${paginaActual === 1 ? ' disabled' : ''}"><button class="page-link" data-page="${paginaActual - 1}" ${paginaActual === 1 ? 'tabindex="-1" aria-disabled="true"' : ''}>Anterior</button></li>`;
-    // Números de página
-    for (let i = 1; i <= totalPaginas; i++) {
-        html += `<li class="page-item${paginaActual === i ? ' active' : ''}"><button class="page-link" data-page="${i}">${i}</button></li>`;
-    }
-    // Botón siguiente
-    html += `<li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}"><button class="page-link" data-page="${paginaActual + 1}" ${paginaActual === totalPaginas ? 'tabindex="-1" aria-disabled="true"' : ''}>Siguiente</button></li>`;
-    html += '</ul></nav>';
-    paginacionContainer.innerHTML = html;
-    // Eventos de paginación
-    paginacionContainer.querySelectorAll('.page-link').forEach(btn => {
-        btn.addEventListener('click', function() {
-            const page = parseInt(this.dataset.page);
-            if (!isNaN(page) && page >= 1 && page <= totalPaginas && page !== paginaActual) {
-                paginaActual = page;
-                renderProductos();
-            }
+    });
+
+    // Evento para editar producto (solo admin)
+    document.querySelectorAll('.btn-editar-producto').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const producto = productosCache.find(p => p.id === id);
+            if (!producto) return;
+            // Rellena el formulario con los datos del producto
+            document.getElementById('nombre').value = producto.nombre || '';
+            document.getElementById('precioCompra').value = producto.precioCompra || '';
+            document.getElementById('precioVenta').value = producto.precio || '';
+            document.getElementById('imagen').value = producto.imagen || '';
+            document.getElementById('categoria').value = producto.categoria || '';
+            document.getElementById('subcategoria').value = producto.subcategoria || '';
+            document.getElementById('marca').value = producto.marca || '';
+            document.getElementById('capacidad').value = producto.capacidad || '';
+            document.getElementById('modelo').value = producto.modelo || '';
+            document.getElementById('dimension').value = producto.dimension || '';
+            document.getElementById('especificaciones').value = producto.especificaciones || '';
+            document.getElementById('monedaCompra').value = producto.moneda || 'USD';
+            // Guarda el ID del producto a editar
+            document.getElementById('adminForm').dataset.editId = producto.id;
+            // Muestra el panel de admin si está oculto
+            document.getElementById('adminContainer').classList.remove('d-none');
+            window.scrollTo({ top: document.getElementById('adminContainer').offsetTop, behavior: 'smooth' });
         });
+    });
+}
+
+// --- MODIFICA LA CARGA DE PRODUCTOS PARA GUARDAR EL ID ---
+function mostrarProductos() {
+    document.getElementById('loaderProductos').style.display = 'block';
+    document.getElementById('productos').style.display = 'none';
+
+    if (unsubscribe) unsubscribe();
+    unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+        productosCache = [];
+        snapshot.forEach(doc => {
+            const prod = doc.data();
+            prod.id = doc.id; // Guarda el ID aquí
+            productosCache.push(prod);
+        });
+        paginaActual = 1;
+        renderProductos();
+
+        document.getElementById('loaderProductos').style.display = 'none';
+        document.getElementById('productos').style.display = '';
     });
 }
 // --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
@@ -778,7 +826,7 @@ function renderPaginacion(totalPaginas) {
         renderProductos();
     });
 
-    // --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
+// --- FIRESTORE: CARGA Y ACTUALIZA PRODUCTOS ---
     function mostrarProductos() {
         // Mostrar loader y ocultar productos
         document.getElementById('loaderProductos').style.display = 'block';
@@ -871,28 +919,23 @@ function renderPaginacion(totalPaginas) {
         const dimension = document.getElementById('dimension').value.trim();
         const especificaciones = document.getElementById('especificaciones').value.trim();
         const moneda = document.getElementById('monedaCompra').value;
-
+        const editId = this.dataset.editId;
         // Validación básica
         if (!nombre || isNaN(precioCompra) || precioCompra <= 0 || isNaN(precioVenta) || precioVenta <= 0 || !imagen || !categoria || !subcategoria || !marca) {
             alert('Por favor, completa todos los campos obligatorios y asegúrate de que los precios sean válidos.');
             return;
         }
-
         try {
-            await db.collection('productos').add({
-                nombre,
-                precioCompra,
-                precio: precioVenta, // este es el precio de venta en soles
-                imagen,
-                categoria,
-                subcategoria,
-                marca,
-                capacidad,
-                modelo,
-                dimension,
-                especificaciones,
-                moneda
-            });
+            if (editId) {
+                await db.collection('productos').doc(editId).update({
+                    nombre, precioCompra, precio: precioVenta, imagen, categoria, subcategoria, marca, capacidad, modelo, dimension, especificaciones, moneda
+                });
+                delete this.dataset.editId;
+            } else {
+                await db.collection('productos').add({
+                    nombre, precioCompra, precio: precioVenta, imagen, categoria, subcategoria, marca, capacidad, modelo, dimension, especificaciones, moneda
+                });
+            }
             this.reset();
             document.getElementById('precioVenta').value = '';
             document.getElementById('monedaCompra').value = 'USD';
@@ -1015,7 +1058,8 @@ function asignarEventosProductos() {
         });
     });
 }
-    // --- CARRITO DE COMPRAS ---
+
+// --- CARRITO DE COMPRAS ---
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
 
 function guardarCarrito() {
@@ -1125,7 +1169,7 @@ document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', fu
 document.addEventListener('DOMContentLoaded', function() {
     actualizarContadorCarrito();
 });
-    // --- MODO OSCURO ---
+// --- MODO OSCURO ---
 document.addEventListener('DOMContentLoaded', function () {
     const switchOscuro = document.getElementById('modoOscuroSwitch');
     const body = document.body;
@@ -1168,6 +1212,3 @@ document.addEventListener('DOMContentLoaded', function() {
         switchOscuro.addEventListener('change', actualizarLogoNav);
     }
 });
-    </script>
-</body>
-</html>
