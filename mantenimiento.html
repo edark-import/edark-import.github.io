@@ -29,6 +29,92 @@
             font-weight: bold;
             color: #00adb5;
         }
+        /* Modo oscuro global */
+        body.modo-oscuro {
+            background-color: #181a1b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .bg-light {
+            background-color: #23272b !important;
+        }
+        body.modo-oscuro .navbar, body.modo-oscuro .dropdown-menu {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .card {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+            border-color: #444 !important;
+        }
+        body.modo-oscuro .modal-content {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .form-control, body.modo-oscuro .form-select {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+            border-color: #444 !important;
+        }
+        body.modo-oscuro .accordion-button {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .accordion-item {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .bg-dark {
+            background-color: #181a1b !important;
+        }
+        body.modo-oscuro .bg-white {
+            background-color: #23272b !important;
+        }
+        body.modo-oscuro .pagination .page-link {
+            background-color: #23272b !important;
+            color: #e0e0e0 !important;
+            border-color: #444 !important;
+        }
+        body.modo-oscuro .page-item.active .page-link {
+            background-color: #00adb5 !important;
+            color: #fff !important;
+            border-color: #00adb5 !important;
+        }
+        body.modo-oscuro .btn-outline-dark {
+            color: #e0e0e0 !important;
+            border-color: #e0e0e0 !important;
+        }
+        body.modo-oscuro .btn-outline-dark:hover {
+            background-color: #00adb5 !important;
+            color: #fff !important;
+            border-color: #00adb5 !important;
+        }
+        body.modo-oscuro .shadow-sm {
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.5)!important;
+        }
+
+        /* Cambia color de textos del navbar en modo oscuro */
+        body.modo-oscuro .navbar,
+        body.modo-oscuro .navbar .navbar-brand,
+        body.modo-oscuro .navbar .nav-link,
+        body.modo-oscuro .navbar .dropdown-item {
+            color: #e0e0e0 !important;
+        }
+
+        body.modo-oscuro .navbar .nav-link.active,
+        body.modo-oscuro .navbar .nav-link:focus,
+        body.modo-oscuro .navbar .nav-link:hover {
+            color: #00adb5 !important;
+        }
+
+        body.modo-oscuro .navbar .dropdown-menu {
+            background-color: #23272b !important;
+        }
+
+        body.modo-oscuro .navbar .dropdown-item:hover,
+        body.modo-oscuro .navbar .dropdown-item:focus {
+            background-color: #222 !important;
+            color: #00adb5 !important;
+        }
     </style>
 </head>
 <script>
@@ -66,6 +152,10 @@ fetch('footer.html')
                     <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
                     <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
                 </ul>
+                <div class="form-check form-switch ms-3">
+                    <input class="form-check-input" type="checkbox" id="modoOscuroSwitch">
+                    <label class="form-check-label text-light" for="modoOscuroSwitch" id="modoOscuroLabel"><i class="bi bi-moon"></i></label>
+                </div>
             </div>
         </div>
     </nav>
@@ -151,5 +241,46 @@ fetch('footer.html')
         });
     });
     </script>
+    <script>
+// --- MODO OSCURO GLOBAL ---
+document.addEventListener('DOMContentLoaded', function () {
+    const switchOscuro = document.getElementById('modoOscuroSwitch');
+    const body = document.body;
+    // Inicializar desde localStorage
+    const dark = localStorage.getItem('modoOscuro') === 'true';
+    if (dark) {
+        body.classList.add('modo-oscuro');
+        if (switchOscuro) switchOscuro.checked = true;
+    } else {
+        body.classList.remove('modo-oscuro');
+        if (switchOscuro) switchOscuro.checked = false;
+    }
+    if (switchOscuro) {
+        switchOscuro.addEventListener('change', function () {
+            if (this.checked) {
+                body.classList.add('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'true');
+            } else {
+                body.classList.remove('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'false');
+            }
+        });
+    }
+    // Cambia el logo según el modo claro/oscuro
+    function actualizarLogoNav() {
+        const logo = document.querySelector('.navbar-brand img');
+        if (!logo) return;
+        if (document.body.classList.contains('modo-oscuro')) {
+            logo.src = 'img/Logo/logo_1.png';
+        } else {
+            logo.src = 'img/Logo/logo_2.png';
+        }
+    }
+    actualizarLogoNav();
+    if (switchOscuro) {
+        switchOscuro.addEventListener('change', actualizarLogoNav);
+    }
+});
+</script>
 </body>
 </html>
