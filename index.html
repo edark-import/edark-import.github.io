@@ -649,26 +649,6 @@ fetch('footer.html')
         }
     });
 
-    // --- MOSTRAR PRODUCTOS CON PAGINACIÓN Y SEGURIDAD ---
-    function mostrarProductos() {
-        // Mostrar loader y ocultar productos
-        document.getElementById('loaderProductos').style.display = 'block';
-        document.getElementById('productos').style.display = 'none';
-
-        if (unsubscribe) unsubscribe();
-        unsubscribe = db.collection('productos').onSnapshot(snapshot => {
-            productosCache = [];
-            snapshot.forEach(doc => {
-                productosCache.push(doc.data());
-            });
-            paginaActual = 1;
-            renderProductos();
-
-            // Ocultar loader y mostrar productos
-            document.getElementById('loaderProductos').style.display = 'none';
-            document.getElementById('productos').style.display = '';
-        });
-    }
 
     // Modifica renderProductosPaginados para filtrar por búsqueda
     // --- RENDERIZA LOS PRODUCTOS Y AGREGA BOTÓN EDITAR SOLO PARA ADMIN ---
