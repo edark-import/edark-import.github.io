@@ -775,7 +775,7 @@ function mostrarProductos() {
             productosCache.push(prod);
         });
         paginaActual = 1;
-        renderProductosPaginados();
+        renderProductosPaginados(); // <--- SOLO así, sin argumentos
 
         document.getElementById('loaderProductos').style.display = 'none';
         document.getElementById('productos').style.display = '';
