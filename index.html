@@ -253,6 +253,8 @@ fetch('footer.html')
             <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">
             <input type="text" id="dimension" placeholder="Dimensión" class="form-control mb-2">
             <input type="text" id="precioVenta" placeholder="Precio de venta (S/)" class="form-control mb-2" readonly>
+            <!-- Agrega esto en tu formulario de producto -->
+            <textarea id="especificaciones" placeholder="Especificaciones técnicas" class="form-control mb-2" rows="4"></textarea>
             <button type="submit" class="btn btn-primary">Agregar Producto</button>
         </form>
     </div>
@@ -301,6 +303,10 @@ fetch('footer.html')
                 <p class="mb-1"><strong>Subcategoría:</strong> <span id="detalleSubcategoria"></span></p>
                 <div class="mt-3">
                   <button class="btn btn-success" id="btnAgregarAlCarritoModal"><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
+                </div>
+                <div class="mb-2">
+                    <strong>Especificaciones técnicas:</strong>
+                    <div id="detalleEspecificaciones" class="small"></div>
                 </div>
               </div>
             </div>
@@ -854,6 +860,7 @@ function renderPaginacion(totalPaginas) {
         const capacidad = document.getElementById('capacidad').value.trim();
         const modelo = document.getElementById('modelo').value.trim();
         const dimension = document.getElementById('dimension').value.trim();
+        const especificaciones = document.getElementById('especificaciones').value.trim();
         const moneda = document.getElementById('monedaCompra').value;
 
         // Validación básica
@@ -874,6 +881,7 @@ function renderPaginacion(totalPaginas) {
                 capacidad,
                 modelo,
                 dimension,
+                especificaciones,
                 moneda
             });
             this.reset();
@@ -1150,6 +1158,3 @@ document.addEventListener('DOMContentLoaded', function() {
         switchOscuro.addEventListener('change', actualizarLogoNav);
     }
 });
-    </script>
-</body>
-</html>
