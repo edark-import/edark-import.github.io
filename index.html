@@ -104,6 +104,18 @@
             background-color: #222 !important;
             color: #00adb5 !important;
         }
+
+        /* Botón tipo de cambio: oscuro en modo claro, claro en modo oscuro */
+        #tipoCambioBtn {
+            color: #23272b;
+            border-color: #23272b;
+            background: transparent;
+        }
+        body.modo-oscuro #tipoCambioBtn {
+            color: #e0e0e0 !important;
+            border-color: #e0e0e0 !important;
+            background: transparent !important;
+        }
     </style>
 </head>
 <script>
@@ -146,7 +158,7 @@ fetch('footer.html')
                     <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
                 </ul>
                 <form class="d-flex align-items-center" id="adminNav">
-                    <button class="btn btn-outline-light" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
+                    <button class="btn btn-outline-dark" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
                         <i class="bi-currency-exchange me-1"></i>
                         <span id="tipoCambioText">S/ 3.8</span>
                     </button>
