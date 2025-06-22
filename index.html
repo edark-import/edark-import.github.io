@@ -80,6 +80,30 @@
         body.modo-oscuro .shadow-sm {
             box-shadow: 0 .125rem .25rem rgba(0,0,0,.5)!important;
         }
+
+        /* Cambia color de textos del navbar en modo oscuro */
+        body.modo-oscuro .navbar,
+        body.modo-oscuro .navbar .navbar-brand,
+        body.modo-oscuro .navbar .nav-link,
+        body.modo-oscuro .navbar .dropdown-item {
+            color: #e0e0e0 !important;
+        }
+
+        body.modo-oscuro .navbar .nav-link.active,
+        body.modo-oscuro .navbar .nav-link:focus,
+        body.modo-oscuro .navbar .nav-link:hover {
+            color: #00adb5 !important;
+        }
+
+        body.modo-oscuro .navbar .dropdown-menu {
+            background-color: #23272b !important;
+        }
+
+        body.modo-oscuro .navbar .dropdown-item:hover,
+        body.modo-oscuro .navbar .dropdown-item:focus {
+            background-color: #222 !important;
+            color: #00adb5 !important;
+        }
     </style>
 </head>
 <script>
