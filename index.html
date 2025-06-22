@@ -733,6 +733,7 @@ function renderProductosPaginados() {
 
 // --- AGREGA EVENTO PARA BOTÓN EDITAR SOLO PARA ADMIN ---
 function asignarEventosProductos() {
+    // Evento Ver Detalles
     document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
         btn.addEventListener('click', function () {
             const idx = parseInt(this.getAttribute('data-idx'));
@@ -754,13 +755,12 @@ function asignarEventosProductos() {
         });
     });
 
-    // Evento para editar producto (solo admin)
+    // Evento Editar (solo admin)
     document.querySelectorAll('.btn-editar-producto').forEach(btn => {
         btn.addEventListener('click', function () {
             const id = this.getAttribute('data-id');
             const producto = productosCache.find(p => p.id === id);
             if (!producto) return;
-            // Rellena el formulario con los datos del producto
             document.getElementById('nombre').value = producto.nombre || '';
             document.getElementById('precioCompra').value = producto.precioCompra || '';
             document.getElementById('precioVenta').value = producto.precio || '';
@@ -773,7 +773,6 @@ function asignarEventosProductos() {
             document.getElementById('dimension').value = producto.dimension || '';
             document.getElementById('especificaciones').value = producto.especificaciones || '';
             document.getElementById('monedaCompra').value = producto.moneda || 'USD';
-            // Guarda el ID del producto a editar
             document.getElementById('adminForm').dataset.editId = producto.id;
             document.getElementById('adminContainer').classList.remove('d-none');
             window.scrollTo({ top: document.getElementById('adminContainer').offsetTop, behavior: 'smooth' });
@@ -1018,6 +1017,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // --- ASIGNAR EVENTOS A BOTONES "VER DETALLES" ---
 function asignarEventosProductos() {
+    // Evento Ver Detalles
     document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
         btn.addEventListener('click', function () {
             const idx = parseInt(this.getAttribute('data-idx'));
@@ -1036,6 +1036,30 @@ function asignarEventosProductos() {
             // Mostrar modal
             const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
             modal.show();
+        });
+    });
+
+    // Evento Editar (solo admin)
+    document.querySelectorAll('.btn-editar-producto').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const id = this.getAttribute('data-id');
+            const producto = productosCache.find(p => p.id === id);
+            if (!producto) return;
+            document.getElementById('nombre').value = producto.nombre || '';
+            document.getElementById('precioCompra').value = producto.precioCompra || '';
+            document.getElementById('precioVenta').value = producto.precio || '';
+            document.getElementById('imagen').value = producto.imagen || '';
+            document.getElementById('categoria').value = producto.categoria || '';
+            document.getElementById('subcategoria').value = producto.subcategoria || '';
+            document.getElementById('marca').value = producto.marca || '';
+            document.getElementById('capacidad').value = producto.capacidad || '';
+            document.getElementById('modelo').value = producto.modelo || '';
+            document.getElementById('dimension').value = producto.dimension || '';
+            document.getElementById('especificaciones').value = producto.especificaciones || '';
+            document.getElementById('monedaCompra').value = producto.moneda || 'USD';
+            document.getElementById('adminForm').dataset.editId = producto.id;
+            document.getElementById('adminContainer').classList.remove('d-none');
+            window.scrollTo({ top: document.getElementById('adminContainer').offsetTop, behavior: 'smooth' });
         });
     });
 }
