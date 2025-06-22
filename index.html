@@ -649,6 +649,26 @@ fetch('footer.html')
         }
     });
 
+    function renderPaginacion(totalPaginas) {
+        const pag = document.getElementById('paginacionProductos');
+        if (!pag) return;
+        pag.innerHTML = '';
+        if (totalPaginas <= 1) return;
+        let html = '<nav><ul class="pagination justify-content-center">';
+        for (let i = 1; i <= totalPaginas; i++) {
+            html += `<li class="page-item${i === paginaActual ? ' active' : ''}">
+                <button class="page-link" data-pag="${i}">${i}</button>
+            </li>`;
+        }
+        html += '</ul></nav>';
+        pag.innerHTML = html;
+        pag.querySelectorAll('.page-link').forEach(btn => {
+            btn.addEventListener('click', function() {
+                paginaActual = parseInt(this.dataset.pag);
+                renderProductosPaginados();
+            });
+        });
+    }
 
     // Modifica renderProductosPaginados para filtrar por búsqueda
     // --- RENDERIZA LOS PRODUCTOS Y AGREGA BOTÓN EDITAR SOLO PARA ADMIN ---
@@ -708,6 +728,7 @@ function renderProductosPaginados() {
         contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
     }
     asignarEventosProductos();
+    renderPaginacion(totalPaginas);
 }
 
 // --- AGREGA EVENTO PARA BOTÓN EDITAR SOLO PARA ADMIN ---
@@ -913,6 +934,8 @@ function mostrarProductos() {
         } else {
             adminContainer.classList.add('d-none');
         }
+        // Renderiza productos para mostrar/ocultar botón Editar según el usuario
+        renderProductosPaginados();
     });
 
     // Botón cerrar sesión en navbar
