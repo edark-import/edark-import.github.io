@@ -301,6 +301,7 @@ fetch('footer.html')
                 <p class="mb-1"><strong>Dimensión:</strong> <span id="detalleDimension"></span></p>
                 <p class="mb-1"><strong>Categoría:</strong> <span id="detalleCategoria"></span></p>
                 <p class="mb-1"><strong>Subcategoría:</strong> <span id="detalleSubcategoria"></span></p>
+                <p class="mb-1"><strong>Especificaciones:</strong> <span id="detalleEspecificaciones"></span></p>
                 <div class="mt-3">
                   <button class="btn btn-success" id="btnAgregarAlCarritoModal"><i class="bi bi-cart-plus"></i> Agregar al carrito</button>
                 </div>
@@ -999,6 +1000,7 @@ function asignarEventosProductos() {
             document.getElementById('detalleDimension').textContent = sanitize(producto.dimension || '');
             document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
             document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
+            document.getElementById('detalleEspecificaciones').textContent = producto.especificaciones || 'No especificado';
             // Mostrar modal
             const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
             modal.show();
