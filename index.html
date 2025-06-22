@@ -775,7 +775,6 @@ function asignarEventosProductos() {
             document.getElementById('monedaCompra').value = producto.moneda || 'USD';
             // Guarda el ID del producto a editar
             document.getElementById('adminForm').dataset.editId = producto.id;
-            // Muestra el panel de admin si está oculto
             document.getElementById('adminContainer').classList.remove('d-none');
             window.scrollTo({ top: document.getElementById('adminContainer').offsetTop, behavior: 'smooth' });
         });
