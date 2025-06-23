@@ -386,6 +386,7 @@ button,
   -webkit-appearance: button;
   appearance: button;
   appearance: button;
+  appearance: button;
 }
 button:not(:disabled),
 [type=button]:not(:disabled),
@@ -10888,4 +10889,9 @@ body.modo-oscuro .form-select {
 }
 .card:hover {
   box-shadow: 0 0.5rem 1.5rem rgba(13,110,253,0.08);
+}
+
+#detalleEspecificaciones {
+  white-space: pre-line;
+  word-break: break-word;
 }
