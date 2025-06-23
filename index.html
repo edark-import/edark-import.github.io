@@ -1029,7 +1029,7 @@ function asignarEventosProductos() {
             document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
             document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
             document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
-            document.getElementById('detalleDimension').textContent = sanitize(producto.dimension || '');
+            document.getElementById('detalleDimension').textContent = producto.dimension || '';
             document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
             document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
             document.getElementById('detalleEspecificaciones').textContent = producto.especificaciones || 'No especificado';
