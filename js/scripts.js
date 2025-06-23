@@ -1,5 +1,4 @@
-
-    // --- CONFIGURACIÓN FIREBASE Y LÓGICA PRINCIPAL (SOLO UNA VEZ) ---
+// --- CONFIGURACIÓN FIREBASE Y LÓGICA PRINCIPAL (SOLO UNA VEZ) ---
     const firebaseConfig = {
         apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
         authDomain: "edark-proyect.firebaseapp.com",
@@ -393,7 +392,36 @@ function asignarEventosProductos() {
             document.getElementById('detalleDimension').textContent = producto.dimension || '';
             document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
             document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
-            document.getElementById('detalleEspecificaciones').textContent = producto.especificaciones || 'No especificado';
+            const especificacionesRaw = producto.especificaciones || '';
+            const lineas = especificacionesRaw
+                .split(/\n|<br>|\/n/g)
+                .map(l => l.trim())
+                .filter(l => l);
+
+            // Detecta si la mayoría de líneas tienen formato CLAVE: VALOR
+            const esTabla = lineas.filter(l => l.includes(':')).length > lineas.length / 2;
+
+            let especificacionesHTML = '';
+            if (esTabla) {
+                // Mostrar como tabla
+                especificacionesHTML = '<table class="table table-sm table-borderless mb-0">';
+                especificacionesHTML += lineas.map(l => {
+                    const partes = l.split(':');
+                    if (partes.length > 1) {
+                        return `<tr><th class="fw-normal text-muted" style="width: 40%;">${partes[0].trim()}</th><td>${partes.slice(1).join(':').trim()}</td></tr>`;
+                    } else {
+                        return `<tr><td colspan="2">${l}</td></tr>`;
+                    }
+                }).join('');
+                especificacionesHTML += '</table>';
+            } else {
+                // Mostrar como lista
+                especificacionesHTML = '<ul style="padding-left: 1.2em;">' +
+                    lineas.map(l => `<li>${l}</li>`).join('') +
+                    '</ul>';
+            }
+
+            document.getElementById('detalleEspecificaciones').innerHTML = especificacionesHTML;
             // Mostrar modal
             const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
             modal.show();
@@ -677,7 +705,36 @@ function asignarEventosProductos() {
             document.getElementById('detalleDimension').textContent = producto.dimension || '';
             document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
             document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
-            document.getElementById('detalleEspecificaciones').textContent = producto.especificaciones || 'No especificado';
+            const especificacionesRaw = producto.especificaciones || '';
+            const lineas = especificacionesRaw
+                .split(/\n|<br>|\/n/g)
+                .map(l => l.trim())
+                .filter(l => l);
+
+            // Detecta si la mayoría de líneas tienen formato CLAVE: VALOR
+            const esTabla = lineas.filter(l => l.includes(':')).length > lineas.length / 2;
+
+            let especificacionesHTML = '';
+            if (esTabla) {
+                // Mostrar como tabla
+                especificacionesHTML = '<table class="table table-sm table-borderless mb-0">';
+                especificacionesHTML += lineas.map(l => {
+                    const partes = l.split(':');
+                    if (partes.length > 1) {
+                        return `<tr><th class="fw-normal text-muted" style="width: 40%;">${partes[0].trim()}</th><td>${partes.slice(1).join(':').trim()}</td></tr>`;
+                    } else {
+                        return `<tr><td colspan="2">${l}</td></tr>`;
+                    }
+                }).join('');
+                especificacionesHTML += '</table>';
+            } else {
+                // Mostrar como lista
+                especificacionesHTML = '<ul style="padding-left: 1.2em;">' +
+                    lineas.map(l => `<li>${l}</li>`).join('') +
+                    '</ul>';
+            }
+
+            document.getElementById('detalleEspecificaciones').innerHTML = especificacionesHTML;
             // Mostrar modal
             const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
             modal.show();
@@ -862,4 +919,3 @@ document.addEventListener('DOMContentLoaded', function() {
         switchOscuro.addEventListener('change', actualizarLogoNav);
     }
 });
-    

@@ -387,6 +387,8 @@ button,
   appearance: button;
   appearance: button;
   appearance: button;
+  appearance: button;
+  appearance: button;
 }
 button:not(:disabled),
 [type=button]:not(:disabled),
@@ -10894,4 +10896,23 @@ body.modo-oscuro .form-select {
 #detalleEspecificaciones {
   white-space: pre-line;
   word-break: break-word;
+}
+#detalleEspecificaciones table {
+  width: 100%;
+  font-size: 0.97em;
+}
+#detalleEspecificaciones th {
+  font-weight: 600;
+  color: #555;
+  vertical-align: top;
+}
+#detalleEspecificaciones td {
+  color: #222;
+}
+body.modo-oscuro #detalleEspecificaciones th,
+body.modo-oscuro #detalleEspecificaciones td {
+  color: #e0e0e0;
+}
+#detalleEspecificaciones ul {
+  margin-bottom: 0;
 }
