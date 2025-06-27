@@ -116,6 +116,40 @@
             border-color: #e0e0e0 !important;
             background: transparent !important;
         }
+
+        /* Banner y carrusel de frases */
+        #frasesCarrusel {
+            background: rgba(0,0,0,0.35);
+            border-radius: 1rem;
+            padding: 1.2rem 1.5rem 1.2rem 1.5rem;
+            box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
+            min-height: 80px;
+            transition: background 0.3s;
+        }
+        .frase-carrusel-texto {
+            min-height: 32px;
+            transition: opacity 0.5s;
+        }
+        .frase-carrusel-autor {
+            color: #00adb5;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+        #frasePrev, #fraseNext {
+            opacity: 0.7;
+            transition: opacity 0.2s;
+        }
+        #frasePrev:hover, #fraseNext:hover {
+            opacity: 1;
+        }
+        @media (max-width: 768px) {
+            .display-1 { font-size: 2.5rem !important; }
+            #frasesCarrusel { padding: 0.8rem 0.7rem; font-size:1rem; }
+            #frasePrev, #fraseNext { display:none !important; }
+        }
+        body.modo-oscuro #frasesCarrusel {
+            background: rgba(30,30,30,0.7);
+        }
     </style>
 </head>
 
@@ -186,13 +220,22 @@ fetch('footer.html')
         </div>
     </nav>
     <!-- Header-->
-    <header class="bg-dark py-5">
+    <!-- Banner Mejorado eDark -->
+    <header class="bg-dark py-5 position-relative">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
-                <h1 class="display-4 fw-bolder">Compra con eDark</h1>
-                <p class="lead fw-normal text-white-50 mb-0">Encuenta tus productos favoritos del lado oscuro</p>
+                <h1 class="display-1 fw-bold mb-2" style="letter-spacing:2px;">Edark</h1>
+                <h2 class="fw-light mb-4" style="font-size:2rem; letter-spacing:1px;">Alpha Technologies</h2>
+                <!-- Carrusel de frases célebres -->
+                <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
+                    <div class="frase-carrusel-texto fs-4 fst-italic"></div>
+                    <div class="frase-carrusel-autor text-end mt-2" style="font-size:1.1rem;"></div>
+                </div>
             </div>
         </div>
+        <!-- Flechas del carrusel -->
+        <button id="frasePrev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+        <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
     </header>
 
     <!-- Filtros y productos -->
@@ -354,6 +397,53 @@ fetch('footer.html')
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
     
     <script src="js/scripts.js"></script>
+    <script>
+    // Frases célebres para el carrusel
+    const frases = [
+        { texto: "La tecnología es solo una herramienta. En términos de motivar a los niños y de conseguir que trabajen juntos, el profesor es lo más importante.", autor: "Bill Gates" },
+        { texto: "La ciencia de hoy es la tecnología del mañana.", autor: "Edward Teller" },
+        { texto: "La tecnología es mejor cuando une a las personas.", autor: "Matt Mullenweg" },
+        { texto: "No es la fe en la tecnología. Es la fe en las personas.", autor: "Steve Jobs" },
+        { texto: "La tecnología mueve el mundo.", autor: "Steve Jobs" },
+        { texto: "La tecnología es solo tan buena como la gente que la usa.", autor: "Unknown" },
+        { texto: "La innovación distingue a un líder de un seguidor.", autor: "Steve Jobs" },
+        { texto: "La mejor manera de predecir el futuro es inventarlo.", autor: "Alan Kay" },
+        { texto: "La tecnología es una palabra que describe algo que aún no funciona.", autor: "Douglas Adams" }
+    ];
+    let fraseActual = 0;
+    const fraseTexto = () => document.querySelector('.frase-carrusel-texto');
+    const fraseAutor = () => document.querySelector('.frase-carrusel-autor');
+    function mostrarFrase(idx) {
+        fraseTexto().style.opacity = 0;
+        fraseAutor().style.opacity = 0;
+        setTimeout(() => {
+            fraseTexto().textContent = '"' + frases[idx].texto + '"';
+            fraseAutor().textContent = '— ' + frases[idx].autor;
+            fraseTexto().style.opacity = 1;
+            fraseAutor().style.opacity = 1;
+        }, 300);
+    }
+    function siguienteFrase() {
+        fraseActual = (fraseActual + 1) % frases.length;
+        mostrarFrase(fraseActual);
+    }
+    function anteriorFrase() {
+        fraseActual = (fraseActual - 1 + frases.length) % frases.length;
+        mostrarFrase(fraseActual);
+    }
+    document.addEventListener('DOMContentLoaded', function() {
+        mostrarFrase(fraseActual);
+        // Auto-carrusel
+        setInterval(siguienteFrase, 7000);
+        // Botones
+        const prev = document.getElementById('frasePrev');
+        const next = document.getElementById('fraseNext');
+        if(prev && next) {
+            prev.addEventListener('click', anteriorFrase);
+            next.addEventListener('click', siguienteFrase);
+        }
+    });
+    </script>
 
 </body>
 </html>

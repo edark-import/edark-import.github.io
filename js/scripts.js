@@ -38,7 +38,7 @@
     const phone = '51916907657'; // <-- Cambia este número por el tuyo
     let productosCache = [];
     let paginaActual = 1;
-    const productosPorPagina = 16;
+    const productosPorPagina =12;
     let unsubscribe = null;
     let textoBusqueda = '';
 
