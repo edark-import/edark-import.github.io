@@ -98,6 +98,38 @@
                 margin-left: 0.1rem;
                 margin-right: 0.1rem;
             }
+            /* Modo oscuro para tarjetas y textos personalizados */
+            body.modo-oscuro .card,
+            body.modo-oscuro .card.border-0 {
+                background: #23272b !important;
+                color: #e0e0e0 !important;
+                border-color: #444 !important;
+            }
+            body.modo-oscuro .card h2,
+            body.modo-oscuro .card h3,
+            body.modo-oscuro .card p,
+            body.modo-oscuro .card ul,
+            body.modo-oscuro .card li {
+                color: #e0e0e0 !important;
+            }
+            body.modo-oscuro .card .text-primary,
+            body.modo-oscuro .fw-semibold.text-primary {
+                color: #00adb5 !important;
+            }
+            body.modo-oscuro .card span[style*="font-size"] {
+                filter: brightness(1.2) contrast(1.2);
+            }
+            body.modo-oscuro .bg-white,
+            body.modo-oscuro .bg-lightblue {
+                background: #23272b !important;
+            }
+            /* Mejora para listas y títulos en modo oscuro */
+            body.modo-oscuro .card ul {
+                background: transparent !important;
+            }
+            body.modo-oscuro .card li b {
+                color: #00adb5 !important;
+            }
         </style>
     </head>
     <body>
@@ -142,6 +174,88 @@
                 </div>
             </div>
         </header>
+
+        <!-- SECCIÓN QUIÉNES SOMOS EDARK ALPHA TECHNOLOGIES -->
+        <section class="py-5 bg-white" id="quienes-somos">
+            <div class="container px-4 px-lg-5 mb-5">
+                <div class="row justify-content-center">
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:1.5rem;">
+                            <div class="d-flex align-items-center mb-3">
+                                <span style="font-size:2.2rem; margin-right:1rem;">🧬</span>
+                                <h2 class="fw-bold mb-0">Quiénes Somos – eDark Alpha Technologies</h2>
+                            </div>
+                            <p class="mb-2">En <b>eDark Alpha Technologies</b>, creemos que toda gran transformación comienza con una chispa: el origen. Por eso somos Alpha. Nacimos con la visión de liderar el futuro tecnológico en Perú y Latinoamérica, ofreciendo soluciones electrónicas de alta calidad que combinan innovación, accesibilidad y diseño inteligente.</p>
+                            <p class="mb-2">Nuestra misión es clara: acercar la tecnología de última generación a las personas y empresas que buscan más que solo productos — buscan evolución. Desde nuestros inicios, nos hemos comprometido con la excelencia, la confianza y una experiencia de compra que inspire.</p>
+                            <p class="mb-0 fw-semibold text-primary">Somos el punto de partida de tu próxima revolución digital.</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:1.5rem;">
+                            <div class="d-flex align-items-center mb-3">
+                                <span style="font-size:2.2rem; margin-right:1rem;">🧬</span>
+                                <h2 class="fw-bold mb-0">Quiénes Somos</h2>
+                            </div>
+                            <p>En <b>eDark Alpha Technologies</b>, creemos que cada avance comienza con una visión clara. Somos una empresa peruana dedicada a acercar la tecnología de vanguardia a personas y empresas que buscan soluciones confiables, accesibles y con propósito. Nuestra esencia está en el nombre: <b>eDark</b> representa lo oculto, lo sofisticado, lo que aún no ha sido descubierto. <b>Alpha</b> simboliza el origen, el liderazgo y la innovación constante.</p>
+                            <p class="mb-0 fw-semibold text-primary">Somos el punto de partida de tu próxima revolución digital.</p>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="row g-4">
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100 p-4" style="border-radius:1.5rem;">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span style="font-size:2rem; margin-right:0.7rem;">🎯</span>
+                                        <h3 class="fw-bold mb-0">Visión</h3>
+                                    </div>
+                                    <p class="mb-0">Ser referentes en Latinoamérica en soluciones tecnológicas inteligentes, accesibles y sostenibles, liderando la transformación digital con propósito y excelencia.</p>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="card border-0 shadow-sm h-100 p-4" style="border-radius:1.5rem;">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <span style="font-size:2rem; margin-right:0.7rem;">🌟</span>
+                                        <h3 class="fw-bold mb-0">Misión</h3>
+                                    </div>
+                                    <p class="mb-0">Ofrecer productos y servicios electrónicos de alta calidad que mejoren la vida de nuestros clientes, integrando innovación, eficiencia y una experiencia de usuario memorable.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:1.5rem;">
+                            <div class="d-flex align-items-center mb-3">
+                                <span style="font-size:2rem; margin-right:0.7rem;">💎</span>
+                                <h3 class="fw-bold mb-0">Nuestros Valores</h3>
+                            </div>
+                            <ul class="mb-2">
+                                <li><b>Innovación constante:</b> Nos anticipamos al cambio y lo convertimos en oportunidad.</li>
+                                <li><b>Compromiso con la calidad:</b> Cada producto y servicio refleja nuestro estándar de excelencia.</li>
+                                <li><b>Accesibilidad tecnológica:</b> Democratizamos el acceso a soluciones avanzadas.</li>
+                                <li><b>Confianza y transparencia:</b> Construimos relaciones duraderas con nuestros clientes.</li>
+                                <li><b>Sostenibilidad:</b> Creemos en un futuro tecnológico responsable con el entorno.</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-10 mb-4">
+                        <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius:1.5rem;">
+                            <div class="d-flex align-items-center mb-3">
+                                <span style="font-size:2rem; margin-right:0.7rem;">🛠</span>
+                                <h3 class="fw-bold mb-0">Servicios Destacados</h3>
+                            </div>
+                            <ul class="mb-2">
+                                <li><b>Venta de productos electrónicos:</b> Equipos de última generación para hogar y empresa.</li>
+                                <li><b>Asesoramiento tecnológico personalizado:</b> Te ayudamos a elegir lo que realmente necesitas.</li>
+                                <li><b>Consultoría en transformación digital:</b> Para empresas que quieren dar el siguiente paso.</li>
+                                <li><b>Soporte técnico y mantenimiento:</b> Porque tu tecnología merece cuidado experto.</li>
+                                <li><b>Reciclaje electrónico:</b> Comprometidos con el planeta y la economía circular.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- FIN SECCIÓN QUIÉNES SOMOS -->
 
         <!-- Tarjetas horizontales con Bootstrap -->
         <section class="py-5">
