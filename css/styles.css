@@ -384,6 +384,11 @@ button,
 [type=reset],
 [type=submit] {
   -webkit-appearance: button;
+  appearance: button;
+  appearance: button;
+  appearance: button;
+  appearance: button;
+  appearance: button;
 }
 button:not(:disabled),
 [type=button]:not(:disabled),
@@ -442,6 +447,7 @@ legend + * {
 [type=search] {
   outline-offset: -2px;
   -webkit-appearance: textfield;
+  appearance: textfield;
 }
 
 /* rtl:raw:
@@ -10823,4 +10829,90 @@ textarea.form-control-lg {
   .d-print-none {
     display: none !important;
   }
+}
+
+/* --- Personalizaciones eDark --- */
+
+/* Mejorar visibilidad del botón Editar */
+.btn-editar-producto {
+  border-color: #0d6efd !important;
+  color: #0d6efd !important;
+  background: #fff !important;
+  transition: background 0.2s, color 0.2s;
+}
+.btn-editar-producto:hover, .btn-editar-producto:focus {
+  background: #0d6efd !important;
+  color: #fff !important;
+}
+
+/* Mejor paginación */
+.pagination .page-link {
+  color: #0d6efd;
+  border-radius: 0.25rem;
+  margin: 0 2px;
+}
+.pagination .page-item.active .page-link {
+  background: #0d6efd;
+  color: #fff;
+  border-color: #0d6efd;
+}
+
+/* Mejorar el panel admin en modo oscuro */
+body.modo-oscuro #adminContainer {
+  background: #23272b !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+/* Mejorar el modal de detalles en modo oscuro */
+body.modo-oscuro .modal-content {
+  background: #23272b !important;
+  color: #e0e0e0 !important;
+}
+
+/* Mejorar los inputs en modo oscuro */
+body.modo-oscuro .form-control, 
+body.modo-oscuro .form-select {
+  background: #23272b !important;
+  color: #e0e0e0 !important;
+  border-color: #444 !important;
+}
+
+/* Mejorar los badges de filtros */
+.badge {
+  font-size: 1em;
+  padding: 0.5em 0.8em;
+  border-radius: 1em;
+}
+
+/* Mejorar cards de productos */
+.card {
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 0.5rem 1.5rem rgba(13,110,253,0.08);
+}
+
+#detalleEspecificaciones {
+  white-space: pre-line;
+  word-break: break-word;
+}
+#detalleEspecificaciones table {
+  width: 100%;
+  font-size: 0.97em;
+}
+#detalleEspecificaciones th {
+  font-weight: 600;
+  color: #555;
+  vertical-align: top;
+}
+#detalleEspecificaciones td {
+  color: #222;
+}
+body.modo-oscuro #detalleEspecificaciones th,
+body.modo-oscuro #detalleEspecificaciones td {
+  color: #e0e0e0;
+}
+#detalleEspecificaciones ul {
+  margin-bottom: 0;
 }
