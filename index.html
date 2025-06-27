@@ -3,14 +3,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <meta name="description" content="Catálogo de productos eDark" />
+    <meta name="description" content="En eDark Alpha Technologies somos especialistas en productos tecnológicos, servicios de consultoría y soporte técnico para empresas y hogares en Perú. Descubre nuestro catálogo de laptops, computadoras, accesorios, software original, Microsoft 365 y mucho más, siempre con los mejores precios y atención personalizada. Ofrecemos asesoramiento tecnológico, mantenimiento, reciclaje de equipos y soluciones digitales innovadoras para potenciar tu negocio o mejorar tu experiencia en casa. Confía en eDark para encontrar productos de calidad, soporte profesional y la mejor experiencia de compra online en tecnología. ¡Compra con seguridad y recibe atención personalizada de expertos en tecnología! Envíos a todo el Perú. eDark Alpha Technologies – Innovación, confianza y tecnología a tu alcance." />
     <meta name="author" content="eDark EIRL" />
     <title>eDark</title>
     <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
-    <!-- Google Fonts Orbitron -->
-    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
+    <!-- Google Fonts Orbitron y Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <style>
         .filtros-container .form-range::-webkit-slider-thumb { background: #00adb5; }
         .filtros-container .form-range::-moz-range-thumb { background: #00adb5; }
@@ -155,7 +155,26 @@
         .logo-edark {
             font-family: 'Orbitron', Arial, sans-serif !important;
             text-transform: uppercase;
-            letter-spacing: 3px;
+            letter-spacing: 0.12em;
+            font-weight: 900;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            text-shadow: 0 2px 16px rgba(0,0,0,0.18), 0 1px 0 #222;
+            margin-bottom: 0.2em !important;
+        }
+        .logo-edark span {
+            letter-spacing: 0.18em;
+        }
+        .sub-edark {
+            font-family: 'Montserrat', Arial, sans-serif;
+            font-weight: 400;
+            font-size: clamp(1.1rem, 3vw, 2.2rem);
+            color: #e0e0e0;
+            letter-spacing: 0.08em;
+            margin-bottom: 1.2em !important;
+        }
+        @media (max-width: 768px) {
+            .logo-edark { font-size: 2.1rem !important; }
+            .sub-edark { font-size: 1.1rem !important; }
         }
     </style>
 </head>
@@ -231,8 +250,8 @@ fetch('footer.html')
     <header class="bg-dark py-5 position-relative">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
-                <h1 class="display-1 fw-bold mb-2 logo-edark" style="letter-spacing:2px;">eDark</h1>
-                <h2 class="fw-light mb-4" style="font-size:2rem; letter-spacing:1px;">Alpha Technologies</h2>
+                <h1 class="logo-edark">EDARK</h1>
+                <div class="sub-edark">Alpha Technologies</div>
                 <!-- Carrusel de frases célebres -->
                 <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
                     <div class="frase-carrusel-texto fs-4 fst-italic"></div>
@@ -245,7 +264,8 @@ fetch('footer.html')
         <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
     </header>
 
-    <!-- Texto SEO para posicionamiento orgánico -->
+    <!-- Eliminar sección de texto SEO visible -->
+    <!--
     <section class="container my-4" id="seo-edark">
         <div class="row justify-content-center">
             <div class="col-lg-10 text-center">
@@ -262,7 +282,7 @@ fetch('footer.html')
             </div>
         </div>
     </section>
-
+    -->
     <!-- Filtros y productos -->
     <div class="container-fluid px-5 my-5">
         <div class="row">
