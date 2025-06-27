@@ -9,6 +9,8 @@
     <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
     <link href="css/styles.css" rel="stylesheet" />
+    <!-- Google Fonts Orbitron -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&display=swap" rel="stylesheet">
     <style>
         .filtros-container .form-range::-webkit-slider-thumb { background: #00adb5; }
         .filtros-container .form-range::-moz-range-thumb { background: #00adb5; }
@@ -150,6 +152,11 @@
         body.modo-oscuro #frasesCarrusel {
             background: rgba(30,30,30,0.7);
         }
+        .logo-edark {
+            font-family: 'Orbitron', Arial, sans-serif !important;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
     </style>
 </head>
 
@@ -224,7 +231,7 @@ fetch('footer.html')
     <header class="bg-dark py-5 position-relative">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
-                <h1 class="display-1 fw-bold mb-2" style="letter-spacing:2px;">Edark</h1>
+                <h1 class="display-1 fw-bold mb-2 logo-edark" style="letter-spacing:2px;">eDark</h1>
                 <h2 class="fw-light mb-4" style="font-size:2rem; letter-spacing:1px;">Alpha Technologies</h2>
                 <!-- Carrusel de frases célebres -->
                 <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
@@ -237,6 +244,24 @@ fetch('footer.html')
         <button id="frasePrev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
         <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
     </header>
+
+    <!-- Texto SEO para posicionamiento orgánico -->
+    <section class="container my-4" id="seo-edark">
+        <div class="row justify-content-center">
+            <div class="col-lg-10 text-center">
+                <h2 class="h4 fw-bold mb-3">Tu tienda de tecnología y soluciones digitales en Perú</h2>
+                <p class="mb-2" style="font-size:1.1rem;">
+                    En <strong>eDark Alpha Technologies</strong> somos especialistas en <strong>productos tecnológicos</strong>, <strong>servicios de consultoría</strong> y <strong>soporte técnico</strong> para empresas y hogares en Perú. Descubre nuestro catálogo de <strong>laptops, computadoras, accesorios, software original, Microsoft 365</strong> y mucho más, siempre con los mejores precios y atención personalizada. <br>
+                    Ofrecemos <strong>asesoramiento tecnológico</strong>, <strong>mantenimiento</strong>, <strong>reciclaje de equipos</strong> y soluciones digitales innovadoras para potenciar tu negocio o mejorar tu experiencia en casa. <br>
+                    Confía en <strong>eDark</strong> para encontrar productos de calidad, soporte profesional y la mejor experiencia de compra online en tecnología.
+                </p>
+                <p class="text-muted mb-0" style="font-size:0.98rem;">
+                    ¡Compra con seguridad y recibe atención personalizada de expertos en tecnología! Envíos a todo el Perú. <br>
+                    <strong>eDark Alpha Technologies</strong> – Innovación, confianza y tecnología a tu alcance.
+                </p>
+            </div>
+        </div>
+    </section>
 
     <!-- Filtros y productos -->
     <div class="container-fluid px-5 my-5">
