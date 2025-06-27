@@ -15,89 +15,6 @@
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
         <style>
-            .tarjeta-horizontal {
-                display: flex;
-                align-items: center;
-                background: #fff;
-                border-radius: 1.5rem;
-                box-shadow: 0 4px 24px 0 rgba(34,40,49,0.08);
-                border: 2px solid #e0e0e0;
-                margin-bottom: 2.5rem;
-                padding: 2.5rem 2rem;
-                min-height: 260px;
-                transition: box-shadow 0.3s, transform 0.3s;
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            .tarjeta-horizontal.visible {
-                opacity: 1;
-                transform: translateY(0);
-                transition: opacity 0.7s, transform 0.7s;
-            }
-            .tarjeta-horizontal:hover, .tarjeta-horizontal.active {
-                box-shadow: 0 8px 32px 0 #00adb533;
-                transform: translateY(-8px) scale(1.03);
-                border-color: #475657;
-                z-index: 2;
-            }
-            .tarjeta-horizontal .icono-tarjeta {
-                font-size: 3.5rem;
-                margin-right: 2.5rem;
-                color: #616768;
-                flex-shrink: 0;
-                background: #e6f7fa;
-                border-radius: 50%;
-                padding: 1.1rem 1.3rem;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                transition: transform 0.4s, background 0.3s;
-            }
-            .tarjeta-horizontal .contenido-tarjeta {
-                flex: 1;
-            }
-            .tarjeta-horizontal h2 {
-                font-size: 1.7rem;
-                font-weight: bold;
-                margin-bottom: 1rem;
-                letter-spacing: 0.5px;
-            }
-            .tarjeta-horizontal .subtitulo {
-                font-size: 1.1rem;
-                font-weight: 500;
-                color: #00adb5;
-                margin-bottom: 0.7rem;
-            }
-            .tarjeta-horizontal ul {
-                padding-left: 1.2rem;
-                margin-bottom: 0.5rem;
-            }
-            .tarjeta-horizontal.bg-lightblue {
-                background: #f8fcfd;
-            }
-            .tarjeta-horizontal.bg-white {
-                background: #fff;
-            }
-            @media (max-width: 991px) {
-                .tarjeta-horizontal {
-                    flex-direction: column;
-                    text-align: center;
-                    padding: 2rem 1rem;
-                }
-                .tarjeta-horizontal .icono-tarjeta {
-                    margin: 0 0 1.2rem 0;
-                }
-            }
-            /* Submenú para Bootstrap 5 */
-            .dropdown-submenu {
-                position: relative;
-            }
-            .dropdown-submenu > .dropdown-menu {
-                top: 0;
-                left: 100%;
-                margin-left: 0.1rem;
-                margin-right: 0.1rem;
-            }
             /* Modo oscuro para tarjetas y textos personalizados */
             body.modo-oscuro .card,
             body.modo-oscuro .card.border-0 {
@@ -260,17 +177,20 @@ fetch('footer.html')
                 </div>
             </div>
         </nav>
-        <!-- Header-->
-        <header class="bg-dark py-5">
+
+        <!-- Banner/Título General -->
+        <header class="bg-dark py-5 mb-0">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Sobre Nosotros</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">
-                        En <b>eDark EIRL</b> nos apasiona la tecnología y la innovación. Somos una empresa peruana dedicada a ofrecer productos electrónicos y servicios tecnológicos de alta calidad, con el compromiso de mejorar la vida de nuestros clientes y acompañarlos en su transformación digital.
+                    <h1 class="display-4 fw-bolder mb-3">eDark Alpha Technologies</h1>
+                    <p class="lead fw-normal text-white-50 mb-0" style="font-size:1.35rem;">
+                        Innovación, tecnología y confianza para tu evolución digital.<br>
+                        Líderes en soluciones electrónicas y transformación tecnológica en Perú y Latinoamérica.
                     </p>
                 </div>
             </div>
         </header>
+        <!-- Fin Banner -->
 
         <!-- SECCIÓN QUIÉNES SOMOS EDARK ALPHA TECHNOLOGIES -->
         <section class="py-5 bg-white" id="quienes-somos">
@@ -283,6 +203,8 @@ fetch('footer.html')
                                 <h2 class="fw-bold mb-0">Quiénes Somos</h2>
                             </div>
                             <p>En <b>eDark Alpha Technologies</b>, creemos que cada avance comienza con una visión clara. Somos una empresa peruana dedicada a acercar la tecnología de vanguardia a personas y empresas que buscan soluciones confiables, accesibles y con propósito. Nuestra esencia está en el nombre: <b>eDark</b> representa lo oculto, lo sofisticado, lo que aún no ha sido descubierto. <b>Alpha</b> simboliza el origen, el liderazgo y la innovación constante.</p>
+                            <p class="mb-2">Nacimos con la visión de liderar el futuro tecnológico en Perú y Latinoamérica, ofreciendo soluciones electrónicas de alta calidad que combinan innovación, accesibilidad y diseño inteligente.</p>
+                            <p class="mb-2">Nuestra misión es clara: acercar la tecnología de última generación a las personas y empresas que buscan más que solo productos — buscan evolución. Desde nuestros inicios, nos hemos comprometido con la excelencia, la confianza y una experiencia de compra que inspire.</p>
                             <p class="mb-0 fw-semibold text-primary">Somos el punto de partida de tu próxima revolución digital.</p>
                         </div>
                     </div>
@@ -343,69 +265,6 @@ fetch('footer.html')
         </section>
         <!-- FIN SECCIÓN QUIÉNES SOMOS -->
 
-        <!-- Tarjetas horizontales con Bootstrap -->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5">
-                <div class="row justify-content-center">
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-bullseye"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">Nuestra Misión</div>
-                                <h2>Mejorar la vida de nuestros clientes</h2>
-                                <p>
-                                    A través de productos electrónicos de vanguardia y servicios personalizados, brindamos una experiencia de compra excepcional basada en la confianza, la calidad y el compromiso con la excelencia.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-eye"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">Nuestra Visión</div>
-                                <h2>Ser líderes en innovación tecnológica</h2>
-                                <p>
-                                    Queremos ser reconocidos en el mercado peruano por nuestra innovación, enfoque en el cliente e integridad, siendo la primera opción para quienes buscan soluciones tecnológicas confiables y de última generación.
-                                </p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-lightblue shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-gem"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">Nuestros Valores</div>
-                                <h2>Lo que nos define</h2>
-                                <ul>
-                                    <li><b>Innovación:</b> Siempre a la vanguardia tecnológica.</li>
-                                    <li><b>Calidad:</b> Garantía en cada producto y servicio.</li>
-                                    <li><b>Servicio al Cliente:</b> Atención personalizada y cercana.</li>
-                                    <li><b>Integridad:</b> Honestidad y transparencia en todo momento.</li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-lg-10 mb-4">
-                        <div class="tarjeta-horizontal bg-white shadow-sm" data-anim="true">
-                            <div class="icono-tarjeta"><i class="bi bi-box-seam"></i></div>
-                            <div class="contenido-tarjeta">
-                                <div class="subtitulo">¿Qué Ofrecemos?</div>
-                                <h2>Soluciones y servicios para ti</h2>
-                                <ul>
-                                    <li>Dispositivos móviles y equipos de cómputo</li>
-                                    <li>Accesorios tecnológicos y hogar inteligente</li>
-                                    <li>Consultoría tecnológica y soporte técnico</li>
-                                    <li>Mantenimiento y reparación</li>
-                                </ul>
-                                <p class="mb-0"><b>Nuestro compromiso:</b> Innovar y mejorar continuamente para adaptarnos a las necesidades de nuestros clientes y del mercado.</p>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
         <!-- Footer-->
         <div id="footer"></div>
         <!-- Bootstrap core JS-->
@@ -414,33 +273,6 @@ fetch('footer.html')
         <script src="js/scripts.js"></script>
         <!-- Animación de tarjetas -->
         <script>
-        // Animación de aparición de tarjetas al hacer scroll
-        document.addEventListener('DOMContentLoaded', function () {
-            function isInViewport(el) {
-                const rect = el.getBoundingClientRect();
-                return (
-                    rect.top < window.innerHeight - 50 && rect.bottom > 0
-                );
-            }
-            function animateTarjetasOnScroll() {
-                document.querySelectorAll('.tarjeta-horizontal').forEach(card => {
-                    if (isInViewport(card)) {
-                        card.classList.add('visible');
-                    } else {
-                        card.classList.remove('visible');
-                    }
-                });
-            }
-            window.addEventListener('scroll', animateTarjetasOnScroll);
-            animateTarjetasOnScroll();
-
-            // Efecto de icono al pasar mouse
-            document.querySelectorAll('.tarjeta-horizontal .icono-tarjeta').forEach(icono => {
-                icono.addEventListener('mouseenter', () => icono.style.transform = 'scale(1.18) rotate(-8deg)');
-                icono.addEventListener('mouseleave', () => icono.style.transform = '');
-            });
-        });
-
         // Soporte para submenús en Bootstrap 5
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){
