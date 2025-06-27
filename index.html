@@ -11,172 +11,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <!-- Google Fonts Orbitron y Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        .filtros-container .form-range::-webkit-slider-thumb { background: #00adb5; }
-        .filtros-container .form-range::-moz-range-thumb { background: #00adb5; }
-        .filtros-container .form-range::-ms-thumb { background: #00adb5; }
-        .filtros-container .form-range:focus::-webkit-slider-thumb { box-shadow: 0 0 0 0.25rem #00adb555; }
-        .ordenar-select { max-width: 220px; }
-        .dropdown-submenu { position: relative; }
-        .dropdown-submenu > .dropdown-menu { top: 0; left: 100%; margin-left: 0.1rem; margin-right: 0.1rem; }
-
-        /* Modo oscuro */
-        body.modo-oscuro {
-            background-color: #181a1b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .bg-light {
-            background-color: #23272b !important;
-        }
-        body.modo-oscuro .navbar, body.modo-oscuro .dropdown-menu {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .card {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-            border-color: #444 !important;
-        }
-        body.modo-oscuro .modal-content {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .form-control, body.modo-oscuro .form-select {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-            border-color: #444 !important;
-        }
-        body.modo-oscuro .accordion-button {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .accordion-item {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .bg-dark {
-            background-color: #181a1b !important;
-        }
-        body.modo-oscuro .bg-white {
-            background-color: #23272b !important;
-        }
-        body.modo-oscuro .pagination .page-link {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-            border-color: #444 !important;
-        }
-        body.modo-oscuro .page-item.active .page-link {
-            background-color: #00adb5 !important;
-            color: #fff !important;
-            border-color: #00adb5 !important;
-        }
-        body.modo-oscuro .btn-outline-dark {
-            color: #e0e0e0 !important;
-            border-color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .btn-outline-dark:hover {
-            background-color: #00adb5 !important;
-            color: #fff !important;
-            border-color: #00adb5 !important;
-        }
-        body.modo-oscuro .shadow-sm {
-            box-shadow: 0 .125rem .25rem rgba(0,0,0,.5)!important;
-        }
-
-        /* Cambia color de textos del navbar en modo oscuro */
-        body.modo-oscuro .navbar,
-        body.modo-oscuro .navbar .navbar-brand,
-        body.modo-oscuro .navbar .nav-link,
-        body.modo-oscuro .navbar .dropdown-item {
-            color: #e0e0e0 !important;
-        }
-
-        body.modo-oscuro .navbar .nav-link.active,
-        body.modo-oscuro .navbar .nav-link:focus,
-        body.modo-oscuro .navbar .nav-link:hover {
-            color: #00adb5 !important;
-        }
-
-        body.modo-oscuro .navbar .dropdown-menu {
-            background-color: #23272b !important;
-        }
-
-        body.modo-oscuro .navbar .dropdown-item:hover,
-        body.modo-oscuro .navbar .dropdown-item:focus {
-            background-color: #222 !important;
-            color: #00adb5 !important;
-        }
-
-        /* Botón tipo de cambio: oscuro en modo claro, claro en modo oscuro */
-        #tipoCambioBtn {
-            color: #23272b;
-            border-color: #23272b;
-            background: transparent;
-        }
-        body.modo-oscuro #tipoCambioBtn {
-            color: #e0e0e0 !important;
-            border-color: #e0e0e0 !important;
-            background: transparent !important;
-        }
-
-        /* Banner y carrusel de frases */
-        #frasesCarrusel {
-            background: rgba(0,0,0,0.35);
-            border-radius: 1rem;
-            padding: 1.2rem 1.5rem 1.2rem 1.5rem;
-            box-shadow: 0 2px 16px 0 rgba(0,0,0,0.12);
-            min-height: 80px;
-            transition: background 0.3s;
-        }
-        .frase-carrusel-texto {
-            min-height: 32px;
-            transition: opacity 0.5s;
-        }
-        .frase-carrusel-autor {
-            color: #00adb5;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-        }
-        #frasePrev, #fraseNext {
-            opacity: 0.7;
-            transition: opacity 0.2s;
-        }
-        #frasePrev:hover, #fraseNext:hover {
-            opacity: 1;
-        }
-        @media (max-width: 768px) {
-            .display-1 { font-size: 2.5rem !important; }
-            #frasesCarrusel { padding: 0.8rem 0.7rem; font-size:1rem; }
-            #frasePrev, #fraseNext { display:none !important; }
-        }
-        body.modo-oscuro #frasesCarrusel {
-            background: rgba(30,30,30,0.7);
-        }
-        .logo-edark {
-            font-family: 'Orbitron', Arial, sans-serif !important;
-            text-transform: uppercase;
-            letter-spacing: 0.12em;
-            font-weight: 900;
-            font-size: clamp(2.5rem, 7vw, 5rem);
-            text-shadow: 0 2px 16px rgba(0,0,0,0.18), 0 1px 0 #222;
-            margin-bottom: 0.2em !important;
-        }
-        .logo-edark span {
-            letter-spacing: 0.18em;
-        }
-        .sub-edark {
-            font-family: 'Montserrat', Arial, sans-serif;
-            font-weight: 400;
-            font-size: clamp(1.1rem, 3vw, 2.2rem);
-            color: #e0e0e0;
-            letter-spacing: 0.08em;
-            margin-bottom: 1.2em !important;
-        }
-        @media (max-width: 768px) {
-            .logo-edark { font-size: 2.1rem !important; }
-            .sub-edark { font-size: 1.1rem !important; }
-        }
-    </style>
+    
 </head>
 
 <script>
@@ -445,15 +280,31 @@ fetch('footer.html')
     <script>
     // Frases célebres para el carrusel
     const frases = [
+        { texto: "La ciencia no es sino una perversión de sí misma a menos que tenga como objetivo final el mejoramiento de la humanidad.", autor: "Nikola Tesla" },
+        { texto: "Cualquier cosa que pueda ser conectada, será conectada.", autor: "Kevin Ashton (Internet de las cosas)" },
         { texto: "La tecnología es solo una herramienta. En términos de motivar a los niños y de conseguir que trabajen juntos, el profesor es lo más importante.", autor: "Bill Gates" },
+        { texto: "La mejor manera de predecir el futuro es inventarlo.", autor: "Alan Kay" },
+        { texto: "No me asusta que las computadoras lleguen a pensar como los humanos. Me asusta que los humanos piensen como computadoras.", autor: "Sydney J. Harris" },
+        { texto: "La innovación distingue a un líder de un seguidor.", autor: "Steve Jobs" },
+        { texto: "El software es como el sexo: es mejor cuando es libre.", autor: "Linus Torvalds" },
+        { texto: "La web es más una invención social que técnica. La diseñé para que la gente pudiera colaborar y compartir conocimiento.", autor: "Tim Berners-Lee" },
         { texto: "La ciencia de hoy es la tecnología del mañana.", autor: "Edward Teller" },
         { texto: "La tecnología es mejor cuando une a las personas.", autor: "Matt Mullenweg" },
         { texto: "No es la fe en la tecnología. Es la fe en las personas.", autor: "Steve Jobs" },
         { texto: "La tecnología mueve el mundo.", autor: "Steve Jobs" },
-        { texto: "La tecnología es solo tan buena como la gente que la usa.", autor: "Unknown" },
-        { texto: "La innovación distingue a un líder de un seguidor.", autor: "Steve Jobs" },
-        { texto: "La mejor manera de predecir el futuro es inventarlo.", autor: "Alan Kay" },
-        { texto: "La tecnología es una palabra que describe algo que aún no funciona.", autor: "Douglas Adams" }
+        { texto: "La tecnología es solo tan buena como la gente que la usa.", autor: "Anónimo" },
+        { texto: "La tecnología es una palabra que describe algo que aún no funciona.", autor: "Douglas Adams" },
+        { texto: "La imaginación es más importante que el conocimiento.", autor: "Albert Einstein" },
+        { texto: "La tecnología es el arte de organizar el mundo para que no tengamos que experimentarlo.", autor: "Max Frisch" },
+        { texto: "El avance de la tecnología es basado en hacerla encajar para que no la notes, para que forme parte de la vida cotidiana.", autor: "Bill Gates" },
+        { texto: "El mayor enemigo del conocimiento no es la ignorancia, es la ilusión del conocimiento.", autor: "Stephen Hawking" },
+        { texto: "Nunca confíes en un ordenador que no puedas lanzar por una ventana.", autor: "Steve Wozniak" },
+        { texto: "El propósito de la computación es la percepción, la comprensión y la acción.", autor: "Marvin Minsky" },
+        { texto: "La tecnología debería mejorar tu vida, no convertirse en tu vida.", autor: "Harvey B. Mackay" },
+        { texto: "El hardware es lo que hace a una máquina rápida; el software es lo que hace que una máquina lenta.", autor: "Craig Bruce" },
+        { texto: "La tecnología es cualquier cosa que no estaba cuando naciste.", autor: "Alan Kay" },
+        { texto: "El verdadero progreso es el que pone la tecnología al alcance de todos.", autor: "Henry Ford" },
+        { texto: "La informática no trata sobre computadoras más que la astronomía sobre telescopios.", autor: "Edsger Dijkstra" }
     ];
     let fraseActual = 0;
     const fraseTexto = () => document.querySelector('.frase-carrusel-texto');
