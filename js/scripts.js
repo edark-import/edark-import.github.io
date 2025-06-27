@@ -373,6 +373,14 @@ function renderProductosPaginados() {
     }
     asignarEventosProductos();
     renderPaginacion(totalPaginas);
+
+    // --- Scroll al primer producto al cambiar de página ---
+    setTimeout(() => {
+        const primerCard = contenedor.querySelector('.card');
+        if (primerCard) {
+            primerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    }, 0);
 }
 
 // --- AGREGA EVENTO PARA BOTÓN EDITAR SOLO PARA ADMIN ---
