@@ -556,9 +556,9 @@ function mostrarProductos() {
         }
         let precioVenta;
         if (moneda === 'USD') {
-            precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.45;
+            precioVenta = precioCompra * tipoCambioGlobal * 1.18 * 1.35;
         } else {
-            precioVenta = precioCompra * 1.18 * 1.45;
+            precioVenta = precioCompra * 1.18 * 1.35;
         }
         precioVenta = Math.ceil(precioVenta);
         document.getElementById('precioVenta').value = precioVenta;
