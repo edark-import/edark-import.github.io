@@ -399,15 +399,21 @@ fetch('footer.html')
         chatbotInput.value = '';
         chatbotInput.disabled = true;
         chatbotSend.disabled = true;
-        // Llama a Hugging Face Inference API (modelo pequeño, gratuito)
+
+        // Detecta si la pregunta es sobre recomendación de productos
+        if (/recomienda|mejor|busco|quiero|necesito/i.test(pregunta)) {
+            // Aquí puedes llamar a tu función de filtrado de productos y mostrar resultados
+            agregarMensajeChat('bot', '¿Qué tipo de producto buscas? Puedes usar los filtros de la izquierda o dime tu necesidad (ejemplo: "necesito una laptop para diseño gráfico").');
+            chatbotInput.disabled = false;
+            chatbotSend.disabled = false;
+            chatbotInput.focus();
+            return;
+        }
+
+        // Si no es una consulta de productos, usa la IA
         fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-small', {
             method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                // Puedes obtener un token gratuito en https://huggingface.co/settings/tokens
-                // Si no pones token, funcionará pero puede estar más limitado.
-                // 'Authorization': 'Bearer TU_TOKEN_AQUI'
-            },
+            headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ inputs: pregunta })
         })
         .then(res => res.json())
