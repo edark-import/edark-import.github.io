@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <title>PC Personalizada | eDark</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <link href="css/styles.css" rel="stylesheet" />
+    <!-- Incluye tus otros links y scripts aquí -->
+</head>
+<body>
+    <!-- Incluye tu navbar aquí (puedes copiarla de index.html) -->
+
+    <div class="container my-5">
+        <h2 class="mb-4">Arma tu Computadora Personalizada</h2>
+        <form id="formPC">
+            <div class="row g-3">
+                <div class="col-md-4">
+                    <label for="procesador" class="form-label">Procesador</label>
+                    <select id="procesador" class="form-select" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Intel i5">Intel i5</option>
+                        <option value="Intel i7">Intel i7</option>
+                        <option value="AMD Ryzen 5">AMD Ryzen 5</option>
+                        <option value="AMD Ryzen 7">AMD Ryzen 7</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="ram" class="form-label">Memoria RAM</label>
+                    <select id="ram" class="form-select" required>
+                        <option value="">Selecciona...</option>
+                        <option value="8GB">8GB</option>
+                        <option value="16GB">16GB</option>
+                        <option value="32GB">32GB</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="almacenamiento" class="form-label">Almacenamiento</label>
+                    <select id="almacenamiento" class="form-select" required>
+                        <option value="">Selecciona...</option>
+                        <option value="SSD 256GB">SSD 256GB</option>
+                        <option value="SSD 512GB">SSD 512GB</option>
+                        <option value="HDD 1TB">HDD 1TB</option>
+                    </select>
+                </div>
+                <div class="col-md-4">
+                    <label for="grafica" class="form-label">Tarjeta Gráfica</label>
+                    <select id="grafica" class="form-select" required>
+                        <option value="">Selecciona...</option>
+                        <option value="Integrada">Integrada</option>
+                        <option value="NVIDIA GTX 1650">NVIDIA GTX 1650</option>
+                        <option value="NVIDIA RTX 3060">NVIDIA RTX 3060</option>
+                        <option value="AMD Radeon RX 6600">AMD Radeon RX 6600</option>
+                    </select>
+                </div>
+                <!-- Agrega más componentes si lo deseas -->
+            </div>
+            <div class="mt-4">
+                <button type="submit" class="btn btn-success">Generar Cotización</button>
+            </div>
+        </form>
+        <div id="cotizacionResultado" class="mt-4"></div>
+    </div>
+
+    <!-- Incluye tu footer aquí (puedes cargarlo igual que en index.html) -->
+
+    <script>
+    // Ejemplo de precios base (puedes obtenerlos de tu base de datos si lo deseas)
+    const precios = {
+        "Intel i5": 800, "Intel i7": 1200, "AMD Ryzen 5": 900, "AMD Ryzen 7": 1300,
+        "8GB": 150, "16GB": 250, "32GB": 400,
+        "SSD 256GB": 180, "SSD 512GB": 300, "HDD 1TB": 220,
+        "Integrada": 0, "NVIDIA GTX 1650": 700, "NVIDIA RTX 3060": 1800, "AMD Radeon RX 6600": 1600
+    };
+
+    document.getElementById('formPC').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const proc = document.getElementById('procesador').value;
+        const ram = document.getElementById('ram').value;
+        const alm = document.getElementById('almacenamiento').value;
+        const graf = document.getElementById('grafica').value;
+
+        let total = precios[proc] + precios[ram] + precios[alm] + precios[graf];
+        let resumen = `
+            <h4>Tu cotización:</h4>
+            <ul>
+                <li><strong>Procesador:</strong> ${proc}</li>
+                <li><strong>RAM:</strong> ${ram}</li>
+                <li><strong>Almacenamiento:</strong> ${alm}</li>
+                <li><strong>Gráfica:</strong> ${graf}</li>
+            </ul>
+            <h5>Total estimado: <span class="text-success">S/ ${total}</span></h5>
+            <p class="text-muted">*Precio referencial. Para una cotización exacta y asesoría personalizada, contáctanos.</p>
+        `;
+        document.getElementById('cotizacionResultado').innerHTML = resumen;
+    });
+    </script>
+</body>
+</html>
