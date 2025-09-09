@@ -392,7 +392,7 @@ fetch('footer.html')
         if (e.key === 'Enter') enviarMensajeChatbot();
     });
 
-    function enviarMensajeChatbot() {
+    async function enviarMensajeChatbot() {
         const pregunta = chatbotInput.value.trim();
         if (!pregunta) return;
         agregarMensajeChat('user', pregunta);
@@ -402,7 +402,6 @@ fetch('footer.html')
 
         // Detecta si la pregunta es sobre recomendación de productos
         if (/recomienda|mejor|busco|quiero|necesito/i.test(pregunta)) {
-            // Aquí puedes llamar a tu función de filtrado de productos y mostrar resultados
             agregarMensajeChat('bot', '¿Qué tipo de producto buscas? Puedes usar los filtros de la izquierda o dime tu necesidad (ejemplo: "necesito una laptop para diseño gráfico").');
             chatbotInput.disabled = false;
             chatbotSend.disabled = false;
@@ -410,27 +409,32 @@ fetch('footer.html')
             return;
         }
 
-        // Si no es una consulta de productos, usa la IA
-        fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-small', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ inputs: pregunta })
-        })
-        .then(res => res.json())
-        .then(data => {
+        // Gemini API
+        const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
+        const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+        const prompt = `Eres un asistente virtual de una tienda de tecnología. Ayuda al usuario a elegir productos según sus necesidades. Pregunta del usuario: ${pregunta}`;
+
+        try {
+            const res = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    contents: [{ parts: [{ text: prompt }] }]
+                })
+            });
+            const data = await res.json();
             let respuesta = 'Lo siento, no entendí. ¿Puedes reformular tu pregunta?';
-            if (data && data.generated_text) respuesta = data.generated_text;
-            if (Array.isArray(data) && data[0]?.generated_text) respuesta = data[0].generated_text;
+            if (data && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                respuesta = data.candidates[0].content.parts[0].text;
+            }
             agregarMensajeChat('bot', respuesta);
-        })
-        .catch(() => {
-            agregarMensajeChat('bot', 'Ocurrió un error al conectar con la IA. Intenta de nuevo más tarde.');
-        })
-        .finally(() => {
+        } catch (e) {
+            agregarMensajeChat('bot', 'Ocurrió un error al conectar con Gemini. Intenta de nuevo más tarde.');
+        } finally {
             chatbotInput.disabled = false;
             chatbotSend.disabled = false;
             chatbotInput.focus();
-        });
+        }
     }
 
     function agregarMensajeChat(remitente, texto) {
