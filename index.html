@@ -109,8 +109,8 @@ fetch('footer.html')
             </div>
         </div>
         <!-- Flechas del carrusel -->
-        <button id="frasePrev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
-        <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+        <!-- <button id="frasePrev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+        <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button> -->
     </header>
 
      <!-- Carrusel de Servicios -->
@@ -203,10 +203,10 @@ fetch('footer.html')
             </div>
           </div>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
+        <button class="carousel-control-prev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
           <span class="carousel-control-prev-icon"></span>
         </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
+        <button class="carousel-control-next" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
           <span class="carousel-control-next-icon"></span>
         </button>
       </div>
@@ -624,14 +624,33 @@ async function enviarMensajeChatbot() {
         let paginacionHTML = `
         <nav>
           <ul class="pagination justify-content-center">
-            <li class="page-item${paginaActual === 1 ? ' disabled' : ''}" id="anteriorPagina">
-              <button class="page-link">Anterior</button>
+            <li class="page-item${paginaActual === 1 ? ' disabled' : ''}">
+              <button class="page-link" id="primeraPagina" aria-label="Primera">&laquo;</button>
             </li>
-            <li class="page-item disabled">
-              <span class="page-link">Página ${paginaActual} de ${totalPaginas}</span>
+            <li class="page-item${paginaActual === 1 ? ' disabled' : ''}">
+              <button class="page-link" id="anteriorPagina" aria-label="Anterior">&lsaquo;</button>
             </li>
-            <li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}" id="siguientePagina">
-              <button class="page-link">Siguiente</button>
+        `;
+
+        // Números de página (máximo 5 visibles)
+        let start = Math.max(1, paginaActual - 2);
+        let end = Math.min(totalPaginas, paginaActual + 2);
+        if (paginaActual <= 3) end = Math.min(5, totalPaginas);
+        if (paginaActual >= totalPaginas - 2) start = Math.max(1, totalPaginas - 4);
+
+        for (let i = start; i <= end; i++) {
+            paginacionHTML += `
+            <li class="page-item${i === paginaActual ? ' active' : ''}">
+              <button class="page-link pagina-numero" data-pagina="${i}">${i}</button>
+            </li>`;
+        }
+
+        paginacionHTML += `
+            <li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}">
+              <button class="page-link" id="siguientePagina" aria-label="Siguiente">&rsaquo;</button>
+            </li>
+            <li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}">
+              <button class="page-link" id="ultimaPagina" aria-label="Última">&raquo;</button>
             </li>
           </ul>
         </nav>
@@ -639,12 +658,24 @@ async function enviarMensajeChatbot() {
         document.getElementById('paginacionProductos').innerHTML = paginacionHTML;
 
         // Listeners
+        document.getElementById('primeraPagina').onclick = function() {
+            if (paginaActual > 1) cargarProductos(1);
+        };
         document.getElementById('anteriorPagina').onclick = function() {
             if (paginaActual > 1) cargarProductos(paginaActual - 1);
         };
         document.getElementById('siguientePagina').onclick = function() {
             if (paginaActual < totalPaginas) cargarProductos(paginaActual + 1);
         };
+        document.getElementById('ultimaPagina').onclick = function() {
+            if (paginaActual < totalPaginas) cargarProductos(totalPaginas);
+        };
+        document.querySelectorAll('.pagina-numero').forEach(btn => {
+            btn.onclick = function() {
+                const pagina = parseInt(this.getAttribute('data-pagina'));
+                if (pagina !== paginaActual) cargarProductos(pagina);
+            };
+        });
     }
 
     // Llama a renderizarPaginacion(paginaActual, totalPaginas) cada vez que cambias de página
