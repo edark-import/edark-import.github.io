@@ -396,14 +396,14 @@ fetch('footer.html')
 
 async function obtenerProductosDestacados() {
     const productos = [];
-    const snapshot = await firebase.firestore().collection('productos').limit(5).get();
+    const snapshot = await firebase.firestore().collection('productos').limit(50).get();
     snapshot.forEach(doc => {
         const data = doc.data();
         productos.push({
             nombre: data.nombre,
             categoria: data.categoria,
             descripcion: data.descripcion || data.especificaciones || "",
-            precio: data.precioVenta ? `S/ ${data.precioVenta}` : ""
+            precio: data.precio ? `S/ ${data.precio}` : ""
         });
     });
     return productos;
@@ -418,7 +418,7 @@ async function enviarMensajeChatbot() {
     chatbotSend.disabled = true;
 
     // Detecta si la pregunta es sobre recomendación de productos o servicios
-    if (/recomienda|mejor|busco|quiero|necesito|servicio|ofrecen/i.test(pregunta)) {
+    if (/recomienda|mejor|busco|quiero|necesito|servicio|ofrecen|requiero|productos|categoría|urgencia/i.test(pregunta)) {
         // Obtén productos y servicios desde Firebase
         let productosDestacados = await obtenerProductosDestacados();
         // Puedes obtener servicios de Firebase o mantenerlos en un array fijo
@@ -430,9 +430,9 @@ async function enviarMensajeChatbot() {
         ];
 
         // Construye el contexto para Gemini
-        let contexto = "Eres un asistente virtual experto en tecnología para una tienda online en Perú. " +
+        let contexto = "Eres un asistente virtual experto en tecnología para la empresa Edark, no pidas características muy técnicas a los usuarios." +
             "Solo puedes recomendar productos y servicios de la siguiente lista. " +
-            "Sé breve y directo, responde en máximo 3 líneas y menciona el producto o servicio más adecuado según la pregunta del usuario.\n\n" +
+            "Sé breve, directo y amable, responde en máximo 3 líneas y menciona el producto o servicio más adecuado según la pregunta del usuario.\n\n" +
             "Productos disponibles:\n";
         productosDestacados.forEach(p => {
             contexto += `- ${p.nombre} (${p.categoria}): ${p.descripcion}. Precio: ${p.precio}\n`;
