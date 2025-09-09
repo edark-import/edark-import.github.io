@@ -5873,7 +5873,8 @@ textarea.form-control-lg {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 15%;
+  width: 5%;
+  height: 10%;
   padding: 0;
   color: #fff;
   text-align: center;
