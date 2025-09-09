@@ -392,6 +392,20 @@ fetch('footer.html')
         if (e.key === 'Enter') enviarMensajeChatbot();
     });
 
+    // Ejemplo de productos y servicios destacados (puedes automatizar esto desde tu base de datos)
+    const productosDestacados = [
+        { nombre: "Laptop HP 15", categoria: "laptop", descripcion: "Ideal para oficina y estudios", precio: "S/ 1800" },
+        { nombre: "Impresora Epson EcoTank", categoria: "impresora", descripcion: "Impresión económica y rápida", precio: "S/ 950" },
+        { nombre: "Mouse Logitech M185", categoria: "accesorio", descripcion: "Inalámbrico y ergonómico", precio: "S/ 55" }
+    ];
+
+    const serviciosDestacados = [
+        "Consultoría tecnológica para empresas y hogares",
+        "Soporte técnico presencial y remoto",
+        "Mantenimiento y reparación de computadoras",
+        "Reciclaje de equipos electrónicos"
+    ];
+
     async function enviarMensajeChatbot() {
         const pregunta = chatbotInput.value.trim();
         if (!pregunta) return;
@@ -400,19 +414,51 @@ fetch('footer.html')
         chatbotInput.disabled = true;
         chatbotSend.disabled = true;
 
-        // Detecta si la pregunta es sobre recomendación de productos
-        if (/recomienda|mejor|busco|quiero|necesito/i.test(pregunta)) {
-            agregarMensajeChat('bot', '¿Qué tipo de producto buscas? Puedes usar los filtros de la izquierda o dime tu necesidad (ejemplo: "necesito una laptop para diseño gráfico").');
-            chatbotInput.disabled = false;
-            chatbotSend.disabled = false;
-            chatbotInput.focus();
+        // Detecta si la pregunta es sobre recomendación de productos o servicios
+        if (/recomienda|mejor|busco|quiero|necesito|servicio|ofrecen/i.test(pregunta)) {
+            // Construye el contexto para Gemini
+            let contexto = "Estos son algunos productos destacados de nuestra tienda:\n";
+            productosDestacados.forEach(p => {
+                contexto += `- ${p.nombre} (${p.categoria}): ${p.descripcion}. Precio: ${p.precio}\n`;
+            });
+            contexto += "\nY estos son algunos de nuestros servicios:\n";
+            serviciosDestacados.forEach(s => {
+                contexto += `- ${s}\n`;
+            });
+            contexto += "\nAyuda al usuario a elegir el producto o servicio más adecuado según su pregunta.";
+
+            const apiKey = 'TU_API_KEY_DE_GEMINI'; // <-- Pega aquí tu API Key
+            const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+            const prompt = `${contexto}\n\nPregunta del usuario: ${pregunta}`;
+
+            try {
+                const res = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }]
+                    })
+                });
+                const data = await res.json();
+                let respuesta = 'Lo siento, no entendí. ¿Puedes reformular tu pregunta?';
+                if (data && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                    respuesta = data.candidates[0].content.parts[0].text;
+                }
+                agregarMensajeChat('bot', respuesta);
+            } catch (e) {
+                agregarMensajeChat('bot', 'Ocurrió un error al conectar con Gemini. Intenta de nuevo más tarde.');
+            } finally {
+                chatbotInput.disabled = false;
+                chatbotSend.disabled = false;
+                chatbotInput.focus();
+            }
             return;
         }
 
         // Gemini API
         const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
         const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
-        const prompt = `Eres un asistente virtual de una tienda de tecnología. Ayuda al usuario a elegir productos según sus necesidades. Pregunta del usuario: ${pregunta}`;
+        const prompt = `Eres un asistente virtual de una tienda de tecnología. Ayuda al usuario a elegir productos o servicios según sus necesidades. Pregunta del usuario: ${pregunta}`;
 
         try {
             const res = await fetch(url, {
@@ -438,9 +484,11 @@ fetch('footer.html')
     }
 
     function agregarMensajeChat(remitente, texto) {
+        // Reemplaza saltos de línea por <br> para mejor visualización
+        const textoFormateado = texto.replace(/\n/g, '<br>');
         const div = document.createElement('div');
         div.className = remitente === 'user' ? 'text-end mb-2' : 'text-start mb-2';
-        div.innerHTML = `<span class="badge ${remitente === 'user' ? 'bg-primary' : 'bg-secondary'}">${texto}</span>`;
+        div.innerHTML = `<span class="badge ${remitente === 'user' ? 'bg-primary' : 'bg-secondary'} text-break" style="white-space:pre-line;max-width:90%;display:inline-block;">${textoFormateado}</span>`;
         chatbotMessages.appendChild(div);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
