@@ -5874,7 +5874,7 @@ textarea.form-control-lg {
   align-items: center;
   justify-content: center;
   width: 5%;
-  height: 10%;
+  height: 5%;
   padding: 0;
   color: #fff;
   text-align: center;
@@ -7135,7 +7135,7 @@ textarea.form-control-lg {
 }
 
 .translate-middle-xx {
-  transform: translateX(100%) !important;
+  transform: translateX(200%) !important;
 }
 
 .translate-middle-y {
