@@ -7131,7 +7131,7 @@ textarea.form-control-lg {
 }
 
 .translate-middle-x {
-  transform: translateX(-50%) !important;
+  transform: translateX(-100%) !important;
 }
 
 .translate-middle-y {
