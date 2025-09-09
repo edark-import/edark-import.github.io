@@ -417,6 +417,17 @@ async function enviarMensajeChatbot() {
     chatbotInput.disabled = true;
     chatbotSend.disabled = true;
 
+    // Indicador de "pensando..."
+    const thinkingId = 'thinking-msg';
+    const divThinking = document.createElement('div');
+    divThinking.id = thinkingId;
+    divThinking.className = 'text-start mb-2';
+    divThinking.innerHTML = `<span class="badge bg-secondary text-break" style="white-space:pre-line;max-width:90%;display:inline-block;">
+        <span class="spinner-border spinner-border-sm me-2"></span>Pensando...
+    </span>`;
+    chatbotMessages.appendChild(divThinking);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
     // Detecta si la pregunta es sobre recomendación de productos o servicios
     if (/recomienda|mejor|busco|quiero|necesito|servicio|ofrecen|requiero|productos|categoría|urgencia/i.test(pregunta)) {
         // Obtén productos y servicios desde Firebase
@@ -462,6 +473,8 @@ async function enviarMensajeChatbot() {
             }
             agregarMensajeChat('bot', respuesta);
         } catch (e) {
+            const thinkingElem = document.getElementById(thinkingId);
+            if (thinkingElem) thinkingElem.remove();
             agregarMensajeChat('bot', 'Ocurrió un error al conectar con Gemini. Intenta de nuevo más tarde.');
         } finally {
             chatbotInput.disabled = false;
@@ -491,6 +504,8 @@ async function enviarMensajeChatbot() {
         }
         agregarMensajeChat('bot', respuesta);
     } catch (e) {
+        const thinkingElem = document.getElementById(thinkingId);
+        if (thinkingElem) thinkingElem.remove();
         agregarMensajeChat('bot', 'Ocurrió un error al conectar con Gemini. Intenta de nuevo más tarde.');
     } finally {
         chatbotInput.disabled = false;
