@@ -418,17 +418,17 @@ fetch('footer.html')
         if (/recomienda|mejor|busco|quiero|necesito|servicio|ofrecen/i.test(pregunta)) {
             // Construye el contexto para Gemini
             let contexto = "Eres un asistente virtual experto en tecnología para una tienda online en Perú. " +
-    "Solo puedes recomendar productos y servicios de la siguiente lista. " +
-    "Sé breve y directo, responde en máximo 3 líneas y menciona el producto o servicio más adecuado según la pregunta del usuario.\n\n" +
-    "Productos disponibles:\n";
-productosDestacados.forEach(p => {
-    contexto += `- ${p.nombre} (${p.categoria}): ${p.descripcion}. Precio: ${p.precio}\n`;
-});
-contexto += "\nServicios disponibles:\n";
-serviciosDestacados.forEach(s => {
-    contexto += `- ${s}\n`;
-});
-contexto += "\nPregunta del usuario: " + pregunta;
+                "Solo puedes recomendar productos y servicios de la siguiente lista. " +
+                "Sé breve y directo, responde en máximo 3 líneas y menciona el producto o servicio más adecuado según la pregunta del usuario.\n\n" +
+                "Productos disponibles:\n";
+            productosDestacados.forEach(p => {
+                contexto += `- ${p.nombre} (${p.categoria}): ${p.descripcion}. Precio: ${p.precio}\n`;
+            });
+            contexto += "\nServicios disponibles:\n";
+            serviciosDestacados.forEach(s => {
+                contexto += `- ${s}\n`;
+            });
+            contexto += "\nPregunta del usuario: " + pregunta;
 
             const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
             const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
