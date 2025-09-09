@@ -113,25 +113,105 @@ fetch('footer.html')
         <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
     </header>
 
-    <!-- Eliminar sección de texto SEO visible -->
-    <!--
-    <section class="container my-4" id="seo-edark">
-        <div class="row justify-content-center">
-            <div class="col-lg-10 text-center">
-                <h2 class="h4 fw-bold mb-3">Tu tienda de tecnología y soluciones digitales en Perú</h2>
-                <p class="mb-2" style="font-size:1.1rem;">
-                    En <strong>eDark Alpha Technologies</strong> somos especialistas en <strong>productos tecnológicos</strong>, <strong>servicios de consultoría</strong> y <strong>soporte técnico</strong> para empresas y hogares en Perú. Descubre nuestro catálogo de <strong>laptops, computadoras, accesorios, software original, Microsoft 365</strong> y mucho más, siempre con los mejores precios y atención personalizada. <br>
-                    Ofrecemos <strong>asesoramiento tecnológico</strong>, <strong>mantenimiento</strong>, <strong>reciclaje de equipos</strong> y soluciones digitales innovadoras para potenciar tu negocio o mejorar tu experiencia en casa. <br>
-                    Confía en <strong>eDark</strong> para encontrar productos de calidad, soporte profesional y la mejor experiencia de compra online en tecnología.
-                </p>
-                <p class="text-muted mb-0" style="font-size:0.98rem;">
-                    ¡Compra con seguridad y recibe atención personalizada de expertos en tecnología! Envíos a todo el Perú. <br>
-                    <strong>eDark Alpha Technologies</strong> – Innovación, confianza y tecnología a tu alcance.
-                </p>
+     <!-- Carrusel de Servicios -->
+    <div class="container my-4">
+      <div id="serviciosCarrusel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="row justify-content-center g-3">
+              <div class="col-6 col-md-3">
+                <a href="consultoria.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-lightbulb icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">Consultoría tecnológica</h5>
+                      <p class="small text-muted">Soluciones y asesoría para empresas y hogares.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="soporte.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-tools icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">Soporte técnico</h5>
+                      <p class="small text-muted">Atención presencial y remota, rápida y confiable.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="mantenimiento.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-gear-wide-connected icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">Mantenimiento y reparación</h5>
+                      <p class="small text-muted">Optimización y reparación de computadoras y laptops.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="recicla.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-recycle icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">Recicla tecnología</h5>
+                      <p class="small text-muted">Reciclaje responsable de equipos electrónicos.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
             </div>
+          </div>
+          <div class="carousel-item">
+            <div class="row justify-content-center g-3">
+              <div class="col-6 col-md-3">
+                <a href="asesoramiento-hogar.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-house-door icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">Asesoramiento Hogar</h5>
+                      <p class="small text-muted">Tecnología y seguridad para tu hogar.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="asesoramiento-empresa.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-building icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">Asesoramiento Empresa</h5>
+                      <p class="small text-muted">Soluciones tecnológicas para tu negocio.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="col-6 col-md-3">
+                <a href="pc-personalizada.html" class="text-decoration-none">
+                  <div class="card h-100 text-center shadow-sm area">
+                    <div class="card-body">
+                      <i class="bi bi-pc-display-horizontal icono-servicio mb-2"></i>
+                      <h5 class="area-titulo mb-2">PC Personalizada</h5>
+                      <p class="small text-muted">Arma tu computadora a medida.</p>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
-    </section>
-    -->
+        <button class="carousel-control-prev" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
+    <!-- Sección de productos -->
     <!-- Filtros y productos -->
     <div class="container-fluid px-5 my-5">
         <div class="row">
@@ -173,7 +253,20 @@ fetch('footer.html')
                     <div class="mt-2 text-success">Cargando productos...</div>
                 </div>
                 <!-- Paginación -->
-                <div id="paginacionProductos" class="mt-4"></div>
+                <div id="paginacionProductos" class="mt-4">
+                    <!-- Ejemplo de paginación -->
+                    <nav>
+                      <ul class="pagination justify-content-center">
+                        <li class="page-item" id="anteriorPagina">
+                          <button class="page-link">Anterior</button>
+                        </li>
+                        <!-- Aquí van los números de página si quieres -->
+                        <li class="page-item" id="siguientePagina">
+                          <button class="page-link">Siguiente</button>
+                        </li>
+                      </ul>
+                    </nav>
+                </div>
             </div>
         </div>
     </div>
@@ -526,7 +619,55 @@ async function enviarMensajeChatbot() {
         chatbotMessages.appendChild(div);
         chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
     }
+
+    function renderizarPaginacion(paginaActual, totalPaginas) {
+        let paginacionHTML = `
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item${paginaActual === 1 ? ' disabled' : ''}" id="anteriorPagina">
+              <button class="page-link">Anterior</button>
+            </li>
+            <li class="page-item disabled">
+              <span class="page-link">Página ${paginaActual} de ${totalPaginas}</span>
+            </li>
+            <li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}" id="siguientePagina">
+              <button class="page-link">Siguiente</button>
+            </li>
+          </ul>
+        </nav>
+        `;
+        document.getElementById('paginacionProductos').innerHTML = paginacionHTML;
+
+        // Listeners
+        document.getElementById('anteriorPagina').onclick = function() {
+            if (paginaActual > 1) cargarProductos(paginaActual - 1);
+        };
+        document.getElementById('siguientePagina').onclick = function() {
+            if (paginaActual < totalPaginas) cargarProductos(paginaActual + 1);
+        };
+    }
+
+    // Llama a renderizarPaginacion(paginaActual, totalPaginas) cada vez que cambias de página
     </script>
+
+    <style>
+    .area {
+        background: #f8f9fa;
+        border-radius: 1rem;
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+    .icono-servicio {
+        font-size: 2.5rem;
+        color: #00adb5;
+    }
+    .area-titulo {
+        font-size: 1.1rem;
+        font-weight: bold;
+        color: #00adb5;
+    }
+    </style>
 
 </body>
 </html>
