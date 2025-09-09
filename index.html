@@ -487,7 +487,7 @@ async function enviarMensajeChatbot() {
         // Gemini API
         const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
         const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
-        const prompt = `Eres un asistente virtual de una tienda de tecnología. Ayuda al usuario a elegir productos o servicios según sus necesidades. Pregunta del usuario: ${pregunta}`;
+        const prompt = `Eres un asistente virtual de la tienda de tecnología Edark. Ayuda al usuario a elegir productos o servicios según sus necesidades brindando una respuesta cálida y amigable para mejorar su experiencia, no permites que se frustre tan pronto entiende su lenguaje. Pregunta del usuario: ${pregunta}`;
 
     try {
         const res = await fetch(url, {
