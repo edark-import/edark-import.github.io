@@ -178,14 +178,50 @@ fetch('footer.html')
         </div>
         <form id="formPC">
             <div class="row g-3">
-                <div class="col-md-4">
+                <div class="col-md-6">
+                    <label for="nombre" class="form-label">Nombre de contacto</label>
+                    <input type="text" id="nombre" class="form-control" required maxlength="60" placeholder="Tu nombre completo">
+                </div>
+                <div class="col-md-6">
                     <label for="procesador" class="form-label">Procesador</label>
                     <select id="procesador" class="form-select" required>
                         <option value="">Selecciona...</option>
-                        <option value="Intel i5">Intel i5</option>
-                        <option value="Intel i7">Intel i7</option>
-                        <option value="AMD Ryzen 5">AMD Ryzen 5</option>
-                        <option value="AMD Ryzen 7">AMD Ryzen 7</option>
+                        <optgroup label="Intel">
+                            <option value="Intel i3 10th Gen">Intel i3 10ª Gen</option>
+                            <option value="Intel i3 11th Gen">Intel i3 11ª Gen</option>
+                            <option value="Intel i3 12th Gen">Intel i3 12ª Gen</option>
+                            <option value="Intel i3 13th Gen">Intel i3 13ª Gen</option>
+                            <option value="Intel i3 14th Gen">Intel i3 14ª Gen</option>
+                            <option value="Intel i5 10th Gen">Intel i5 10ª Gen</option>
+                            <option value="Intel i5 11th Gen">Intel i5 11ª Gen</option>
+                            <option value="Intel i5 12th Gen">Intel i5 12ª Gen</option>
+                            <option value="Intel i5 13th Gen">Intel i5 13ª Gen</option>
+                            <option value="Intel i5 14th Gen">Intel i5 14ª Gen</option>
+                            <option value="Intel i7 10th Gen">Intel i7 10ª Gen</option>
+                            <option value="Intel i7 11th Gen">Intel i7 11ª Gen</option>
+                            <option value="Intel i7 12th Gen">Intel i7 12ª Gen</option>
+                            <option value="Intel i7 13th Gen">Intel i7 13ª Gen</option>
+                            <option value="Intel i7 14th Gen">Intel i7 14ª Gen</option>
+                            <option value="Intel i9 10th Gen">Intel i9 10ª Gen</option>
+                            <option value="Intel i9 11th Gen">Intel i9 11ª Gen</option>
+                            <option value="Intel i9 12th Gen">Intel i9 12ª Gen</option>
+                            <option value="Intel i9 13th Gen">Intel i9 13ª Gen</option>
+                            <option value="Intel i9 14th Gen">Intel i9 14ª Gen</option>
+                        </optgroup>
+                        <optgroup label="AMD">
+                            <option value="AMD Ryzen 3 4000">Ryzen 3 4000</option>
+                            <option value="AMD Ryzen 3 5000">Ryzen 3 5000</option>
+                            <option value="AMD Ryzen 3 7000">Ryzen 3 7000</option>
+                            <option value="AMD Ryzen 5 4000">Ryzen 5 4000</option>
+                            <option value="AMD Ryzen 5 5000">Ryzen 5 5000</option>
+                            <option value="AMD Ryzen 5 7000">Ryzen 5 7000</option>
+                            <option value="AMD Ryzen 7 4000">Ryzen 7 4000</option>
+                            <option value="AMD Ryzen 7 5000">Ryzen 7 5000</option>
+                            <option value="AMD Ryzen 7 7000">Ryzen 7 7000</option>
+                            <option value="AMD Ryzen 9 4000">Ryzen 9 4000</option>
+                            <option value="AMD Ryzen 9 5000">Ryzen 9 5000</option>
+                            <option value="AMD Ryzen 9 7000">Ryzen 9 7000</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="col-md-4">
@@ -195,34 +231,108 @@ fetch('footer.html')
                         <option value="8GB">8GB</option>
                         <option value="16GB">16GB</option>
                         <option value="32GB">32GB</option>
+                        <option value="64GB">64GB</option>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="almacenamiento" class="form-label">Almacenamiento</label>
                     <select id="almacenamiento" class="form-select" required>
                         <option value="">Selecciona...</option>
-                        <option value="SSD 256GB">SSD 256GB</option>
-                        <option value="SSD 512GB">SSD 512GB</option>
-                        <option value="HDD 1TB">HDD 1TB</option>
+                        <optgroup label="SSD">
+                            <option value="SSD 128GB">SSD 128GB</option>
+                            <option value="SSD 256GB">SSD 256GB</option>
+                            <option value="SSD 512GB">SSD 512GB</option>
+                            <option value="SSD 1TB">SSD 1TB</option>
+                            <option value="SSD 2TB">SSD 2TB</option>
+                            <option value="SSD 4TB">SSD 4TB</option>
+                        </optgroup>
+                        <optgroup label="M.2">
+                            <option value="M.2 128GB">M.2 128GB</option>
+                            <option value="M.2 256GB">M.2 256GB</option>
+                            <option value="M.2 512GB">M.2 512GB</option>
+                            <option value="M.2 1TB">M.2 1TB</option>
+                            <option value="M.2 2TB">M.2 2TB</option>
+                            <option value="M.2 4TB">M.2 4TB</option>
+                        </optgroup>
+                        <optgroup label="HDD">
+                            <option value="HDD 500GB">HDD 500GB</option>
+                            <option value="HDD 1TB">HDD 1TB</option>
+                            <option value="HDD 2TB">HDD 2TB</option>
+                            <option value="HDD 4TB">HDD 4TB</option>
+                        </optgroup>
                     </select>
                 </div>
                 <div class="col-md-4">
                     <label for="grafica" class="form-label">Tarjeta Gráfica</label>
                     <select id="grafica" class="form-select" required>
                         <option value="">Selecciona...</option>
+                        <optgroup label="NVIDIA">
+                            <option value="NVIDIA GTX 1050">GTX 1050</option>
+                            <option value="NVIDIA GTX 1060">GTX 1060</option>
+                            <option value="NVIDIA GTX 1070">GTX 1070</option>
+                            <option value="NVIDIA GTX 1080">GTX 1080</option>
+                            <option value="NVIDIA GTX 1650">GTX 1650</option>
+                            <option value="NVIDIA GTX 1660">GTX 1660</option>
+                            <option value="NVIDIA RTX 2060">RTX 2060</option>
+                            <option value="NVIDIA RTX 2070">RTX 2070</option>
+                            <option value="NVIDIA RTX 2080">RTX 2080</option>
+                            <option value="NVIDIA RTX 3060">RTX 3060</option>
+                            <option value="NVIDIA RTX 3070">RTX 3070</option>
+                            <option value="NVIDIA RTX 3080">RTX 3080</option>
+                            <option value="NVIDIA RTX 4060">RTX 4060</option>
+                            <option value="NVIDIA RTX 4070">RTX 4070</option>
+                            <option value="NVIDIA RTX 4080">RTX 4080</option>
+                            <option value="NVIDIA RTX 5060">RTX 5060</option>
+                            <option value="NVIDIA RTX 5070">RTX 5070</option>
+                            <option value="NVIDIA RTX 5080">RTX 5080</option>
+                        </optgroup>
+                        <optgroup label="AMD">
+                            <option value="AMD Radeon RX 6600">Radeon RX 6600</option>
+                            <option value="AMD Radeon RX 6700">Radeon RX 6700</option>
+                            <option value="AMD Radeon RX 6800">Radeon RX 6800</option>
+                            <option value="AMD Radeon RX 7600">Radeon RX 7600</option>
+                            <option value="AMD Radeon RX 7700">Radeon RX 7700</option>
+                            <option value="AMD Radeon RX 7800">Radeon RX 7800</option>
+                            <option value="AMD Radeon RX 7900">Radeon RX 7900</option>
+                        </optgroup>
                         <option value="Integrada">Integrada</option>
-                        <option value="NVIDIA GTX 1650">NVIDIA GTX 1650</option>
-                        <option value="NVIDIA RTX 3060">NVIDIA RTX 3060</option>
-                        <option value="AMD Radeon RX 6600">AMD Radeon RX 6600</option>
                     </select>
                 </div>
-                <!-- Agrega más componentes si lo deseas -->
+                <div class="col-md-12">
+                    <label class="form-label">Complementos (opcional)</label>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="pantalla" value="Pantalla">
+                        <label class="form-check-label" for="pantalla">Pantalla</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="teclado" value="Teclado">
+                        <label class="form-check-label" for="teclado">Teclado</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="mouse" value="Mouse">
+                        <label class="form-check-label" for="mouse">Mouse</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="mousepad" value="Mousepad">
+                        <label class="form-check-label" for="mousepad">Mousepad</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="wifi" value="WiFi integrado">
+                        <label class="form-check-label" for="wifi">WiFi integrado</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input class="form-check-input" type="checkbox" id="bluetooth" value="Bluetooth integrado">
+                        <label class="form-check-label" for="bluetooth">Bluetooth integrado</label>
+                    </div>
+                </div>
             </div>
             <div class="mt-4 text-center">
                 <button type="submit" class="btn btn-success btn-lg"><i class="bi bi-calculator"></i> Generar Cotización</button>
+                <button type="button" id="enviarWhatsapp" class="btn btn-primary btn-lg ms-2" style="display:none;"><i class="bi bi-whatsapp"></i> Enviar orden de servicio</button>
             </div>
         </form>
         <div id="cotizacionResultado" class="mt-4"></div>
+        <div class="text-muted mt-3 text-center">*Precio referencial. La cotización final puede variar según disponibilidad y proveedor.</div>
     </main>
 
     <!-- Footer-->
@@ -287,32 +397,82 @@ fetch('footer.html')
     <script>
     // Ejemplo de precios base (puedes obtenerlos de tu base de datos si lo deseas)
     const precios = {
-        "Intel i5": 800, "Intel i7": 1200, "AMD Ryzen 5": 900, "AMD Ryzen 7": 1300,
-        "8GB": 150, "16GB": 250, "32GB": 400,
-        "SSD 256GB": 180, "SSD 512GB": 300, "HDD 1TB": 220,
-        "Integrada": 0, "NVIDIA GTX 1650": 700, "NVIDIA RTX 3060": 1800, "AMD Radeon RX 6600": 1600
+        "Intel i3 10th Gen": 600, "Intel i3 11th Gen": 650, "Intel i3 12th Gen": 700, "Intel i3 13th Gen": 750, "Intel i3 14th Gen": 800,
+        "Intel i5 10th Gen": 800, "Intel i5 11th Gen": 850, "Intel i5 12th Gen": 900, "Intel i5 13th Gen": 950, "Intel i5 14th Gen": 1000,
+        "Intel i7 10th Gen": 1100, "Intel i7 11th Gen": 1150, "Intel i7 12th Gen": 1200, "Intel i7 13th Gen": 1250, "Intel i7 14th Gen": 1300,
+        "Intel i9 10th Gen": 1500, "Intel i9 11th Gen": 1550, "Intel i9 12th Gen": 1600, "Intel i9 13th Gen": 1650, "Intel i9 14th Gen": 1700,
+        "AMD Ryzen 3 4000": 600, "AMD Ryzen 3 5000": 650, "AMD Ryzen 3 7000": 700,
+        "AMD Ryzen 5 4000": 800, "AMD Ryzen 5 5000": 850, "AMD Ryzen 5 7000": 900,
+        "AMD Ryzen 7 4000": 1100, "AMD Ryzen 7 5000": 1150, "AMD Ryzen 7 7000": 1200,
+        "AMD Ryzen 9 4000": 1500, "AMD Ryzen 9 5000": 1550, "AMD Ryzen 9 7000": 1600,
+        "8GB": 150, "16GB": 250, "32GB": 400, "64GB": 700,
+        "SSD 128GB": 100, "SSD 256GB": 180, "SSD 512GB": 300, "SSD 1TB": 500, "SSD 2TB": 900, "SSD 4TB": 1600,
+        "M.2 128GB": 120, "M.2 256GB": 200, "M.2 512GB": 350, "M.2 1TB": 600, "M.2 2TB": 1000, "M.2 4TB": 1800,
+        "HDD 500GB": 120, "HDD 1TB": 220, "HDD 2TB": 400, "HDD 4TB": 700,
+        "NVIDIA GTX 1050": 400, "NVIDIA GTX 1060": 500, "NVIDIA GTX 1070": 600, "NVIDIA GTX 1080": 700,
+        "NVIDIA GTX 1650": 800, "NVIDIA GTX 1660": 900,
+        "NVIDIA RTX 2060": 1200, "NVIDIA RTX 2070": 1400, "NVIDIA RTX 2080": 1600,
+        "NVIDIA RTX 3060": 1800, "NVIDIA RTX 3070": 2200, "NVIDIA RTX 3080": 2600,
+        "NVIDIA RTX 4060": 2000, "NVIDIA RTX 4070": 2500, "NVIDIA RTX 4080": 3000,
+        "NVIDIA RTX 5060": 2200, "NVIDIA RTX 5070": 2700, "NVIDIA RTX 5080": 3200,
+        "AMD Radeon RX 6600": 1200, "AMD Radeon RX 6700": 1500, "AMD Radeon RX 6800": 1800,
+        "AMD Radeon RX 7600": 2000, "AMD Radeon RX 7700": 2300, "AMD Radeon RX 7800": 2600, "AMD Radeon RX 7900": 3000,
+        "Integrada": 0
     };
 
     document.getElementById('formPC').addEventListener('submit', function(e) {
         e.preventDefault();
+        const nombre = document.getElementById('nombre').value.trim();
         const proc = document.getElementById('procesador').value;
         const ram = document.getElementById('ram').value;
         const alm = document.getElementById('almacenamiento').value;
         const graf = document.getElementById('grafica').value;
+        const complementos = [];
+        ['pantalla', 'teclado', 'mouse', 'mousepad', 'wifi', 'bluetooth'].forEach(id => {
+            if (document.getElementById(id).checked) complementos.push(document.getElementById(id).value);
+        });
 
-        let total = precios[proc] + precios[ram] + precios[alm] + precios[graf];
+        let total = (precios[proc] || 0) + (precios[ram] || 0) + (precios[alm] || 0) + (precios[graf] || 0);
         let resumen = `
             <h4>Tu cotización:</h4>
             <ul>
+                <li><strong>Nombre:</strong> ${nombre}</li>
                 <li><strong>Procesador:</strong> ${proc}</li>
                 <li><strong>RAM:</strong> ${ram}</li>
                 <li><strong>Almacenamiento:</strong> ${alm}</li>
                 <li><strong>Gráfica:</strong> ${graf}</li>
+                <li><strong>Complementos:</strong> ${complementos.length ? complementos.join(', ') : 'Ninguno'}</li>
             </ul>
             <h5>Total estimado: <span class="text-success">S/ ${total}</span></h5>
             <p class="text-muted">*Precio referencial. Para una cotización exacta y asesoría personalizada, contáctanos.</p>
         `;
         document.getElementById('cotizacionResultado').innerHTML = resumen;
+        document.getElementById('enviarWhatsapp').style.display = 'inline-block';
+    });
+
+    // Enviar por WhatsApp
+    document.getElementById('enviarWhatsapp').addEventListener('click', function() {
+        const nombre = document.getElementById('nombre').value.trim();
+        const proc = document.getElementById('procesador').value;
+        const ram = document.getElementById('ram').value;
+        const alm = document.getElementById('almacenamiento').value;
+        const graf = document.getElementById('grafica').value;
+        const complementos = [];
+        ['pantalla', 'teclado', 'mouse', 'mousepad', 'wifi', 'bluetooth'].forEach(id => {
+            if (document.getElementById(id).checked) complementos.push(document.getElementById(id).value);
+        });
+        let total = (precios[proc] || 0) + (precios[ram] || 0) + (precios[alm] || 0) + (precios[graf] || 0);
+
+        let mensaje = `Hola, soy ${nombre} y deseo una cotización para una PC personalizada:%0A` +
+            `Procesador: ${proc}%0A` +
+            `RAM: ${ram}%0A` +
+            `Almacenamiento: ${alm}%0A` +
+            `Gráfica: ${graf}%0A` +
+            `Complementos: ${complementos.length ? complementos.join(', ') : 'Ninguno'}%0A` +
+            `Total estimado: S/ ${total} (precio referencial)`;
+
+        // Reemplaza el número por el tuyo de WhatsApp en formato internacional, por ejemplo: 51999999999
+        window.open(`https://wa.me/51999999999?text=${mensaje}`, '_blank');
     });
     </script>
 </body>
