@@ -505,6 +505,8 @@ async function obtenerProductosDestacados() {
     return productos;
 }
 
+let historialChat = [];
+
 async function enviarMensajeChatbot() {
     const pregunta = chatbotInput.value.trim();
     if (!pregunta) return;
@@ -512,6 +514,8 @@ async function enviarMensajeChatbot() {
     chatbotInput.value = '';
     chatbotInput.disabled = true;
     chatbotSend.disabled = true;
+
+    historialChat.push({ role: 'user', text: pregunta });
 
     // Indicador de "pensando..."
     const thinkingId = 'thinking-msg';
@@ -524,66 +528,16 @@ async function enviarMensajeChatbot() {
     chatbotMessages.appendChild(divThinking);
     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
-    // Detecta si la pregunta es sobre recomendación de productos o servicios
-    if (/recomienda|mejor|busco|quiero|necesito|servicio|ofrecen|requiero|productos|categoría|urgencia/i.test(pregunta)) {
-        // Obtén productos y servicios desde Firebase
-        let productosDestacados = await obtenerProductosDestacados();
-        // Puedes obtener servicios de Firebase o mantenerlos en un array fijo
-        let serviciosDestacados = [
-            "Consultoría tecnológica para empresas y hogares",
-            "Soporte técnico presencial y remoto",
-            "Mantenimiento y reparación de computadoras",
-            "Reciclaje de equipos electrónicos"
-        ];
+    // Construye el contexto con historial
+    let contexto = "Eres un asistente virtual experto en tecnología para la empresa Edark. Mantén una conversación amigable y breve.\n";
+    historialChat.forEach(m => {
+        contexto += (m.role === 'user' ? "Usuario: " : "Bot: ") + m.text + "\n";
+    });
+    contexto += "Usuario: " + pregunta + "\nBot:";
 
-        // Construye el contexto para Gemini
-        let contexto = "Eres un asistente virtual experto en tecnología para la empresa Edark, no pidas características muy técnicas a los usuarios." +
-            "Solo puedes recomendar productos y servicios de la siguiente lista. " +
-            "Sé breve, directo y amable, responde en máximo 3 líneas y menciona el producto o servicio más adecuado según la pregunta del usuario.\n\n" +
-            "Productos disponibles:\n";
-        productosDestacados.forEach(p => {
-            contexto += `- ${p.nombre} (${p.categoria}): ${p.descripcion}. Precio: ${p.precio}\n`;
-        });
-        contexto += "\nServicios disponibles:\n";
-        serviciosDestacados.forEach(s => {
-            contexto += `- ${s}\n`;
-        });
-        contexto += "\nPregunta del usuario: " + pregunta;
-
-            const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
-            const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
-            const prompt = `${contexto}\n\nPregunta del usuario: ${pregunta}`;
-
-        try {
-            const res = await fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: [{ parts: [{ text: prompt }] }]
-                })
-            });
-            const data = await res.json();
-            let respuesta = 'Lo siento, no entendí. ¿Puedes reformular tu pregunta?';
-            if (data && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-                respuesta = data.candidates[0].content.parts[0].text;
-            }
-            agregarMensajeChat('bot', respuesta);
-        } catch (e) {
-            const thinkingElem = document.getElementById(thinkingId);
-            if (thinkingElem) thinkingElem.remove();
-            agregarMensajeChat('bot', 'Ocurrió un error al conectar con Gemini. Intenta de nuevo más tarde.');
-        } finally {
-            chatbotInput.disabled = false;
-            chatbotSend.disabled = false;
-            chatbotInput.focus();
-        }
-        return;
-    }
-
-        // Gemini API
-        const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
-        const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
-        const prompt = `Eres un asistente virtual de la tienda de tecnología Edark. Ayuda al usuario a elegir productos o servicios según sus necesidades brindando una respuesta cálida y amigable para mejorar su experiencia, no permites que se frustre tan pronto entiende su lenguaje. Pregunta del usuario: ${pregunta}`;
+    const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
+    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
+    const prompt = `${contexto}\n\nPregunta del usuario: ${pregunta}`;
 
     try {
         const res = await fetch(url, {
@@ -598,7 +552,12 @@ async function enviarMensajeChatbot() {
         if (data && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
             respuesta = data.candidates[0].content.parts[0].text;
         }
+        // Elimina el "Pensando..."
+        const thinkingElem = document.getElementById(thinkingId);
+        if (thinkingElem) thinkingElem.remove();
+
         agregarMensajeChat('bot', respuesta);
+        historialChat.push({ role: 'bot', text: respuesta });
     } catch (e) {
         const thinkingElem = document.getElementById(thinkingId);
         if (thinkingElem) thinkingElem.remove();
