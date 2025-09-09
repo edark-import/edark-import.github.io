@@ -8,11 +8,14 @@
     <title>eDark</title>
     <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link href="css/styles.css" rel="stylesheet" />
     <!-- Google Fonts Orbitron y Montserrat -->
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9246515570012526"
+     crossorigin="anonymous"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
@@ -403,7 +406,7 @@ fetch('footer.html')
                 'Content-Type': 'application/json',
                 // Puedes obtener un token gratuito en https://huggingface.co/settings/tokens
                 // Si no pones token, funcionará pero puede estar más limitado.
-                'Authorization': 'Bearer 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' 
+                // 'Authorization': 'Bearer TU_TOKEN_AQUI'
             },
             body: JSON.stringify({ inputs: pregunta })
         })
