@@ -378,13 +378,7 @@ fetch('footer.html')
     <div id="footer"></div>
     <!-- Botón flotante de chat con SVG de gatito negro -->
     <button id="chatbotBtn" style="position:fixed;bottom:30px;right:30px;z-index:1050;" class="btn btn-primary rounded-circle shadow-lg p-0">
-        <svg width="32" height="32" viewBox="0 0 32 32" fill="black" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="18" r="10"/>
-      <ellipse cx="10" cy="10" rx="4" ry="7" transform="rotate(-20 10 10)"/>
-      <ellipse cx="22" cy="10" rx="4" ry="7" transform="rotate(20 22 10)"/>
-      <circle cx="13" cy="20" r="1.5" fill="#fff"/>
-      <circle cx="19" cy="20" r="1.5" fill="#fff"/>
-    </svg>
+      <img src="img/Logo/isotipo_Negro.png">
     </button>
 
     <!-- Modal de chat IA -->
@@ -546,7 +540,7 @@ async function enviarMensajeChatbot() {
     }
 
     // 2. Construye el contexto con historial y productos
-    let contexto = "Eres un asistente virtual experto en tecnología para la empresa Edark. Mantén una conversación amigable y breve.\n";
+    let contexto = "Eres Chimuelo, un asistente virtual experto en tecnología para la empresa Edark. Mantén una conversación amigable y breve.\n";
     contexto += "Estos son algunos productos disponibles en la tienda:\n" + productosTexto + "\n";
     historialChat.forEach(m => {
         contexto += (m.role === 'user' ? "Usuario: " : "Bot: ") + m.text + "\n";
