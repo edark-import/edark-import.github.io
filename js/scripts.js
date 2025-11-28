@@ -1,16 +1,6 @@
 // --- CONFIGURACIÓN FIREBASE Y LÓGICA PRINCIPAL (SOLO UNA VEZ) ---
-    const firebaseConfig = {
-        apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
-        authDomain: "edark-proyect.firebaseapp.com",
-        projectId: "edark-proyect",
-        storageBucket: "edark-proyect.appspot.com",
-        messagingSenderId: "705929141287",
-        appId: "1:705929141287:web:f16389625de554d6790202",
-        measurementId: "G-V89W8SCSH1"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const auth = firebase.auth();
+    // La configuración de Firebase está en js/firebase-config.js
+    // Variables disponibles: db, auth, analytics
 
     // --- SEGURIDAD Y VALIDACIONES ---
     function sanitize(str) {
