@@ -1147,8 +1147,31 @@ function actualizarLogoNav() {
 
 document.addEventListener('DOMContentLoaded', function() {
     actualizarLogoNav();
+
+    // Modo oscuro toggle
     const switchOscuro = document.getElementById('modoOscuroSwitch');
+    const labelOscuro = document.getElementById('modoOscuroLabel');
+
     if (switchOscuro) {
-        switchOscuro.addEventListener('change', actualizarLogoNav);
+        // Verificar si ya está en modo oscuro (guardado en localStorage)
+        const modoOscuroGuardado = localStorage.getItem('modoOscuro') === 'true';
+        if (modoOscuroGuardado) {
+            document.body.classList.add('modo-oscuro');
+            switchOscuro.checked = true;
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
+        }
+
+        switchOscuro.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'true');
+                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
+            } else {
+                document.body.classList.remove('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'false');
+                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
+            }
+            actualizarLogoNav();
+        });
     }
 });

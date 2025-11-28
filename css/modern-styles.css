@@ -386,8 +386,8 @@ p {
     }
 }
 
-/* Dark Mode Support */
-@media (prefers-color-scheme: dark) {
+/* Dark Mode Support - REMOVED: Using manual toggle instead */
+/* @media (prefers-color-scheme: dark) {
     :root {
         --bg-primary: var(--edark-gray-900);
         --bg-secondary: var(--edark-gray-800);
@@ -420,48 +420,128 @@ p {
         background: var(--edark-gray-800);
         border-color: var(--edark-gray-700);
     }
-}
+} */
 
 /* Manual Dark Mode Toggle */
-.dark-mode {
-    --bg-primary: var(--edark-gray-900);
-    --bg-secondary: var(--edark-gray-800);
-    --bg-tertiary: var(--edark-gray-700);
-    --text-primary: var(--edark-white);
-    --text-secondary: var(--edark-gray-300);
-    --text-tertiary: var(--edark-gray-400);
-    --border-color: var(--edark-gray-700);
+body.modo-oscuro {
+    background-color: #181a1b !important;
+    color: #e0e0e0 !important;
 }
 
-.dark-mode .navbar {
-    background: rgba(0, 0, 0, 0.8) !important;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--edark-gray-700);
+body.modo-oscuro .bg-light {
+    background-color: #23272b !important;
 }
 
-.dark-mode .navbar-brand {
-    color: #FFFFFF !important;
+body.modo-oscuro .navbar,
+body.modo-oscuro .dropdown-menu {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
 }
 
-.dark-mode .navbar-brand:hover {
-    color: #CCCCCC !important;
+body.modo-oscuro .navbar-brand {
+    color: #e0e0e0 !important;
 }
 
-.dark-mode .card {
-    background: var(--edark-gray-800);
-    border-color: var(--edark-gray-700);
+body.modo-oscuro .navbar.navbar-light {
+    background-color: #23272b !important;
+    border-bottom: 1px solid #444 !important;
 }
 
-.dark-mode .form-control {
-    background: var(--edark-gray-700);
-    border-color: var(--edark-gray-600);
-    color: var(--edark-white);
+body.modo-oscuro .card {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
 }
 
-.dark-mode .filter-section {
-    background: var(--edark-gray-800);
-    border-color: var(--edark-gray-700);
+body.modo-oscuro .modal-content {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .form-control,
+body.modo-oscuro .form-select {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+body.modo-oscuro .accordion-button {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .accordion-item {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .bg-dark {
+    background-color: #181a1b !important;
+}
+
+body.modo-oscuro .bg-white {
+    background-color: #23272b !important;
+}
+
+body.modo-oscuro .pagination .page-link {
+    background-color: #23272b !important;
+    color: #e0e0e0 !important;
+    border-color: #444 !important;
+}
+
+body.modo-oscuro .page-item.active .page-link {
+    background-color: #00adb5 !important;
+    color: #fff !important;
+    border-color: #00adb5 !important;
+}
+
+body.modo-oscuro .btn-outline-dark {
+    color: #e0e0e0 !important;
+    border-color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .btn-outline-dark:hover {
+    background-color: #e0e0e0 !important;
+    color: #23272b !important;
+}
+
+body.modo-oscuro .btn-primary {
+    background-color: #00adb5 !important;
+    border-color: #00adb5 !important;
+    color: #fff !important;
+}
+
+body.modo-oscuro .btn-primary:hover {
+    background-color: #019ca1 !important;
+    border-color: #019ca1 !important;
+}
+
+body.modo-oscuro .text-primary {
+    color: #00adb5 !important;
+}
+
+body.modo-oscuro .text-light {
+    color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .filter-section {
+    background-color: #23272b !important;
+    border-color: #444 !important;
+    color: #e0e0e0 !important;
+}
+
+/* Override Bootstrap navbar styles specifically */
+body.modo-oscuro .navbar-light .navbar-brand {
+    color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .navbar-light .navbar-nav .nav-link {
+    color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .navbar-light .navbar-nav .nav-link:hover {
+    color: #00adb5 !important;
 }
 
 /* Copilot-inspired Code-like Styling */
