@@ -10,81 +10,80 @@
     } catch {}
 })();
 // --- MODO OSCURO GLOBAL ---
+let darkModeInitialized = false;
+
+function actualizarLogoNav() {
+    const logo = document.querySelector('.navbar-brand img');
+    if (!logo) return;
+    if (document.body.classList.contains('modo-oscuro')) {
+        logo.src = 'img/Logo/logo_1.png';
+    } else {
+        logo.src = 'img/Logo/logo_2.png';
+    }
+}
+
 function initDarkMode() {
+    if (darkModeInitialized) return;
+    
     const switchOscuro = document.getElementById('modoOscuroSwitch');
     const labelOscuro = document.getElementById('modoOscuroLabel');
+    
+    if (!switchOscuro) return;
+    
+    darkModeInitialized = true;
     const body = document.body;
 
     // Inicializar desde localStorage
     const dark = localStorage.getItem('modoOscuro') === 'true';
     if (dark) {
         body.classList.add('modo-oscuro');
-        if (switchOscuro) switchOscuro.checked = true;
+        switchOscuro.checked = true;
         if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
     } else {
         body.classList.remove('modo-oscuro');
-        if (switchOscuro) switchOscuro.checked = false;
+        switchOscuro.checked = false;
         if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
     }
 
-    if (switchOscuro) {
-        // Remove existing listeners to avoid duplicates
-        const newSwitch = switchOscuro.cloneNode(true);
-        switchOscuro.parentNode.replaceChild(newSwitch, switchOscuro);
-        
-        newSwitch.addEventListener('change', function () {
-            if (this.checked) {
-                body.classList.add('modo-oscuro');
-                localStorage.setItem('modoOscuro', 'true');
-                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
-            } else {
-                body.classList.remove('modo-oscuro');
-                localStorage.setItem('modoOscuro', 'false');
-                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
-            }
-            actualizarLogoNav();
-        });
-    }
-
-    // Cambia el logo según el modo claro/oscuro
-    function actualizarLogoNav() {
-        const logo = document.querySelector('.navbar-brand img');
-        if (!logo) return;
-        if (document.body.classList.contains('modo-oscuro')) {
-            logo.src = 'img/Logo/logo_1.png';
+    // Agregar event listener
+    switchOscuro.addEventListener('change', function () {
+        if (this.checked) {
+            body.classList.add('modo-oscuro');
+            localStorage.setItem('modoOscuro', 'true');
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
         } else {
-            logo.src = 'img/Logo/logo_2.png';
+            body.classList.remove('modo-oscuro');
+            localStorage.setItem('modoOscuro', 'false');
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
         }
-    }
+        actualizarLogoNav();
+    });
+
     actualizarLogoNav();
 }
 
-// Initialize with aggressive retries to catch navbar loading
-let retryCount = 0;
-const maxRetries = 10;
-
-function tryInitDarkMode() {
+// Usar MutationObserver para detectar cuando el navbar se carga
+const observer = new MutationObserver(function(mutations) {
     const switchOscuro = document.getElementById('modoOscuroSwitch');
-    if (switchOscuro) {
+    if (switchOscuro && !darkModeInitialized) {
         initDarkMode();
-        return true;
+        observer.disconnect();
     }
-    return false;
-}
+});
 
-function retryInit() {
-    if (tryInitDarkMode()) return;
-    
-    retryCount++;
-    if (retryCount < maxRetries) {
-        setTimeout(retryInit, 150);
-    }
-}
+// Observar cambios en el body
+observer.observe(document.body, {
+    childList: true,
+    subtree: true
+});
 
+// Intentar init inmediato por si el navbar ya está cargado
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', retryInit);
+    document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(initDarkMode, 50);
+    });
 } else {
-    retryInit();
+    setTimeout(initDarkMode, 50);
 }
 
 // Also handle nested dropdowns
