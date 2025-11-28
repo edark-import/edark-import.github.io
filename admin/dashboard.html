@@ -883,9 +883,17 @@
         async function cargarCategorias() {
             try {
                 const tbody = document.getElementById('tablaCategorias');
+                const table = tbody ? tbody.closest('table') : null;
                 tbody.innerHTML = '<tr><td colspan="4" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
 
-                const snapshot = await db.collection('categorias').orderBy('nombre').get();
+                const ref = db.collection('categorias');
+                let snapshot;
+                try {
+                    snapshot = await ref.orderBy('nombre').get();
+                } catch (e) {
+                    // Si falla por permisos o por falta de índice, intenta sin orderBy
+                    snapshot = await ref.get();
+                }
                 categoriasData = [];
                 
                 snapshot.forEach(doc => {
@@ -928,7 +936,14 @@
                 }
             } catch (error) {
                 console.error('Error al cargar categorías:', error);
-                alert('Error al cargar categorías');
+                const tbody = document.getElementById('tablaCategorias');
+                if (tbody) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-danger">
+                        Error al cargar categorías<br>
+                        <small>${(error && error.message) ? error.message : 'Verifica reglas de Firestore o conexión.'}</small>
+                    </td></tr>`;
+                }
+                // Evitar alert bloqueante, mostrar info inline
             }
         }
 
