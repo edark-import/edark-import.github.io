@@ -730,6 +730,8 @@ function mostrarProductos() {
                     const instance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
                     instance.hide();
                 }
+                // Redirect to dashboard after successful login
+                window.location.href = 'dashboard.html';
             } catch (err) {
                 if (errorBox) {
                     errorBox.textContent = 'Usuario o contraseña incorrectos.';
