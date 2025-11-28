@@ -59,13 +59,32 @@ function initDarkMode() {
     actualizarLogoNav();
 }
 
-// Initialize immediately if DOM is ready, otherwise wait
+// Initialize with aggressive retries to catch navbar loading
+let retryCount = 0;
+const maxRetries = 10;
+
+function tryInitDarkMode() {
+    const switchOscuro = document.getElementById('modoOscuroSwitch');
+    if (switchOscuro) {
+        initDarkMode();
+        return true;
+    }
+    return false;
+}
+
+function retryInit() {
+    if (tryInitDarkMode()) return;
+    
+    retryCount++;
+    if (retryCount < maxRetries) {
+        setTimeout(retryInit, 150);
+    }
+}
+
 if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initDarkMode);
+    document.addEventListener('DOMContentLoaded', retryInit);
 } else {
-    // Try now, and retry after a short delay for navbar to load
-    initDarkMode();
-    setTimeout(initDarkMode, 100);
+    retryInit();
 }
 
 // Also handle nested dropdowns
