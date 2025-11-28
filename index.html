@@ -30,11 +30,13 @@
     <script src="https://www.paypal.com/sdk/js?client-id=AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R&components=buttons&currency=USD"></script>
     <!-- Apply dark mode immediately from localStorage -->
     <script>
-        if (localStorage.getItem('modoOscuro') === 'true') {
-
-            document.documentElement.classList.add('modo-oscuro');
-            document.body.classList.add('modo-oscuro');
-        }
+        (function() {
+            try {
+                if (localStorage.getItem('modoOscuro') === 'true') {
+                    document.documentElement.classList.add('modo-oscuro');
+                }
+            } catch(e) {}
+        })();
     </script>
 </head>
 
