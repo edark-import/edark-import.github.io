@@ -474,38 +474,57 @@ fetch('footer.html')
         }
     });
 
-    // Chatbot IA gratuito usando Hugging Face Inference API (modelo pequeño)
-    const chatbotBtn = document.getElementById('chatbotBtn');
-    const chatbotModal = new bootstrap.Modal(document.getElementById('chatbotModal'));
-    const chatbotMessages = document.getElementById('chatbotMessages');
-    const chatbotInput = document.getElementById('chatbotInput');
-    const chatbotSend = document.getElementById('chatbotSend');
+// Chatbot IA mejorado con Gemini
+const chatbotBtn = document.getElementById('chatbotBtn');
+const chatbotModal = new bootstrap.Modal(document.getElementById('chatbotModal'));
+const chatbotMessages = document.getElementById('chatbotMessages');
+const chatbotInput = document.getElementById('chatbotInput');
+const chatbotSend = document.getElementById('chatbotSend');
 
-    chatbotBtn.addEventListener('click', () => {
-        chatbotModal.show();
-        setTimeout(() => chatbotInput.focus(), 500);
-    });
+chatbotBtn.addEventListener('click', () => {
+    chatbotModal.show();
+    setTimeout(() => {
+        chatbotInput.focus();
+        // Mensaje de bienvenida solo la primera vez
+        if (chatbotMessages.children.length === 0) {
+            agregarMensajeChat('bot', '¡Hola! 👋 Soy Chimuelo, tu asistente virtual de eDark. ¿En qué puedo ayudarte hoy?\n\nPuedo ayudarte con:\n• Información de productos\n• Recomendaciones tecnológicas\n• Precios y disponibilidad\n• Servicios de eDark');
+        }
+    }, 500);
+});
 
-    chatbotSend.addEventListener('click', enviarMensajeChatbot);
-    chatbotInput.addEventListener('keydown', function(e) {
-        if (e.key === 'Enter') enviarMensajeChatbot();
-    });
-
-    // Asume que ya tienes Firebase inicializado y Firestore disponible como 'firebase.firestore()'
+chatbotSend.addEventListener('click', enviarMensajeChatbot);
+chatbotInput.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        enviarMensajeChatbot();
+    }
+});
 
 async function obtenerProductosDestacados() {
-    const productos = [];
-    const snapshot = await firebase.firestore().collection('productos').limit(50).get();
-    snapshot.forEach(doc => {
-        const data = doc.data();
-        productos.push({
-            nombre: data.nombre,
-            categoria: data.categoria,
-            descripcion: data.descripcion || data.especificaciones || "",
-            precio: data.precio ? `S/ ${data.precio}` : ""
+    try {
+        const productos = [];
+        const snapshot = await db.collection('productos')
+            .where('activo', '==', true)
+            .orderBy('nombre')
+            .limit(30)
+            .get();
+        
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            productos.push({
+                nombre: data.nombre,
+                categoria: data.categoria,
+                marca: data.marca,
+                descripcion: data.descripcion || '',
+                precio: data.precio ? `S/ ${data.precio.toFixed(2)}` : 'Consultar',
+                stock: data.stock > 0 ? 'Disponible' : 'Agotado'
+            });
         });
-    });
-    return productos;
+        return productos;
+    } catch (error) {
+        console.error('Error al obtener productos:', error);
+        return [];
+    }
 }
 
 let historialChat = [];
@@ -513,6 +532,7 @@ let historialChat = [];
 async function enviarMensajeChatbot() {
     const pregunta = chatbotInput.value.trim();
     if (!pregunta) return;
+    
     agregarMensajeChat('user', pregunta);
     chatbotInput.value = '';
     chatbotInput.disabled = true;
@@ -521,62 +541,96 @@ async function enviarMensajeChatbot() {
     historialChat.push({ role: 'user', text: pregunta });
 
     // Indicador de "pensando..."
-    const thinkingId = 'thinking-msg';
+    const thinkingId = 'thinking-msg-' + Date.now();
     const divThinking = document.createElement('div');
     divThinking.id = thinkingId;
     divThinking.className = 'text-start mb-2';
     divThinking.innerHTML = `<span class="badge bg-secondary text-break" style="white-space:pre-line;max-width:90%;display:inline-block;">
-        <span class="spinner-border spinner-border-sm me-2"></span>Pensando...
+        <span class="spinner-border spinner-border-sm me-2"></span>Chimuelo está pensando...
     </span>`;
     chatbotMessages.appendChild(divThinking);
     chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
 
-    // 1. Obtén productos destacados
-    let productosTexto = '';
     try {
+        // Obtener productos para contexto
         const productos = await obtenerProductosDestacados();
-        productosTexto = productos.map(p =>
-            `- ${p.nombre} (${p.categoria})${p.precio ? ', ' + p.precio : ''}${p.descripcion ? '. ' + p.descripcion : ''}`
-        ).join('\n');
-    } catch (e) {
-        productosTexto = '';
-    }
+        const productosTexto = productos.length > 0 
+            ? productos.map(p => `• ${p.nombre} (${p.categoria}${p.marca ? ' - ' + p.marca : ''}): ${p.precio} - ${p.stock}`).join('\n')
+            : 'No hay productos disponibles actualmente.';
 
-    // 2. Construye el contexto con historial y productos
-    let contexto = "Eres Chimuelo, un asistente virtual experto en tecnología para la empresa Edark. Mantén una conversación amigable y breve.\n";
-    contexto += "Estos son algunos productos disponibles en la tienda:\n" + productosTexto + "\n";
-    historialChat.forEach(m => {
-        contexto += (m.role === 'user' ? "Usuario: " : "Bot: ") + m.text + "\n";
-    });
-    contexto += "Usuario: " + pregunta + "\nBot:";
+        // Construir prompt mejorado para Gemini
+        const systemPrompt = `Eres Chimuelo, un asistente virtual amigable y experto en tecnología para eDark Alpha Technologies, una empresa peruana especializada en:
+- Venta de productos tecnológicos (laptops, PCs, accesorios, software)
+- Consultoría tecnológica empresarial y para hogares
+- Soporte técnico profesional
+- Mantenimiento y reparación de equipos
+- Reciclaje de tecnología
+- PC personalizadas a medida
 
-    const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8'; // <-- Pega aquí tu API Key
-    const url = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=' + apiKey;
-    const prompt = `${contexto}\n\nPregunta del usuario: ${pregunta}`;
+Tu personalidad es profesional pero cercana, y siempre buscas ayudar al cliente.
 
-    try {
-        const res = await fetch(url, {
+PRODUCTOS DISPONIBLES:
+${productosTexto}
+
+INSTRUCCIONES:
+1. Responde de forma concisa (máximo 3-4 párrafos)
+2. Si preguntan por productos, menciona los disponibles con precios
+3. Si preguntan por servicios, describe brevemente nuestros servicios
+4. Si preguntan algo fuera de tu conocimiento, sugiere contactar con soporte
+5. Usa emojis ocasionales para ser más amigable 😊
+6. Si el cliente muestra interés, invítalo a contactarnos por WhatsApp: +51 916 907 657
+
+HISTORIAL DE CONVERSACIÓN:
+${historialChat.slice(-6).map(m => `${m.role === 'user' ? 'Cliente' : 'Chimuelo'}: ${m.text}`).join('\n')}
+
+PREGUNTA ACTUAL: ${pregunta}
+
+Responde como Chimuelo:`;
+
+        // Llamada a Gemini API
+        const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        const response = await fetch(url, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
-                contents: [{ parts: [{ text: prompt }] }]
+                contents: [{
+                    parts: [{ text: systemPrompt }]
+                }],
+                generationConfig: {
+                    temperature: 0.7,
+                    topK: 40,
+                    topP: 0.95,
+                    maxOutputTokens: 500
+                }
             })
         });
-        const data = await res.json();
-        let respuesta = 'Lo siento, no entendí. ¿Puedes reformular tu pregunta?';
-        if (data && data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-            respuesta = data.candidates[0].content.parts[0].text;
-        }
-        // Elimina el "Pensando..."
-        const thinkingElem = document.getElementById(thinkingId);
-        if (thinkingElem) thinkingElem.remove();
 
-        agregarMensajeChat('bot', respuesta);
-        historialChat.push({ role: 'bot', text: respuesta });
-    } catch (e) {
-        const thinkingElem = document.getElementById(thinkingId);
-        if (thinkingElem) thinkingElem.remove();
-        agregarMensajeChat('bot', 'Ocurrió un error al conectar con Gemini. Intenta de nuevo más tarde.');
+        const data = await response.json();
+        
+        // Remover indicador de pensando
+        document.getElementById(thinkingId)?.remove();
+
+        if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+            const respuesta = data.candidates[0].content.parts[0].text.trim();
+            agregarMensajeChat('bot', respuesta);
+            historialChat.push({ role: 'bot', text: respuesta });
+        } else if (data?.error) {
+            throw new Error(data.error.message || 'Error en la API');
+        } else {
+            throw new Error('Respuesta inválida de la API');
+        }
+
+    } catch (error) {
+        console.error('Error en chatbot:', error);
+        document.getElementById(thinkingId)?.remove();
+        
+        const mensajeError = error.message.includes('quota') || error.message.includes('429')
+            ? '⚠️ Hemos alcanzado el límite de consultas. Por favor, contacta con nosotros directamente por WhatsApp: +51 916 907 657'
+            : '❌ Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentarlo de nuevo? Si el problema persiste, escríbenos al +51 916 907 657';
+        
+        agregarMensajeChat('bot', mensajeError);
     } finally {
         chatbotInput.disabled = false;
         chatbotSend.disabled = false;
@@ -584,15 +638,15 @@ async function enviarMensajeChatbot() {
     }
 }
 
-    function agregarMensajeChat(remitente, texto) {
-        // Reemplaza saltos de línea por <br> para mejor visualización
-        const textoFormateado = texto.replace(/\n/g, '<br>');
-        const div = document.createElement('div');
-        div.className = remitente === 'user' ? 'text-end mb-2' : 'text-start mb-2';
-        div.innerHTML = `<span class="badge ${remitente === 'user' ? 'bg-primary' : 'bg-secondary'} text-break" style="white-space:pre-line;max-width:90%;display:inline-block;">${textoFormateado}</span>`;
-        chatbotMessages.appendChild(div);
-        chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
-    }
+function agregarMensajeChat(remitente, texto) {
+    const textoFormateado = texto.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    const div = document.createElement('div');
+    div.className = remitente === 'user' ? 'text-end mb-2' : 'text-start mb-2';
+    const badgeClass = remitente === 'user' ? 'bg-primary' : 'bg-secondary';
+    div.innerHTML = `<span class="badge ${badgeClass} text-break" style="white-space:pre-line;max-width:90%;display:inline-block;text-align:left;">${textoFormateado}</span>`;
+    chatbotMessages.appendChild(div);
+    chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+}
 
     function renderizarPaginacion(paginaActual, totalPaginas) {
         let paginacionHTML = `
