@@ -440,6 +440,14 @@ p {
     border-bottom: 1px solid var(--edark-gray-700);
 }
 
+.dark-mode .navbar-brand {
+    color: #FFFFFF !important;
+}
+
+.dark-mode .navbar-brand:hover {
+    color: #CCCCCC !important;
+}
+
 .dark-mode .card {
     background: var(--edark-gray-800);
     border-color: var(--edark-gray-700);
@@ -808,19 +816,13 @@ p {
     font-family: 'Orbitron', sans-serif;
     font-weight: 900;
     font-size: 1.8rem;
-    background: linear-gradient(135deg, #007bff, #6c757d);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #000000 !important;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
 
 .navbar-brand:hover {
-    background: linear-gradient(135deg, #0056b3, #495057);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
+    color: #333333 !important;
     transform: scale(1.02);
 }
 
