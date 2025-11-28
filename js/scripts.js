@@ -696,6 +696,22 @@ function mostrarProductos() {
         auth.signOut();
     });
 
+    // Mostrar/ocultar botones de login/logout y email
+    auth.onAuthStateChanged(user => {
+        const loginBtn = document.getElementById('loginBtnNav');
+        const logoutBtn = document.getElementById('logoutBtnNav');
+        const userEmail = document.getElementById('userEmail');
+        if (user) {
+            if (loginBtn) loginBtn.classList.add('d-none');
+            if (logoutBtn) logoutBtn.classList.remove('d-none');
+            if (userEmail) { userEmail.textContent = user.email || ''; userEmail.classList.remove('d-none'); }
+        } else {
+            if (loginBtn) loginBtn.classList.remove('d-none');
+            if (logoutBtn) logoutBtn.classList.add('d-none');
+            if (userEmail) userEmail.classList.add('d-none');
+        }
+    });
+
     // Soporte para submenús en Bootstrap 5
     document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.dropdown-submenu > a').forEach(function(element){

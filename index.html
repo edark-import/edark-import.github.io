@@ -56,25 +56,33 @@ fetch('navbar.html')
     <!-- Header-->
     <!-- Banner Mejorado eDark -->
     <header class="gradient-bg py-5 position-relative">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <h1 class="display-4 fw-bold gradient-text">EDARK</h1>
-                <div class="h5 mb-4">Alpha Technologies</div>
-                <!-- Carrusel de frases célebres -->
-                <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
-                    <div class="frase-carrusel-texto fs-4 fst-italic"></div>
-                    <div class="frase-carrusel-autor text-end mt-2" style="font-size:1.1rem;"></div>
-                </div>
-            </div>
+      <div class="container px-4 px-lg-5 my-5 d-flex justify-content-center">
+        <div class="banner-card text-center text-white p-4 rounded-3 shadow-lg">
+          <h1 class="display-4 fw-bold gradient-text mb-1">EDARK</h1>
+          <div class="h5 mb-4">Alpha Technologies</div>
+          <!-- Carrusel de frases célebres -->
+          <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
+            <div class="frase-carrusel-texto fs-4 fst-italic"></div>
+            <div class="frase-carrusel-autor text-end mt-2" style="font-size:1.1rem;"></div>
+          </div>
         </div>
+      </div>
         <!-- Flechas del carrusel -->
-        <!-- <button id="frasePrev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
-        <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button> -->
+        <button id="frasePrev" class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block" style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+        <button id="fraseNext" class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block" style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
     </header>
 
      <!-- Carrusel de Servicios -->
     <div class="container my-4">
       <div id="serviciosCarrusel" class="carousel slide" data-bs-ride="carousel">
+        <button class="carousel-control-prev" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Anterior</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="visually-hidden">Siguiente</span>
+        </button>
         <div class="carousel-inner">
           <div class="carousel-item active">
             <div class="row justify-content-center g-3">

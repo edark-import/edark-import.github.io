@@ -254,8 +254,9 @@ p {
 
 .dropdown-submenu > .dropdown-toggle::after {
     transform: rotate(-90deg);
-    float: right;
-    margin-top: 8px;
+    display: inline-block;
+    margin-left: 0.5rem;
+    vertical-align: middle;
 }
 
 .navbar-brand {
@@ -676,6 +677,13 @@ body.modo-oscuro .paso {
     background: #000000;
     position: relative;
     z-index: 1;
+}
+
+/* Banner card contrast */
+.banner-card {
+    max-width: 720px;
+    background: rgba(0,0,0,0.6);
+    border: 2px solid #007BFF;
 }
 
 .gradient-text {
