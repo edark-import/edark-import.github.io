@@ -330,7 +330,7 @@
 
             // Verificar rol de administrador
             const userDoc = await db.collection('usuarios').doc(user.uid).get();
-            if (!userDoc.exists || userDoc.data().role !== 'admin') {
+            if (!userDoc.exists || userDoc.data().rol !== 'admin') {
                 alert('Acceso denegado: Se requiere rol de administrador');
                 auth.signOut();
                 window.location.href = '../index.html';

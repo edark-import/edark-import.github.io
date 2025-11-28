@@ -5,7 +5,7 @@ service cloud.firestore {
     // Función auxiliar para verificar admin
     function isAdmin() {
       return request.auth != null && 
-             get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role == 'admin';
+             get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'admin';
     }
     
     // Función para verificar autenticación
