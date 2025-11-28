@@ -1053,6 +1053,8 @@
                 renderizarProductos();
             } catch (error) {
                 console.error('Error al cargar productos:', error);
+                const tbody = document.getElementById('tablaProductos');
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center text-danger">Error al cargar productos: ${error?.message || 'ver consola'}</td></tr>`;
                 alert('Error al cargar productos');
             }
         }
@@ -1090,6 +1092,10 @@
 
             } catch (error) {
                 console.error('Error al cargar categorías:', error);
+                const selectFiltro = document.getElementById('filtroCategoria');
+                const selectForm = document.getElementById('productoCategoria');
+                if (selectFiltro) selectFiltro.innerHTML = '<option value="">Todas las categorías</option>';
+                if (selectForm) selectForm.innerHTML = '<option value="">Seleccionar categoría...</option>';
             }
         }
 
