@@ -39,19 +39,28 @@
             const data = await res.json();
             if (data && data.venta) {
                 tipoCambioGlobal = parseFloat(data.venta);
-                document.getElementById('tipoCambioValor').textContent = tipoCambioGlobal.toFixed(3);
-                document.getElementById('tipoCambioMoneda').textContent = `${data.moneda ? data.moneda : 'USD/PEN'}`;
-                document.getElementById('tipoCambioFecha').textContent = data.fecha ? `(${data.fecha})` : '';
-                document.getElementById('tipoCambioOrigen').textContent = data.origen ? `- ${data.origen}` : '';
+                const v = document.getElementById('tipoCambioValor');
+                const m = document.getElementById('tipoCambioMoneda');
+                const f = document.getElementById('tipoCambioFecha');
+                const o = document.getElementById('tipoCambioOrigen');
+                if (v) v.textContent = tipoCambioGlobal.toFixed(3);
+                if (m) m.textContent = `${data.moneda ? data.moneda : 'USD/PEN'}`;
+                if (f) f.textContent = data.fecha ? `(${data.fecha})` : '';
+                if (o) o.textContent = data.origen ? `- ${data.origen}` : '';
             }
         } catch (e) {
             tipoCambioGlobal = 3.8;
-            document.getElementById('tipoCambioValor').textContent = tipoCambioGlobal.toFixed(2);
-            document.getElementById('tipoCambioMoneda').textContent = 'USD/PEN';
-            document.getElementById('tipoCambioFecha').textContent = '';
-            document.getElementById('tipoCambioOrigen').textContent = '- Local';
+            const v = document.getElementById('tipoCambioValor');
+            const m = document.getElementById('tipoCambioMoneda');
+            const f = document.getElementById('tipoCambioFecha');
+            const o = document.getElementById('tipoCambioOrigen');
+            if (v) v.textContent = tipoCambioGlobal.toFixed(2);
+            if (m) m.textContent = 'USD/PEN';
+            if (f) f.textContent = '';
+            if (o) o.textContent = '- Local';
         }
-        document.getElementById('tipoCambioText').textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
+        const tcText = document.getElementById('tipoCambioText');
+        if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
     }
     document.addEventListener('DOMContentLoaded', async function () {
         await inicializarTipoCambioSunat();
