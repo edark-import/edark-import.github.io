@@ -198,6 +198,7 @@
                 </div>
                 <span class="ms-2">Verificando credenciales...</span>
             </div>
+            <div id="diagnosticBox" class="alert alert-secondary mt-3 d-none" role="alert"></div>
         </form>
 
         <div id="loginAlert" class="alert d-none" role="alert"></div>
@@ -373,7 +374,13 @@
                         break;
                 }
 
-                showAlert(errorMessage, 'danger');
+                // Mostrar código y mensaje exacto para diagnóstico
+                showAlert(`${errorMessage} (code: ${error.code || 'n/a'})`, 'danger');
+                const diag = document.getElementById('diagnosticBox');
+                if (diag) {
+                    diag.classList.remove('d-none');
+                    diag.textContent = `Error code: ${error.code || 'n/a'} | message: ${error.message || 'n/a'}`;
+                }
             } finally {
                 // Ocultar loading
                 document.getElementById('loginBtn').disabled = false;
