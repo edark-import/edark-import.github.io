@@ -15,6 +15,7 @@
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="css/styles.css" rel="stylesheet" />
+    <link href="css/modern-styles.css" rel="stylesheet" />
             <!-- Google tag (gtag.js) -->
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
         <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9246515570012526"
@@ -28,126 +29,7 @@
 
         gtag('config', 'G-V89W8SCSH1');
         </script>
-        <style>
-            /* Modo oscuro para tarjetas y textos personalizados */
-            body.modo-oscuro .card,
-            body.modo-oscuro .card.border-0 {
-                background: #23272b !important;
-                color: #e0e0e0 !important;
-                border-color: #444 !important;
-            }
-            body.modo-oscuro .card h2,
-            body.modo-oscuro .card h3,
-            body.modo-oscuro .card p,
-            body.modo-oscuro .card ul,
-            body.modo-oscuro .card li {
-                color: #e0e0e0 !important;
-            }
-            body.modo-oscuro .card .text-primary,
-            body.modo-oscuro .fw-semibold.text-primary {
-                color: #00adb5 !important;
-            }
-            body.modo-oscuro .card span[style*="font-size"] {
-                filter: brightness(1.2) contrast(1.2);
-            }
-            body.modo-oscuro .bg-white,
-            body.modo-oscuro .bg-lightblue {
-                background: #23272b !important;
-            }
-            /* Mejora para listas y títulos en modo oscuro */
-            body.modo-oscuro .card ul {
-                background: transparent !important;
-            }
-            body.modo-oscuro .card li b {
-                color: #00adb5 !important;
-            }
-            /* Modo oscuro global */
-        body.modo-oscuro {
-            background-color: #181a1b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .bg-light {
-            background-color: #23272b !important;
-        }
-        body.modo-oscuro .navbar, body.modo-oscuro .dropdown-menu {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .card {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-            border-color: #444 !important;
-        }
-        body.modo-oscuro .modal-content {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .form-control, body.modo-oscuro .form-select {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-            border-color: #444 !important;
-        }
-        body.modo-oscuro .accordion-button {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .accordion-item {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .bg-dark {
-            background-color: #181a1b !important;
-        }
-        body.modo-oscuro .bg-white {
-            background-color: #23272b !important;
-        }
-        body.modo-oscuro .pagination .page-link {
-            background-color: #23272b !important;
-            color: #e0e0e0 !important;
-            border-color: #444 !important;
-        }
-        body.modo-oscuro .page-item.active .page-link {
-            background-color: #00adb5 !important;
-            color: #fff !important;
-            border-color: #00adb5 !important;
-        }
-        body.modo-oscuro .btn-outline-dark {
-            color: #e0e0e0 !important;
-            border-color: #e0e0e0 !important;
-        }
-        body.modo-oscuro .btn-outline-dark:hover {
-            background-color: #00adb5 !important;
-            color: #fff !important;
-            border-color: #00adb5 !important;
-        }
-        body.modo-oscuro .shadow-sm {
-            box-shadow: 0 .125rem .25rem rgba(0,0,0,.5)!important;
-        }
-
-        /* Cambia color de textos del navbar en modo oscuro */
-        body.modo-oscuro .navbar,
-        body.modo-oscuro .navbar .navbar-brand,
-        body.modo-oscuro .navbar .nav-link,
-        body.modo-oscuro .navbar .dropdown-item {
-            color: #e0e0e0 !important;
-        }
-
-        body.modo-oscuro .navbar .nav-link.active,
-        body.modo-oscuro .navbar .nav-link:focus,
-        body.modo-oscuro .navbar .nav-link:hover {
-            color: #00adb5 !important;
-        }
-
-        body.modo-oscuro .navbar .dropdown-menu {
-            background-color: #23272b !important;
-        }
-
-        body.modo-oscuro .navbar .dropdown-item:hover,
-        body.modo-oscuro .navbar .dropdown-item:focus {
-            background-color: #222 !important;
-            color: #00adb5 !important;
-        }
-        </style>
+        
     </head>
     <script>
 fetch('footer.html')
@@ -155,43 +37,16 @@ fetch('footer.html')
   .then(html => {
     document.getElementById('footer').innerHTML = html;
   });
+
+fetch('navbar.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('navbar').innerHTML = html;
+  });
 </script>
     <body>
         <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link" aria-current="page" href="index.html">Inicio</a></li> 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="consultoria.html">Consultoría tecnológica</a></li>
-                            <li><a class="dropdown-item" href="soporte.html">Soporte técnico</a></li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" id="asesoramientoDropdown" data-bs-toggle="dropdown" aria-expanded="false">Asesoramiento Tecnológico</a>
-                                <ul class="dropdown-menu" aria-labelledby="asesoramientoDropdown">
-                                    <li><a class="dropdown-item" href="asesoramiento-hogar.html">Hogar</a></li>
-                                    <li><a class="dropdown-item" href="asesoramiento-empresa.html">Empresa</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item" href="mantenimiento.html">Mantenimiento y reparación</a></li>
-                            <li><a class="dropdown-item" href="recicla.html">Recicla tecnología</a></li>
-                            <li><a class="dropdown-item" href="pc-personalizada.html">PC Personalizada</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link active" href="nosotros.html">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
-                    </ul>
-                    <div class="form-check form-switch ms-3">
-                        <input class="form-check-input" type="checkbox" id="modoOscuroSwitch">
-                        <label class="form-check-label text-light" for="modoOscuroSwitch" id="modoOscuroLabel"><i class="bi bi-moon"></i></label>
-                    </div>
-                </div>
-            </div>
-        </nav>
+        <div id="navbar"></div>
 
         <!-- Banner/Título General -->
         <header class="bg-dark py-5 mb-0">
@@ -322,45 +177,13 @@ fetch('footer.html')
         });
         </script>
         <script>
-// --- MODO OSCURO GLOBAL ---
-document.addEventListener('DOMContentLoaded', function () {
-    const switchOscuro = document.getElementById('modoOscuroSwitch');
-    const body = document.body;
-    // Inicializar desde localStorage
-    const dark = localStorage.getItem('modoOscuro') === 'true';
-    if (dark) {
-        body.classList.add('modo-oscuro');
-        if (switchOscuro) switchOscuro.checked = true;
-    } else {
-        body.classList.remove('modo-oscuro');
-        if (switchOscuro) switchOscuro.checked = false;
-    }
-    if (switchOscuro) {
-        switchOscuro.addEventListener('change', function () {
-            if (this.checked) {
-                body.classList.add('modo-oscuro');
-                localStorage.setItem('modoOscuro', 'true');
-            } else {
-                body.classList.remove('modo-oscuro');
-                localStorage.setItem('modoOscuro', 'false');
-            }
-        });
-    }
-    // Cambia el logo según el modo claro/oscuro
-    function actualizarLogoNav() {
-        const logo = document.querySelector('.navbar-brand img');
-        if (!logo) return;
-        if (document.body.classList.contains('modo-oscuro')) {
-            logo.src = 'img/Logo/logo_1.png';
-        } else {
-            logo.src = 'img/Logo/logo_2.png';
-        }
-    }
-    actualizarLogoNav();
-    if (switchOscuro) {
-        switchOscuro.addEventListener('change', actualizarLogoNav);
-    }
-});
+fetch('dark-mode.html')
+  .then(res => res.text())
+  .then(html => {
+    const script = document.createElement('div');
+    script.innerHTML = html;
+    document.body.appendChild(script);
+  });
 </script>
     </body>
 </html>
