@@ -85,7 +85,7 @@
 }
 
 body {
-    font-family: var(--font-family);
+    font-family: 'Montserrat', sans-serif;
     background: var(--bg-secondary);
     color: var(--text-primary);
     line-height: 1.5;
@@ -798,35 +798,45 @@ p {
 
 /* Enhanced Navbar */
 .navbar {
-    background: rgba(255, 255, 255, 0.95);
+    background: rgba(255, 255, 255, 0.8);
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-color);
-    padding: var(--spacing-md) 0;
-    transition: all var(--transition-normal);
+    border: 1px solid rgba(255, 255, 255, 0.2);
 }
 
 .navbar-brand {
-    font-weight: 700;
-    font-size: var(--font-size-xl);
-    color: var(--edark-blue) !important;
-    transition: all var(--transition-normal);
+    font-family: 'Orbitron', sans-serif;
+    font-weight: 900;
+    font-size: 1.8rem;
+    background: linear-gradient(135deg, #007bff, #6c757d);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-transform: uppercase;
+    letter-spacing: 2px;
 }
 
 .navbar-brand:hover {
-    color: var(--edark-blue-dark) !important;
-    transform: scale(1.05);
+    background: linear-gradient(135deg, #0056b3, #495057);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    transform: scale(1.02);
 }
 
-/* Enhanced Cards */
-.card {
-    background: var(--bg-primary);
-    border-radius: var(--border-radius-large);
-    box-shadow: var(--shadow);
-    border: 1px solid var(--border-color);
-    overflow: hidden;
-    transition: all var(--transition-normal);
-    position: relative;
+/* Banner EDARK */
+header h1.display-4 {
+    font-family: 'Orbitron', sans-serif !important;
+    font-weight: 900 !important;
+    font-size: 4rem !important;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+/* Restaurar tipografía original */
+body {
+    font-family: 'Montserrat', sans-serif;
 }
 
 .card::before {
