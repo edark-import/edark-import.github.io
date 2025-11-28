@@ -637,16 +637,5 @@ function agregarMensajeChat(remitente, texto) {
     // Llama a renderizarPaginacion(paginaActual, totalPaginas) cada vez que cambias de página
     </script>
 
-    <!-- Load dark mode script -->
-    <script>
-    fetch('dark-mode.html')
-      .then(res => res.text())
-      .then(html => {
-        const script = document.createElement('div');
-        script.innerHTML = html;
-        document.body.appendChild(script);
-      });
-    </script>
-
 </body>
 </html>
