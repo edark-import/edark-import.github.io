@@ -833,25 +833,7 @@
             });
         }
 
-        // Navegación
-        document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                e.preventDefault();
-                document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
-                this.classList.add('active');
-                
-                const section = this.getAttribute('data-section');
-                if (section) {
-                    cambiarSeccion(section);
-                }
-            });
-        });
-
-        // Estado inicial
-        document.addEventListener('DOMContentLoaded', function() {
-            cambiarSeccion('dashboard');
-        });
-
+        // DEFINIR cambiarSeccion PRIMERO (antes de onclick)
         function cambiarSeccion(section) {
             // Ocultar todas las secciones
             document.getElementById('dashboardSection').style.display = 'none';
@@ -877,6 +859,25 @@
                     document.getElementById('otrasSeccionesContent').style.display = 'block';
             }
         }
+
+        // Navegación
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                const section = this.getAttribute('data-section');
+                if (section) {
+                    cambiarSeccion(section);
+                }
+            });
+        });
+
+        // Estado inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            cambiarSeccion('dashboard');
+        });
 
         // === GESTIÓN DE CATEGORÍAS ===
         let categoriasData = [];

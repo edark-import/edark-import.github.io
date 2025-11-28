@@ -23,10 +23,6 @@ if (typeof firebase !== 'undefined') {
     window.db = firebase.firestore();
     window.auth = firebase.auth();
     window.storage = firebase.storage();
-    // Crear alias globales no-modulares para otros scripts
-    try { var db = window.db; } catch {}
-    try { var auth = window.auth; } catch {}
-    try { var storage = window.storage; } catch {}
   } catch (e) {
     // Ignorar si algún servicio no está disponible en la página
   }
