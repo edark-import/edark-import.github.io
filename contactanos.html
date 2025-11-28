@@ -46,10 +46,24 @@ fetch('footer.html')
   });
 
 fetch('navbar.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('navbar').innerHTML = html;
-  });
+    .then(res => res.text())
+    .then(html => {
+        const navbarContainer = document.getElementById('navbar');
+        navbarContainer.innerHTML = html;
+    
+        // Ejecutar scripts insertados dinámicamente
+        const scripts = navbarContainer.querySelectorAll('script');
+        scripts.forEach(oldScript => {
+            const newScript = document.createElement('script');
+            if (oldScript.src) {
+                newScript.src = oldScript.src;
+            } else {
+                newScript.textContent = oldScript.textContent;
+            }
+            document.body.appendChild(newScript);
+            oldScript.remove();
+        });
+    });
 </script>
 <body>
     <!-- Navigation-->
