@@ -653,8 +653,10 @@
         <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <script>
-        // Firebase ya está configurado en firebase-config.js
-        // Variables disponibles: db, auth, analytics
+        // Tomar las referencias globales de Firebase v8 inicializadas en <head>
+        const db = window.db;
+        const auth = window.auth;
+        const storage = window.storage;
 
         // Variables globales
         let ventasChart, metodoPagoChart;
