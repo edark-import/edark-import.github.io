@@ -217,16 +217,16 @@
             <img src="../img/Logo/logo_2.png" alt="eDark" style="max-width: 150px;">
         </div>
         <ul class="sidebar-nav">
-            <li><a href="#" class="active" data-section="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-            <li><a href="#" data-section="ventas"><i class="bi bi-cart-check"></i> Ventas</a></li>
-            <li><a href="#" data-section="productos"><i class="bi bi-box-seam"></i> Productos</a></li>
-            <li><a href="#" data-section="categorias"><i class="bi bi-tags"></i> Categorías</a></li>
-            <li><a href="#" data-section="inventario"><i class="bi bi-clipboard-data"></i> Inventario</a></li>
-            <li><a href="#" data-section="clientes"><i class="bi bi-people"></i> Clientes</a></li>
-            <li><a href="#" data-section="blog"><i class="bi bi-newspaper"></i> Blog</a></li>
-            <li><a href="#" data-section="publicidad"><i class="bi bi-bullseye"></i> Publicidad</a></li>
-            <li><a href="#" data-section="reportes"><i class="bi bi-graph-up"></i> Reportes</a></li>
-            <li><a href="#" data-section="configuracion"><i class="bi bi-gear"></i> Configuración</a></li>
+            <li><a href="javascript:void(0)" class="active" data-section="dashboard" onclick="cambiarSeccion('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li><a href="javascript:void(0)" data-section="ventas" onclick="cambiarSeccion('ventas')"><i class="bi bi-cart-check"></i> Ventas</a></li>
+            <li><a href="javascript:void(0)" data-section="productos" onclick="cambiarSeccion('productos')"><i class="bi bi-box-seam"></i> Productos</a></li>
+            <li><a href="javascript:void(0)" data-section="categorias" onclick="cambiarSeccion('categorias')"><i class="bi bi-tags"></i> Categorías</a></li>
+            <li><a href="javascript:void(0)" data-section="inventario" onclick="cambiarSeccion('inventario')"><i class="bi bi-clipboard-data"></i> Inventario</a></li>
+            <li><a href="javascript:void(0)" data-section="clientes" onclick="cambiarSeccion('clientes')"><i class="bi bi-people"></i> Clientes</a></li>
+            <li><a href="javascript:void(0)" data-section="blog" onclick="cambiarSeccion('blog')"><i class="bi bi-newspaper"></i> Blog</a></li>
+            <li><a href="javascript:void(0)" data-section="publicidad" onclick="cambiarSeccion('publicidad')"><i class="bi bi-bullseye"></i> Publicidad</a></li>
+            <li><a href="javascript:void(0)" data-section="reportes" onclick="cambiarSeccion('reportes')"><i class="bi bi-graph-up"></i> Reportes</a></li>
+            <li><a href="javascript:void(0)" data-section="configuracion" onclick="cambiarSeccion('configuracion')"><i class="bi bi-gear"></i> Configuración</a></li>
             <li><a href="#" id="cerrarSesion"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
         </ul>
     </div>
@@ -843,6 +843,11 @@
                     cambiarSeccion(section);
                 }
             });
+        });
+
+        // Estado inicial
+        document.addEventListener('DOMContentLoaded', function() {
+            cambiarSeccion('dashboard');
         });
 
         function cambiarSeccion(section) {
