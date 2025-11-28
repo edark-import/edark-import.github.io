@@ -1,5 +1,14 @@
 <!-- MODO OSCURO SCRIPT -->
 <script>
+// Aplicar modo oscuro de inmediato al insertarse (sin parpadeo)
+(function immediateDarkApply(){
+    try {
+        if (localStorage.getItem('modoOscuro') === 'true') {
+            document.documentElement.classList.add('modo-oscuro');
+            document.body.classList.add('modo-oscuro');
+        }
+    } catch {}
+})();
 // --- MODO OSCURO GLOBAL ---
 function initDarkMode() {
     const switchOscuro = document.getElementById('modoOscuroSwitch');

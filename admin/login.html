@@ -209,22 +209,24 @@
         </div>
     </div>
 
+    <!-- Cargar config central de Firebase (window.firebaseConfig) -->
+    <script src="../js/firebase-config.js"></script>
     <!-- Firebase SDK -->
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
         import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
-        // Configuración Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyC6vJ9qGd9vMQVj2iJjzI6MQv5R5h9Fg",
-            authDomain: "edark-import.firebaseapp.com",
-            projectId: "edark-import",
-            storageBucket: "edark-import.appspot.com",
-            messagingSenderId: "123456789",
-            appId: "1:123456789:web:abcdef123456"
-        };
-
+        // Configuración Firebase desde archivo central
+        const firebaseConfig = window.firebaseConfig;
+        if (!firebaseConfig || !firebaseConfig.apiKey) {
+            console.error('Firebase config missing or invalid. Check js/firebase-config.js');
+            const diag = document.getElementById('diagnosticBox');
+            if (diag) {
+                diag.classList.remove('d-none');
+                diag.textContent = 'Error: Falta configuración de Firebase (apiKey). Verifique js/firebase-config.js';
+            }
+        }
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
