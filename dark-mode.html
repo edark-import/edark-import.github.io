@@ -1,7 +1,7 @@
 <!-- MODO OSCURO SCRIPT -->
 <script>
 // --- MODO OSCURO GLOBAL ---
-document.addEventListener('DOMContentLoaded', function () {
+function initDarkMode() {
     const switchOscuro = document.getElementById('modoOscuroSwitch');
     const labelOscuro = document.getElementById('modoOscuroLabel');
     const body = document.body;
@@ -19,7 +19,11 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     if (switchOscuro) {
-        switchOscuro.addEventListener('change', function () {
+        // Remove existing listeners to avoid duplicates
+        const newSwitch = switchOscuro.cloneNode(true);
+        switchOscuro.parentNode.replaceChild(newSwitch, switchOscuro);
+        
+        newSwitch.addEventListener('change', function () {
             if (this.checked) {
                 body.classList.add('modo-oscuro');
                 localStorage.setItem('modoOscuro', 'true');
@@ -44,5 +48,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
     actualizarLogoNav();
+}
+
+// Initialize immediately if DOM is ready, otherwise wait
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initDarkMode);
+} else {
+    // Try now, and retry after a short delay for navbar to load
+    initDarkMode();
+    setTimeout(initDarkMode, 100);
+}
+
+// Also handle nested dropdowns
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle nested dropdown menus
+    const dropdownSubmenus = document.querySelectorAll('.dropdown-submenu');
+    dropdownSubmenus.forEach(function(submenu) {
+        const toggle = submenu.querySelector('.dropdown-toggle');
+        if (toggle) {
+            toggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                const menu = submenu.querySelector('.dropdown-menu');
+                if (menu) {
+                    menu.classList.toggle('show');
+                }
+            });
+        }
+    });
 });
 </script>
