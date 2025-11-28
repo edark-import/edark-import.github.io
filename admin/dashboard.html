@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Administración - eDark</title>
+    <link rel="icon" type="image/x-icon" href="../img/Logo/isotipo_Negro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --sidebar-width: 250px;
+            --primary-color: #00adb5;
+            --dark-bg: #222831;
+            --light-bg: #393e46;
+        }
+        
+        body {
+            background: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: var(--dark-bg);
+            padding: 20px 0;
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar .logo {
+            text-align: center;
+            padding: 20px;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 20px;
+        }
+
+        .sidebar-nav {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
+            margin: 5px 0;
+        }
+
+        .sidebar-nav a {
+            display: flex;
+            align-items: center;
+            padding: 15px 25px;
+            color: #eeeeee;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+
+        .sidebar-nav a:hover, .sidebar-nav a.active {
+            background: var(--primary-color);
+            color: white;
+            border-left: 4px solid white;
+        }
+
+        .sidebar-nav i {
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .stats-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+
+        .stats-card .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 15px;
+        }
+
+        .stats-card.blue .icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stats-card.green .icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+        .stats-card.orange .icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+        .stats-card.purple .icon { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+
+        .chart-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .table-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+
+        .topbar {
+            background: white;
+            padding: 15px 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .badge-status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .badge-pendiente { background: #ffc107; color: #000; }
+        .badge-confirmado { background: #17a2b8; color: white; }
+        .badge-enviado { background: #007bff; color: white; }
+        .badge-entregado { background: #28a745; color: white; }
+        .badge-cancelado { background: #dc3545; color: white; }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+            .main-content {
+                margin-left: 0;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="logo">
+            <img src="../img/Logo/logo_2.png" alt="eDark" style="max-width: 150px;">
+        </div>
+        <ul class="sidebar-nav">
+            <li><a href="#" class="active" data-section="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li><a href="#" data-section="ventas"><i class="bi bi-cart-check"></i> Ventas</a></li>
+            <li><a href="#" data-section="productos"><i class="bi bi-box-seam"></i> Productos</a></li>
+            <li><a href="#" data-section="inventario"><i class="bi bi-clipboard-data"></i> Inventario</a></li>
+            <li><a href="#" data-section="clientes"><i class="bi bi-people"></i> Clientes</a></li>
+            <li><a href="#" data-section="blog"><i class="bi bi-newspaper"></i> Blog</a></li>
+            <li><a href="#" data-section="publicidad"><i class="bi bi-bullseye"></i> Publicidad</a></li>
+            <li><a href="#" data-section="reportes"><i class="bi bi-graph-up"></i> Reportes</a></li>
+            <li><a href="#" data-section="configuracion"><i class="bi bi-gear"></i> Configuración</a></li>
+            <li><a href="#" id="cerrarSesion"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Topbar -->
+        <div class="topbar">
+            <div>
+                <h4 class="mb-0">Panel de Administración</h4>
+                <small class="text-muted" id="fechaActual"></small>
+            </div>
+            <div>
+                <span class="me-3" id="adminName"></span>
+                <button class="btn btn-sm btn-outline-primary d-md-none" onclick="toggleSidebar()">
+                    <i class="bi bi-list"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div id="dashboardSection">
+            <h2 class="section-title">Dashboard General</h2>
+            
+            <!-- Stats Cards -->
+            <div class="row mb-4">
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card blue">
+                        <div class="icon"><i class="bi bi-cart4"></i></div>
+                        <h6 class="text-muted">Ventas del Mes</h6>
+                        <h3 id="totalVentas">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card green">
+                        <div class="icon"><i class="bi bi-currency-dollar"></i></div>
+                        <h6 class="text-muted">Ingresos del Mes</h6>
+                        <h3 id="totalIngresos">S/ 0.00</h3>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card orange">
+                        <div class="icon"><i class="bi bi-box"></i></div>
+                        <h6 class="text-muted">Productos Activos</h6>
+                        <h3 id="totalProductos">0</h3>
+                    </div>
+                </div>
+                <div class="col-md-3 mb-3">
+                    <div class="stats-card purple">
+                        <div class="icon"><i class="bi bi-people"></i></div>
+                        <h6 class="text-muted">Clientes</h6>
+                        <h3 id="totalClientes">0</h3>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="chart-container">
+                        <h5>Ventas por Mes</h5>
+                        <canvas id="ventasChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="chart-container">
+                        <h5>Métodos de Pago</h5>
+                        <canvas id="metodoPagoChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Sales -->
+            <div class="table-container">
+                <h5>Ventas Recientes</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Estado</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ventasRecientes"></tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Low Stock Products -->
+            <div class="table-container">
+                <h5>Productos con Bajo Stock</h5>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Stock</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="productosBajoStock"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Otras secciones se cargan dinámicamente -->
+        <div id="otrasSeccionesContent" style="display: none;">
+            <!-- Contenido dinámico de otras secciones -->
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+    
+    <script>
+        // Configuración Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
+            authDomain: "edark-proyect.firebaseapp.com",
+            projectId: "edark-proyect",
+            storageBucket: "edark-proyect.appspot.com",
+            messagingSenderId: "705929141287",
+            appId: "1:705929141287:web:f16389625de554d6790202",
+            measurementId: "G-V89W8SCSH1"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const auth = firebase.auth();
+
+        // Variables globales
+        let ventasChart, metodoPagoChart;
+        let token = localStorage.getItem('adminToken');
+
+        // Verificar autenticación
+        auth.onAuthStateChanged(async (user) => {
+            if (!user) {
+                window.location.href = '../index.html';
+                return;
+            }
+
+            // Verificar rol de administrador
+            const userDoc = await db.collection('usuarios').doc(user.uid).get();
+            if (!userDoc.exists || userDoc.data().role !== 'admin') {
+                alert('Acceso denegado: Se requiere rol de administrador');
+                auth.signOut();
+                window.location.href = '../index.html';
+                return;
+            }
+
+            document.getElementById('adminName').textContent = user.email;
+            cargarDashboard();
+        });
+
+        // Fecha actual
+        document.getElementById('fechaActual').textContent = new Date().toLocaleDateString('es-PE', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        // Cargar Dashboard
+        async function cargarDashboard() {
+            try {
+                const fechaFin = new Date();
+                const fechaInicio = new Date();
+                fechaInicio.setDate(fechaInicio.getDate() - 30);
+
+                // Obtener ventas
+                const ventasSnapshot = await db.collection('ventas')
+                    .where('fechaCreacion', '>=', fechaInicio)
+                    .where('fechaCreacion', '<=', fechaFin)
+                    .get();
+
+                let totalVentas = 0;
+                let totalIngresos = 0;
+                let ventasPorEstado = {};
+                let metodoPago = {};
+                let ventasRecientes = [];
+
+                ventasSnapshot.forEach(doc => {
+                    const venta = doc.data();
+                    totalVentas++;
+                    totalIngresos += venta.total || 0;
+                    
+                    ventasPorEstado[venta.estado] = (ventasPorEstado[venta.estado] || 0) + 1;
+                    metodoPago[venta.metodoPago] = (metodoPago[venta.metodoPago] || 0) + 1;
+                    
+                    ventasRecientes.push({
+                        id: doc.id,
+                        ...venta
+                    });
+                });
+
+                // Actualizar stats cards
+                document.getElementById('totalVentas').textContent = totalVentas;
+                document.getElementById('totalIngresos').textContent = `S/ ${totalIngresos.toFixed(2)}`;
+
+                // Obtener productos
+                const productosSnapshot = await db.collection('productos').where('activo', '==', true).get();
+                document.getElementById('totalProductos').textContent = productosSnapshot.size;
+
+                // Productos con bajo stock
+                let productosBajoStock = [];
+                productosSnapshot.forEach(doc => {
+                    const producto = doc.data();
+                    if (producto.stock < 5) {
+                        productosBajoStock.push({
+                            id: doc.id,
+                            nombre: producto.nombre,
+                            stock: producto.stock
+                        });
+                    }
+                });
+
+                // Clientes únicos
+                const clientesSet = new Set();
+                ventasSnapshot.forEach(doc => {
+                    const venta = doc.data();
+                    if (venta.cliente?.email) clientesSet.add(venta.cliente.email);
+                });
+                document.getElementById('totalClientes').textContent = clientesSet.size;
+
+                // Renderizar tablas
+                renderVentasRecientes(ventasRecientes.slice(0, 10));
+                renderProductosBajoStock(productosBajoStock);
+
+                // Renderizar gráficos
+                renderCharts(metodoPago);
+
+            } catch (error) {
+                console.error('Error al cargar dashboard:', error);
+                alert('Error al cargar datos del dashboard');
+            }
+        }
+
+        // Render ventas recientes
+        function renderVentasRecientes(ventas) {
+            const tbody = document.getElementById('ventasRecientes');
+            tbody.innerHTML = '';
+
+            ventas.forEach(venta => {
+                const fecha = venta.fechaCreacion?.toDate ? venta.fechaCreacion.toDate().toLocaleDateString() : 'N/A';
+                const estadoClass = `badge-${venta.estado}`;
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${venta.numeroOrden}</td>
+                        <td>${venta.cliente?.nombre || 'N/A'}</td>
+                        <td>S/ ${venta.total.toFixed(2)}</td>
+                        <td><span class="badge-status ${estadoClass}">${venta.estado}</span></td>
+                        <td>${fecha}</td>
+                        <td>
+                            <button class="btn btn-sm btn-primary" onclick="verVenta('${venta.id}')">Ver</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Render productos bajo stock
+        function renderProductosBajoStock(productos) {
+            const tbody = document.getElementById('productosBajoStock');
+            tbody.innerHTML = '';
+
+            if (productos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" class="text-center">No hay productos con bajo stock</td></tr>';
+                return;
+            }
+
+            productos.forEach(producto => {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${producto.nombre}</td>
+                        <td><span class="badge bg-danger">${producto.stock}</span></td>
+                        <td>
+                            <button class="btn btn-sm btn-warning" onclick="reabastecerProducto('${producto.id}')">Reabastecer</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        // Render Charts
+        function renderCharts(metodoPagoData) {
+            // Método de Pago Chart
+            const ctx2 = document.getElementById('metodoPagoChart').getContext('2d');
+            if (metodoPagoChart) metodoPagoChart.destroy();
+            
+            metodoPagoChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(metodoPagoData),
+                    datasets: [{
+                        data: Object.values(metodoPagoData),
+                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#f5576c', '#4facfe']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true
+                }
+            });
+        }
+
+        // Navegación
+        document.querySelectorAll('.sidebar-nav a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
+                this.classList.add('active');
+                
+                const section = this.getAttribute('data-section');
+                if (section) {
+                    // Aquí cargarías el contenido de otras secciones
+                    console.log('Navegar a:', section);
+                }
+            });
+        });
+
+        // Cerrar sesión
+        document.getElementById('cerrarSesion').addEventListener('click', async (e) => {
+            e.preventDefault();
+            await auth.signOut();
+            localStorage.removeItem('adminToken');
+            window.location.href = '../index.html';
+        });
+
+        // Funciones auxiliares
+        function verVenta(id) {
+            alert('Ver venta: ' + id);
+        }
+
+        function reabastecerProducto(id) {
+            alert('Reabastecer producto: ' + id);
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('show');
+        }
+    </script>
+</body>
+</html>

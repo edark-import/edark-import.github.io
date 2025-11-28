@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Blog de tecnología, trucos y noticias - eDark">
+    <meta name="keywords" content="tecnología, trucos, tips, informática, gadgets, noticias tech">
+    <title>Blog Tech - eDark</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/styles.css" rel="stylesheet">
+    
+    <!-- Google AdSense - Reemplaza XXXXXXXXXXXXXXXX con tu código de AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
+            crossorigin="anonymous"></script>
+    
+    <style>
+        .blog-hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .article-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            margin-bottom: 30px;
+            height: 100%;
+        }
+        
+        .article-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .article-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+        
+        .article-content {
+            padding: 20px;
+        }
+        
+        .article-meta {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 10px;
+        }
+        
+        .article-title {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .article-excerpt {
+            color: #666;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .category-badge {
+            background: #00adb5;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+        
+        .ad-space {
+            background: #f8f9fa;
+            border: 2px dashed #dee2e6;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            margin: 30px 0;
+            min-height: 250px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .sidebar-widget {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        
+        .sidebar-widget h5 {
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #00adb5;
+        }
+        
+        .popular-post {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .popular-post:last-child {
+            border-bottom: none;
+        }
+        
+        .popular-post img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+            margin-right: 15px;
+        }
+        
+        .popular-post-info {
+            flex: 1;
+        }
+        
+        .popular-post-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 5px;
+            line-height: 1.4;
+        }
+        
+        .popular-post-date {
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .tag-cloud {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .tag {
+            background: #f8f9fa;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 13px;
+            color: #495057;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        
+        .tag:hover {
+            background: #00adb5;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="index.html"><img width="80" alt="edark_logo" src="img/Logo/logo_2.png"></a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item"><a class="nav-link" href="index.html">Tienda</a></li>
+                    <li class="nav-item"><a class="nav-link active" href="blog.html">Blog</a></li>
+                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
+                    <li class="nav-item"><a class="nav-link" href="contactanos.html">Contacto</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="blog-hero">
+        <div class="container">
+            <h1 class="display-4 fw-bold">Blog Tech de eDark</h1>
+            <p class="lead">Noticias, trucos y consejos sobre tecnología</p>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container my-5">
+        <div class="row">
+            <!-- Articles Column -->
+            <div class="col-lg-8">
+                <!-- Top Ad Space -->
+                <div class="ad-space" id="adSpace1">
+                    <!-- Google AdSense - Horizontal Banner -->
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                         data-ad-slot="XXXXXXXXXX"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <!-- Filter/Search -->
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div>
+                        <select class="form-select" id="categoriaFilter" style="width: 200px;">
+                            <option value="">Todas las categorías</option>
+                        </select>
+                    </div>
+                    <div>
+                        <input type="search" class="form-control" id="searchInput" placeholder="Buscar artículos...">
+                    </div>
+                </div>
+
+                <!-- Articles Grid -->
+                <div class="row" id="articlesContainer">
+                    <!-- Los artículos se cargan dinámicamente -->
+                </div>
+
+                <!-- Pagination -->
+                <nav aria-label="Page navigation" class="mt-4">
+                    <ul class="pagination justify-content-center" id="pagination">
+                    </ul>
+                </nav>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="col-lg-4">
+                <!-- Ad Space - Sidebar Top -->
+                <div class="sidebar-widget">
+                    <div class="ad-space" style="min-height: 200px;">
+                        <!-- Google AdSense - Square -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
+                </div>
+
+                <!-- Popular Posts -->
+                <div class="sidebar-widget">
+                    <h5>Artículos Populares</h5>
+                    <div id="popularPosts">
+                        <!-- Los posts populares se cargan dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Categories -->
+                <div class="sidebar-widget">
+                    <h5>Categorías</h5>
+                    <ul class="list-unstyled" id="categoriesList">
+                        <!-- Las categorías se cargan dinámicamente -->
+                    </ul>
+                </div>
+
+                <!-- Tags -->
+                <div class="sidebar-widget">
+                    <h5>Tags</h5>
+                    <div class="tag-cloud" id="tagsCloud">
+                        <!-- Los tags se cargan dinámicamente -->
+                    </div>
+                </div>
+
+                <!-- Newsletter -->
+                <div class="sidebar-widget" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
+                    <h5 style="color: white; border-color: rgba(255,255,255,0.3);">Newsletter</h5>
+                    <p style="font-size: 14px;">Recibe las últimas noticias tech en tu email</p>
+                    <form id="newsletterForm">
+                        <input type="email" class="form-control mb-2" placeholder="Tu email" required>
+                        <button type="submit" class="btn btn-light w-100">Suscribirse</button>
+                    </form>
+                </div>
+
+                <!-- Ad Space - Sidebar Bottom -->
+                <div class="sidebar-widget">
+                    <div class="ad-space" style="min-height: 250px;">
+                        <!-- Google AdSense - Skyscraper -->
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                             data-ad-slot="XXXXXXXXXX"
+                             data-ad-format="auto"
+                             data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="py-5 bg-dark">
+        <div class="container">
+            <p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    
+    <script>
+        // Configuración Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBXbqr_NrwqcfDvvk1mqN9GKKPaRv4uvx4",
+            authDomain: "edark-proyect.firebaseapp.com",
+            projectId: "edark-proyect",
+            storageBucket: "edark-proyect.appspot.com",
+            messagingSenderId: "705929141287",
+            appId: "1:705929141287:web:f16389625de554d6790202",
+            measurementId: "G-V89W8SCSH1"
+        };
+        
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        // Variables
+        let articulos = [];
+        let categorias = new Set();
+        let tags = new Set();
+
+        // Cargar artículos
+        async function cargarArticulos() {
+            try {
+                const snapshot = await db.collection('blog')
+                    .where('publicado', '==', true)
+                    .orderBy('fechaPublicacion', 'desc')
+                    .limit(20)
+                    .get();
+
+                articulos = [];
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    articulos.push({
+                        id: doc.id,
+                        ...data
+                    });
+                    
+                    if (data.categoria) categorias.add(data.categoria);
+                    if (data.tags) data.tags.forEach(tag => tags.add(tag));
+                });
+
+                renderArticulos(articulos);
+                renderCategorias();
+                renderTags();
+                renderPopularPosts();
+
+            } catch (error) {
+                console.error('Error al cargar artículos:', error);
+                document.getElementById('articlesContainer').innerHTML = `
+                    <div class="col-12 text-center">
+                        <p class="text-muted">No se pudieron cargar los artículos.</p>
+                        <p class="text-muted"><small>Nota: Asegúrate de tener artículos publicados en Firestore.</small></p>
+                    </div>
+                `;
+            }
+        }
+
+        // Render artículos
+        function renderArticulos(arts) {
+            const container = document.getElementById('articlesContainer');
+            
+            if (arts.length === 0) {
+                container.innerHTML = `
+                    <div class="col-12 text-center py-5">
+                        <i class="bi bi-inbox" style="font-size: 48px; color: #ccc;"></i>
+                        <p class="text-muted mt-3">No se encontraron artículos</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = '';
+            arts.forEach((articulo, index) => {
+                // Insertar ad cada 3 artículos
+                if (index > 0 && index % 3 === 0) {
+                    container.innerHTML += `
+                        <div class="col-12 mb-4">
+                            <div class="ad-space" style="min-height: 150px;">
+                                <ins class="adsbygoogle"
+                                     style="display:block"
+                                     data-ad-format="fluid"
+                                     data-ad-layout-key="-6t+ed+2i-1n-4w"
+                                     data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
+                                     data-ad-slot="XXXXXXXXXX"></ins>
+                                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                            </div>
+                        </div>
+                    `;
+                }
+
+                const fecha = articulo.fechaPublicacion?.toDate ? 
+                    articulo.fechaPublicacion.toDate().toLocaleDateString('es-PE') : 'Fecha desconocida';
+                
+                container.innerHTML += `
+                    <div class="col-md-6 mb-4">
+                        <div class="article-card">
+                            <img src="${articulo.imagenDestacada || 'https://via.placeholder.com/400x200?text=Sin+Imagen'}" alt="${articulo.titulo}">
+                            <div class="article-content">
+                                <span class="category-badge">${articulo.categoria || 'General'}</span>
+                                <h3 class="article-title">${articulo.titulo}</h3>
+                                <div class="article-meta">
+                                    <i class="bi bi-calendar"></i> ${fecha} &nbsp;
+                                    <i class="bi bi-eye"></i> ${articulo.vistas || 0} vistas
+                                </div>
+                                <p class="article-excerpt">${articulo.extracto || ''}</p>
+                                <a href="blog-post.html?slug=${articulo.slug}" class="btn btn-sm btn-outline-primary">
+                                    Leer más <i class="bi bi-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Render categorías
+        function renderCategorias() {
+            const select = document.getElementById('categoriaFilter');
+            const list = document.getElementById('categoriesList');
+            
+            categorias.forEach(cat => {
+                select.innerHTML += `<option value="${cat}">${cat}</option>`;
+                
+                const count = articulos.filter(a => a.categoria === cat).length;
+                list.innerHTML += `
+                    <li class="mb-2">
+                        <a href="#" class="text-decoration-none text-dark" data-categoria="${cat}">
+                            ${cat} <span class="badge bg-secondary">${count}</span>
+                        </a>
+                    </li>
+                `;
+            });
+
+            // Event listeners para filtrar
+            select.addEventListener('change', filtrarPorCategoria);
+            list.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const cat = e.target.getAttribute('data-categoria');
+                    select.value = cat;
+                    filtrarPorCategoria();
+                });
+            });
+        }
+
+        // Render tags
+        function renderTags() {
+            const container = document.getElementById('tagsCloud');
+            tags.forEach(tag => {
+                container.innerHTML += `<a href="#" class="tag">${tag}</a>`;
+            });
+        }
+
+        // Render posts populares
+        function renderPopularPosts() {
+            const container = document.getElementById('popularPosts');
+            const populares = articulos
+                .sort((a, b) => (b.vistas || 0) - (a.vistas || 0))
+                .slice(0, 5);
+
+            populares.forEach(art => {
+                const fecha = art.fechaPublicacion?.toDate ? 
+                    art.fechaPublicacion.toDate().toLocaleDateString('es-PE') : '';
+                
+                container.innerHTML += `
+                    <div class="popular-post">
+                        <img src="${art.imagenDestacada || 'https://via.placeholder.com/80'}" alt="${art.titulo}">
+                        <div class="popular-post-info">
+                            <div class="popular-post-title">
+                                <a href="blog-post.html?slug=${art.slug}" class="text-dark text-decoration-none">
+                                    ${art.titulo}
+                                </a>
+                            </div>
+                            <div class="popular-post-date">${fecha}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        // Filtrar por categoría
+        function filtrarPorCategoria() {
+            const categoria = document.getElementById('categoriaFilter').value;
+            const filtrados = categoria ? 
+                articulos.filter(a => a.categoria === categoria) : 
+                articulos;
+            renderArticulos(filtrados);
+        }
+
+        // Búsqueda
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            const filtrados = articulos.filter(a => 
+                a.titulo.toLowerCase().includes(term) ||
+                a.extracto?.toLowerCase().includes(term) ||
+                a.categoria?.toLowerCase().includes(term)
+            );
+            renderArticulos(filtrados);
+        });
+
+        // Newsletter
+        document.getElementById('newsletterForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = e.target.querySelector('input').value;
+            
+            try {
+                await db.collection('newsletter').add({
+                    email,
+                    fechaSuscripcion: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                alert('¡Gracias por suscribirte!');
+                e.target.reset();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al suscribirse');
+            }
+        });
+
+        // Inicializar
+        cargarArticulos();
+    </script>
+</body>
+</html>

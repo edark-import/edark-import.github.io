@@ -1,0 +1,56 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Función auxiliar para verificar admin
+    function isAdmin() {
+      return request.auth != null && 
+             get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role == 'admin';
+    }
+    
+    // Función para verificar autenticación
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+    
+    // Productos - lectura pública, escritura solo admin
+    match /productos/{producto} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Ventas - crear autenticado, leer/actualizar solo admin o propietario
+    match /ventas/{venta} {
+      allow create: if true; // Permitir crear ventas sin login para checkout rápido
+      allow read, update: if isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Usuarios - solo el usuario puede leer sus datos
+    match /usuarios/{userId} {
+      allow read: if isAuthenticated() && 
+                    (request.auth.uid == userId || isAdmin());
+      allow create: if request.auth.uid == userId;
+      allow update: if request.auth.uid == userId || isAdmin();
+      allow delete: if isAdmin();
+    }
+    
+    // Blog - lectura pública si está publicado, escritura solo admin
+    match /blog/{articulo} {
+      allow read: if resource.data.publicado == true || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Newsletter - solo crear
+    match /newsletter/{suscripcion} {
+      allow create: if true;
+      allow read, update, delete: if isAdmin();
+    }
+    
+    // Espacios publicitarios - lectura pública, escritura admin
+    match /espacios_publicitarios/{espacio} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}
