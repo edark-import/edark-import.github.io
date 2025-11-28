@@ -196,24 +196,25 @@
                 const campo = this.dataset.campo;
                 const valor = this.value;
                 const parentCategoria = this.dataset.parent; // Para subcategorías
-                
+
                 if (this.checked) {
                     if (!filtrosSeleccionados[campo].includes(valor)) {
                         filtrosSeleccionados[campo].push(valor);
                     }
-                    
+
                     // Si es una categoría, mostrar sus subcategorías
                     if (campo === 'categoria') {
                         mostrarSubcategorias(valor);
                     }
                 } else {
                     filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-                    
+
                     // Si es una categoría, ocultar y deseleccionar sus subcategorías
                     if (campo === 'categoria') {
                         ocultarYLimpiarSubcategorias(valor);
                     }
                 }
+                actualizarFiltrosDinamicos();
                 renderBadges();
                 mostrarProductos();
             });
@@ -240,6 +241,73 @@
         document.querySelectorAll('[data-campo="subcategoria"]').forEach(subcatCheckbox => {
             subcatCheckbox.closest('.form-check').style.display = 'none';
         });
+
+        // Función para actualizar filtros dinámicamente
+        function actualizarFiltrosDinamicos() {
+            // Obtener productos que coinciden con los filtros actuales (excepto el campo que estamos actualizando)
+            const productosFiltrados = productosCache.filter(producto => {
+                for (const campo of Object.keys(filtrosSeleccionados)) {
+                    const valores = filtrosSeleccionados[campo];
+                    if (valores && valores.length > 0) {
+                        if (campo === 'subcategoria') {
+                            const categoriasSeleccionadas = filtrosSeleccionados['categoria'] || [];
+                            if (categoriasSeleccionadas.length > 0) {
+                                if (!categoriasSeleccionadas.includes(producto.categoria)) {
+                                    return false;
+                                }
+                                if (!valores.includes(producto.subcategoria)) {
+                                    return false;
+                                }
+                            } else {
+                                if (!valores.includes(producto.subcategoria)) {
+                                    return false;
+                                }
+                            }
+                        } else if (campo === 'categoria') {
+                            if (!valores.includes(producto.categoria)) {
+                                return false;
+                            }
+                        } else {
+                            const productoValor = producto[campo] || '';
+                            if (!valores.includes(productoValor)) {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                return true;
+            });
+
+            // Calcular valores disponibles para cada campo basado en productos filtrados
+            const valoresDisponibles = {};
+            camposFiltro.forEach(f => valoresDisponibles[f.campo] = new Set());
+
+            productosFiltrados.forEach(prod => {
+                camposFiltro.forEach(f => {
+                    if (prod[f.campo]) valoresDisponibles[f.campo].add(prod[f.campo]);
+                });
+            });
+
+            // Actualizar las opciones de cada filtro
+            camposFiltro.forEach(campo => {
+                if (campo.campo === 'categoria' || campo.campo === 'subcategoria') return; // Estos ya se manejan especialmente
+
+                const checkboxes = document.querySelectorAll(`[data-campo="${campo.campo}"]`);
+                checkboxes.forEach(cb => {
+                    const valor = cb.value;
+                    const estaDisponible = valoresDisponibles[campo.campo].has(valor);
+                    const estaSeleccionado = filtrosSeleccionados[campo.campo].includes(valor);
+
+                    cb.closest('.form-check').style.display = estaDisponible || estaSeleccionado ? 'block' : 'none';
+                    cb.disabled = !estaDisponible && !estaSeleccionado;
+
+                    if (!estaDisponible && !estaSeleccionado) {
+                        cb.checked = false;
+                        filtrosSeleccionados[campo.campo] = filtrosSeleccionados[campo.campo].filter(v => v !== valor);
+                    }
+                });
+            });
+        }
 
         // Filtro de precio
         document.getElementById('precioMin').addEventListener('input', function () {
@@ -990,29 +1058,80 @@ document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', fu
 document.addEventListener('DOMContentLoaded', function() {
     actualizarContadorCarrito();
 });
-// --- MODO OSCURO ---
-document.addEventListener('DOMContentLoaded', function () {
-    const switchOscuro = document.getElementById('modoOscuroSwitch');
-    const body = document.body;
-    // Inicializar desde localStorage
-    const dark = localStorage.getItem('modoOscuro') === 'true';
-    if (dark) {
-        body.classList.add('modo-oscuro');
-        if (switchOscuro) switchOscuro.checked = true;
-    } else {
-        body.classList.remove('modo-oscuro');
-        if (switchOscuro) switchOscuro.checked = false;
-    }
-    if (switchOscuro) {
-        switchOscuro.addEventListener('change', function () {
-            if (this.checked) {
-                body.classList.add('modo-oscuro');
-                localStorage.setItem('modoOscuro', 'true');
-            } else {
-                body.classList.remove('modo-oscuro');
-                localStorage.setItem('modoOscuro', 'false');
-            }
+// --- CARRUSEL DINÁMICO ---
+document.addEventListener('DOMContentLoaded', function() {
+    const carousel = document.getElementById('serviciosCarrusel');
+    if (carousel) {
+        const carouselInstance = new bootstrap.Carousel(carousel, {
+            interval: 5000, // Cambia cada 5 segundos
+            pause: 'hover', // Pausa al pasar el mouse
+            wrap: true, // Ciclo infinito
+            keyboard: true // Navegación con teclado
         });
+
+        // Agregar indicadores dinámicos
+        const indicatorsContainer = document.createElement('div');
+        indicatorsContainer.className = 'carousel-indicators';
+        carousel.appendChild(indicatorsContainer);
+
+        const items = carousel.querySelectorAll('.carousel-item');
+        items.forEach((item, index) => {
+            const indicator = document.createElement('button');
+            indicator.type = 'button';
+            indicator.setAttribute('data-bs-target', '#serviciosCarrusel');
+            indicator.setAttribute('data-bs-slide-to', index);
+            if (index === 0) indicator.classList.add('active');
+            indicator.setAttribute('aria-label', `Slide ${index + 1}`);
+            indicatorsContainer.appendChild(indicator);
+        });
+
+        // Efectos de entrada para las tarjetas
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const cards = entry.target.querySelectorAll('.card');
+                    cards.forEach((card, index) => {
+                        setTimeout(() => {
+                            card.classList.add('fade-in-up');
+                        }, index * 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        items.forEach(item => observer.observe(item));
+
+        // Efectos de hover mejorados
+        const cards = carousel.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-10px) scale(1.02)';
+                this.style.boxShadow = '0 15px 35px rgba(0, 123, 255, 0.3)';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = '';
+                this.style.boxShadow = '';
+            });
+        });
+
+        // Auto-pause cuando no está visible
+        const carouselObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    carouselInstance.cycle();
+                } else {
+                    carouselInstance.pause();
+                }
+            });
+        }, { threshold: 0.5 });
+
+        carouselObserver.observe(carousel);
     }
 });
 // Cambia el logo según el modo claro/oscuro

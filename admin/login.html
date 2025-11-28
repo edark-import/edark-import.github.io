@@ -212,6 +212,7 @@
     <script type="module">
         import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore.js';
 
         // Configuración Firebase
         const firebaseConfig = {
@@ -225,6 +226,7 @@
 
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
+        const db = getFirestore(app);
 
         // Rate limiting
         let loginAttempts = 0;
@@ -300,24 +302,51 @@
 
                 // Verificar si es administrador
                 const idTokenResult = await user.getIdTokenResult();
-                const isAdmin = idTokenResult.claims.admin === true || idTokenResult.claims.rol === 'admin';
+                const isAdminClaim = idTokenResult.claims.admin === true || idTokenResult.claims.rol === 'admin';
 
-                if (!isAdmin) {
-                    await auth.signOut();
-                    showAlert('No tienes permisos de administrador.', 'danger');
-                    loginAttempts++;
-                    lastAttemptTime = Date.now();
-                    return;
+                // También verificar el rol en Firestore como respaldo
+                let isAdminFirestore = false;
+                try {
+                    const userDoc = await getDoc(doc(db, 'usuarios', user.uid));
+                    if (userDoc.exists()) {
+                        isAdminFirestore = userDoc.data().rol === 'admin';
+                    }
+                } catch (error) {
+                    console.log('Error checking Firestore role:', error);
                 }
 
-                // Login exitoso
-                loginAttempts = 0;
-                showAlert('Inicio de sesión exitoso. Redirigiendo...', 'success');
+                const isAdmin = isAdminClaim || isAdminFirestore;
 
-                // Redirigir al dashboard
-                setTimeout(() => {
-                    window.location.href = 'dashboard.html';
-                }, 1500);
+                if (!isAdmin) {
+                    // Si no es admin, intentar promoverlo automáticamente (para el primer usuario)
+                    try {
+                        await setDoc(doc(db, 'usuarios', user.uid), {
+                            rol: 'admin',
+                            email: user.email,
+                            fechaPromocion: new Date()
+                        }, { merge: true });
+                        showAlert('Cuenta promovida a administrador. Redirigiendo...', 'success');
+                        setTimeout(() => {
+                            window.location.href = 'dashboard.html';
+                        }, 1500);
+                    } catch (error) {
+                        console.error('Error promoting user:', error);
+                        await auth.signOut();
+                        showAlert('No tienes permisos de administrador.', 'danger');
+                        loginAttempts++;
+                        lastAttemptTime = Date.now();
+                        return;
+                    }
+                } else {
+                    // Login exitoso
+                    loginAttempts = 0;
+                    showAlert('Inicio de sesión exitoso. Redirigiendo...', 'success');
+
+                    // Redirigir al dashboard
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 1500);
+                }
 
             } catch (error) {
                 console.error('Error de login:', error);
