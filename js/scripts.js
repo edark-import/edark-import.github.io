@@ -195,16 +195,50 @@
             cb.addEventListener('change', function () {
                 const campo = this.dataset.campo;
                 const valor = this.value;
+                const parentCategoria = this.dataset.parent; // Para subcategorías
+                
                 if (this.checked) {
                     if (!filtrosSeleccionados[campo].includes(valor)) {
                         filtrosSeleccionados[campo].push(valor);
                     }
+                    
+                    // Si es una categoría, mostrar sus subcategorías
+                    if (campo === 'categoria') {
+                        mostrarSubcategorias(valor);
+                    }
                 } else {
                     filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                    
+                    // Si es una categoría, ocultar y deseleccionar sus subcategorías
+                    if (campo === 'categoria') {
+                        ocultarYLimpiarSubcategorias(valor);
+                    }
                 }
                 renderBadges();
                 mostrarProductos();
             });
+        });
+
+        // Funciones auxiliares para mostrar/ocultar subcategorías
+        function mostrarSubcategorias(categoria) {
+            document.querySelectorAll(`[data-parent="${categoria}"]`).forEach(subcatCheckbox => {
+                subcatCheckbox.closest('.form-check').style.display = 'block';
+            });
+        }
+
+        function ocultarYLimpiarSubcategorias(categoria) {
+            document.querySelectorAll(`[data-parent="${categoria}"]`).forEach(subcatCheckbox => {
+                subcatCheckbox.checked = false;
+                subcatCheckbox.closest('.form-check').style.display = 'none';
+                // Remover de filtros seleccionados
+                const valor = subcatCheckbox.value;
+                filtrosSeleccionados['subcategoria'] = filtrosSeleccionados['subcategoria'].filter(v => v !== valor);
+            });
+        }
+
+        // Ocultar todas las subcategorías inicialmente
+        document.querySelectorAll('[data-campo="subcategoria"]').forEach(subcatCheckbox => {
+            subcatCheckbox.closest('.form-check').style.display = 'none';
         });
 
         // Filtro de precio
@@ -633,13 +667,29 @@ function mostrarProductos() {
 
     // --- FUNCIÓN PARA FILTRAR PRODUCTOS SEGÚN LOS FILTROS SELECCIONADOS ---
 function productoCoincideFiltros(producto) {
-    // Filtros por campos
+    // Filtros por campos con lógica anidada
     for (const campo of Object.keys(filtrosSeleccionados)) {
         const valores = filtrosSeleccionados[campo];
         if (valores && valores.length > 0) {
             if (campo === 'subcategoria') {
-                if (!valores.includes(producto.subcategoria)) {
-                    return false;
+                // La subcategoría solo se aplica si su categoría padre está seleccionada o no hay categorías seleccionadas
+                const categoriasSeleccionadas = filtrosSeleccionados['categoria'] || [];
+                
+                if (categoriasSeleccionadas.length > 0) {
+                    // Si hay categorías seleccionadas, verificar que:
+                    // 1. La categoría del producto esté en las seleccionadas
+                    // 2. La subcategoría del producto esté en las seleccionadas
+                    if (!categoriasSeleccionadas.includes(producto.categoria)) {
+                        return false;
+                    }
+                    if (!valores.includes(producto.subcategoria)) {
+                        return false;
+                    }
+                } else {
+                    // Si no hay categorías seleccionadas, solo filtrar por subcategoría
+                    if (!valores.includes(producto.subcategoria)) {
+                        return false;
+                    }
                 }
             } else if (campo === 'categoria') {
                 if (!valores.includes(producto.categoria)) {
@@ -666,7 +716,9 @@ function productoCoincideFiltros(producto) {
             (producto.subcategoria || '') + ' ' +
             (producto.marca || '') + ' ' +
             (producto.capacidad || '') + ' ' +
-            (producto.modelo || '')
+            (producto.modelo || '') + ' ' +
+            (producto.dimension || '') + ' ' +
+            (producto.especificaciones || '')
         ).toLowerCase();
         if (!texto.includes(textoBusqueda)) {
             return false;

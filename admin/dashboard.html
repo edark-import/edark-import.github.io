@@ -183,6 +183,7 @@
             <li><a href="#" class="active" data-section="dashboard"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
             <li><a href="#" data-section="ventas"><i class="bi bi-cart-check"></i> Ventas</a></li>
             <li><a href="#" data-section="productos"><i class="bi bi-box-seam"></i> Productos</a></li>
+            <li><a href="#" data-section="categorias"><i class="bi bi-tags"></i> Categorías</a></li>
             <li><a href="#" data-section="inventario"><i class="bi bi-clipboard-data"></i> Inventario</a></li>
             <li><a href="#" data-section="clientes"><i class="bi bi-people"></i> Clientes</a></li>
             <li><a href="#" data-section="blog"><i class="bi bi-newspaper"></i> Blog</a></li>
@@ -299,6 +300,40 @@
             </div>
         </div>
 
+        <!-- Sección de Categorías -->
+        <div id="categoriasSection" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title">Gestión de Categorías</h2>
+                <button class="btn btn-primary" onclick="mostrarModalCategoria()">
+                    <i class="bi bi-plus-circle"></i> Nueva Categoría
+                </button>
+            </div>
+
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Subcategorías</th>
+                                <th>Productos</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaCategorias">
+                            <tr>
+                                <td colspan="4" class="text-center">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Cargando...</span>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
         <!-- Sección de Productos -->
         <div id="productosSection" style="display: none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
@@ -370,6 +405,38 @@
         </div>
     </div>
 
+    <!-- Modal Categoría -->
+    <div class="modal fade" id="modalCategoria" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCategoriaTitulo">Nueva Categoría</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formCategoria">
+                        <input type="hidden" id="categoriaId">
+                        <div class="mb-3">
+                            <label class="form-label">Nombre de la Categoría *</label>
+                            <input type="text" class="form-control" id="categoriaNombre" required placeholder="Ej: Laptops, Accesorios">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Subcategorías (separadas por coma)</label>
+                            <input type="text" class="form-control" id="categoriaSubcategorias" placeholder="Gaming, Oficina, Ultrabook">
+                            <small class="text-muted">Opcional: separa múltiples subcategorías con comas</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarCategoria()">
+                        <i class="bi bi-save"></i> Guardar
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Producto -->
     <div class="modal fade" id="modalProducto" tabindex="-1">
         <div class="modal-dialog modal-lg">
@@ -381,47 +448,117 @@
                 <div class="modal-body">
                     <form id="formProducto">
                         <input type="hidden" id="productoId">
+                        
+                        <!-- Fila 1: Nombre -->
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Nombre del Producto *</label>
+                                <input type="text" class="form-control" id="productoNombre" required placeholder="Ej: Laptop Dell Inspiron 15">
+                            </div>
+                        </div>
+
+                        <!-- Fila 2: Precios -->
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Precio de Compra</label>
+                                <input type="number" step="0.01" class="form-control" id="productoPrecioCompra" placeholder="0.00">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Moneda</label>
+                                <select class="form-select" id="productoMoneda">
+                                    <option value="PEN">Soles (S/)</option>
+                                    <option value="USD">Dólares (USD)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Precio de Venta (S/) *</label>
+                                <input type="number" step="0.01" class="form-control" id="productoPrecioVenta" required placeholder="0.00">
+                            </div>
+                        </div>
+
+                        <!-- Tipo de cambio SUNAT -->
+                        <div class="row">
+                            <div class="col-12 mb-3">
+                                <div class="alert alert-info py-2" id="tipoCambioInfo">
+                                    <small><strong>Tipo de cambio SUNAT:</strong> <span id="tcSunat">Cargando...</span></small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Fila 3: URL Imagen -->
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">URL de la Imagen</label>
+                                <input type="url" class="form-control" id="productoImagen" placeholder="https://ejemplo.com/imagen.jpg">
+                                <small class="text-muted">Puedes usar servicios como Imgur o enlaces directos</small>
+                            </div>
+                        </div>
+
+                        <!-- Fila 4: Categoría y Subcategoría -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Nombre del Producto *</label>
-                                <input type="text" class="form-control" id="productoNombre" required>
+                                <label class="form-label">Categoría *</label>
+                                <select class="form-select" id="productoCategoria" required>
+                                    <option value="">Seleccionar categoría...</option>
+                                </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Categoría *</label>
-                                <input type="text" class="form-control" id="productoCategoria" required>
+                                <label class="form-label">Subcategoría</label>
+                                <input type="text" class="form-control" id="productoSubcategoria" placeholder="Ej: Gaming, Oficina">
                             </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Precio (S/) *</label>
-                                <input type="number" step="0.01" class="form-control" id="productoPrecio" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label class="form-label">Stock *</label>
-                                <input type="number" class="form-control" id="productoStock" required>
-                            </div>
+                        </div>
+
+                        <!-- Fila 5: Marca, Capacidad, Modelo -->
+                        <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Marca</label>
-                                <input type="text" class="form-control" id="productoMarca">
+                                <input type="text" class="form-control" id="productoMarca" placeholder="Ej: Dell, HP, Lenovo">
                             </div>
-                            <div class="col-md-12 mb-3">
-                                <label class="form-label">Descripción</label>
-                                <textarea class="form-control" id="productoDescripcion" rows="3"></textarea>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Capacidad</label>
+                                <input type="text" class="form-control" id="productoCapacidad" placeholder="Ej: 512GB, 16GB RAM">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label">Modelo</label>
+                                <input type="text" class="form-control" id="productoModelo" placeholder="Ej: XPS 15, ThinkPad T14">
+                            </div>
+                        </div>
+
+                        <!-- Fila 6: Dimensión y Stock -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Dimensión</label>
+                                <input type="text" class="form-control" id="productoDimension" placeholder="Ej: 15.6 pulgadas, 27 pulgadas">
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">URL de Imagen</label>
-                                <input type="url" class="form-control" id="productoImagen" placeholder="https://...">
+                                <label class="form-label">Stock *</label>
+                                <input type="number" class="form-control" id="productoStock" required min="0" placeholder="0">
                             </div>
-                            <div class="col-md-3 mb-3">
+                        </div>
+
+                        <!-- Fila 7: Especificaciones Técnicas -->
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Especificaciones Técnicas</label>
+                                <textarea class="form-control" id="productoEspecificaciones" rows="4" placeholder="Detalla las especificaciones técnicas del producto..."></textarea>
+                                <small class="text-muted">Procesador, RAM, Almacenamiento, Pantalla, etc.</small>
+                            </div>
+                        </div>
+
+                        <!-- Fila 8: Switches -->
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Destacado</label>
                                 <div class="form-check form-switch mt-2">
                                     <input class="form-check-input" type="checkbox" id="productoDestacado">
-                                    <label class="form-check-label" for="productoDestacado">Sí</label>
+                                    <label class="form-check-label" for="productoDestacado">Mostrar en inicio</label>
                                 </div>
                             </div>
-                            <div class="col-md-3 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label class="form-label">Activo</label>
                                 <div class="form-check form-switch mt-2">
                                     <input class="form-check-input" type="checkbox" id="productoActivo" checked>
-                                    <label class="form-check-label" for="productoActivo">Sí</label>
+                                    <label class="form-check-label" for="productoActivo">Publicado</label>
                                 </div>
                             </div>
                         </div>
@@ -640,6 +777,7 @@
             // Ocultar todas las secciones
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('productosSection').style.display = 'none';
+            document.getElementById('categoriasSection').style.display = 'none';
             document.getElementById('otrasSeccionesContent').style.display = 'none';
 
             // Mostrar sección seleccionada
@@ -652,8 +790,160 @@
                     document.getElementById('productosSection').style.display = 'block';
                     cargarProductos();
                     break;
+                case 'categorias':
+                    document.getElementById('categoriasSection').style.display = 'block';
+                    cargarCategorias();
+                    break;
                 default:
                     document.getElementById('otrasSeccionesContent').style.display = 'block';
+            }
+        }
+
+        // === GESTIÓN DE CATEGORÍAS ===
+        let categoriasData = [];
+        let modalCategoriaInstance;
+
+        async function cargarCategorias() {
+            try {
+                const tbody = document.getElementById('tablaCategorias');
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+
+                const snapshot = await db.collection('categorias').orderBy('nombre').get();
+                categoriasData = [];
+                
+                snapshot.forEach(doc => {
+                    categoriasData.push({
+                        id: doc.id,
+                        ...doc.data()
+                    });
+                });
+
+                if (categoriasData.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No hay categorías. Crea la primera categoría.</td></tr>';
+                    return;
+                }
+
+                tbody.innerHTML = '';
+                for (const categoria of categoriasData) {
+                    // Contar productos de esta categoría
+                    const productosSnap = await db.collection('productos').where('categoria', '==', categoria.nombre).get();
+                    const cantidadProductos = productosSnap.size;
+
+                    const subcategorias = categoria.subcategorias && categoria.subcategorias.length > 0
+                        ? categoria.subcategorias.join(', ')
+                        : '<span class="text-muted">Ninguna</span>';
+
+                    tbody.innerHTML += `
+                        <tr>
+                            <td><strong>${categoria.nombre}</strong></td>
+                            <td><small>${subcategorias}</small></td>
+                            <td><span class="badge bg-info">${cantidadProductos}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-warning me-1" onclick="editarCategoria('${categoria.id}')" title="Editar">
+                                    <i class="bi bi-pencil"></i>
+                                </button>
+                                <button class="btn btn-sm btn-danger" onclick="eliminarCategoria('${categoria.id}', '${categoria.nombre}')" title="Eliminar">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }
+            } catch (error) {
+                console.error('Error al cargar categorías:', error);
+                alert('Error al cargar categorías');
+            }
+        }
+
+        function mostrarModalCategoria() {
+            document.getElementById('modalCategoriaTitulo').textContent = 'Nueva Categoría';
+            document.getElementById('formCategoria').reset();
+            document.getElementById('categoriaId').value = '';
+            
+            modalCategoriaInstance = new bootstrap.Modal(document.getElementById('modalCategoria'));
+            modalCategoriaInstance.show();
+        }
+
+        async function editarCategoria(id) {
+            try {
+                const doc = await db.collection('categorias').doc(id).get();
+                if (!doc.exists) {
+                    alert('Categoría no encontrada');
+                    return;
+                }
+
+                const categoria = doc.data();
+                document.getElementById('modalCategoriaTitulo').textContent = 'Editar Categoría';
+                document.getElementById('categoriaId').value = id;
+                document.getElementById('categoriaNombre').value = categoria.nombre || '';
+                document.getElementById('categoriaSubcategorias').value = categoria.subcategorias ? categoria.subcategorias.join(', ') : '';
+
+                modalCategoriaInstance = new bootstrap.Modal(document.getElementById('modalCategoria'));
+                modalCategoriaInstance.show();
+            } catch (error) {
+                console.error('Error al cargar categoría:', error);
+                alert('Error al cargar categoría');
+            }
+        }
+
+        async function guardarCategoria() {
+            try {
+                const id = document.getElementById('categoriaId').value;
+                const nombre = document.getElementById('categoriaNombre').value.trim();
+                const subcategoriasTexto = document.getElementById('categoriaSubcategorias').value.trim();
+                
+                if (!nombre) {
+                    alert('El nombre de la categoría es obligatorio');
+                    return;
+                }
+
+                const subcategorias = subcategoriasTexto 
+                    ? subcategoriasTexto.split(',').map(s => s.trim()).filter(s => s.length > 0)
+                    : [];
+
+                const categoria = {
+                    nombre,
+                    subcategorias,
+                    fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                if (id) {
+                    await db.collection('categorias').doc(id).update(categoria);
+                    alert('Categoría actualizada exitosamente');
+                } else {
+                    categoria.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('categorias').add(categoria);
+                    alert('Categoría creada exitosamente');
+                }
+
+                modalCategoriaInstance.hide();
+                cargarCategorias();
+                
+            } catch (error) {
+                console.error('Error al guardar categoría:', error);
+                alert('Error al guardar categoría: ' + error.message);
+            }
+        }
+
+        async function eliminarCategoria(id, nombre) {
+            // Verificar si hay productos con esta categoría
+            const productosSnap = await db.collection('productos').where('categoria', '==', nombre).get();
+            
+            if (productosSnap.size > 0) {
+                if (!confirm(`Esta categoría tiene ${productosSnap.size} producto(s). ¿Estás seguro de eliminarla? Los productos no se eliminarán pero quedarán sin categoría.`)) {
+                    return;
+                }
+            } else if (!confirm(`¿Estás seguro de eliminar la categoría "${nombre}"?`)) {
+                return;
+            }
+
+            try {
+                await db.collection('categorias').doc(id).delete();
+                alert('Categoría eliminada exitosamente');
+                cargarCategorias();
+            } catch (error) {
+                console.error('Error al eliminar categoría:', error);
+                alert('Error al eliminar categoría');
             }
         }
 
@@ -677,18 +967,57 @@
                     });
                 });
 
-                // Cargar categorías para el filtro
-                const categorias = [...new Set(productosData.map(p => p.categoria).filter(Boolean))];
-                const selectCategoria = document.getElementById('filtroCategoria');
-                selectCategoria.innerHTML = '<option value="">Todas las categorías</option>';
-                categorias.forEach(cat => {
-                    selectCategoria.innerHTML += `<option value="${cat}">${cat}</option>`;
-                });
+                // Cargar categorías para el filtro y el formulario
+                await cargarCategoriasEnSelect();
+                
+                // Cargar tipo de cambio SUNAT
+                await cargarTipoCambio();
 
                 renderizarProductos();
             } catch (error) {
                 console.error('Error al cargar productos:', error);
                 alert('Error al cargar productos');
+            }
+        }
+
+        async function cargarCategoriasEnSelect() {
+            try {
+                const snapshot = await db.collection('categorias').orderBy('nombre').get();
+                const categorias = [];
+                
+                snapshot.forEach(doc => {
+                    categorias.push(doc.data().nombre);
+                });
+
+                // Actualizar select de filtro
+                const selectFiltro = document.getElementById('filtroCategoria');
+                selectFiltro.innerHTML = '<option value="">Todas las categorías</option>';
+                categorias.forEach(cat => {
+                    selectFiltro.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+
+                // Actualizar select del formulario
+                const selectForm = document.getElementById('productoCategoria');
+                selectForm.innerHTML = '<option value="">Seleccionar categoría...</option>';
+                categorias.forEach(cat => {
+                    selectForm.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+
+            } catch (error) {
+                console.error('Error al cargar categorías:', error);
+            }
+        }
+
+        async function cargarTipoCambio() {
+            try {
+                const res = await fetch('https://corsproxy.io/?https://api.apis.net.pe/v1/tipo-cambio-sunat');
+                const data = await res.json();
+                if (data && data.venta) {
+                    const tc = parseFloat(data.venta).toFixed(3);
+                    document.getElementById('tcSunat').textContent = `S/ ${tc} - ${data.fecha || ''}`;
+                }
+            } catch (error) {
+                document.getElementById('tcSunat').textContent = 'S/ 3.80 (aprox.)';
             }
         }
 
@@ -755,11 +1084,16 @@
         });
 
         // Mostrar modal para nuevo producto
-        function mostrarModalProducto() {
+        async function mostrarModalProducto() {
             document.getElementById('modalProductoTitulo').textContent = 'Nuevo Producto';
             document.getElementById('formProducto').reset();
             document.getElementById('productoId').value = '';
             document.getElementById('productoActivo').checked = true;
+            document.getElementById('productoMoneda').value = 'PEN';
+            
+            // Cargar categorías
+            await cargarCategoriasEnSelect();
+            await cargarTipoCambio();
             
             modalProductoInstance = new bootstrap.Modal(document.getElementById('modalProducto'));
             modalProductoInstance.show();
@@ -777,13 +1111,25 @@
                 const producto = doc.data();
                 document.getElementById('modalProductoTitulo').textContent = 'Editar Producto';
                 document.getElementById('productoId').value = id;
+                
+                // Cargar categorías primero
+                await cargarCategoriasEnSelect();
+                await cargarTipoCambio();
+                
+                // Llenar formulario
                 document.getElementById('productoNombre').value = producto.nombre || '';
-                document.getElementById('productoCategoria').value = producto.categoria || '';
-                document.getElementById('productoPrecio').value = producto.precio || '';
-                document.getElementById('productoStock').value = producto.stock || '';
-                document.getElementById('productoMarca').value = producto.marca || '';
-                document.getElementById('productoDescripcion').value = producto.descripcion || '';
+                document.getElementById('productoPrecioCompra').value = producto.precioCompra || '';
+                document.getElementById('productoMoneda').value = producto.moneda || 'PEN';
+                document.getElementById('productoPrecioVenta').value = producto.precio || '';
                 document.getElementById('productoImagen').value = producto.imagenUrl || '';
+                document.getElementById('productoCategoria').value = producto.categoria || '';
+                document.getElementById('productoSubcategoria').value = producto.subcategoria || '';
+                document.getElementById('productoMarca').value = producto.marca || '';
+                document.getElementById('productoCapacidad').value = producto.capacidad || '';
+                document.getElementById('productoModelo').value = producto.modelo || '';
+                document.getElementById('productoDimension').value = producto.dimension || '';
+                document.getElementById('productoStock').value = producto.stock || '';
+                document.getElementById('productoEspecificaciones').value = producto.especificaciones || '';
                 document.getElementById('productoDestacado').checked = producto.destacado || false;
                 document.getElementById('productoActivo').checked = producto.activo !== false;
 
@@ -801,12 +1147,18 @@
                 const id = document.getElementById('productoId').value;
                 const producto = {
                     nombre: document.getElementById('productoNombre').value.trim(),
-                    categoria: document.getElementById('productoCategoria').value.trim(),
-                    precio: parseFloat(document.getElementById('productoPrecio').value),
-                    stock: parseInt(document.getElementById('productoStock').value),
-                    marca: document.getElementById('productoMarca').value.trim(),
-                    descripcion: document.getElementById('productoDescripcion').value.trim(),
+                    precioCompra: parseFloat(document.getElementById('productoPrecioCompra').value) || null,
+                    moneda: document.getElementById('productoMoneda').value,
+                    precio: parseFloat(document.getElementById('productoPrecioVenta').value),
                     imagenUrl: document.getElementById('productoImagen').value.trim(),
+                    categoria: document.getElementById('productoCategoria').value.trim(),
+                    subcategoria: document.getElementById('productoSubcategoria').value.trim(),
+                    marca: document.getElementById('productoMarca').value.trim(),
+                    capacidad: document.getElementById('productoCapacidad').value.trim(),
+                    modelo: document.getElementById('productoModelo').value.trim(),
+                    dimension: document.getElementById('productoDimension').value.trim(),
+                    stock: parseInt(document.getElementById('productoStock').value),
+                    especificaciones: document.getElementById('productoEspecificaciones').value.trim(),
                     destacado: document.getElementById('productoDestacado').checked,
                     activo: document.getElementById('productoActivo').checked,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
@@ -814,7 +1166,7 @@
 
                 // Validaciones
                 if (!producto.nombre || !producto.categoria || !producto.precio || producto.stock < 0) {
-                    alert('Por favor completa todos los campos obligatorios');
+                    alert('Por favor completa todos los campos obligatorios (*)');
                     return;
                 }
 
