@@ -84,9 +84,9 @@ fetch('navbar.html')
     </header>
 
     <!-- Formulario Moderno iOS/Copilot Style -->
-    <section style="padding: 60px 0; background: #f8f9fa;">
+    <section class="contact-section" style="padding: 60px 0; background: #f8f9fa;">
         <div class="container" style="max-width: 650px;">
-            <div style="background: white; border-radius: 20px; padding: 48px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
+            <div class="contact-card" style="background: white; border-radius: 20px; padding: 48px; box-shadow: 0 8px 32px rgba(0,0,0,0.08);">
                 <form id="contactForm" autocomplete="off">
                     <!-- Nombre -->
                     <div class="mb-4">
@@ -199,7 +199,7 @@ fetch('navbar.html')
             </div>
 
             <!-- Info adicional -->
-            <div style="margin-top: 32px; text-align: center;">
+            <div class="contact-extra" style="margin-top: 32px; text-align: center;">
                 <p style="color: #666; font-size: 14px; margin-bottom: 16px;">
                     También puedes contactarnos directamente:
                 </p>
@@ -214,6 +214,29 @@ fetch('navbar.html')
             </div>
         </div>
     </section>
+    <style>
+    /* Dark mode overrides for contact page */
+    .modo-oscuro .contact-section { background: #0e1116 !important; }
+    .modo-oscuro .contact-card {
+        background: #131720 !important;
+        border: 1px solid #2a2f36 !important;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.4) !important;
+        color: #e8eaf0 !important;
+    }
+    .modo-oscuro .contact-card label { color: #e8eaf0 !important; }
+    .modo-oscuro .contact-card input,
+    .modo-oscuro .contact-card textarea {
+        background: #0f1320 !important;
+        border-color: #2a2f36 !important;
+        color: #e8eaf0 !important;
+    }
+    .modo-oscuro .contact-card input::placeholder,
+    .modo-oscuro .contact-card textarea::placeholder { color: #8c94a3 !important; }
+    .modo-oscuro .contact-extra p { color: #a3abb8 !important; }
+    .modo-oscuro .contact-extra a { color: #4DA3FF !important; }
+    /* Preference boxes neutral state */
+    .modo-oscuro [id$='Box'] { border-color: #2a2f36 !important; color: #e8eaf0 !important; }
+    </style>
 
     <!-- Footer-->
     <div id="footer"></div>
