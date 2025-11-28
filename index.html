@@ -31,6 +31,34 @@
     <!-- Apply dark mode immediately from localStorage -->
     <script>
         if (localStorage.getItem('modoOscuro') === 'true') {
+
+    <!-- Modal Login (restaurado) -->
+    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <form id="loginForm">
+            <div class="modal-body">
+              <div class="mb-3">
+                <label for="loginEmail" class="form-label">Correo electrónico</label>
+                <input type="email" class="form-control" id="loginEmail" required>
+              </div>
+              <div class="mb-3">
+                <label for="loginPassword" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="loginPassword" required>
+              </div>
+              <div id="loginError" class="alert alert-danger d-none" role="alert"></div>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Iniciar Sesión</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
             document.documentElement.classList.add('modo-oscuro');
             document.body.classList.add('modo-oscuro');
         }

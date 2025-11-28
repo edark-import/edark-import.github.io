@@ -705,12 +705,39 @@ function mostrarProductos() {
             if (loginBtn) loginBtn.classList.add('d-none');
             if (logoutBtn) logoutBtn.classList.remove('d-none');
             if (userEmail) { userEmail.textContent = user.email || ''; userEmail.classList.remove('d-none'); }
+            // Opcional: redirigir a dashboard si corresponde
+            // window.location.href = 'dashboard.html';
         } else {
             if (loginBtn) loginBtn.classList.remove('d-none');
             if (logoutBtn) logoutBtn.classList.add('d-none');
             if (userEmail) userEmail.classList.add('d-none');
         }
     });
+
+    // Handler login modal
+    const loginForm = document.getElementById('loginForm');
+    if (loginForm) {
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = (document.getElementById('loginEmail')?.value || '').trim();
+            const password = (document.getElementById('loginPassword')?.value || '').trim();
+            const errorBox = document.getElementById('loginError');
+            if (errorBox) { errorBox.classList.add('d-none'); errorBox.textContent = ''; }
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+                const modalEl = document.getElementById('loginModal');
+                if (modalEl) {
+                    const instance = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+                    instance.hide();
+                }
+            } catch (err) {
+                if (errorBox) {
+                    errorBox.textContent = 'Usuario o contraseña incorrectos.';
+                    errorBox.classList.remove('d-none');
+                }
+            }
+        });
+    }
 
     // Soporte para submenús en Bootstrap 5
     document.addEventListener('DOMContentLoaded', function () {

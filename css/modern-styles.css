@@ -686,6 +686,27 @@ body.modo-oscuro .paso {
     border: 2px solid #007BFF;
 }
 
+/* Carousel controls – keep chevrons, remove big circles on cards */
+#serviciosCarrusel .carousel-control-prev,
+#serviciosCarrusel .carousel-control-next {
+    width: 32px;
+    opacity: 0.9;
+}
+
+#serviciosCarrusel .carousel-control-prev {
+    left: -36px;
+}
+
+#serviciosCarrusel .carousel-control-next {
+    right: -36px;
+}
+
+#serviciosCarrusel .carousel-control-prev-icon,
+#serviciosCarrusel .carousel-control-next-icon {
+    background-size: 1.25rem 1.25rem;
+    filter: none;
+}
+
 .gradient-text {
     background: linear-gradient(135deg, var(--primary), var(--secondary));
     -webkit-background-clip: text;
@@ -755,11 +776,11 @@ body.modo-oscuro .paso {
 
 .carousel-control-prev,
 .carousel-control-next {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: rgba(0, 0, 0, 0.5);
-    border: 2px solid var(--edark-white);
+    width: 40px;
+    height: 40px;
+    border-radius: 0;
+    background: transparent;
+    border: none;
     top: 50%;
     transform: translateY(-50%);
     transition: all var(--transition-normal);
@@ -767,9 +788,8 @@ body.modo-oscuro .paso {
 
 .carousel-control-prev:hover,
 .carousel-control-next:hover {
-    background: var(--edark-blue);
-    border-color: var(--edark-blue);
-    transform: translateY(-50%) scale(1.1);
+    background: transparent;
+    transform: translateY(-50%);
 }
 
 .carousel-indicators {
