@@ -239,36 +239,7 @@ fetch('navbar.html')
         </div>
     </div>
 
-    <!-- Panel de Login y Administrador -->
-    <div class="container my-5 d-none" id="adminContainer">
-        <h3>Panel Administrador</h3>
-        <button id="logoutBtn" class="btn btn-danger mb-3">Cerrar Sesión</button>
-        <form id="adminForm" class="mb-3">
-            <input type="text" id="nombre" placeholder="Nombre del producto" required class="form-control mb-2">
-            <input type="number" id="precioCompra" placeholder="Precio de compra" required class="form-control mb-2" step="any">
-            <div class="input-group mb-2">
-              <label class="input-group-text" for="monedaCompra">Moneda</label>
-              <select id="monedaCompra" class="form-select">
-                <option value="USD" selected>Dólares (USD)</option>
-                <option value="PEN">Soles (S/)</option>
-              </select>
-            </div>
-            <div class="alert alert-info py-2 px-3 mb-2" id="infoTipoCambio" style="font-size:0.95em;">
-              <strong>Tipo de cambio SUNAT:</strong> <span id="tipoCambioValor">-</span> <span id="tipoCambioMoneda">USD/PEN</span> <span id="tipoCambioFecha"></span> <span id="tipoCambioOrigen"></span>
-            </div>
-            <input type="text" id="imagen" placeholder="URL de la imagen" required class="form-control mb-2">
-            <input type="text" id="categoria" placeholder="Categoría" required class="form-control mb-2">
-            <input type="text" id="subcategoria" placeholder="Subcategoría" required class="form-control mb-2">
-            <input type="text" id="marca" placeholder="Marca" required class="form-control mb-2">
-            <input type="text" id="capacidad" placeholder="Capacidad" class="form-control mb-2">
-            <input type="text" id="modelo" placeholder="Modelo" class="form-control mb-2">
-            <input type="text" id="dimension" placeholder="Dimensión" class="form-control mb-2">
-            <input type="text" id="precioVenta" placeholder="Precio de venta (S/)" class="form-control mb-2" readonly>
-            <!-- Agrega esto en tu formulario de producto -->
-            <textarea id="especificaciones" placeholder="Especificaciones técnicas" class="form-control mb-2" rows="4"></textarea>
-            <button type="submit" class="btn btn-primary">Agregar Producto</button>
-        </form>
-    </div>
+    <!-- Panel de Administrador removido del index; usar Admin Dashboard -->
 
     <!-- Modal Detalles de Producto -->
     <div class="modal fade" id="modalDetallesProducto" tabindex="-1" aria-labelledby="modalDetallesProductoLabel" aria-hidden="true">
