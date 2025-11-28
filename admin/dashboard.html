@@ -689,9 +689,6 @@
         // Cargar Dashboard
         async function cargarDashboard() {
             try {
-                // Inicializar categorías por defecto si no existen
-                await inicializarCategoriasPorDefecto();
-
                 const fechaFin = new Date();
                 const fechaInicio = new Date();
                 fechaInicio.setDate(fechaInicio.getDate() - 30);
