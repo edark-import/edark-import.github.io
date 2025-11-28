@@ -542,25 +542,6 @@ function mostrarProductos() {
     }
     */
 
-    // Login
-    document.addEventListener('DOMContentLoaded', function() {
-        document.getElementById('loginForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const email = document.getElementById('loginEmail').value;
-            const password = document.getElementById('loginPassword').value;
-            auth.signInWithEmailAndPassword(email, password)
-                .then(() => {
-                    document.getElementById('loginError').textContent = '';
-                    // Cierra el modal si es necesario
-                    const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-                    if (loginModal) loginModal.hide();
-                })
-                .catch(err => {
-                    document.getElementById('loginError').textContent = 'Usuario o contraseña incorrectos';
-                });
-        });
-    });
-
     // Logout
     document.getElementById('logoutBtn').addEventListener('click', function() {
         auth.signOut();
@@ -696,7 +677,9 @@ function productoCoincideFiltros(producto) {
                     return false;
                 }
             } else {
-                if (!valores.includes(producto[campo])) {
+                // Para otros campos, verificar que el producto tenga el valor
+                const productoValor = producto[campo] || '';
+                if (!valores.includes(productoValor)) {
                     return false;
                 }
             }
@@ -896,6 +879,87 @@ document.getElementById('btnEnviarWhatsapp').addEventListener('click', function(
     });
     mensaje += `%0ATotal: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}`;
     window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+});
+
+// --- PAYPAL PAYMENT INTEGRATION ---
+function initPayPalButton() {
+    if (typeof paypal === 'undefined') {
+        console.warn('PayPal SDK no cargado');
+        return;
+    }
+
+    paypal.Buttons({
+        createOrder: function(data, actions) {
+            if (carrito.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+
+            const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+
+            return actions.order.create({
+                purchase_units: [{
+                    amount: {
+                        value: total.toFixed(2),
+                        currency_code: 'USD' // PayPal maneja USD, conversión automática
+                    },
+                    description: `Compra en eDark - ${carrito.length} producto(s)`
+                }]
+            });
+        },
+        onApprove: function(data, actions) {
+            return actions.order.capture().then(function(details) {
+                // Pago exitoso
+                alert(`¡Pago exitoso! Gracias por tu compra, ${details.payer.name.given_name}.`);
+
+                // Guardar la venta en Firestore
+                guardarVentaPayPal(details);
+
+                // Limpiar carrito
+                carrito = [];
+                guardarCarrito();
+                renderCarrito();
+
+                // Cerrar modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('modalCarrito'));
+                if (modal) modal.hide();
+            });
+        },
+        onError: function(err) {
+            console.error('Error en PayPal:', err);
+            alert('Hubo un error procesando el pago. Por favor intenta de nuevo.');
+        }
+    }).render('#paypal-button-container');
+}
+
+function guardarVentaPayPal(details) {
+    const venta = {
+        productos: carrito.map(item => ({
+            nombre: item.nombre,
+            precio: item.precio,
+            cantidad: item.cantidad,
+            subtotal: item.precio * item.cantidad
+        })),
+        total: carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0),
+        metodoPago: 'PayPal',
+        paypalOrderId: details.id,
+        paypalPayerId: details.payer.payer_id,
+        paypalEmail: details.payer.email_address,
+        estado: 'completado',
+        fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    db.collection('ventas').add(venta)
+        .then(() => console.log('Venta guardada en Firestore'))
+        .catch(error => console.error('Error guardando venta:', error));
+}
+
+// Inicializar PayPal cuando se abre el modal del carrito
+document.getElementById('cartBtn').addEventListener('click', function() {
+    // Pequeño delay para asegurar que el modal se renderice
+    setTimeout(() => {
+        initPayPalButton();
+    }, 100);
 });
 
 // --- AGREGAR AL CARRITO DESDE EL MODAL ---

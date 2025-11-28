@@ -15,6 +15,7 @@ firebase.initializeApp(firebaseConfig);
 // Referencias a servicios
 const db = firebase.firestore();
 const auth = firebase.auth();
+const storage = firebase.storage();
 const analytics = firebase.analytics();
 
 console.log('✅ Firebase inicializado correctamente');

@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Administrador - eDark</title>
+    <link rel="icon" type="image/x-icon" href="../img/Logo/isotipo_Negro.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #007AFF;
+            --secondary-color: #5856D6;
+            --success-color: #34C759;
+            --danger-color: #FF3B30;
+            --warning-color: #FF9500;
+            --background-primary: #F2F2F7;
+            --background-secondary: #FFFFFF;
+            --text-primary: #1C1C1E;
+            --text-secondary: #8E8E93;
+            --border-radius: 12px;
+            --shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+        }
+
+        .login-container {
+            background: var(--background-secondary);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 2rem;
+            width: 100%;
+            max-width: 400px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .logo-section {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .logo-section img {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+        }
+
+        .logo-section h1 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 1rem 0 0.5rem 0;
+        }
+
+        .logo-section p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .form-floating {
+            margin-bottom: 1rem;
+        }
+
+        .form-control {
+            border: 1px solid #E5E5EA;
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+        }
+
+        .btn-login {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 8px 24px rgba(0, 122, 255, 0.3);
+        }
+
+        .btn-login:active {
+            transform: translateY(0);
+        }
+
+        .alert {
+            border-radius: 8px;
+            border: none;
+            margin-bottom: 1rem;
+        }
+
+        .loading-spinner {
+            display: none;
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .spinner-border-sm {
+            width: 1rem;
+            height: 1rem;
+        }
+
+        .security-notice {
+            background: rgba(255, 149, 0, 0.1);
+            border: 1px solid rgba(255, 149, 0, 0.2);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            font-size: 0.8rem;
+            color: var(--warning-color);
+        }
+
+        .security-notice i {
+            margin-right: 0.5rem;
+        }
+
+        @media (max-width: 480px) {
+            .login-container {
+                margin: 1rem;
+                padding: 1.5rem;
+            }
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-container {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="logo-section">
+            <img src="../img/Logo/logo_2.png" alt="eDark Logo">
+            <h1>Panel Administrativo</h1>
+            <p>Acceso seguro para administradores</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-floating">
+                <input type="email" class="form-control" id="loginEmail" placeholder="correo@ejemplo.com" required>
+                <label for="loginEmail">
+                    <i class="bi bi-envelope me-2"></i>Correo electrónico
+                </label>
+            </div>
+
+            <div class="form-floating">
+                <input type="password" class="form-control" id="loginPassword" placeholder="Contraseña" required>
+                <label for="loginPassword">
+                    <i class="bi bi-lock me-2"></i>Contraseña
+                </label>
+            </div>
+
+            <button type="submit" class="btn btn-login" id="loginBtn">
+                <i class="bi bi-box-arrow-in-right me-2"></i>Iniciar Sesión
+            </button>
+
+            <div class="loading-spinner" id="loadingSpinner">
+                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                    <span class="visually-hidden">Cargando...</span>
+                </div>
+                <span class="ms-2">Verificando credenciales...</span>
+            </div>
+        </form>
+
+        <div id="loginAlert" class="alert d-none" role="alert"></div>
+
+        <div class="security-notice">
+            <i class="bi bi-shield-check"></i>
+            <strong>Seguridad:</strong> Esta sesión está protegida con encriptación SSL y validaciones anti-ataques.
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-app.js';
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/9.22.2/firebase-auth.js';
+
+        // Configuración Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6vJ9qGd9vMQVj2iJjzI6MQv5R5h9Fg",
+            authDomain: "edark-import.firebaseapp.com",
+            projectId: "edark-import",
+            storageBucket: "edark-import.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef123456"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Rate limiting
+        let loginAttempts = 0;
+        let lastAttemptTime = 0;
+        const MAX_ATTEMPTS = 5;
+        const LOCKOUT_TIME = 15 * 60 * 1000; // 15 minutos
+
+        function showAlert(message, type = 'danger') {
+            const alert = document.getElementById('loginAlert');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            alert.classList.remove('d-none');
+
+            setTimeout(() => {
+                alert.classList.add('d-none');
+            }, 5000);
+        }
+
+        function sanitizeInput(input) {
+            return input.trim().toLowerCase();
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        function checkRateLimit() {
+            const now = Date.now();
+
+            if (now - lastAttemptTime > LOCKOUT_TIME) {
+                loginAttempts = 0;
+            }
+
+            if (loginAttempts >= MAX_ATTEMPTS) {
+                const remainingTime = Math.ceil((LOCKOUT_TIME - (now - lastAttemptTime)) / 60000);
+                showAlert(`Demasiados intentos fallidos. Intente nuevamente en ${remainingTime} minutos.`, 'warning');
+                return false;
+            }
+
+            return true;
+        }
+
+        // Event listener para el formulario
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            if (!checkRateLimit()) {
+                return;
+            }
+
+            const email = sanitizeInput(document.getElementById('loginEmail').value);
+            const password = document.getElementById('loginPassword').value;
+
+            // Validaciones
+            if (!validateEmail(email)) {
+                showAlert('Por favor ingrese un correo electrónico válido.', 'warning');
+                return;
+            }
+
+            if (password.length < 6) {
+                showAlert('La contraseña debe tener al menos 6 caracteres.', 'warning');
+                return;
+            }
+
+            // Mostrar loading
+            document.getElementById('loginBtn').disabled = true;
+            document.getElementById('loadingSpinner').style.display = 'block';
+
+            try {
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Verificar si es administrador
+                const idTokenResult = await user.getIdTokenResult();
+                const isAdmin = idTokenResult.claims.admin === true || idTokenResult.claims.rol === 'admin';
+
+                if (!isAdmin) {
+                    await auth.signOut();
+                    showAlert('No tienes permisos de administrador.', 'danger');
+                    loginAttempts++;
+                    lastAttemptTime = Date.now();
+                    return;
+                }
+
+                // Login exitoso
+                loginAttempts = 0;
+                showAlert('Inicio de sesión exitoso. Redirigiendo...', 'success');
+
+                // Redirigir al dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1500);
+
+            } catch (error) {
+                console.error('Error de login:', error);
+                loginAttempts++;
+                lastAttemptTime = Date.now();
+
+                let errorMessage = 'Usuario o contraseña incorrectos.';
+
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                        errorMessage = 'Usuario no encontrado.';
+                        break;
+                    case 'auth/wrong-password':
+                        errorMessage = 'Contraseña incorrecta.';
+                        break;
+                    case 'auth/invalid-email':
+                        errorMessage = 'Correo electrónico inválido.';
+                        break;
+                    case 'auth/user-disabled':
+                        errorMessage = 'Esta cuenta ha sido deshabilitada.';
+                        break;
+                    case 'auth/too-many-requests':
+                        errorMessage = 'Demasiados intentos. Intente más tarde.';
+                        break;
+                }
+
+                showAlert(errorMessage, 'danger');
+            } finally {
+                // Ocultar loading
+                document.getElementById('loginBtn').disabled = false;
+                document.getElementById('loadingSpinner').style.display = 'none';
+            }
+        });
+
+        // Verificar estado de autenticación
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                // Usuario ya autenticado, verificar si es admin
+                user.getIdTokenResult().then((idTokenResult) => {
+                    const isAdmin = idTokenResult.claims.admin === true || idTokenResult.claims.rol === 'admin';
+                    if (isAdmin) {
+                        window.location.href = 'dashboard.html';
+                    } else {
+                        auth.signOut();
+                    }
+                });
+            }
+        });
+
+        // Prevenir copy/paste en campos de contraseña (seguridad adicional)
+        document.getElementById('loginPassword').addEventListener('paste', function(e) {
+            e.preventDefault();
+            showAlert('Pegar contraseña no está permitido por seguridad.', 'warning');
+        });
+    </script>
+</body>
+</html>

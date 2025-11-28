@@ -25,6 +25,8 @@
 
     gtag('config', 'G-V89W8SCSH1');
     </script>
+    <!-- PayPal SDK -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R&components=buttons&currency=USD"></script>
 </head>
 
 <script>
@@ -36,10 +38,11 @@ fetch('footer.html')
 </script>
 <body>
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <nav class="navbar navbar-expand-lg navbar-light glass shadow-sm">
         <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="index.html">
-                <img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png">
+            <a class="navbar-brand gradient-text" href="index.html">
+                <img width="80" class="d-flex me-2" alt="edark_logo" src="img/Logo/logo_2.png">
+                eDark
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -72,10 +75,6 @@ fetch('footer.html')
                         <i class="bi-currency-exchange me-1"></i>
                         <span id="tipoCambioText">S/ 3.8</span>
                     </button>
-                    <!-- Botón en navbar -->
-                    <button class="btn btn-outline-primary ms-2" type="button" id="adminBtn" data-bs-toggle="modal" data-bs-target="#loginModal">
-                        <i class="bi bi-person-fill"></i>  
-                    </button>
                     <!-- Botón de Carrito en Navbar -->
                     <button class="btn btn-success ms-2 position-relative" type="button" id="cartBtn">
                         <i class="bi bi-cart"></i>
@@ -96,11 +95,11 @@ fetch('footer.html')
     </nav>
     <!-- Header-->
     <!-- Banner Mejorado eDark -->
-    <header class="bg-dark py-5 position-relative">
+    <header class="gradient-bg py-5 position-relative">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
-                <h1 class="logo-edark">EDARK</h1>
-                <div class="sub-edark">Alpha Technologies</div>
+                <h1 class="display-4 fw-bold gradient-text">EDARK</h1>
+                <div class="h5 mb-4">Alpha Technologies</div>
                 <!-- Carrusel de frases célebres -->
                 <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
                     <div class="frase-carrusel-texto fs-4 fst-italic"></div>
@@ -302,26 +301,6 @@ fetch('footer.html')
         </form>
     </div>
 
-    <!-- Modal de Login Administrador -->
-    <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="loginModalLabel">Iniciar Sesión Administrador</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-          </div>
-          <div class="modal-body">
-            <form id="loginForm">
-              <input type="email" id="loginEmail" placeholder="Correo" required class="form-control mb-2">
-              <input type="password" id="loginPassword" placeholder="Contraseña" required class="form-control mb-2">
-              <button type="submit" class="btn btn-primary">Ingresar</button>
-              <div id="loginError" class="text-danger mt-2"></div>
-            </form>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Modal Detalles de Producto -->
     <div class="modal fade" id="modalDetallesProducto" tabindex="-1" aria-labelledby="modalDetallesProductoLabel" aria-hidden="true">
       <div class="modal-dialog modal-lg">
@@ -366,9 +345,15 @@ fetch('footer.html')
           <div class="modal-body">
             <div id="carritoContenido"></div>
           </div>
-          <div class="modal-footer">
-            <button class="btn btn-danger" id="btnVaciarCarrito">Vaciar Carrito</button>
-            <button class="btn btn-success" id="btnEnviarWhatsapp"><i class="bi bi-whatsapp"></i> Enviar pedido por WhatsApp</button>
+          <div class="modal-footer d-flex justify-content-between">
+            <div>
+              <button class="btn btn-danger" id="btnVaciarCarrito">Vaciar Carrito</button>
+            </div>
+            <div>
+              <button class="btn btn-success" id="btnEnviarWhatsapp"><i class="bi bi-whatsapp"></i> WhatsApp</button>
+              <!-- PayPal Button Container -->
+              <div id="paypal-button-container" class="ms-2 d-inline-block"></div>
+            </div>
           </div>
         </div>
       </div>
