@@ -10,19 +10,29 @@ const firebaseConfig = {
   measurementId: "G-V89W8SCSH1"
 };
 
-// Expose globally for non-module pages (admin/login.html loads this file before ES module SDK)
+// Exponer config global
 window.firebaseConfig = firebaseConfig;
 
-// Optional: UMD-style export for bundlers
-try { module && (module.exports = { firebaseConfig }); } catch {}
-
-// Inicializar Firebase
-firebase.initializeApp(firebaseConfig);
-
-// Referencias a servicios
-const db = firebase.firestore();
-const auth = firebase.auth();
-const storage = firebase.storage();
-const analytics = firebase.analytics();
-
-console.log('✅ Firebase inicializado correctamente');
+// Inicializar Firebase solo si el SDK está cargado y no está inicializado
+if (typeof firebase !== 'undefined') {
+  if (!firebase.apps || firebase.apps.length === 0) {
+    firebase.initializeApp(firebaseConfig);
+  }
+  // Referencias v8
+  try {
+    window.db = firebase.firestore();
+    window.auth = firebase.auth();
+    window.storage = firebase.storage();
+    // Crear alias globales no-modulares para otros scripts
+    try { var db = window.db; } catch {}
+    try { var auth = window.auth; } catch {}
+    try { var storage = window.storage; } catch {}
+  } catch (e) {
+    // Ignorar si algún servicio no está disponible en la página
+  }
+  try {
+    if (firebase.analytics) {
+      window.analytics = firebase.analytics();
+    }
+  } catch {}
+}
