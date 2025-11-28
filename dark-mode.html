@@ -1,0 +1,48 @@
+<!-- MODO OSCURO SCRIPT -->
+<script>
+// --- MODO OSCURO GLOBAL ---
+document.addEventListener('DOMContentLoaded', function () {
+    const switchOscuro = document.getElementById('modoOscuroSwitch');
+    const labelOscuro = document.getElementById('modoOscuroLabel');
+    const body = document.body;
+
+    // Inicializar desde localStorage
+    const dark = localStorage.getItem('modoOscuro') === 'true';
+    if (dark) {
+        body.classList.add('modo-oscuro');
+        if (switchOscuro) switchOscuro.checked = true;
+        if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
+    } else {
+        body.classList.remove('modo-oscuro');
+        if (switchOscuro) switchOscuro.checked = false;
+        if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
+    }
+
+    if (switchOscuro) {
+        switchOscuro.addEventListener('change', function () {
+            if (this.checked) {
+                body.classList.add('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'true');
+                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
+            } else {
+                body.classList.remove('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'false');
+                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
+            }
+            actualizarLogoNav();
+        });
+    }
+
+    // Cambia el logo según el modo claro/oscuro
+    function actualizarLogoNav() {
+        const logo = document.querySelector('.navbar-brand img');
+        if (!logo) return;
+        if (document.body.classList.contains('modo-oscuro')) {
+            logo.src = 'img/Logo/logo_1.png';
+        } else {
+            logo.src = 'img/Logo/logo_2.png';
+        }
+    }
+    actualizarLogoNav();
+});
+</script>

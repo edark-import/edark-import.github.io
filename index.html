@@ -36,64 +36,16 @@ fetch('footer.html')
   .then(html => {
     document.getElementById('footer').innerHTML = html;
   });
+
+fetch('navbar.html')
+  .then(res => res.text())
+  .then(html => {
+    document.getElementById('navbar').innerHTML = html;
+  });
 </script>
 <body>
     <!-- Navigation-->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container px-4 px-lg-5">
-            <a class="navbar-brand" href="index.html">
-                <img width="80" class="d-flex me-2" alt="edark_logo" src="img/Logo/logo_2.png">
-                eDark
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                    <li class="nav-item"><a class="nav-link active" aria-current="page" href="index.html">Inicio</a></li> 
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Servicios</a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" href="consultoria.html">Consultoría tecnológica</a></li>
-                            <li><a class="dropdown-item" href="soporte.html">Soporte técnico</a></li>
-                            <li class="dropdown-submenu">
-                                <a class="dropdown-item dropdown-toggle" href="#" id="asesoramientoDropdown" data-bs-toggle="dropdown" aria-expanded="false">Asesoramiento Tecnológico</a>
-                                <ul class="dropdown-menu" aria-labelledby="asesoramientoDropdown">
-                                    <li><a class="dropdown-item" href="asesoramiento-hogar.html">Hogar</a></li>
-                                    <li><a class="dropdown-item" href="asesoramiento-empresa.html">Empresa</a></li>
-                                </ul>
-                            </li>
-                            <li><a class="dropdown-item" href="mantenimiento.html">Mantenimiento y reparación</a></li>
-                            <li><a class="dropdown-item" href="recicla.html">Recicla tecnología</a></li>
-                            <li><a class="dropdown-item" href="pc-personalizada.html">PC Personalizada</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
-                    <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
-                </ul>
-                <form class="d-flex align-items-center" id="adminNav">
-                    <button class="btn btn-outline-dark" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
-                        <i class="bi-currency-exchange me-1"></i>
-                        <span id="tipoCambioText">S/ 3.8</span>
-                    </button>
-                    <!-- Botón de Carrito en Navbar -->
-                    <button class="btn btn-success ms-2 position-relative" type="button" id="cartBtn">
-                        <i class="bi bi-cart"></i>
-                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount" style="font-size:0.8em;">0</span>
-                    </button>
-                    <span id="userEmail" class="ms-2 text-primary d-none"></span>
-                    <button class="btn btn-danger ms-2 d-none" type="button" id="logoutBtnNav">
-                        Cerrar Sesión
-                    </button>
-                    <!-- Switch modo oscuro/claro -->
-                    <div class="form-check form-switch ms-3">
-                        <input class="form-check-input" type="checkbox" id="modoOscuroSwitch">
-                        <label class="form-check-label text-light" for="modoOscuroSwitch" id="modoOscuroLabel"><i class="bi bi-moon"></i></label>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </nav>
+    <div id="navbar"></div>
     <!-- Header-->
     <!-- Banner Mejorado eDark -->
     <header class="gradient-bg py-5 position-relative">
@@ -695,76 +647,16 @@ function agregarMensajeChat(remitente, texto) {
     // Llama a renderizarPaginacion(paginaActual, totalPaginas) cada vez que cambias de página
     </script>
 
-    <!-- MODO OSCURO INLINE -->
+    <!-- Load dark mode script -->
     <script>
-    // --- MODO OSCURO GLOBAL ---
-    document.addEventListener('DOMContentLoaded', function () {
-        const switchOscuro = document.getElementById('modoOscuroSwitch');
-        const labelOscuro = document.getElementById('modoOscuroLabel');
-        const body = document.body;
-
-        // Inicializar desde localStorage
-        const dark = localStorage.getItem('modoOscuro') === 'true';
-        if (dark) {
-            body.classList.add('modo-oscuro');
-            if (switchOscuro) switchOscuro.checked = true;
-            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
-        } else {
-            body.classList.remove('modo-oscuro');
-            if (switchOscuro) switchOscuro.checked = false;
-            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
-        }
-
-        if (switchOscuro) {
-            switchOscuro.addEventListener('change', function () {
-                if (this.checked) {
-                    body.classList.add('modo-oscuro');
-                    localStorage.setItem('modoOscuro', 'true');
-                    if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
-                } else {
-                    body.classList.remove('modo-oscuro');
-                    localStorage.setItem('modoOscuro', 'false');
-                    if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
-                }
-                actualizarLogoNav();
-            });
-        }
-
-        // Cambia el logo según el modo claro/oscuro
-        function actualizarLogoNav() {
-            const logo = document.querySelector('.navbar-brand img');
-            if (!logo) return;
-            if (document.body.classList.contains('modo-oscuro')) {
-                logo.src = 'img/Logo/logo_1.png';
-            } else {
-                logo.src = 'img/Logo/logo_2.png';
-            }
-        }
-        actualizarLogoNav();
-        if (switchOscuro) {
-            switchOscuro.addEventListener('change', actualizarLogoNav);
-        }
-    });
+    fetch('dark-mode.html')
+      .then(res => res.text())
+      .then(html => {
+        const script = document.createElement('div');
+        script.innerHTML = html;
+        document.body.appendChild(script);
+      });
     </script>
-
-    <style>
-    .area {
-        background: #f8f9fa;
-        border-radius: 1rem;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-    }
-    .icono-servicio {
-        font-size: 2.5rem;
-        color: #00adb5;
-    }
-    .area-titulo {
-        font-size: 1.1rem;
-        font-weight: bold;
-        color: #00adb5;
-    }
-    </style>
 
 </body>
 </html>
