@@ -619,16 +619,26 @@ function mostrarProductos() {
     }
     */
 
-    // Logout
-    document.getElementById('logoutBtn').addEventListener('click', function() {
-        auth.signOut();
-    });
+    // Logout (si existe el botón en la página)
+    (function(){
+        const logoutBtn = document.getElementById('logoutBtn');
+        if (logoutBtn) {
+            logoutBtn.addEventListener('click', function() {
+                auth.signOut();
+            });
+        }
+    })();
 
     // Calcula y muestra el precio de venta automáticamente
     // Usa tipoCambioGlobal en vez de llamar a la API cada vez
 
-    document.getElementById('precioCompra').addEventListener('input', calcularPrecioVenta);
-    document.getElementById('monedaCompra').addEventListener('change', calcularPrecioVenta);
+    // Listeners de cálculo de precio (solo en páginas con formulario admin)
+    (function(){
+        const precioCompraInput = document.getElementById('precioCompra');
+        const monedaCompraSelect = document.getElementById('monedaCompra');
+        if (precioCompraInput) precioCompraInput.addEventListener('input', calcularPrecioVenta);
+        if (monedaCompraSelect) monedaCompraSelect.addEventListener('change', calcularPrecioVenta);
+    })();
     function calcularPrecioVenta() {
         const precioCompra = parseFloat(document.getElementById('precioCompra').value);
         const moneda = document.getElementById('monedaCompra').value;
@@ -646,7 +656,8 @@ function mostrarProductos() {
         document.getElementById('precioVenta').value = precioVenta;
     }
 
-    document.getElementById('adminForm').addEventListener('submit', async function(e) {
+    const adminFormEl = document.getElementById('adminForm');
+    if (adminFormEl) adminFormEl.addEventListener('submit', async function(e) {
         e.preventDefault();
         const nombre = document.getElementById('nombre').value.trim();
         const precioCompra = parseFloat(document.getElementById('precioCompra').value);
@@ -688,22 +699,29 @@ function mostrarProductos() {
     // Mostrar/ocultar panel según autenticación
     auth.onAuthStateChanged(user => {
         const adminContainer = document.getElementById('adminContainer');
-        if (user) {
-            adminContainer.classList.remove('d-none');
-            // Opcional: Cerrar el modal de login
-            const loginModal = bootstrap.Modal.getInstance(document.getElementById('loginModal'));
-            if (loginModal) loginModal.hide();
-        } else {
-            adminContainer.classList.add('d-none');
+        if (adminContainer) {
+            if (user) {
+                adminContainer.classList.remove('d-none');
+                const loginModalEl = document.getElementById('loginModal');
+                const loginModal = loginModalEl ? bootstrap.Modal.getInstance(loginModalEl) : null;
+                if (loginModal) loginModal.hide();
+            } else {
+                adminContainer.classList.add('d-none');
+            }
         }
         // Renderiza productos para mostrar/ocultar botón Editar según el usuario
         renderProductosPaginados();
     });
 
     // Botón cerrar sesión en navbar
-    document.getElementById('logoutBtnNav').addEventListener('click', function() {
-        auth.signOut();
-    });
+    (function(){
+        const logoutBtnNav = document.getElementById('logoutBtnNav');
+        if (logoutBtnNav) {
+            logoutBtnNav.addEventListener('click', function() {
+                auth.signOut();
+            });
+        }
+    })();
 
     // Mostrar/ocultar botones de login/logout y email
     auth.onAuthStateChanged(user => {
