@@ -889,83 +889,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 
-// --- ASIGNAR EVENTOS A BOTONES "VER DETALLES" ---
-function asignarEventosProductos() {
-    // Evento Ver Detalles
-    document.querySelectorAll('.btn-ver-detalles').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const idx = parseInt(this.getAttribute('data-idx'));
-            const producto = productosCache[idx];
-            if (!producto) return;
-            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
-            document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
-            document.getElementById('detallePrecio').textContent = producto.precio || '';
-            document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
-            document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
-            document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
-            document.getElementById('detalleDimension').textContent = producto.dimension || '';
-            document.getElementById('detalleCategoria').textContent = sanitize(producto.categoria || '');
-            document.getElementById('detalleSubcategoria').textContent = sanitize(producto.subcategoria || '');
-            const especificacionesRaw = producto.especificaciones || '';
-            const lineas = especificacionesRaw
-                .split(/\n|<br>|\/n/g)
-                .map(l => l.trim())
-                .filter(l => l);
-
-            // Detecta si la mayoría de líneas tienen formato CLAVE: VALOR
-            const esTabla = lineas.filter(l => l.includes(':')).length > lineas.length / 2;
-
-            let especificacionesHTML = '';
-            if (esTabla) {
-                // Mostrar como tabla
-                especificacionesHTML = '<table class="table table-sm table-borderless mb-0">';
-                especificacionesHTML += lineas.map(l => {
-                    const partes = l.split(':');
-                    if (partes.length > 1) {
-                        return `<tr><th class="fw-normal text-muted" style="width: 40%;">${partes[0].trim()}</th><td>${partes.slice(1).join(':').trim()}</td></tr>`;
-                    } else {
-                        return `<tr><td colspan="2">${l}</td></tr>`;
-                    }
-                }).join('');
-                especificacionesHTML += '</table>';
-            } else {
-                // Mostrar como lista
-                especificacionesHTML = '<ul style="padding-left: 1.2em;">' +
-                    lineas.map(l => `<li>${l}</li>`).join('') +
-                    '</ul>';
-            }
-
-            document.getElementById('detalleEspecificaciones').innerHTML = especificacionesHTML;
-            // Mostrar modal
-            const modal = new bootstrap.Modal(document.getElementById('modalDetallesProducto'));
-            modal.show();
-        });
-    });
-
-    // Evento Editar (solo admin)
-    document.querySelectorAll('.btn-editar-producto').forEach(btn => {
-        btn.addEventListener('click', function () {
-            const id = this.getAttribute('data-id');
-            const producto = productosCache.find(p => p.id === id);
-            if (!producto) return;
-            document.getElementById('nombre').value = producto.nombre || '';
-            document.getElementById('precioCompra').value = producto.precioCompra || '';
-            document.getElementById('precioVenta').value = producto.precio || '';
-            document.getElementById('imagen').value = producto.imagen || '';
-            document.getElementById('categoria').value = producto.categoria || '';
-            document.getElementById('subcategoria').value = producto.subcategoria || '';
-            document.getElementById('marca').value = producto.marca || '';
-            document.getElementById('capacidad').value = producto.capacidad || '';
-            document.getElementById('modelo').value = producto.modelo || '';
-            document.getElementById('dimension').value = producto.dimension || '';
-            document.getElementById('especificaciones').value = producto.especificaciones || '';
-            document.getElementById('monedaCompra').value = producto.moneda || 'USD';
-            document.getElementById('adminForm').dataset.editId = producto.id;
-            document.getElementById('adminContainer').classList.remove('d-none');
-            window.scrollTo({ top: document.getElementById('adminContainer').offsetTop, behavior: 'smooth' });
-        });
-    });
-}
+// (Se eliminó una redefinición duplicada de asignarEventosProductos que sobrescribía el precio mostrado)
 
 // --- CARRITO DE COMPRAS ---
 let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
@@ -1160,24 +1084,26 @@ document.addEventListener('DOMContentLoaded', () => {
 // --- AGREGAR AL CARRITO DESDE EL MODAL ---
 document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', function() {
     const nombre = document.getElementById('detalleNombre').textContent;
-    const precio = parseFloat(document.getElementById('detallePrecio').textContent);
-    const imagen = document.getElementById('detalleImagen').src;
-    // Buscar en productosCache el producto exacto
-    const producto = productosCache.find(p => sanitize(p.nombre) === nombre);
+    // Buscar el producto por nombre (ya está saneado en el modal)
+    const producto = productosCache.find(p => sanitize(p.nombre || '') === nombre);
     if (!producto) return;
-    const idx = carrito.findIndex(item => item.nombre === producto.nombre && item.precio === producto.precio);
+
+    const precioCalc = parseFloat(calcularPrecioProducto(producto));
+    const imagenProd = producto.imagenUrl || producto.imagen || document.getElementById('detalleImagen').src || '';
+
+    const idx = carrito.findIndex(item => item.nombre === (producto.nombre || '') && Number(item.precio) === Number(precioCalc));
     if (idx >= 0) {
         carrito[idx].cantidad++;
     } else {
         carrito.push({
-            nombre: producto.nombre,
-            precio: parseFloat(calcularPrecioProducto(producto)),
-            imagen: producto.imagen,
+            nombre: producto.nombre || '',
+            precio: precioCalc,
+            imagen: imagenProd,
             cantidad: 1
         });
     }
     guardarCarrito();
-    // Opcional: cerrar modal
+    // Cerrar modal
     const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
     if (modal) modal.hide();
 });
