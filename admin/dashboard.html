@@ -1243,7 +1243,7 @@
                 tbody.innerHTML += `
                     <tr>
                         <td>
-                            <img src="${producto.imagenUrl || 'https://via.placeholder.com/50'}" 
+                            <img src="${(producto.imagenUrl || producto.imagen || 'https://via.placeholder.com/50')}" 
                                  alt="${producto.nombre}" 
                                  style="width: 50px; height: 50px; object-fit: cover; border-radius: 5px;">
                         </td>
@@ -1322,13 +1322,13 @@
                     calcularPrecioVentaAutomatico();
                 }
 
-                // Manejar imagen - usar URL tab por defecto para edición
-                imagenUrlActual = producto.imagenUrl || '';
-                document.getElementById('productoImagenUrl').value = producto.imagenUrl || '';
+                // Manejar imagen - usar URL tab por defecto para edición (soporta imagenUrl o imagen legacy)
+                imagenUrlActual = producto.imagenUrl || producto.imagen || '';
+                document.getElementById('productoImagenUrl').value = imagenUrlActual;
                 document.getElementById('productoImagenFile').value = '';
                 document.getElementById('url-tab').click(); // Activar tab URL
-                if (producto.imagenUrl) {
-                    mostrarPreviewImagen(producto.imagenUrl);
+                if (imagenUrlActual) {
+                    mostrarPreviewImagen(imagenUrlActual);
                 }
 
                 document.getElementById('productoCategoria').value = producto.categoria || '';
@@ -1371,6 +1371,7 @@
                     valorGanancia: parseFloat(document.getElementById('productoValorGanancia').value) || 30,
                     precio: parseFloat(document.getElementById('productoPrecioVenta').value),
                     imagenUrl: imagenUrl,
+                    imagen: imagenUrl, // compatibilidad con frontend existente
                     categoria: document.getElementById('productoCategoria').value.trim(),
                     subcategoria: document.getElementById('productoSubcategoria').value.trim(),
                     marca: document.getElementById('productoMarca').value.trim(),
@@ -1396,7 +1397,7 @@
                         const prevSnap = await db.collection('productos').doc(id).get();
                         if (prevSnap.exists) {
                             const prev = prevSnap.data();
-                            const prevUrl = prev?.imagenUrl || '';
+                            const prevUrl = prev?.imagenUrl || prev?.imagen || '';
                             if (prevUrl && prevUrl !== imagenUrl && prevUrl.includes('firebasestorage.googleapis.com')) {
                                 await eliminarImagenDeStorage(prevUrl);
                             }
@@ -1435,7 +1436,7 @@
                     const docSnap = await db.collection('productos').doc(id).get();
                     if (docSnap.exists) {
                         const data = docSnap.data();
-                        imagenUrl = data.imagenUrl || '';
+                        imagenUrl = data.imagenUrl || data.imagen || '';
                     }
                 } catch (e) {
                     console.warn('No se pudo obtener el documento antes de borrar:', e);
