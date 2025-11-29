@@ -157,7 +157,9 @@
                 if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
                 subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
             }
-            if (typeof prod.precio === "number") precios.push(prod.precio);
+            // Usar precio calculado para rangos de filtro
+            const pc = parseFloat(calcularPrecioProducto(prod));
+            if (!isNaN(pc) && pc > 0) precios.push(pc);
         });
 
         // Filtro de precio
@@ -475,9 +477,9 @@ function renderProductosPaginados() {
     // Ordenamiento y paginación
     const orden = document.getElementById('ordenarSelect').value;
     if (orden === "precio-asc") {
-        productos.sort((a, b) => (a.precio || 0) - (b.precio || 0));
+        productos.sort((a, b) => parseFloat(calcularPrecioProducto(a)) - parseFloat(calcularPrecioProducto(b)));
     } else if (orden === "precio-desc") {
-        productos.sort((a, b) => (b.precio || 0) - (a.precio || 0));
+        productos.sort((a, b) => parseFloat(calcularPrecioProducto(b)) - parseFloat(calcularPrecioProducto(a)));
     } else if (orden === "capacidad-asc") {
         productos.sort((a, b) => parseCapacidad(a.capacidad) - parseCapacidad(b.capacidad));
     } else if (orden === "capacidad-desc") {
@@ -850,8 +852,10 @@ function productoCoincideFiltros(producto) {
         }
     }
     // Filtro de precio
-    if (typeof producto.precio === 'number') {
-        if (producto.precio < precioFiltroMin || producto.precio > precioFiltroMax) {
+    // Filtro de precio usando precio calculado
+    const precioCalc = parseFloat(calcularPrecioProducto(producto));
+    if (!isNaN(precioCalc)) {
+        if (precioCalc < precioFiltroMin || precioCalc > precioFiltroMax) {
             return false;
         }
     }
