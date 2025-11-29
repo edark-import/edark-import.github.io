@@ -1323,7 +1323,19 @@
                 }
 
                 if (id) {
-                    // Actualizar
+                    // Si se reemplaza la imagen, eliminar la anterior de Storage
+                    try {
+                        const prevSnap = await db.collection('productos').doc(id).get();
+                        if (prevSnap.exists) {
+                            const prev = prevSnap.data();
+                            const prevUrl = prev?.imagenUrl || '';
+                            if (prevUrl && prevUrl !== imagenUrl && prevUrl.includes('firebasestorage.googleapis.com')) {
+                                await eliminarImagenDeStorage(prevUrl);
+                            }
+                        }
+                    } catch (e) {
+                        console.warn('No se pudo evaluar imagen previa:', e.message);
+                    }
                     await db.collection('productos').doc(id).update(producto);
                     alert('Producto actualizado exitosamente');
                 } else {
@@ -1349,12 +1361,48 @@
             }
 
             try {
+                // Obtener primero el documento para intentar borrar su imagen
+                let imagenUrl = '';
+                try {
+                    const docSnap = await db.collection('productos').doc(id).get();
+                    if (docSnap.exists) {
+                        const data = docSnap.data();
+                        imagenUrl = data.imagenUrl || '';
+                    }
+                } catch (e) {
+                    console.warn('No se pudo obtener el documento antes de borrar:', e);
+                }
+
+                // Intentar borrar la imagen si es de Firebase Storage
+                if (imagenUrl && imagenUrl.includes('firebasestorage.googleapis.com')) {
+                    try {
+                        const ref = storage.refFromURL(imagenUrl);
+                        await ref.delete();
+                        console.log('Imagen eliminada de Storage');
+                    } catch (e) {
+                        console.warn('No se pudo eliminar la imagen de Storage (continuando):', e.message);
+                    }
+                }
+
                 await db.collection('productos').doc(id).delete();
                 alert('Producto eliminado exitosamente');
                 cargarProductos();
             } catch (error) {
                 console.error('Error al eliminar producto:', error);
                 alert('Error al eliminar producto');
+            }
+        }
+
+        // (Opcional) función reutilizable para borrar imagen por URL
+        async function eliminarImagenDeStorage(url) {
+            if (!url || !url.includes('firebasestorage.googleapis.com')) return false;
+            try {
+                const ref = storage.refFromURL(url);
+                await ref.delete();
+                return true;
+            } catch (e) {
+                console.warn('Fallo al eliminar imagen:', e.message);
+                return false;
             }
         }
 
@@ -1547,8 +1595,21 @@
 
             if (urlTab.classList.contains('active')) {
                 // Usar URL directa
-                const url = urlInput.value.trim();
+                const url = (urlInput.value || '').trim();
+                // Si el campo está vacío pero ya tenemos una URL previa (modo edición), usarla
                 if (!url) {
+                    if (imagenUrlActual && typeof imagenUrlActual === 'string' && imagenUrlActual.length > 0) {
+                        return imagenUrlActual;
+                    }
+                    throw new Error('Por favor ingresa una URL de imagen válida');
+                }
+                // Validación básica de formato URL
+                try {
+                    const u = new URL(url);
+                    if (!/^https?:$/.test(u.protocol)) {
+                        throw new Error('La URL de imagen debe comenzar con http(s)');
+                    }
+                } catch {
                     throw new Error('Por favor ingresa una URL de imagen válida');
                 }
                 return url;
@@ -1556,6 +1617,10 @@
                 // Subir archivo
                 const file = fileInput.files[0];
                 if (!file) {
+                    // Si no hay archivo seleccionado pero existe imagen previa (modo edición), usarla
+                    if (imagenUrlActual && typeof imagenUrlActual === 'string' && imagenUrlActual.length > 0) {
+                        return imagenUrlActual;
+                    }
                     throw new Error('Por favor selecciona un archivo de imagen');
                 }
                 return await subirImagenFirebase(file);
