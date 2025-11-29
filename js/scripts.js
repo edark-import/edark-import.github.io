@@ -24,6 +24,7 @@
 
     // --- VARIABLES GLOBALES ---
     let tipoCambioGlobal = 3.8; // Tipo de cambio SUNAT global
+    let configGeneral = null;   // Configuración global desde Firestore
     // Número de WhatsApp para pedidos. Cambia aquí tu número en formato internacional, sin espacios ni signos.
     const phone = '51916907657'; // <-- Cambia este número por el tuyo
     let productosCache = [];
@@ -64,10 +65,62 @@
     }
     document.addEventListener('DOMContentLoaded', async function () {
         await inicializarTipoCambioSunat();
+        await cargarConfigGeneral();
         await cargarFiltrosDinamicos();
         renderBadges();
         mostrarProductos();
     });
+
+    // Cargar configuración general desde Firestore
+    async function cargarConfigGeneral() {
+        try {
+            const snap = await db.collection('config').doc('general').get();
+            configGeneral = snap.exists ? snap.data() : {};
+        } catch (e) {
+            console.warn('No se pudo cargar config/general:', e.message);
+            configGeneral = {};
+        }
+    }
+
+    // Calcular precio para mostrar en tienda usando reglas
+    function calcularPrecioProducto(prod) {
+        const precioCompra = parseFloat(prod.precioCompra || 0);
+        const moneda = prod.moneda || 'USD';
+        const tipoGanancia = prod.tipoGanancia || 'porcentaje';
+        const valorGanancia = parseFloat(prod.valorGanancia != null ? prod.valorGanancia : 30);
+
+        // Tipo de cambio: usar manual si está habilitado
+        let tc = tipoCambioGlobal;
+        try {
+            if (configGeneral && configGeneral.usarTcManual && configGeneral.tipoCambioManual) {
+                tc = parseFloat(configGeneral.tipoCambioManual) || tc;
+            }
+        } catch {}
+
+        // Base en soles
+        let base;
+        if (precioCompra > 0) {
+            base = moneda === 'USD' ? precioCompra * tc : precioCompra;
+        } else {
+            base = parseFloat(prod.precio || 0) || 0;
+        }
+
+        // IGV desde config (default 18%)
+        const igv = (configGeneral && typeof configGeneral.igv === 'number') ? configGeneral.igv : 18;
+        const conIgv = base * (1 + igv / 100);
+
+        let precioFinal;
+        if (tipoGanancia === 'monto') {
+            precioFinal = conIgv + (isNaN(valorGanancia) ? 0 : valorGanancia);
+        } else {
+            precioFinal = conIgv * (1 + (isNaN(valorGanancia) ? 0 : (valorGanancia / 100)));
+        }
+
+        if (!precioFinal || isNaN(precioFinal) || precioFinal <= 0) {
+            precioFinal = parseFloat(prod.precio || 0) || 0;
+        }
+        return Number(precioFinal).toFixed(2);
+    }
 
     // --- FUNCIONES DE FILTROS Y PAGINACIÓN ---
     // Filtros anidados y filtro de precio
@@ -456,7 +509,7 @@ function renderProductosPaginados() {
                                 <div class="bi-star-fill"></div>
                                 <div class="bi-star-fill"></div>
                             </div>
-                            s/${sanitize(prod.precio || '---')}
+                            s/${sanitize(calcularPrecioProducto(prod))}
                         </div>
                     </div>
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
@@ -494,7 +547,7 @@ function asignarEventosProductos() {
             if (!producto) return;
             document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
             document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
-            document.getElementById('detallePrecio').textContent = producto.precio || '';
+            document.getElementById('detallePrecio').textContent = calcularPrecioProducto(producto);
             document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
             document.getElementById('detalleModelo').textContent = sanitize(producto.modelo || '');
             document.getElementById('detalleCapacidad').textContent = sanitize(producto.capacidad || '');
@@ -1106,7 +1159,7 @@ document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', fu
     const precio = parseFloat(document.getElementById('detallePrecio').textContent);
     const imagen = document.getElementById('detalleImagen').src;
     // Buscar en productosCache el producto exacto
-    const producto = productosCache.find(p => sanitize(p.nombre) === nombre && p.precio == precio);
+    const producto = productosCache.find(p => sanitize(p.nombre) === nombre);
     if (!producto) return;
     const idx = carrito.findIndex(item => item.nombre === producto.nombre && item.precio === producto.precio);
     if (idx >= 0) {
@@ -1114,7 +1167,7 @@ document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', fu
     } else {
         carrito.push({
             nombre: producto.nombre,
-            precio: producto.precio,
+            precio: parseFloat(calcularPrecioProducto(producto)),
             imagen: producto.imagen,
             cantidad: 1
         });
