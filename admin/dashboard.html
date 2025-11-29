@@ -435,6 +435,60 @@
             </div>
         </div>
 
+        <!-- Sección de Configuración -->
+        <div id="configuracionSection" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title">Configuración de la Tienda</h2>
+                <button class="btn btn-success" onclick="guardarConfiguracion()"><i class="bi bi-save"></i> Guardar Cambios</button>
+            </div>
+            <div class="table-container">
+                <form id="formConfiguracion">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre de la tienda</label>
+                            <input type="text" class="form-control" id="cfgNombreTienda" placeholder="eDark" />
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">PayPal Client ID (LIVE)</label>
+                            <input type="text" class="form-control" id="cfgPayPalClientId" placeholder="AXXX..." />
+                            <small class="text-muted">No compartas tu secret; solo el client-id público.</small>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Mensaje de banner / promoción</label>
+                            <input type="text" class="form-control" id="cfgBannerMsg" placeholder="Ofertas de temporada" />
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">IGV (%)</label>
+                            <input type="number" step="0.01" class="form-control" id="cfgIgv" placeholder="18" />
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">Margen (%) por defecto</label>
+                            <input type="number" step="0.01" class="form-control" id="cfgMargen" placeholder="30" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Tipo de cambio manual</label>
+                            <input type="number" step="0.0001" class="form-control" id="cfgTipoCambioManual" placeholder="3.80" />
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Usar tipo de cambio manual</label>
+                            <div class="form-check form-switch mt-2">
+                                <input class="form-check-input" type="checkbox" id="cfgUsarTcManual">
+                                <label class="form-check-label" for="cfgUsarTcManual">Activar override</label>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <label class="form-label">Estado de configuración</label>
+                            <div id="cfgStatus" class="mt-2"><small class="text-muted">Sin cambios</small></div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
         <!-- Otras secciones -->
         <div id="otrasSeccionesContent" style="display: none;">
             <h2>Sección en desarrollo</h2>
@@ -836,6 +890,8 @@
             document.getElementById('dashboardSection').style.display = 'none';
             document.getElementById('productosSection').style.display = 'none';
             document.getElementById('categoriasSection').style.display = 'none';
+            const cfg = document.getElementById('configuracionSection');
+            if (cfg) cfg.style.display = 'none';
             document.getElementById('otrasSeccionesContent').style.display = 'none';
 
             // Mostrar sección seleccionada
@@ -851,6 +907,10 @@
                 case 'categorias':
                     document.getElementById('categoriasSection').style.display = 'block';
                     cargarCategorias();
+                    break;
+                case 'configuracion':
+                    if (cfg) cfg.style.display = 'block';
+                    cargarConfiguracion();
                     break;
                 default:
                     document.getElementById('otrasSeccionesContent').style.display = 'block';
@@ -1624,6 +1684,52 @@
                     throw new Error('Por favor selecciona un archivo de imagen');
                 }
                 return await subirImagenFirebase(file);
+            }
+        }
+
+        // ===== CONFIGURACIÓN (Firestore: config/general) =====
+        let configuracionCache = null;
+        async function cargarConfiguracion() {
+            const statusEl = document.getElementById('cfgStatus');
+            if (statusEl) statusEl.innerHTML = '<small class="text-primary">Cargando...</small>';
+            try {
+                const snap = await db.collection('config').doc('general').get();
+                configuracionCache = snap.exists ? snap.data() : {};
+                document.getElementById('cfgNombreTienda').value = configuracionCache.nombreTienda || 'eDark';
+                document.getElementById('cfgPayPalClientId').value = configuracionCache.paypalClientId || '';
+                document.getElementById('cfgBannerMsg').value = configuracionCache.bannerMsg || '';
+                document.getElementById('cfgIgv').value = (configuracionCache.igv != null) ? configuracionCache.igv : 18;
+                document.getElementById('cfgMargen').value = (configuracionCache.margen != null) ? configuracionCache.margen : 30;
+                document.getElementById('cfgTipoCambioManual').value = (configuracionCache.tipoCambioManual != null) ? configuracionCache.tipoCambioManual : '';
+                document.getElementById('cfgUsarTcManual').checked = configuracionCache.usarTcManual === true;
+                if (statusEl) statusEl.innerHTML = '<small class="text-success">Configuración cargada</small>';
+            } catch (e) {
+                console.error('Error cargando configuración', e);
+                if (statusEl) statusEl.innerHTML = '<small class="text-danger">Error cargando configuración</small>';
+            }
+        }
+        async function guardarConfiguracion() {
+            const statusEl = document.getElementById('cfgStatus');
+            if (statusEl) statusEl.innerHTML = '<small class="text-primary">Guardando...</small>';
+            const data = {
+                nombreTienda: document.getElementById('cfgNombreTienda').value.trim() || 'eDark',
+                paypalClientId: document.getElementById('cfgPayPalClientId').value.trim(),
+                bannerMsg: document.getElementById('cfgBannerMsg').value.trim(),
+                igv: parseFloat(document.getElementById('cfgIgv').value) || 18,
+                margen: parseFloat(document.getElementById('cfgMargen').value) || 30,
+                tipoCambioManual: parseFloat(document.getElementById('cfgTipoCambioManual').value) || null,
+                usarTcManual: document.getElementById('cfgUsarTcManual').checked,
+                fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            try {
+                await db.collection('config').doc('general').set(data, { merge: true });
+                configuracionCache = data;
+                if (statusEl) statusEl.innerHTML = '<small class="text-success">Guardado</small>';
+                alert('Configuración guardada');
+            } catch (e) {
+                console.error('Error guardando configuración', e);
+                if (statusEl) statusEl.innerHTML = '<small class="text-danger">Error al guardar</small>';
+                alert('Error al guardar configuración: ' + e.message);
             }
         }
     </script>

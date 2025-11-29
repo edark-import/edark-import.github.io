@@ -1073,6 +1073,33 @@ document.getElementById('cartBtn').addEventListener('click', function() {
     }, 100);
 });
 
+// === CARGA DINÁMICA DE SDK PAYPAL DESDE CONFIG (Firestore: config/general) ===
+let paypalScriptEstado = 'no-cargado';
+async function cargarPayPalDesdeConfig() {
+    if (paypalScriptEstado === 'cargando' || paypalScriptEstado === 'cargado') return;
+    try {
+        const snap = await db.collection('config').doc('general').get();
+        const cfg = snap.exists ? snap.data() : {};
+        const clientId = cfg.paypalClientId || '';
+        if (!clientId) {
+            console.warn('Sin clientId PayPal en configuración. Agrega uno en el panel de Configuración.');
+            return;
+        }
+        paypalScriptEstado = 'cargando';
+        const s = document.createElement('script');
+        s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD`;
+        s.onload = () => { paypalScriptEstado = 'cargado'; console.log('PayPal SDK cargado'); };
+        s.onerror = () => { paypalScriptEstado = 'error'; console.error('Error cargando PayPal SDK'); };
+        document.head.appendChild(s);
+    } catch (e) {
+        console.warn('No se pudo cargar configuración PayPal:', e.message);
+    }
+}
+// Intentar cargar el SDK al iniciar la página
+document.addEventListener('DOMContentLoaded', () => {
+    cargarPayPalDesdeConfig();
+});
+
 // --- AGREGAR AL CARRITO DESDE EL MODAL ---
 document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', function() {
     const nombre = document.getElementById('detalleNombre').textContent;
