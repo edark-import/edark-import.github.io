@@ -1082,30 +1082,55 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // --- AGREGAR AL CARRITO DESDE EL MODAL ---
-document.getElementById('btnAgregarAlCarritoModal').addEventListener('click', function() {
-    const nombre = document.getElementById('detalleNombre').textContent;
-    // Buscar el producto por nombre (ya está saneado en el modal)
-    const producto = productosCache.find(p => sanitize(p.nombre || '') === nombre);
-    if (!producto) return;
+document.addEventListener('DOMContentLoaded', function() {
+    const btnAgregar = document.getElementById('btnAgregarAlCarritoModal');
+    if (!btnAgregar) return;
+    
+    btnAgregar.addEventListener('click', function() {
+        const nombre = document.getElementById('detalleNombre').textContent;
+        const precioTexto = document.getElementById('detallePrecio').textContent;
+        const imagenSrc = document.getElementById('detalleImagen').src;
+        
+        if (!nombre || !precioTexto) {
+            console.warn('No se pudo obtener los datos del producto');
+            return;
+        }
 
-    const precioCalc = parseFloat(calcularPrecioProducto(producto));
-    const imagenProd = producto.imagenUrl || producto.imagen || document.getElementById('detalleImagen').src || '';
+        const precio = parseFloat(precioTexto);
+        if (isNaN(precio) || precio <= 0) {
+            console.warn('Precio inválido');
+            return;
+        }
 
-    const idx = carrito.findIndex(item => item.nombre === (producto.nombre || '') && Number(item.precio) === Number(precioCalc));
-    if (idx >= 0) {
-        carrito[idx].cantidad++;
-    } else {
-        carrito.push({
-            nombre: producto.nombre || '',
-            precio: precioCalc,
-            imagen: imagenProd,
-            cantidad: 1
-        });
-    }
-    guardarCarrito();
-    // Cerrar modal
-    const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
-    if (modal) modal.hide();
+        // Buscar si ya existe en el carrito
+        const idx = carrito.findIndex(item => item.nombre === nombre && Math.abs(Number(item.precio) - precio) < 0.01);
+        if (idx >= 0) {
+            carrito[idx].cantidad++;
+        } else {
+            carrito.push({
+                nombre: nombre,
+                precio: precio,
+                imagen: imagenSrc || '',
+                cantidad: 1
+            });
+        }
+        
+        guardarCarrito();
+        
+        // Mostrar feedback visual
+        const toastHtml = `<div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:9999" role="alert">
+            <div class="d-flex"><div class="toast-body">✓ Producto agregado al carrito</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`;
+        document.body.insertAdjacentHTML('beforeend', toastHtml);
+        const toastEl = document.body.lastElementChild;
+        const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+        toast.show();
+        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+        
+        // Cerrar modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
+        if (modal) modal.hide();
+    });
 });
 
 document.addEventListener('DOMContentLoaded', function() {
