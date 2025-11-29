@@ -562,9 +562,15 @@
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Margen de Ganancia (%)</label>
-                                <input type="number" step="0.01" class="form-control" id="productoMargenGanancia" placeholder="30.00" value="30.00">
-                                <small class="text-muted">Porcentaje de ganancia sobre precio con IGV</small>
+                                <label class="form-label">Margen de Ganancia</label>
+                                <div class="input-group">
+                                    <select class="form-select" id="productoTipoGanancia">
+                                        <option value="porcentaje" selected>Porcentaje (%)</option>
+                                        <option value="monto">Monto fijo (S/)</option>
+                                    </select>
+                                    <input type="number" step="0.01" class="form-control" id="productoValorGanancia" placeholder="30.00" value="30.00">
+                                </div>
+                                <small class="text-muted">Aplicado sobre el precio con IGV</small>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Precio de Venta (S/) *</label>
@@ -1307,7 +1313,8 @@
                 document.getElementById('productoNombre').value = producto.nombre || '';
                 document.getElementById('productoPrecioCompra').value = producto.precioCompra || '';
                 document.getElementById('productoMoneda').value = producto.moneda || 'PEN';
-                document.getElementById('productoMargenGanancia').value = producto.margenGanancia || '30.00';
+                document.getElementById('productoTipoGanancia').value = producto.tipoGanancia || 'porcentaje';
+                document.getElementById('productoValorGanancia').value = (producto.valorGanancia != null) ? producto.valorGanancia : 30;
                 document.getElementById('productoPrecioVenta').value = producto.precio || '';
 
                 // Calcular precio si hay datos
@@ -1360,7 +1367,8 @@
                     nombre: document.getElementById('productoNombre').value.trim(),
                     precioCompra: parseFloat(document.getElementById('productoPrecioCompra').value) || null,
                     moneda: document.getElementById('productoMoneda').value,
-                    margenGanancia: parseFloat(document.getElementById('productoMargenGanancia').value) || 30,
+                    tipoGanancia: document.getElementById('productoTipoGanancia').value,
+                    valorGanancia: parseFloat(document.getElementById('productoValorGanancia').value) || 30,
                     precio: parseFloat(document.getElementById('productoPrecioVenta').value),
                     imagenUrl: imagenUrl,
                     categoria: document.getElementById('productoCategoria').value.trim(),
@@ -1492,32 +1500,47 @@
         // Variables para imagen
         let imagenUrlActual = '';
         let tipoCambioGlobal = 3.8; // Valor por defecto
+        let configuracionCache = null; // Se carga en cargarConfiguracion()
 
         // Calcular precio de venta automáticamente
         function calcularPrecioVentaAutomatico() {
             const precioCompra = parseFloat(document.getElementById('productoPrecioCompra').value) || 0;
             const moneda = document.getElementById('productoMoneda').value;
-            const margenGanancia = parseFloat(document.getElementById('productoMargenGanancia').value) || 0;
+            const tipoGanancia = document.getElementById('productoTipoGanancia').value;
+            const valorGanancia = parseFloat(document.getElementById('productoValorGanancia').value) || 0;
 
             if (precioCompra <= 0) {
                 document.getElementById('productoPrecioVenta').value = '';
                 return;
             }
 
+            // Tipo de cambio: usar manual si está habilitado en configuración
+            let tc = tipoCambioGlobal;
+            try {
+                if (configuracionCache && configuracionCache.usarTcManual && configuracionCache.tipoCambioManual) {
+                    tc = parseFloat(configuracionCache.tipoCambioManual) || tc;
+                }
+            } catch {}
+
             let precioBase = precioCompra;
 
             // Convertir a soles si está en dólares
             if (moneda === 'USD') {
-                precioBase = precioCompra * tipoCambioGlobal;
+                precioBase = precioCompra * tc;
             }
 
-            // Aplicar IGV (18%)
-            const precioConIgv = precioBase * 1.18;
+            // IGV desde configuración (default 18%)
+            const igv = (configuracionCache && typeof configuracionCache.igv === 'number') ? configuracionCache.igv : 18;
+            const precioConIgv = precioBase * (1 + igv / 100);
 
-            // Aplicar margen de ganancia
-            const precioVenta = precioConIgv * (1 + margenGanancia / 100);
+            // Aplicar ganancia
+            let precioVenta;
+            if (tipoGanancia === 'monto') {
+                precioVenta = precioConIgv + valorGanancia; // monto fijo en soles
+            } else {
+                precioVenta = precioConIgv * (1 + valorGanancia / 100); // porcentaje
+            }
 
-            // Redondear a 2 decimales
             document.getElementById('productoPrecioVenta').value = precioVenta.toFixed(2);
         }
 
@@ -1528,7 +1551,8 @@
                 const data = await response.json();
                 if (data && data.compra) {
                     tipoCambioGlobal = data.compra;
-                    document.getElementById('tipoCambioDisplay').textContent = `S/ ${tipoCambioGlobal.toFixed(3)}`;
+                    const tcDisplay = document.getElementById('tipoCambioDisplay');
+                    if (tcDisplay) tcDisplay.textContent = `S/ ${tipoCambioGlobal.toFixed(3)}`;
                 }
             } catch (error) {
                 console.warn('No se pudo cargar el tipo de cambio, usando valor por defecto:', error);
@@ -1538,7 +1562,8 @@
         // Event listeners para cálculo automático de precios
         document.getElementById('productoPrecioCompra').addEventListener('input', calcularPrecioVentaAutomatico);
         document.getElementById('productoMoneda').addEventListener('change', calcularPrecioVentaAutomatico);
-        document.getElementById('productoMargenGanancia').addEventListener('input', calcularPrecioVentaAutomatico);
+        document.getElementById('productoTipoGanancia').addEventListener('change', calcularPrecioVentaAutomatico);
+        document.getElementById('productoValorGanancia').addEventListener('input', calcularPrecioVentaAutomatico);
 
         // Event listener para cargar subcategorías
         document.getElementById('productoCategoria').addEventListener('change', cargarSubcategorias);
