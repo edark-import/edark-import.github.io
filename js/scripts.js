@@ -500,7 +500,7 @@ function renderProductosPaginados() {
         contenedor.innerHTML += `
             <div class="col mb-5">
                 <div class="card h-100">
-                    <img class="card-img-top" src="${safeImageUrl(prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
+                    <img class="card-img-top" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
                     <div class="card-body p-4">
                         <div class="text-center">
                             <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
@@ -547,7 +547,11 @@ function asignarEventosProductos() {
             const idx = parseInt(this.getAttribute('data-idx'));
             const producto = productosCache[idx];
             if (!producto) return;
-            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagen || '');
+            // Guardar ID del producto en el modal para usarlo al agregar al carrito
+            const modalEl = document.getElementById('modalDetallesProducto');
+            if (modalEl) modalEl.dataset.productId = producto.id || '';
+
+            document.getElementById('detalleImagen').src = safeImageUrl(producto.imagenUrl || producto.imagen || '');
             document.getElementById('detalleNombre').textContent = sanitize(producto.nombre || '');
             document.getElementById('detallePrecio').textContent = calcularPrecioProducto(producto);
             document.getElementById('detalleMarca').textContent = sanitize(producto.marca || '');
@@ -1085,51 +1089,60 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', function() {
     const btnAgregar = document.getElementById('btnAgregarAlCarritoModal');
     if (!btnAgregar) return;
-    
+
     btnAgregar.addEventListener('click', function() {
-        const nombre = document.getElementById('detalleNombre').textContent;
-        const precioTexto = document.getElementById('detallePrecio').textContent;
-        const imagenSrc = document.getElementById('detalleImagen').src;
-        
-        if (!nombre || !precioTexto) {
-            console.warn('No se pudo obtener los datos del producto');
-            return;
-        }
+        try {
+            const modalEl = document.getElementById('modalDetallesProducto');
+            const productId = modalEl ? modalEl.dataset.productId : '';
+            const nombre = document.getElementById('detalleNombre').textContent;
+            const precioTexto = document.getElementById('detallePrecio').textContent;
+            const imagenSrc = document.getElementById('detalleImagen').src;
 
-        const precio = parseFloat(precioTexto);
-        if (isNaN(precio) || precio <= 0) {
-            console.warn('Precio inválido');
-            return;
-        }
+            let producto = null;
+            if (productId) producto = productosCache.find(p => p.id === productId);
+            if (!producto) producto = productosCache.find(p => sanitize(p.nombre || '') === nombre);
 
-        // Buscar si ya existe en el carrito
-        const idx = carrito.findIndex(item => item.nombre === nombre && Math.abs(Number(item.precio) - precio) < 0.01);
-        if (idx >= 0) {
-            carrito[idx].cantidad++;
-        } else {
-            carrito.push({
-                nombre: nombre,
-                precio: precio,
-                imagen: imagenSrc || '',
-                cantidad: 1
-            });
+            let precioCalc = producto ? parseFloat(calcularPrecioProducto(producto)) : parseFloat(precioTexto);
+            if (!nombre || isNaN(precioCalc) || precioCalc <= 0) return;
+
+            // Buscar por id si disponible, de lo contrario por nombre+precio
+            let idx = -1;
+            if (productId) {
+                idx = carrito.findIndex(item => item.id === productId);
+            }
+            if (idx < 0) {
+                idx = carrito.findIndex(item => item.nombre === nombre && Math.abs(Number(item.precio) - precioCalc) < 0.01);
+            }
+
+            if (idx >= 0) {
+                carrito[idx].cantidad++;
+            } else {
+                carrito.push({
+                    id: productId || undefined,
+                    nombre: nombre,
+                    precio: precioCalc,
+                    imagen: (producto && (producto.imagenUrl || producto.imagen)) || imagenSrc || '',
+                    cantidad: 1
+                });
+            }
+
+            guardarCarrito();
+            actualizarContadorCarrito();
+
+            const toastHtml = `<div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:9999" role="alert">
+                <div class="d-flex"><div class="toast-body">✓ Producto agregado al carrito</div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`;
+            document.body.insertAdjacentHTML('beforeend', toastHtml);
+            const toastEl = document.body.lastElementChild;
+            const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
+            toast.show();
+            toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+
+            const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
+            if (modal) modal.hide();
+        } catch (err) {
+            console.error('[Cart] Error agregando al carrito:', err);
         }
-        
-        guardarCarrito();
-        
-        // Mostrar feedback visual
-        const toastHtml = `<div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:9999" role="alert">
-            <div class="d-flex"><div class="toast-body">✓ Producto agregado al carrito</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button></div></div>`;
-        document.body.insertAdjacentHTML('beforeend', toastHtml);
-        const toastEl = document.body.lastElementChild;
-        const toast = new bootstrap.Toast(toastEl, { delay: 2000 });
-        toast.show();
-        toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
-        
-        // Cerrar modal
-        const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
-        if (modal) modal.hide();
     });
 });
 
