@@ -1,25 +1,57 @@
 # Admin and shop routes
-from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash
+from functools import wraps
+from flask import Blueprint, render_template, request, redirect, url_for, jsonify, flash, session
 from app import app, db # Import app and db from app.py
 from models import Product # Import Product model
 
+# --- DECORADOR DE AUTENTICACIÓN ---
+def login_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            flash('Please log in to access this page.', 'warning')
+            return redirect(url_for('admin.login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+# --- BLUEPRINT DE ADMINISTRACIÓN ---
 admin_bp = Blueprint('admin', __name__, url_prefix='/admin')
 
-# Route to display list of products (renders products.html)
+# --- RUTAS DE AUTENTICACIÓN ---
+@admin_bp.route('/login', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        # ¡CAMBIA ESTA CONTRASEÑA EN UN ENTORNO DE PRODUCCIÓN!
+        if request.form.get('password') == 'admin123':
+            session['admin_logged_in'] = True
+            flash('You were successfully logged in.', 'success')
+            return redirect(url_for('admin.get_products'))
+        else:
+            flash('Invalid password.', 'danger')
+    return render_template('admin/login.html', title="Admin Login")
+
+@admin_bp.route('/logout')
+def logout():
+    session.pop('admin_logged_in', None)
+    flash('You were successfully logged out.', 'success')
+    return redirect(url_for('admin.login'))
+
+# --- RUTAS DE PRODUCTOS (PROTEGIDAS) ---
 @admin_bp.route('/products', methods=['GET'])
+@login_required
 def get_products():
     products = Product.query.all()
     return render_template('admin/products.html', products=products, title="Manage Products")
 
-# Route to display form for adding a new product
 @admin_bp.route('/products/new', methods=['GET'])
+@login_required
 def create_product_form():
     return render_template('admin/product_form.html', product=None, title="Add New Product", form_action=url_for('admin.create_product'))
 
-# Route to handle submission for creating a new product
 @admin_bp.route('/products', methods=['POST'])
+@login_required
 def create_product():
-    form_data = request.form # Using request.form for HTML forms
+    form_data = request.form
     if not form_data.get('name') or not form_data.get('price'):
         flash('Name and Price are required fields.', 'danger')
         return render_template('admin/product_form.html', product=form_data, title="Add New Product", form_action=url_for('admin.create_product')), 400
@@ -44,14 +76,14 @@ def create_product():
         flash(f'Error creating product: {str(e)}', 'danger')
         return render_template('admin/product_form.html', product=form_data, title="Add New Product", form_action=url_for('admin.create_product')), 500
 
-# Route to display form for editing an existing product
 @admin_bp.route('/products/<int:product_id>/edit', methods=['GET'])
+@login_required
 def edit_product_form(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('admin/product_form.html', product=product, title=f"Edit Product: {product.name}", form_action=url_for('admin.update_product', product_id=product.id))
 
-# Route to handle submission for updating an existing product
 @admin_bp.route('/products/<int:product_id>/edit', methods=['POST'])
+@login_required
 def update_product(product_id):
     product = Product.query.get_or_404(product_id)
     form_data = request.form
@@ -78,8 +110,8 @@ def update_product(product_id):
         flash(f'Error updating product: {str(e)}', 'danger')
         return render_template('admin/product_form.html', product=product, title=f"Edit Product: {product.name}", form_action=url_for('admin.update_product', product_id=product.id), form_data=form_data), 500
 
-# Delete Product (using POST for form submission from products.html)
 @admin_bp.route('/products/<int:product_id>/delete', methods=['POST'])
+@login_required
 def delete_product(product_id):
     product = Product.query.get_or_404(product_id)
     try:
@@ -92,8 +124,8 @@ def delete_product(product_id):
         flash(f'Error deleting product "{product.name}": {str(e)}', 'danger')
     return redirect(url_for('admin.get_products'))
 
-# Optional: Keep a JSON endpoint for single product details if an API is desired
 @admin_bp.route('/products/<int:product_id>/json', methods=['GET'])
+@login_required
 def get_product_json(product_id):
     product = Product.query.get_or_404(product_id)
     return jsonify({
@@ -102,34 +134,29 @@ def get_product_json(product_id):
     })
 
 @admin_bp.route('/test')
+@login_required
 def admin_test():
-    # This route is less useful now that we have a full product listing page
-    # but can be kept for other testing.
     flash("Admin test route successfully reached!", "info")
     return redirect(url_for('admin.get_products'))
 
 app.register_blueprint(admin_bp)
 
-# Shop Blueprint
+# --- BLUEPRINT DE LA TIENDA (PÚBLICO) ---
 shop_bp = Blueprint('shop', __name__)
 
-# Redirect /index.html to /products
 @shop_bp.route('/index.html')
 def redirect_to_products():
     return redirect(url_for('shop.list_products'))
 
-# List Products (GET / or /products)
 @shop_bp.route('/', methods=['GET'])
 @shop_bp.route('/products', methods=['GET'])
 def list_products():
-    products = Product.query.filter(Product.stock > 0).order_by(Product.name).all() # Only show products in stock, ordered by name
+    products = Product.query.filter(Product.stock > 0).order_by(Product.name).all()
     return render_template('shop/product_list.html', products=products, title="Products")
 
-# View Single Product (GET /products/<int:product_id>)
 @shop_bp.route('/products/<int:product_id>', methods=['GET'])
 def view_product(product_id):
     product = Product.query.get_or_404(product_id)
     return render_template('shop/product_detail.html', product=product, title=product.name)
 
-# Register the shop blueprint
 app.register_blueprint(shop_bp)

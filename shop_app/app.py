@@ -6,6 +6,8 @@ from flask_migrate import Migrate
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///shop.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY'] = 'super-secret-key' # ¡Cambia esto por una clave segura y aleatoria en producción!
+
 
 db = SQLAlchemy(app)
 migrate = Migrate(app, db)
