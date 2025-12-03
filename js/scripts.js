@@ -984,6 +984,10 @@ function initPayPalButton() {
         return;
     }
 
+    const containerSelector = '#paypal-button-container';
+    const cont = document.querySelector(containerSelector);
+    if (cont) cont.innerHTML = '';
+
     paypal.Buttons({
         createOrder: function(data, actions) {
             if (carrito.length === 0) {
@@ -1025,7 +1029,7 @@ function initPayPalButton() {
             console.error('Error en PayPal:', err);
             alert('Hubo un error procesando el pago. Por favor intenta de nuevo.');
         }
-    }).render('#paypal-button-container');
+    }).render(containerSelector);
 }
 
 function guardarVentaPayPal(details) {
@@ -1051,11 +1055,26 @@ function guardarVentaPayPal(details) {
 }
 
 // Inicializar PayPal cuando se abre el modal del carrito
+let paypalButtonsRendered = false;
 document.getElementById('cartBtn').addEventListener('click', function() {
-    // Pequeño delay para asegurar que el modal se renderice
-    setTimeout(() => {
-        initPayPalButton();
-    }, 100);
+    const modalEl = document.getElementById('modalCarrito');
+    const modal = new bootstrap.Modal(modalEl);
+    modal.show();
+
+    // Render cuando el modal se muestra, evitar duplicados
+    modalEl.addEventListener('shown.bs.modal', function onShown() {
+        if (!paypalButtonsRendered) {
+            initPayPalButton();
+            paypalButtonsRendered = true;
+        }
+    }, { once: true });
+
+    // Al cerrar, limpiar contenedor y flag
+    modalEl.addEventListener('hidden.bs.modal', function onHidden() {
+        const cont = document.querySelector('#paypal-button-container');
+        if (cont) cont.innerHTML = '';
+        paypalButtonsRendered = false;
+    }, { once: true });
 });
 
 // === CARGA DINÁMICA DE SDK PAYPAL DESDE CONFIG (Firestore: config/general) ===
@@ -1083,6 +1102,18 @@ async function cargarPayPalDesdeConfig() {
 // Intentar cargar el SDK al iniciar la página
 document.addEventListener('DOMContentLoaded', () => {
     cargarPayPalDesdeConfig();
+    // Fallback: asegurar que el botón de cierre funcione en ambos modales
+    const detalleModal = document.getElementById('modalDetallesProducto');
+    const carritoModal = document.getElementById('modalCarrito');
+    [detalleModal, carritoModal].forEach(modal => {
+        if (!modal) return;
+        modal.querySelectorAll('.btn-close').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const inst = bootstrap.Modal.getInstance(modal) || new bootstrap.Modal(modal);
+                inst.hide();
+            });
+        });
+    });
 });
 
 // --- AGREGAR AL CARRITO DESDE EL MODAL ---
