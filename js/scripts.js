@@ -931,7 +931,8 @@ function renderCarrito() {
         </li>`;
     });
     html += '</ul>';
-    html += `<div class="text-end fw-bold">Total: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}</div>`;
+    const totalSoles = carrito.reduce((acc, item) => acc + Number(item.precio) * Number(item.cantidad), 0);
+    html += `<div class="text-end fw-bold">Total: S/ ${totalSoles.toFixed(2)}</div>`;
     cont.innerHTML = html;
     // Evento para cambiar cantidad
     cont.querySelectorAll('.cantidad-input').forEach(input => {
@@ -978,6 +979,10 @@ document.getElementById('btnEnviarWhatsapp').addEventListener('click', function(
 });
 
 // --- PAYPAL PAYMENT INTEGRATION ---
+function calcularTotalCarritoSoles() {
+    return carrito.reduce((acc, item) => acc + Number(item.precio) * Number(item.cantidad), 0);
+}
+
 function initPayPalButton() {
     if (typeof paypal === 'undefined') {
         console.warn('PayPal SDK no cargado');
@@ -994,16 +999,25 @@ function initPayPalButton() {
                 alert('El carrito está vacío');
                 return;
             }
-
-            const total = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
+            // Total en soles (S/)
+            const totalSoles = calcularTotalCarritoSoles();
+            // Tipo de cambio: usar manual si está habilitado en config; de lo contrario usar SUNAT cargado
+            let tc = tipoCambioGlobal;
+            try {
+                if (configGeneral && configGeneral.usarTcManual && configGeneral.tipoCambioManual) {
+                    tc = parseFloat(configGeneral.tipoCambioManual) || tc;
+                }
+            } catch {}
+            // Monto en USD para PayPal
+            const totalUsd = totalSoles / (tc > 0 ? tc : 3.8);
 
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: total.toFixed(2),
-                        currency_code: 'USD' // PayPal maneja USD, conversión automática
+                        value: totalUsd.toFixed(2),
+                        currency_code: 'USD'
                     },
-                    description: `Compra en eDark - ${carrito.length} producto(s)`
+                    description: `Compra en eDark - ${carrito.length} producto(s) (Total S/ ${totalSoles.toFixed(2)})`
                 }]
             });
         },
