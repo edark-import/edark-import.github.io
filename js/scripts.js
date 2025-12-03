@@ -1001,21 +1001,12 @@ function initPayPalButton() {
             }
             // Total en soles (S/)
             const totalSoles = calcularTotalCarritoSoles();
-            // Tipo de cambio: usar manual si está habilitado en config; de lo contrario usar SUNAT cargado
-            let tc = tipoCambioGlobal;
-            try {
-                if (configGeneral && configGeneral.usarTcManual && configGeneral.tipoCambioManual) {
-                    tc = parseFloat(configGeneral.tipoCambioManual) || tc;
-                }
-            } catch {}
-            // Monto en USD para PayPal
-            const totalUsd = totalSoles / (tc > 0 ? tc : 3.8);
 
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: totalUsd.toFixed(2),
-                        currency_code: 'USD'
+                        value: totalSoles.toFixed(2),
+                        currency_code: 'PEN'
                     },
                     description: `Compra en eDark - ${carrito.length} producto(s) (Total S/ ${totalSoles.toFixed(2)})`
                 }]
@@ -1105,7 +1096,7 @@ async function cargarPayPalDesdeConfig() {
         }
         paypalScriptEstado = 'cargando';
         const s = document.createElement('script');
-        s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD`;
+        s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=PEN`;
         s.onload = () => { paypalScriptEstado = 'cargado'; console.log('PayPal SDK cargado'); };
         s.onerror = () => { paypalScriptEstado = 'error'; console.error('Error cargando PayPal SDK'); };
         document.head.appendChild(s);
