@@ -185,6 +185,24 @@
             window.auth = firebase.auth();
             window.db = firebase.firestore();
             window.storage = firebase.storage();
+
+            // Control de edición para Configuración según permisos
+            function actualizarEdicionConfiguracion(habilitar) {
+                const form = document.getElementById('formConfiguracion');
+                const btn = document.getElementById('btnGuardarConfiguracion');
+                const status = document.getElementById('cfgStatus');
+                const disable = !habilitar;
+                if (form) {
+                    Array.from(form.elements).forEach(el => { el.disabled = disable; });
+                }
+                if (btn) btn.disabled = disable;
+                if (status) {
+                    status.innerHTML = disable
+                        ? '<small class="text-warning">Solo lectura: sin permisos de edición</small>'
+                        : '<small class="text-muted">Sin cambios</small>';
+                }
+            }
+
             const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e=>e.toLowerCase());
             window.auth.onAuthStateChanged(async (user) => {
                 if (!user) { window.location.href = 'login.html'; return; }
@@ -199,7 +217,12 @@
                     } catch {}
                     const wl = EMAIL_ADMIN_WHITELIST.includes((user.email||'').toLowerCase());
                     const isAdmin = claimAdmin || fsAdmin || wl;
+                    window.isAdmin = !!isAdmin;
+                    // Actualizar estado de edición de la sección Configuración
+                    actualizarEdicionConfiguracion(window.isAdmin);
+
                     if (!isAdmin) {
+                        // Mantener la redirección de seguridad si no es admin
                         alert('Acceso denegado: Se requiere rol de administrador');
                         await auth.signOut();
                         window.location.href = 'login.html';
@@ -439,7 +462,7 @@
         <div id="configuracionSection" style="display:none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="section-title">Configuración de la Tienda</h2>
-                <button class="btn btn-success" onclick="guardarConfiguracion()"><i class="bi bi-save"></i> Guardar Cambios</button>
+                <button id="btnGuardarConfiguracion" class="btn btn-success" onclick="guardarConfiguracion()"><i class="bi bi-save"></i> Guardar Cambios</button>
             </div>
             <div class="table-container">
                 <form id="formConfiguracion">
@@ -1755,6 +1778,11 @@
                 console.error('Error guardando configuración', e);
                 if (statusEl) statusEl.innerHTML = '<small class="text-danger">Error al guardar</small>';
                 alert('Error al guardar configuración: ' + e.message);
+                // Si es un tema de permisos, poner la sección en solo lectura para evitar más intentos
+                const msg = (e && (e.code || e.message || '')).toString().toLowerCase();
+                if (msg.includes('permission') || msg.includes('insufficient')) {
+                    actualizarEdicionConfiguracion(false);
+                }
             }
         }
     </script>

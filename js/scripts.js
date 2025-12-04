@@ -1085,7 +1085,7 @@ document.getElementById('cartBtn').addEventListener('click', function() {
 // === CARGA DINÁMICA DE SDK PAYPAL DESDE CONFIG (Firestore: config/general) ===
 let paypalScriptEstado = 'no-cargado';
 // Fallback público (client id de PayPal, no es secreto). Usa el tuyo si config/general no está disponible.
-const PAYPAL_CLIENT_ID_FALLBACK = 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R';
+const PAYPAL_CLIENT_ID_FALLBACK = 'AQfZy0lnnXz1a9EfXJ588is9ZeAADGiFGp3nxrg-wAbdEqG-mykhKDkrP8wlDfmpVw3VLgaJtPIM7NBo';
 async function cargarPayPalDesdeConfig() {
     if (paypalScriptEstado === 'cargando' || paypalScriptEstado === 'cargado') return;
     try {
