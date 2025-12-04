@@ -1084,14 +1084,16 @@ document.getElementById('cartBtn').addEventListener('click', function() {
 
 // === CARGA DINÁMICA DE SDK PAYPAL DESDE CONFIG (Firestore: config/general) ===
 let paypalScriptEstado = 'no-cargado';
+// Fallback público (client id de PayPal, no es secreto). Usa el tuyo si config/general no está disponible.
+const PAYPAL_CLIENT_ID_FALLBACK = 'AZDxjDScFpQtjWTOUtWKbyN_bDt4OgqaF4eYXlewfBP4-8aqX3PiV8e1GWU6liB2CUXlkA59kJXE7M6R';
 async function cargarPayPalDesdeConfig() {
     if (paypalScriptEstado === 'cargando' || paypalScriptEstado === 'cargado') return;
     try {
         const snap = await db.collection('config').doc('general').get();
         const cfg = snap.exists ? snap.data() : {};
-        const clientId = cfg.paypalClientId || '';
+        const clientId = (cfg && cfg.paypalClientId) ? cfg.paypalClientId : PAYPAL_CLIENT_ID_FALLBACK;
         if (!clientId) {
-            console.warn('Sin clientId PayPal en configuración. Agrega uno en el panel de Configuración.');
+            console.warn('Sin clientId PayPal. No se cargará el SDK.');
             return;
         }
         paypalScriptEstado = 'cargando';
@@ -1101,7 +1103,19 @@ async function cargarPayPalDesdeConfig() {
         s.onerror = () => { paypalScriptEstado = 'error'; console.error('Error cargando PayPal SDK'); };
         document.head.appendChild(s);
     } catch (e) {
-        console.warn('No se pudo cargar configuración PayPal:', e.message);
+        console.warn('No se pudo cargar configuración PayPal, usando fallback:', e.message);
+        if (paypalScriptEstado === 'no-cargado' && PAYPAL_CLIENT_ID_FALLBACK) {
+            try {
+                paypalScriptEstado = 'cargando';
+                const s = document.createElement('script');
+                s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID_FALLBACK)}&currency=PEN`;
+                s.onload = () => { paypalScriptEstado = 'cargado'; console.log('PayPal SDK (fallback) cargado'); };
+                s.onerror = () => { paypalScriptEstado = 'error'; console.error('Error cargando PayPal SDK (fallback)'); };
+                document.head.appendChild(s);
+            } catch (err) {
+                console.error('Fallo al cargar SDK PayPal con fallback:', err);
+            }
+        }
     }
 }
 // Intentar cargar el SDK al iniciar la página
