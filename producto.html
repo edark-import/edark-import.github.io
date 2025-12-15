@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle de Producto - eDark Import</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/estilos.css" rel="stylesheet">
+    <style>
+        .product-image-container {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            text-align: center;
+        }
+
+        .product-main-img {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+
+        .price-tag {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #0d6efd;
+        }
+
+        .spec-item {
+            background-color: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="navbar-container"></div>
+
+    <div class="container py-5 mt-4">
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Inicio</a></li>
+                <li class="breadcrumb-item"><a href="index.html#productos" class="text-decoration-none">Productos</a>
+                </li>
+                <li class="breadcrumb-item active" aria-current="page" id="breadcrumbName">Cargando...</li>
+            </ol>
+        </nav>
+
+        <div id="loadingSpinner" class="text-center py-5">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
+            <p class="mt-2 text-muted">Cargando detalles del producto...</p>
+        </div>
+
+        <div class="row d-none" id="productContent">
+            <!-- Image Column -->
+            <div class="col-lg-6 mb-4">
+                <div class="product-image-container position-relative">
+                    <span id="badgeStock" class="position-absolute top-0 start-0 m-3 badge bg-success fs-6">En
+                        Stock</span>
+                    <img src="" alt="Producto" id="productImg" class="product-main-img">
+                </div>
+            </div>
+
+            <!-- Info Column -->
+            <div class="col-lg-6">
+                <h1 class="fw-bold mb-2" id="productName">Nombre del Producto</h1>
+                <div class="text-muted mb-3">
+                    <span id="productBrand">Marca</span> | <span id="productModel">Modelo</span>
+                </div>
+
+                <div class="mb-4">
+                    <span class="price-tag" id="productPrice">S/ 0.00</span>
+                    <div class="text-muted small">Incluye IGV</div>
+                </div>
+
+                <div class="card bg-light border-0 mb-4">
+                    <div class="card-body">
+                        <h6 class="fw-bold mb-3">Descripción</h6>
+                        <p id="productDescription" class="mb-0">Descripción no disponible.</p>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="d-flex gap-3 mb-4 align-items-end">
+                    <div style="width: 120px;">
+                        <label class="form-label small fw-bold">Cantidad</label>
+                        <input type="number" class="form-control" value="1" min="1" id="qtyInput">
+                    </div>
+                    <button class="btn btn-primary flex-grow-1 py-2" onclick="addToCartCurrent()">
+                        <i class="bi bi-cart-plus me-2"></i>Agregar al Carrito
+                    </button>
+                    <button class="btn btn-success flex-grow-1 py-2" onclick="buyNowCurrent()">
+                        Comprar Ahora
+                    </button>
+                </div>
+
+                <!-- Specs -->
+                <h5 class="fw-bold mb-3 border-bottom pb-2">Especificaciones Técnicas</h5>
+                <div class="row">
+                    <div class="col-md-12" id="specsContainer">
+                        <!-- Dynamic specs -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="errorState" class="text-center py-5 d-none">
+            <i class="bi bi-exclamation-circle text-danger display-4"></i>
+            <h3 class="mt-3">Producto no encontrado</h3>
+            <p class="text-muted">El producto que buscas no existe o ha sido eliminado.</p>
+            <a href="index.html" class="btn btn-primary mt-2">Volver al Inicio</a>
+        </div>
+    </div>
+
+    <div id="footer-container"></div>
+
+    <!-- Toast Notification -->
+    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
+        <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert"
+            aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body">
+                    <i class="bi bi-check-circle-fill me-2"></i>Producto agregado al carrito
+                </div>
+                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
+                    aria-label="Close"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <script src="js/firebase-config.js"></script>
+    <script src="js/scripts.js"></script>
+
+    <script>
+        // Global var for current product data
+        let currentProduct = null;
+        let db = firebase.firestore();
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const productId = urlParams.get('id');
+
+            if (!productId) {
+                showError();
+                return;
+            }
+
+            try {
+                // Ensure config is loaded for pricing
+                if (window.inicializarTipoCambioSunat) await window.inicializarTipoCambioSunat();
+                if (window.cargarConfiguracionGeneral) await window.cargarConfiguracionGeneral();
+
+                const doc = await db.collection('productos').doc(productId).get();
+                if (!doc.exists) {
+                    showError();
+                    return;
+                }
+
+                currentProduct = { id: doc.id, ...doc.data() };
+                renderProduct(currentProduct);
+            } catch (e) {
+                console.error(e);
+                showError();
+            }
+        });
+
+        function renderProduct(prod) {
+            document.getElementById('loadingSpinner').classList.add('d-none');
+            document.getElementById('productContent').classList.remove('d-none');
+
+            // Header info
+            document.getElementById('breadcrumbName').textContent = prod.nombre;
+            document.getElementById('productName').textContent = prod.nombre;
+            document.getElementById('productBrand').textContent = prod.marca || 'Genérico';
+            document.getElementById('productModel').textContent = prod.modelo || '-';
+
+            // Image
+            const imgEl = document.getElementById('productImg');
+            imgEl.src = prod.imagenUrl || prod.imagen || 'img/productos/default.png';
+
+            // Price using scripts.js global logic if available
+            let precio = parseFloat(prod.precioVenta);
+            if (window.calcularPrecioProducto) {
+                // re-calculate to ensure latest settings
+                precio = window.calcularPrecioProducto(prod);
+                // Attach calculated price to object for cart
+                prod.precioFinal = precio;
+            }
+            if (!precio) precio = parseFloat(prod.precio) || 0; // Fallback
+
+            document.getElementById('productPrice').textContent = `S/ ${precio.toFixed(2)}`;
+
+            // Description
+            const desc = prod.descripcion || prod.especificaciones || 'Sin descripción detallada.';
+            document.getElementById('productDescription').innerHTML = desc.replace(/\n/g, '<br>');
+
+            // Stock
+            const stockBadge = document.getElementById('badgeStock');
+            if (prod.stock <= 0) {
+                stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-danger fs-6';
+                stockBadge.textContent = 'Agotado';
+                document.querySelector('button[onclick="addToCartCurrent()"]').disabled = true;
+                document.querySelector('button[onclick="buyNowCurrent()"]').disabled = true;
+            } else if (prod.stock < 5) {
+                stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-warning text-dark fs-6';
+                stockBadge.textContent = 'Últimas unidades';
+            }
+
+            // Specs
+            const specsContainer = document.getElementById('specsContainer');
+            const specs = [
+                { label: 'Categoría', value: prod.categoria },
+                { label: 'Subcategoría', value: prod.subcategoria },
+                { label: 'Dimensiones', value: prod.dimension },
+                { label: 'Capacidad', value: prod.capacidad }
+            ];
+
+            let specsHtml = '';
+            specs.forEach(s => {
+                if (s.value) {
+                    specsHtml += `
+                        <div class="spec-item">
+                            <span class="fw-bold text-muted">${s.label}</span>
+                            <span class="text-dark">${s.value}</span>
+                        </div>
+                    `;
+                }
+            });
+            // Parse text specs if possible or just append generic fields
+            specsContainer.innerHTML = specsHtml;
+        }
+
+        function showError() {
+            document.getElementById('loadingSpinner').classList.add('d-none');
+            document.getElementById('errorState').classList.remove('d-none');
+        }
+
+        function addToCartCurrent() {
+            if (!currentProduct) return;
+            const qty = parseInt(document.getElementById('qtyInput').value) || 1;
+
+            // Use script.js functionality
+            // Make sure price is set correctly on the object
+            // If precioFinal was calculated in render, use it
+            let productToAdd = { ...currentProduct };
+            if (productToAdd.precioFinal) productToAdd.precioVenta = productToAdd.precioFinal;
+
+            agregarAlCarrito(productToAdd, qty); // This function is in scripts.js
+
+            // Show toast
+            const toast = new bootstrap.Toast(document.getElementById('liveToast'));
+            toast.show();
+        }
+
+        function buyNowCurrent() {
+            if (!currentProduct) return;
+            addToCartCurrent();
+            window.location.href = 'carrito.html';
+        }
+    </script>
+</body>
+
+</html>

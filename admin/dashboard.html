@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,7 +16,7 @@
             --dark-bg: #222831;
             --light-bg: #393e46;
         }
-        
+
         body {
             background: #f8f9fa;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -40,7 +41,7 @@
             color: white;
             font-size: 24px;
             font-weight: bold;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             margin-bottom: 20px;
         }
 
@@ -63,7 +64,8 @@
             transition: all 0.3s;
         }
 
-        .sidebar-nav a:hover, .sidebar-nav a.active {
+        .sidebar-nav a:hover,
+        .sidebar-nav a.active {
             background: var(--primary-color);
             color: white;
             border-left: 4px solid white;
@@ -84,13 +86,13 @@
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             transition: transform 0.3s;
         }
 
         .stats-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
         }
 
         .stats-card .icon {
@@ -105,16 +107,27 @@
             margin-bottom: 15px;
         }
 
-        .stats-card.blue .icon { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .stats-card.green .icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .stats-card.orange .icon { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .stats-card.purple .icon { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+        .stats-card.blue .icon {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .stats-card.green .icon {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        .stats-card.orange .icon {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+
+        .stats-card.purple .icon {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
 
         .chart-container {
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
 
@@ -122,7 +135,7 @@
             background: white;
             border-radius: 10px;
             padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-top: 20px;
         }
 
@@ -130,7 +143,7 @@
             background: white;
             padding: 15px 30px;
             border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
@@ -151,88 +164,111 @@
             font-weight: 600;
         }
 
-        .badge-pendiente { background: #ffc107; color: #000; }
-        .badge-confirmado { background: #17a2b8; color: white; }
-        .badge-enviado { background: #007bff; color: white; }
-        .badge-entregado { background: #28a745; color: white; }
-        .badge-cancelado { background: #dc3545; color: white; }
+        .badge-pendiente {
+            background: #ffc107;
+            color: #000;
+        }
+
+        .badge-confirmado {
+            background: #17a2b8;
+            color: white;
+        }
+
+        .badge-enviado {
+            background: #007bff;
+            color: white;
+        }
+
+        .badge-entregado {
+            background: #28a745;
+            color: white;
+        }
+
+        .badge-cancelado {
+            background: #dc3545;
+            color: white;
+        }
 
         @media (max-width: 768px) {
             .sidebar {
                 transform: translateX(-100%);
             }
+
             .sidebar.show {
                 transform: translateX(0);
             }
+
             .main-content {
                 margin-left: 0;
             }
+
             .mobile-menu-btn {
                 display: block;
             }
         }
     </style>
-        <!-- Config central Firebase -->
-        <script src="../js/firebase-config.js"></script>
-        <!-- Firebase v8 SDKs (compatibles con código existente) -->
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-        <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
-        <script>
-            // Inicializar Firebase (v8) y exponer como globals
-            firebase.initializeApp(window.firebaseConfig);
-            window.auth = firebase.auth();
-            window.db = firebase.firestore();
-            window.storage = firebase.storage();
+    <!-- Config central Firebase -->
+    <script src="../js/firebase-config.js"></script>
+    <!-- Firebase v8 SDKs (compatibles con código existente) -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
+    <script>
+        // Inicializar Firebase (v8) y exponer como globals
+        firebase.initializeApp(window.firebaseConfig);
+        window.auth = firebase.auth();
+        window.db = firebase.firestore();
+        window.storage = firebase.storage();
 
-            // Control de edición para Configuración según permisos
-            function actualizarEdicionConfiguracion(habilitar) {
-                const form = document.getElementById('formConfiguracion');
-                const btn = document.getElementById('btnGuardarConfiguracion');
-                const status = document.getElementById('cfgStatus');
-                const disable = !habilitar;
-                if (form) {
-                    Array.from(form.elements).forEach(el => { el.disabled = disable; });
-                }
-                if (btn) btn.disabled = disable;
-                if (status) {
-                    status.innerHTML = disable
-                        ? '<small class="text-warning">Solo lectura: sin permisos de edición</small>'
-                        : '<small class="text-muted">Sin cambios</small>';
-                }
+        // Control de edición para Configuración según permisos
+        function actualizarEdicionConfiguracion(habilitar) {
+            const form = document.getElementById('formConfiguracion');
+            const btn = document.getElementById('btnGuardarConfiguracion');
+            const status = document.getElementById('cfgStatus');
+            const disable = !habilitar;
+            if (form) {
+                Array.from(form.elements).forEach(el => { el.disabled = disable; });
             }
+            if (btn) btn.disabled = disable;
+            if (status) {
+                status.innerHTML = disable
+                    ? '<small class="text-warning">Solo lectura: sin permisos de edición</small>'
+                    : '<small class="text-muted">Sin cambios</small>';
+            }
+        }
 
-            const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e=>e.toLowerCase());
-            window.auth.onAuthStateChanged(async (user) => {
-                if (!user) { window.location.href = 'login.html'; return; }
+        const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+        window.auth.onAuthStateChanged(async (user) => {
+            if (!user) { window.location.href = 'login.html'; return; }
+            try {
+                const token = await user.getIdTokenResult();
+                const c = token.claims || {};
+                const claimAdmin = c.admin === true || c.rol === 'admin' || c.role === 'admin' || c.isAdmin === true;
+                let fsAdmin = false;
                 try {
-                    const token = await user.getIdTokenResult();
-                    const c = token.claims || {};
-                    const claimAdmin = c.admin===true || c.rol==='admin' || c.role==='admin' || c.isAdmin===true;
-                    let fsAdmin = false;
-                    try {
-                        const snap = await db.collection('usuarios').doc(user.uid).get();
-                        if (snap.exists) { const u = snap.data(); fsAdmin = (u.rol==='admin'||u.role==='admin'||u.admin===true||u.isAdmin===true); }
-                    } catch {}
-                    const wl = EMAIL_ADMIN_WHITELIST.includes((user.email||'').toLowerCase());
-                    const isAdmin = claimAdmin || fsAdmin || wl;
-                    window.isAdmin = !!isAdmin;
-                    // Actualizar estado de edición de la sección Configuración
-                    actualizarEdicionConfiguracion(window.isAdmin);
+                    const snap = await db.collection('usuarios').doc(user.uid).get();
+                    if (snap.exists) { const u = snap.data(); fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true); }
+                } catch { }
+                const wl = EMAIL_ADMIN_WHITELIST.includes((user.email || '').toLowerCase());
+                const isAdmin = claimAdmin || fsAdmin || wl;
+                window.isAdmin = !!isAdmin;
+                // Actualizar estado de edición de la sección Configuración
+                actualizarEdicionConfiguracion(window.isAdmin);
 
-                    if (!isAdmin) {
-                        // Mantener la redirección de seguridad si no es admin
-                        alert('Acceso denegado: Se requiere rol de administrador');
-                        await auth.signOut();
-                        window.location.href = 'login.html';
-                    }
-                } catch {
+                if (!isAdmin) {
+                    // Mantener la redirección de seguridad si no es admin
+                    alert('Acceso denegado: Se requiere rol de administrador');
+                    await auth.signOut();
                     window.location.href = 'login.html';
                 }
-            });
-        </script>
+            } catch {
+                window.location.href = 'login.html';
+            }
+        });
+    </script>
 </head>
+
 <body>
     <!-- Sidebar -->
     <div class="sidebar" id="sidebar">
@@ -240,16 +276,26 @@
             <img src="../img/Logo/logo_2.png" alt="eDark" style="max-width: 150px;">
         </div>
         <ul class="sidebar-nav">
-            <li><a href="javascript:void(0)" class="active" data-section="dashboard" onclick="cambiarSeccion('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
-            <li><a href="javascript:void(0)" data-section="ventas" onclick="cambiarSeccion('ventas')"><i class="bi bi-cart-check"></i> Ventas</a></li>
-            <li><a href="javascript:void(0)" data-section="productos" onclick="cambiarSeccion('productos')"><i class="bi bi-box-seam"></i> Productos</a></li>
-            <li><a href="javascript:void(0)" data-section="categorias" onclick="cambiarSeccion('categorias')"><i class="bi bi-tags"></i> Categorías</a></li>
-            <li><a href="javascript:void(0)" data-section="inventario" onclick="cambiarSeccion('inventario')"><i class="bi bi-clipboard-data"></i> Inventario</a></li>
-            <li><a href="javascript:void(0)" data-section="clientes" onclick="cambiarSeccion('clientes')"><i class="bi bi-people"></i> Clientes</a></li>
-            <li><a href="javascript:void(0)" data-section="blog" onclick="cambiarSeccion('blog')"><i class="bi bi-newspaper"></i> Blog</a></li>
-            <li><a href="javascript:void(0)" data-section="publicidad" onclick="cambiarSeccion('publicidad')"><i class="bi bi-bullseye"></i> Publicidad</a></li>
-            <li><a href="javascript:void(0)" data-section="reportes" onclick="cambiarSeccion('reportes')"><i class="bi bi-graph-up"></i> Reportes</a></li>
-            <li><a href="javascript:void(0)" data-section="configuracion" onclick="cambiarSeccion('configuracion')"><i class="bi bi-gear"></i> Configuración</a></li>
+            <li><a href="javascript:void(0)" class="active" data-section="dashboard"
+                    onclick="cambiarSeccion('dashboard')"><i class="bi bi-speedometer2"></i> Dashboard</a></li>
+            <li><a href="javascript:void(0)" data-section="ventas" onclick="cambiarSeccion('ventas')"><i
+                        class="bi bi-cart-check"></i> Ventas</a></li>
+            <li><a href="javascript:void(0)" data-section="productos" onclick="cambiarSeccion('productos')"><i
+                        class="bi bi-box-seam"></i> Productos</a></li>
+            <li><a href="javascript:void(0)" data-section="categorias" onclick="cambiarSeccion('categorias')"><i
+                        class="bi bi-tags"></i> Categorías</a></li>
+            <li><a href="javascript:void(0)" data-section="inventario" onclick="cambiarSeccion('inventario')"><i
+                        class="bi bi-clipboard-data"></i> Inventario</a></li>
+            <li><a href="javascript:void(0)" data-section="clientes" onclick="cambiarSeccion('clientes')"><i
+                        class="bi bi-people"></i> Clientes</a></li>
+            <li><a href="javascript:void(0)" data-section="blog" onclick="cambiarSeccion('blog')"><i
+                        class="bi bi-newspaper"></i> Blog</a></li>
+            <li><a href="javascript:void(0)" data-section="publicidad" onclick="cambiarSeccion('publicidad')"><i
+                        class="bi bi-bullseye"></i> Publicidad</a></li>
+            <li><a href="javascript:void(0)" data-section="reportes" onclick="cambiarSeccion('reportes')"><i
+                        class="bi bi-graph-up"></i> Reportes</a></li>
+            <li><a href="javascript:void(0)" data-section="configuracion" onclick="cambiarSeccion('configuracion')"><i
+                        class="bi bi-gear"></i> Configuración</a></li>
             <li><a href="#" id="cerrarSesion"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
         </ul>
     </div>
@@ -273,7 +319,7 @@
         <!-- Dashboard Content -->
         <div id="dashboardSection">
             <h2 class="section-title">Dashboard General</h2>
-            
+
             <!-- Stats Cards -->
             <div class="row mb-4">
                 <div class="col-md-3 mb-3">
@@ -462,7 +508,8 @@
         <div id="configuracionSection" style="display:none;">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="section-title">Configuración de la Tienda</h2>
-                <button id="btnGuardarConfiguracion" class="btn btn-success" onclick="guardarConfiguracion()"><i class="bi bi-save"></i> Guardar Cambios</button>
+                <button id="btnGuardarConfiguracion" class="btn btn-success" onclick="guardarConfiguracion()"><i
+                        class="bi bi-save"></i> Guardar Cambios</button>
             </div>
             <div class="table-container">
                 <form id="formConfiguracion">
@@ -480,7 +527,8 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Mensaje de banner / promoción</label>
-                            <input type="text" class="form-control" id="cfgBannerMsg" placeholder="Ofertas de temporada" />
+                            <input type="text" class="form-control" id="cfgBannerMsg"
+                                placeholder="Ofertas de temporada" />
                         </div>
                         <div class="col-md-3 mb-3">
                             <label class="form-label">IGV (%)</label>
@@ -494,7 +542,8 @@
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Tipo de cambio manual</label>
-                            <input type="number" step="0.0001" class="form-control" id="cfgTipoCambioManual" placeholder="3.80" />
+                            <input type="number" step="0.0001" class="form-control" id="cfgTipoCambioManual"
+                                placeholder="3.80" />
                         </div>
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Usar tipo de cambio manual</label>
@@ -509,6 +558,202 @@
                         </div>
                     </div>
                 </form>
+            </div>
+        </div>
+
+        <!-- Sección de Ventas -->
+        <div id="ventasSection" style="display: none;">
+            <h2 class="section-title">Gestión de Ventas</h2>
+            <div class="table-container">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <input type="text" id="buscarVentaInput" class="form-control"
+                            placeholder="Buscar por cliente o ID...">
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Orden</th>
+                                <th>Cliente</th>
+                                <th>Total</th>
+                                <th>Método Pago</th>
+                                <th>Fecha</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaVentas"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Inventario -->
+        <div id="inventarioSection" style="display: none;">
+            <h2 class="section-title">Control de Inventario</h2>
+            <div class="table-container">
+                <div class="alert alert-warning">Productos con stock crítico (&lt; 5 unidades)</div>
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Stock Actual</th>
+                                <th>Estado</th>
+                                <th>Acción</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaInventario"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Clientes -->
+        <div id="clientesSection" style="display: none;">
+            <h2 class="section-title">Base de Clientes</h2>
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Teléfono</th>
+                                <th>Total Compras</th>
+                                <th>Última Compra</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaClientes"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Blog -->
+        <div id="blogSection" style="display: none;">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="section-title">Gestión del Blog</h2>
+                <button class="btn btn-primary" onclick="mostrarModalBlog()"><i class="bi bi-plus-circle"></i> Nueva
+                    Entrada</button>
+            </div>
+            <div class="table-container">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Título</th>
+                                <th>Autor</th>
+                                <th>Fecha</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaBlog"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Publicidad -->
+        <div id="publicidadSection" style="display: none;">
+            <h2 class="section-title">Gestión de Publicidad</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Banner Principal</h5>
+                            <p class="text-muted">Configura la imagen del banner promocional en la home.</p>
+                            <div class="mb-3">
+                                <label class="form-label">URL de Imagen</label>
+                                <input type="text" id="bannerUrlInput" class="form-control" placeholder="https://...">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Texto Promocional</label>
+                                <input type="text" id="bannerTextInput" class="form-control" placeholder="¡Oferta!">
+                            </div>
+                            <button class="btn btn-primary" onclick="guardarBanner()">Actualizar Banner</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card shadow-sm">
+                        <div class="card-body">
+                            <h5 class="card-title">Avisos Globales</h5>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="avisoActivoCheck">
+                                <label class="form-check-label">Mostrar aviso superior</label>
+                            </div>
+                            <div class="mt-2">
+                                <input type="text" id="avisoTextoInput" class="form-control"
+                                    placeholder="Envíos gratis por compras > S/ 500">
+                            </div>
+                            <button class="btn btn-success mt-3" onclick="guardarAviso()">Guardar Aviso</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sección de Reportes -->
+        <div id="reportesSection" style="display: none;">
+            <h2 class="section-title">Reportes Avanzados</h2>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Ventas Anuales</h5>
+                        <canvas id="ventasAnualesChart"></canvas>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="chart-container">
+                        <h5>Productos Más Vendidos</h5>
+                        <canvas id="topProductosChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-4 text-end">
+                <button class="btn btn-outline-secondary" onclick="window.print()"><i class="bi bi-printer"></i>
+                    Imprimir Reporte</button>
+            </div>
+        </div>
+
+        <!-- Modal Blog -->
+        <div class="modal fade" id="modalBlog" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modalBlogTitulo">Nueva Entrada</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formBlog">
+                            <input type="hidden" id="blogId">
+                            <div class="mb-3">
+                                <label class="form-label">Título</label>
+                                <input type="text" class="form-control" id="blogTitulo" required>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Imagen (URL)</label>
+                                <input type="text" class="form-control" id="blogImagen">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Contenido</label>
+                                <textarea class="form-control" id="blogContenido" rows="6" required></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Autor</label>
+                                <input type="text" class="form-control" id="blogAutor" placeholder="eDark Team">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" onclick="guardarBlog()">Publicar</button>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -532,11 +777,13 @@
                         <input type="hidden" id="categoriaId">
                         <div class="mb-3">
                             <label class="form-label">Nombre de la Categoría *</label>
-                            <input type="text" class="form-control" id="categoriaNombre" required placeholder="Ej: Laptops, Accesorios">
+                            <input type="text" class="form-control" id="categoriaNombre" required
+                                placeholder="Ej: Laptops, Accesorios">
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Subcategorías (separadas por coma)</label>
-                            <input type="text" class="form-control" id="categoriaSubcategorias" placeholder="Gaming, Oficina, Ultrabook">
+                            <input type="text" class="form-control" id="categoriaSubcategorias"
+                                placeholder="Gaming, Oficina, Ultrabook">
                             <small class="text-muted">Opcional: separa múltiples subcategorías con comas</small>
                         </div>
                     </form>
@@ -562,12 +809,13 @@
                 <div class="modal-body">
                     <form id="formProducto">
                         <input type="hidden" id="productoId">
-                        
+
                         <!-- Fila 1: Nombre -->
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Nombre del Producto *</label>
-                                <input type="text" class="form-control" id="productoNombre" required placeholder="Ej: Laptop Dell Inspiron 15">
+                                <input type="text" class="form-control" id="productoNombre" required
+                                    placeholder="Ej: Laptop Dell Inspiron 15">
                             </div>
                         </div>
 
@@ -575,7 +823,8 @@
                         <div class="row">
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Precio de Compra</label>
-                                <input type="number" step="0.01" class="form-control" id="productoPrecioCompra" placeholder="0.00">
+                                <input type="number" step="0.01" class="form-control" id="productoPrecioCompra"
+                                    placeholder="0.00">
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Moneda</label>
@@ -591,13 +840,15 @@
                                         <option value="porcentaje" selected>Porcentaje (%)</option>
                                         <option value="monto">Monto fijo (S/)</option>
                                     </select>
-                                    <input type="number" step="0.01" class="form-control" id="productoValorGanancia" placeholder="30.00" value="30.00">
+                                    <input type="number" step="0.01" class="form-control" id="productoValorGanancia"
+                                        placeholder="30.00" value="30.00">
                                 </div>
                                 <small class="text-muted">Aplicado sobre el precio con IGV</small>
                             </div>
                             <div class="col-md-3 mb-3">
                                 <label class="form-label">Precio de Venta (S/) *</label>
-                                <input type="number" step="0.01" class="form-control" id="productoPrecioVenta" required placeholder="0.00" readonly>
+                                <input type="number" step="0.01" class="form-control" id="productoPrecioVenta" required
+                                    placeholder="0.00" readonly>
                                 <small class="text-muted">Calculado automáticamente</small>
                             </div>
                         </div>
@@ -606,7 +857,8 @@
                         <div class="row">
                             <div class="col-12 mb-3">
                                 <div class="alert alert-info py-2" id="tipoCambioInfo">
-                                    <small><strong>Tipo de cambio SUNAT:</strong> <span id="tcSunat">Cargando...</span></small>
+                                    <small><strong>Tipo de cambio SUNAT:</strong> <span
+                                            id="tcSunat">Cargando...</span></small>
                                 </div>
                             </div>
                         </div>
@@ -619,24 +871,30 @@
                                 <!-- Tabs para seleccionar tipo de imagen -->
                                 <ul class="nav nav-tabs mb-3" id="imagenTabs" role="tablist">
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link active" id="url-tab" data-bs-toggle="tab" data-bs-target="#url-panel" type="button" role="tab">URL</button>
+                                        <button class="nav-link active" id="url-tab" data-bs-toggle="tab"
+                                            data-bs-target="#url-panel" type="button" role="tab">URL</button>
                                     </li>
                                     <li class="nav-item" role="presentation">
-                                        <button class="nav-link" id="file-tab" data-bs-toggle="tab" data-bs-target="#file-panel" type="button" role="tab">Subir Archivo</button>
+                                        <button class="nav-link" id="file-tab" data-bs-toggle="tab"
+                                            data-bs-target="#file-panel" type="button" role="tab">Subir Archivo</button>
                                     </li>
                                 </ul>
 
                                 <div class="tab-content" id="imagenTabContent">
                                     <!-- Panel URL -->
                                     <div class="tab-pane fade show active" id="url-panel" role="tabpanel">
-                                        <input type="url" class="form-control" id="productoImagenUrl" placeholder="https://ejemplo.com/imagen.jpg">
-                                        <small class="text-muted">Puedes usar servicios como Imgur, Cloudinary o enlaces directos</small>
+                                        <input type="url" class="form-control" id="productoImagenUrl"
+                                            placeholder="https://ejemplo.com/imagen.jpg">
+                                        <small class="text-muted">Puedes usar servicios como Imgur, Cloudinary o enlaces
+                                            directos</small>
                                     </div>
 
                                     <!-- Panel Archivo -->
                                     <div class="tab-pane fade" id="file-panel" role="tabpanel">
-                                        <input type="file" class="form-control" id="productoImagenFile" accept="image/*">
-                                        <small class="text-muted">Formatos soportados: JPG, PNG, GIF, WebP (máx. 5MB)</small>
+                                        <input type="file" class="form-control" id="productoImagenFile"
+                                            accept="image/*">
+                                        <small class="text-muted">Formatos soportados: JPG, PNG, GIF, WebP (máx.
+                                            5MB)</small>
                                         <div id="uploadProgress" class="progress mt-2 d-none">
                                             <div class="progress-bar" role="progressbar" style="width: 0%"></div>
                                         </div>
@@ -646,7 +904,8 @@
 
                                 <!-- Preview de imagen -->
                                 <div id="imagenPreview" class="mt-3 d-none">
-                                    <img id="previewImg" src="" alt="Preview" class="img-thumbnail" style="max-width: 200px; max-height: 200px;">
+                                    <img id="previewImg" src="" alt="Preview" class="img-thumbnail"
+                                        style="max-width: 200px; max-height: 200px;">
                                 </div>
                             </div>
                         </div>
@@ -661,7 +920,8 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Subcategoría</label>
-                                <input type="text" class="form-control" id="productoSubcategoria" placeholder="Ej: Gaming, Oficina">
+                                <input type="text" class="form-control" id="productoSubcategoria"
+                                    placeholder="Ej: Gaming, Oficina">
                             </div>
                         </div>
 
@@ -669,15 +929,18 @@
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Marca</label>
-                                <input type="text" class="form-control" id="productoMarca" placeholder="Ej: Dell, HP, Lenovo">
+                                <input type="text" class="form-control" id="productoMarca"
+                                    placeholder="Ej: Dell, HP, Lenovo">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Capacidad</label>
-                                <input type="text" class="form-control" id="productoCapacidad" placeholder="Ej: 512GB, 16GB RAM">
+                                <input type="text" class="form-control" id="productoCapacidad"
+                                    placeholder="Ej: 512GB, 16GB RAM">
                             </div>
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Modelo</label>
-                                <input type="text" class="form-control" id="productoModelo" placeholder="Ej: XPS 15, ThinkPad T14">
+                                <input type="text" class="form-control" id="productoModelo"
+                                    placeholder="Ej: XPS 15, ThinkPad T14">
                             </div>
                         </div>
 
@@ -685,11 +948,13 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Dimensión</label>
-                                <input type="text" class="form-control" id="productoDimension" placeholder="Ej: 15.6 pulgadas, 27 pulgadas">
+                                <input type="text" class="form-control" id="productoDimension"
+                                    placeholder="Ej: 15.6 pulgadas, 27 pulgadas">
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Stock *</label>
-                                <input type="number" class="form-control" id="productoStock" required min="0" placeholder="0">
+                                <input type="number" class="form-control" id="productoStock" required min="0"
+                                    placeholder="0">
                             </div>
                         </div>
 
@@ -697,7 +962,8 @@
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Especificaciones Técnicas</label>
-                                <textarea class="form-control" id="productoEspecificaciones" rows="4" placeholder="Detalla las especificaciones técnicas del producto..."></textarea>
+                                <textarea class="form-control" id="productoEspecificaciones" rows="4"
+                                    placeholder="Detalla las especificaciones técnicas del producto..."></textarea>
                                 <small class="text-muted">Procesador, RAM, Almacenamiento, Pantalla, etc.</small>
                             </div>
                         </div>
@@ -733,8 +999,8 @@
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
     <script>
         // Tomar las referencias globales de Firebase v8 inicializadas en <head>
         const db = window.db;
@@ -792,10 +1058,10 @@
                     const venta = doc.data();
                     totalVentas++;
                     totalIngresos += venta.total || 0;
-                    
+
                     ventasPorEstado[venta.estado] = (ventasPorEstado[venta.estado] || 0) + 1;
                     metodoPago[venta.metodoPago] = (metodoPago[venta.metodoPago] || 0) + 1;
-                    
+
                     ventasRecientes.push({
                         id: doc.id,
                         ...venta
@@ -852,7 +1118,7 @@
             ventas.forEach(venta => {
                 const fecha = venta.fechaCreacion?.toDate ? venta.fechaCreacion.toDate().toLocaleDateString() : 'N/A';
                 const estadoClass = `badge-${venta.estado}`;
-                
+
                 tbody.innerHTML += `
                     <tr>
                         <td>${venta.numeroOrden}</td>
@@ -896,7 +1162,7 @@
             // Método de Pago Chart
             const ctx2 = document.getElementById('metodoPagoChart').getContext('2d');
             if (metodoPagoChart) metodoPagoChart.destroy();
-            
+
             metodoPagoChart = new Chart(ctx2, {
                 type: 'doughnut',
                 data: {
@@ -916,43 +1182,294 @@
         // DEFINIR cambiarSeccion PRIMERO (antes de onclick)
         function cambiarSeccion(section) {
             // Ocultar todas las secciones
-            document.getElementById('dashboardSection').style.display = 'none';
-            document.getElementById('productosSection').style.display = 'none';
-            document.getElementById('categoriasSection').style.display = 'none';
-            const cfg = document.getElementById('configuracionSection');
-            if (cfg) cfg.style.display = 'none';
-            document.getElementById('otrasSeccionesContent').style.display = 'none';
+            const sections = [
+                'dashboardSection', 'productosSection', 'categoriasSection',
+                'configuracionSection', 'ventasSection', 'inventarioSection',
+                'clientesSection', 'blogSection', 'publicidadSection', 'reportesSection',
+                'otrasSeccionesContent'
+            ];
+
+            sections.forEach(s => {
+                const el = document.getElementById(s);
+                if (el) el.style.display = 'none';
+            });
 
             // Mostrar sección seleccionada
-            switch(section) {
-                case 'dashboard':
-                    document.getElementById('dashboardSection').style.display = 'block';
-                    cargarDashboard();
-                    break;
-                case 'productos':
-                    document.getElementById('productosSection').style.display = 'block';
-                    cargarProductos();
-                    break;
-                case 'categorias':
-                    document.getElementById('categoriasSection').style.display = 'block';
-                    cargarCategorias();
-                    break;
-                case 'configuracion':
-                    if (cfg) cfg.style.display = 'block';
-                    cargarConfiguracion();
-                    break;
-                default:
-                    document.getElementById('otrasSeccionesContent').style.display = 'block';
+            const target = document.getElementById(section + 'Section');
+            if (target) {
+                target.style.display = 'block';
+            } else {
+                // Fallback
+                document.getElementById('otrasSeccionesContent').style.display = 'block';
             }
+
+            // Cargar datos específicos
+            switch (section) {
+                case 'dashboard': cargarDashboard(); break;
+                case 'productos': cargarProductos(); break;
+                case 'categorias': cargarCategorias(); break;
+                case 'configuracion': cargarConfiguracion(); break;
+                case 'ventas': cargarVentas(); break;
+                case 'inventario': cargarInventario(); break;
+                case 'clientes': cargarClientes(); break;
+                case 'blog': cargarBlog(); break;
+                case 'publicidad': cargarPublicidad(); break;
+                case 'reportes': cargarReportes(); break;
+            }
+        }
+
+        // === LOGICA DE VENTAS ===
+        async function cargarVentas() {
+            const tbody = document.getElementById('tablaVentas');
+            tbody.innerHTML = '<tr><td colspan="7" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+            try {
+                const snap = await db.collection('ventas').orderBy('fechaCreacion', 'desc').limit(50).get();
+                tbody.innerHTML = '';
+                if (snap.empty) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center">No hay ventas registradas</td></tr>';
+                    return;
+                }
+                snap.forEach(doc => {
+                    const v = doc.data();
+                    const fecha = v.fechaCreacion?.toDate ? v.fechaCreacion.toDate().toLocaleString() : 'N/A';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${v.numeroOrden || doc.id}</td>
+                            <td>${v.cliente?.nombre || 'Anónimo'}</td>
+                            <td>S/ ${(v.total || 0).toFixed(2)}</td>
+                            <td>${v.metodoPago || '-'}</td>
+                            <td>${fecha}</td>
+                            <td><span class="badge-status badge-${v.estado}">${v.estado}</span></td>
+                            <td><button class="btn btn-sm btn-primary" onclick="verVenta('${doc.id}')">Ver</button></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Error al cargar ventas</td></tr>';
+            }
+        }
+
+        // === LOGICA DE INVENTARIO ===
+        async function cargarInventario() {
+            const tbody = document.getElementById('tablaInventario');
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+            try {
+                const snap = await db.collection('productos').orderBy('stock', 'asc').get();
+                tbody.innerHTML = '';
+                snap.forEach(doc => {
+                    const p = doc.data();
+                    const critico = p.stock < 5 ? 'bg-danger text-white' : '';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${p.nombre}</td>
+                            <td>${p.categoria}</td>
+                            <td class="${critico} fw-bold text-center" style="width:100px">${p.stock}</td>
+                            <td>${p.activo ? 'Activo' : 'Inactivo'}</td>
+                            <td>
+                                <button class="btn btn-sm btn-warning" onclick="editarProducto('${doc.id}')">
+                                    <i class="bi bi-pencil"></i> Ajustar
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al cargar inventario</td></tr>';
+            }
+        }
+
+        // === LOGICA DE CLIENTES ===
+        async function cargarClientes() {
+            const tbody = document.getElementById('tablaClientes');
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+            try {
+                // Idealmente 'usuarios' collection, fallback a extraer de ventas si no hay usuarios registrados
+                const snap = await db.collection('usuarios').get(); // Asumiendo colección usuarios
+                tbody.innerHTML = '';
+                if (snap.empty) {
+                    // Fallback: mostrar ventas únicas como "clientes" (demo)
+                    const vent = await db.collection('ventas').limit(20).get();
+                    let clientesMap = new Map();
+                    vent.forEach(d => {
+                        const v = d.data();
+                        if (v.cliente && v.cliente.email && !clientesMap.has(v.cliente.email)) {
+                            clientesMap.set(v.cliente.email, v.cliente);
+                        }
+                    });
+                    if (clientesMap.size === 0) {
+                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No hay clientes registrados</td></tr>';
+                        return;
+                    }
+                    clientesMap.forEach(c => {
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${c.nombre || 'N/A'}</td>
+                                <td>${c.email || 'N/A'}</td>
+                                <td>${c.telefono || '-'}</td>
+                                <td>-</td>
+                                <td>-</td>
+                            </tr>
+                         `;
+                    });
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const u = doc.data();
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${u.nombre || 'Usuario'}</td>
+                            <td>${u.email}</td>
+                            <td>${u.telefono || '-'}</td>
+                            <td>S/ 0.00</td> <!-- Calcular real si fuese necesario -->
+                            <td>-</td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al cargar clientes</td></tr>';
+            }
+        }
+
+        // === LOGICA DE BLOG ===
+        let modalBlogInstance;
+        async function cargarBlog() {
+            const tbody = document.getElementById('tablaBlog');
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+            try {
+                const snap = await db.collection('blog').orderBy('fecha', 'desc').get();
+                tbody.innerHTML = '';
+                if (snap.empty) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay entradas</td></tr>';
+                    return;
+                }
+                snap.forEach(doc => {
+                    const b = doc.data();
+                    const fecha = b.fecha?.toDate ? b.fecha.toDate().toLocaleDateString() : 'N/A';
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${b.titulo}</td>
+                            <td>${b.autor}</td>
+                            <td>${fecha}</td>
+                            <td>
+                                <button class="btn btn-sm btn-danger" onclick="eliminarBlog('${doc.id}')"><i class="bi bi-trash"></i></button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error al cargar blog</td></tr>';
+            }
+        }
+
+        function mostrarModalBlog() {
+            document.getElementById('formBlog').reset();
+            modalBlogInstance = new bootstrap.Modal(document.getElementById('modalBlog'));
+            modalBlogInstance.show();
+        }
+
+        async function guardarBlog() {
+            const data = {
+                titulo: document.getElementById('blogTitulo').value,
+                imagen: document.getElementById('blogImagen').value,
+                contenido: document.getElementById('blogContenido').value,
+                autor: document.getElementById('blogAutor').value || 'eDark Team',
+                fecha: firebase.firestore.FieldValue.serverTimestamp()
+            };
+            try {
+                await db.collection('blog').add(data);
+                alert('Entrada publicada');
+                modalBlogInstance.hide();
+                cargarBlog();
+            } catch (e) {
+                alert('Error al publicar: ' + e.message);
+            }
+        }
+
+        async function eliminarBlog(id) {
+            if (confirm('¿Eliminar entrada?')) {
+                await db.collection('blog').doc(id).delete();
+                cargarBlog();
+            }
+        }
+
+        // === LOGICA DE PUBLICIDAD ===
+        async function cargarPublicidad() {
+            try {
+                const doc = await db.collection('config').doc('banners').get();
+                if (doc.exists) {
+                    const d = doc.data();
+                    document.getElementById('bannerUrlInput').value = d.mainBannerImg || '';
+                    document.getElementById('bannerTextInput').value = d.mainBannerText || '';
+                    document.getElementById('avisoActivoCheck').checked = d.topBarActive || false;
+                    document.getElementById('avisoTextoInput').value = d.topBarText || '';
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function guardarBanner() {
+            const data = {
+                mainBannerImg: document.getElementById('bannerUrlInput').value,
+                mainBannerText: document.getElementById('bannerTextInput').value
+            };
+            await db.collection('config').doc('banners').set(data, { merge: true });
+            alert('Banner actualizado');
+        }
+
+        async function guardarAviso() {
+            const data = {
+                topBarActive: document.getElementById('avisoActivoCheck').checked,
+                topBarText: document.getElementById('avisoTextoInput').value
+            };
+            await db.collection('config').doc('banners').set(data, { merge: true });
+            alert('Aviso actualizado');
+        }
+
+        // === LOGICA DE REPORTES ===
+        async function cargarReportes() {
+            // Reutilizar o crear nuevos charts. Aquí simulamos datos para demo, 
+            // idealmente agregarías lógica de agregación real con firestore.
+
+            // Chart 1: Ventas Anuales (Simulado)
+            const ctx1 = document.getElementById('ventasAnualesChart').getContext('2d');
+            if (ventasAnualesChart) ventasAnualesChart.destroy();
+            ventasAnualesChart = new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun', 'Jul', 'Ago', 'Sep', 'Oct', 'Nov', 'Dic'],
+                    datasets: [{
+                        label: 'Ventas 2025 (Simulado)',
+                        data: [1200, 1900, 3000, 5000, 2000, 3000, 4500, 4000, 4200, 5100, 6000, 7500],
+                        borderColor: '#00adb5',
+                        tension: 0.1
+                    }]
+                }
+            });
+
+            // Chart 2: Top Productos (Simulado o real si fuese facil query)
+            const ctx2 = document.getElementById('topProductosChart').getContext('2d');
+            if (topProductosChart) topProductosChart.destroy();
+            topProductosChart = new Chart(ctx2, {
+                type: 'bar',
+                data: {
+                    labels: ['Laptop HP', 'Mouse Logi', 'Teclado Mec', 'Monitor 24', 'Auriculares'],
+                    datasets: [{
+                        label: 'Unidades Vendidas',
+                        data: [50, 45, 30, 25, 20],
+                        backgroundColor: ['#00adb5', '#393e46', '#00adb5', '#393e46', '#00adb5']
+                    }]
+                }
+            });
         }
 
         // Navegación
         document.querySelectorAll('.sidebar-nav a').forEach(link => {
-            link.addEventListener('click', function(e) {
+            link.addEventListener('click', function (e) {
                 e.preventDefault();
                 document.querySelectorAll('.sidebar-nav a').forEach(l => l.classList.remove('active'));
                 this.classList.add('active');
-                
+
                 const section = this.getAttribute('data-section');
                 if (section) {
                     cambiarSeccion(section);
@@ -961,7 +1478,7 @@
         });
 
         // Estado inicial
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             cambiarSeccion('dashboard');
         });
 
@@ -984,7 +1501,7 @@
                     snapshot = await ref.get();
                 }
                 categoriasData = [];
-                
+
                 snapshot.forEach(doc => {
                     categoriasData.push({
                         id: doc.id,
@@ -1040,7 +1557,7 @@
             document.getElementById('modalCategoriaTitulo').textContent = 'Nueva Categoría';
             document.getElementById('formCategoria').reset();
             document.getElementById('categoriaId').value = '';
-            
+
             modalCategoriaInstance = new bootstrap.Modal(document.getElementById('modalCategoria'));
             modalCategoriaInstance.show();
         }
@@ -1072,13 +1589,13 @@
                 const id = document.getElementById('categoriaId').value;
                 const nombre = document.getElementById('categoriaNombre').value.trim();
                 const subcategoriasTexto = document.getElementById('categoriaSubcategorias').value.trim();
-                
+
                 if (!nombre) {
                     alert('El nombre de la categoría es obligatorio');
                     return;
                 }
 
-                const subcategorias = subcategoriasTexto 
+                const subcategorias = subcategoriasTexto
                     ? subcategoriasTexto.split(',').map(s => s.trim()).filter(s => s.length > 0)
                     : [];
 
@@ -1099,7 +1616,7 @@
 
                 modalCategoriaInstance.hide();
                 cargarCategorias();
-                
+
             } catch (error) {
                 console.error('Error al guardar categoría:', error);
                 alert('Error al guardar categoría: ' + error.message);
@@ -1109,7 +1626,7 @@
         async function eliminarCategoria(id, nombre) {
             // Verificar si hay productos con esta categoría
             const productosSnap = await db.collection('productos').where('categoria', '==', nombre).get();
-            
+
             if (productosSnap.size > 0) {
                 if (!confirm(`Esta categoría tiene ${productosSnap.size} producto(s). ¿Estás seguro de eliminarla? Los productos no se eliminarán pero quedarán sin categoría.`)) {
                     return;
@@ -1140,7 +1657,7 @@
 
                 const snapshot = await db.collection('productos').orderBy('nombre').get();
                 productosData = [];
-                
+
                 snapshot.forEach(doc => {
                     productosData.push({
                         id: doc.id,
@@ -1150,7 +1667,7 @@
 
                 // Cargar categorías para el filtro y el formulario
                 await cargarCategoriasEnSelect();
-                
+
                 // Cargar tipo de cambio SUNAT
                 await cargarTipoCambio();
 
@@ -1257,12 +1774,12 @@
 
             tbody.innerHTML = '';
             productosFiltrados.forEach(producto => {
-                const estadoBadge = (producto.activo !== false) 
-                    ? '<span class="badge bg-success">Activo</span>' 
+                const estadoBadge = (producto.activo !== false)
+                    ? '<span class="badge bg-success">Activo</span>'
                     : '<span class="badge bg-secondary">Inactivo</span>';
-                
+
                 const stockClass = producto.stock < 5 ? 'text-danger fw-bold' : '';
-                
+
                 tbody.innerHTML += `
                     <tr>
                         <td>
@@ -1289,7 +1806,7 @@
         }
 
         // Filtros en tiempo real
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const buscarInput = document.getElementById('buscarProducto');
             const filtroCategoria = document.getElementById('filtroCategoria');
             const filtroEstado = document.getElementById('filtroEstado');
@@ -1306,11 +1823,11 @@
             document.getElementById('productoId').value = '';
             document.getElementById('productoActivo').checked = true;
             document.getElementById('productoMoneda').value = 'PEN';
-            
+
             // Cargar categorías
             await cargarCategoriasEnSelect();
             await cargarTipoCambio();
-            
+
             modalProductoInstance = new bootstrap.Modal(document.getElementById('modalProducto'));
             modalProductoInstance.show();
         }
@@ -1327,11 +1844,11 @@
                 const producto = doc.data();
                 document.getElementById('modalProductoTitulo').textContent = 'Editar Producto';
                 document.getElementById('productoId').value = id;
-                
+
                 // Cargar categorías primero
                 await cargarCategoriasEnSelect();
                 await cargarTipoCambio();
-                
+
                 // Llenar formulario
                 document.getElementById('productoNombre').value = producto.nombre || '';
                 document.getElementById('productoPrecioCompra').value = producto.precioCompra || '';
@@ -1544,7 +2061,7 @@
                 if (configuracionCache && configuracionCache.usarTcManual && configuracionCache.tipoCambioManual) {
                     tc = parseFloat(configuracionCache.tipoCambioManual) || tc;
                 }
-            } catch {}
+            } catch { }
 
             let precioBase = precioCompra;
 
@@ -1593,16 +2110,16 @@
         document.getElementById('productoCategoria').addEventListener('change', cargarSubcategorias);
 
         // Event listeners para tabs de imagen
-        document.getElementById('url-tab').addEventListener('click', function() {
+        document.getElementById('url-tab').addEventListener('click', function () {
             document.getElementById('productoImagenUrl').focus();
         });
 
-        document.getElementById('file-tab').addEventListener('click', function() {
+        document.getElementById('file-tab').addEventListener('click', function () {
             document.getElementById('productoImagenFile').focus();
         });
 
         // Preview de imagen URL
-        document.getElementById('productoImagenUrl').addEventListener('input', function() {
+        document.getElementById('productoImagenUrl').addEventListener('input', function () {
             const url = this.value.trim();
             if (url) {
                 mostrarPreviewImagen(url);
@@ -1612,7 +2129,7 @@
         });
 
         // Preview de imagen archivo
-        document.getElementById('productoImagenFile').addEventListener('change', function(e) {
+        document.getElementById('productoImagenFile').addEventListener('change', function (e) {
             const file = e.target.files[0];
             if (file) {
                 // Validar tipo de archivo
@@ -1631,7 +2148,7 @@
 
                 // Mostrar preview
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     mostrarPreviewImagen(e.target.result);
                 };
                 reader.readAsDataURL(file);
@@ -1787,4 +2304,5 @@
         }
     </script>
 </body>
+
 </html>
