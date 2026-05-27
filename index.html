@@ -472,8 +472,6 @@
       try {
         const productos = [];
         const snapshot = await db.collection('productos')
-          .where('activo', '==', true)
-          .orderBy('nombre')
           .limit(30)
           .get();
 
@@ -484,8 +482,8 @@
             categoria: data.categoria,
             marca: data.marca,
             descripcion: data.descripcion || '',
-            precio: data.precio ? `S/ ${data.precio.toFixed(2)}` : 'Consultar',
-            stock: data.stock > 0 ? 'Disponible' : 'Agotado'
+            precio: data.precio ? \`S/ \${data.precio.toFixed(2)}\` : 'Consultar',
+            stock: data.stock > 0 ? 'Disponible' : 'Consultar'
           });
         });
         return productos;

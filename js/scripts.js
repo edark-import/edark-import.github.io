@@ -36,7 +36,11 @@ let textoBusqueda = '';
 // --- OBTENER Y MOSTRAR TIPO DE CAMBIO SUNAT UNA SOLA VEZ ---
 async function inicializarTipoCambioSunat() {
     try {
-        const res = await fetch('https://corsproxy.io/?https://api.apis.net.pe/v1/tipo-cambio-sunat');
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 3000);
+        // Usando un proxy más robusto y añadiendo timeout
+        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.apis.net.pe/v1/tipo-cambio-sunat'), { signal: controller.signal });
+        clearTimeout(timeoutId);
         const data = await res.json();
         if (data && data.venta) {
             tipoCambioGlobal = parseFloat(data.venta);
@@ -50,30 +54,65 @@ async function inicializarTipoCambioSunat() {
             if (o) o.textContent = data.origen ? `- ${data.origen}` : '';
         }
     } catch (e) {
+        console.warn('Error al obtener tipo de cambio, usando default 3.8:', e.message);
         tipoCambioGlobal = 3.8;
         const v = document.getElementById('tipoCambioValor');
         const m = document.getElementById('tipoCambioMoneda');
-        const f = document.getElementById('tipoCambioFecha');
-        const o = document.getElementById('tipoCambioOrigen');
         if (v) v.textContent = tipoCambioGlobal.toFixed(2);
         if (m) m.textContent = 'USD/PEN';
-        if (f) f.textContent = '';
-        if (o) o.textContent = '- Local';
     }
     const tcText = document.getElementById('tipoCambioText');
     if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
 }
+
 document.addEventListener('DOMContentLoaded', async function () {
-    await inicializarTipoCambioSunat();
-    await cargarConfigGeneral();
-    await cargarFiltrosDinamicos();
-    renderBadges();
-    mostrarProductos();
+    // Asegurar que Firebase esté inicializado antes de proceder
+    if (typeof db === 'undefined') {
+        console.error('Firebase DB no inicializado. Verifica firebase-config.js');
+        // Reintentar brevemente si es por delay de carga
+        setTimeout(async () => {
+            if (typeof db !== 'undefined') {
+                await iniciarTodo();
+            }
+        }, 1000);
+        return;
+    }
+    await iniciarTodo();
 });
+
+async function iniciarTodo() {
+    console.log('Iniciando carga de la aplicación...');
+    try {
+        // Ejecutar inicializaciones en paralelo para mayor velocidad
+        const [tc, config] = await Promise.allSettled([
+            inicializarTipoCambioSunat(),
+            cargarConfigGeneral()
+        ]);
+        console.log('Tipo de cambio y Config General procesados.');
+    } catch (e) {
+        console.error('Error en inicializaciones base:', e);
+    }
+
+    try {
+        console.log('Cargando filtros dinámicos...');
+        await cargarFiltrosDinamicos();
+        renderBadges();
+    } catch (e) {
+        console.error('Error al cargar filtros:', e);
+    }
+
+    try {
+        console.log('Llamando a mostrarProductos...');
+        mostrarProductos();
+    } catch (e) {
+        console.error('Error al llamar a mostrarProductos:', e);
+    }
+}
 
 // Cargar configuración general desde Firestore
 async function cargarConfigGeneral() {
     try {
+        if (!db) return;
         const snap = await db.collection('config').doc('general').get();
         configGeneral = snap.exists ? snap.data() : {};
     } catch (e) {
@@ -84,6 +123,7 @@ async function cargarConfigGeneral() {
 
 // Calcular precio para mostrar en tienda usando reglas
 function calcularPrecioProducto(prod) {
+    if (!prod) return "0.00";
     const precioCompra = parseFloat(prod.precioCompra || 0);
     const moneda = prod.moneda || 'USD';
     const tipoGanancia = prod.tipoGanancia || 'porcentaje';
@@ -138,36 +178,60 @@ let subcategoriasPorCategoria = {};
 let filtrosSeleccionados = {};
 camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
 // Filtro de precio
-let precioMin = 0, precioMax = 0, precioFiltroMin = 0, precioFiltroMax = 0;
+let precioMin = 0, precioMax = 5000, precioFiltroMin = 0, precioFiltroMax = 5000;
 
 // 1. Obtiene todos los valores únicos de cada campo desde Firestore
 async function cargarFiltrosDinamicos() {
-    const snapshot = await db.collection('productos').get();
-    valoresFiltro = {};
-    subcategoriasPorCategoria = {};
-    camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
-    let precios = [];
-    snapshot.forEach(doc => {
-        const prod = doc.data();
-        camposFiltro.forEach(f => {
-            if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
-        });
-        // Relaciona subcategoría con categoría
-        if (prod.categoria && prod.subcategoria) {
-            if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
-            subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
+    try {
+        if (!db) return;
+        const snapshot = await db.collection('productos').get();
+        valoresFiltro = {};
+        subcategoriasPorCategoria = {};
+        camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
+        let precios = [];
+        
+        if (snapshot.empty) {
+            console.log('No se encontraron productos para inicializar filtros.');
+            generarHtmlFiltros();
+            return;
         }
-        // Usar precio calculado para rangos de filtro
-        const pc = parseFloat(calcularPrecioProducto(prod));
-        if (!isNaN(pc) && pc > 0) precios.push(pc);
-    });
 
-    // Filtro de precio
-    precioMin = Math.min(...precios);
-    precioMax = Math.max(...precios);
-    precioFiltroMin = precioMin;
-    precioFiltroMax = precioMax;
+        snapshot.forEach(doc => {
+            const prod = doc.data();
+            camposFiltro.forEach(f => {
+                if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
+            });
+            // Relaciona subcategoría con categoría
+            if (prod.categoria && prod.subcategoria) {
+                if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
+                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
+            }
+            // Usar precio calculado para rangos de filtro
+            const pc = parseFloat(calcularPrecioProducto(prod));
+            if (!isNaN(pc) && pc > 0) precios.push(pc);
+        });
 
+        // Filtro de precio con valores seguros
+        if (precios.length > 0) {
+            precioMin = Math.floor(Math.min(...precios));
+            precioMax = Math.ceil(Math.max(...precios));
+            // Evitar que min y max sean iguales para que el slider funcione
+            if (precioMin === precioMax) precioMax = precioMin + 1;
+        } else {
+            precioMin = 0;
+            precioMax = 5000;
+        }
+        
+        precioFiltroMin = precioMin;
+        precioFiltroMax = precioMax;
+
+        generarHtmlFiltros();
+    } catch (e) {
+        console.error('Error en cargarFiltrosDinamicos:', e);
+    }
+}
+
+function generarHtmlFiltros() {
     // Genera el HTML de los filtros
     let html = '';
 
@@ -205,84 +269,120 @@ async function cargarFiltrosDinamicos() {
             <div id="filter-categoria" class="accordion-collapse collapse">
                 <div class="accordion-body" id="categoria-body">
         `;
-    Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
-        const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
-        html += `
-                <div class="form-check mb-1">
-                    <input class="form-check-input filter-checkbox" type="checkbox" value="${categoria}" id="${catId}" data-campo="categoria">
-                    <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
-                </div>
-            `;
-        // Subcategorías anidadas
-        if (subcategoriasPorCategoria[categoria]) {
-            Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
-                const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
-                html += `
-                        <div class="form-check ms-4">
-                            <input class="form-check-input filter-checkbox" type="checkbox" value="${subcat}" id="${subcatId}" data-campo="subcategoria" data-parent="${categoria}">
-                            <label class="form-check-label" for="${subcatId}">${subcat}</label>
-                        </div>
-                    `;
-            });
-        }
-    });
+    
+    if (valoresFiltro["categoria"]) {
+        Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
+            const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+            html += `
+                    <div class="form-check mb-1">
+                        <input class="form-check-input filter-checkbox" type="checkbox" value="${categoria}" id="${catId}" data-campo="categoria">
+                        <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
+                    </div>
+                `;
+            // Subcategorías anidadas
+            if (subcategoriasPorCategoria[categoria]) {
+                Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
+                    const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
+                    html += `
+                            <div class="form-check ms-4">
+                                <input class="form-check-input filter-checkbox" type="checkbox" value="${subcat}" id="${subcatId}" data-campo="subcategoria" data-parent="${categoria}">
+                                <label class="form-check-label" for="${subcatId}">${subcat}</label>
+                            </div>
+                        `;
+                });
+            }
+        });
+    }
     html += `</div></div></div>`;
 
     // Resto de filtros
     ["marca", "capacidad", "modelo", "dimension"].forEach(campo => {
+        const label = camposFiltro.find(f => f.campo === campo).label;
         html += `
             <div class="accordion-item">
                 <h2 class="accordion-header">
                     <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#filter-${campo}">
-                        ${camposFiltro.find(f => f.campo === campo).label}
+                        ${label}
                     </button>
                 </h2>
                 <div id="filter-${campo}" class="accordion-collapse collapse">
                     <div class="accordion-body">
             `;
-        Array.from(valoresFiltro[campo]).sort().forEach(valor => {
-            const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
-            html += `
-                    <div class="form-check">
-                        <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
-                        <label class="form-check-label" for="${id}">${valor}</label>
-                    </div>
-                `;
-        });
+        if (valoresFiltro[campo]) {
+            Array.from(valoresFiltro[campo]).sort().forEach(valor => {
+                const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
+                html += `
+                        <div class="form-check">
+                            <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
+                            <label class="form-check-label" for="${id}">${valor}</label>
+                        </div>
+                    `;
+            });
+        }
         html += `</div></div></div>`;
     });
 
-    document.getElementById('dynamic-filters').innerHTML = html;
+    const filterContainer = document.getElementById('dynamic-filters');
+    if (filterContainer) {
+        filterContainer.innerHTML = html;
+        asignarEventosFiltros();
+    }
+}
 
+function asignarEventosFiltros() {
     // Eventos para filtros
     document.querySelectorAll('.filter-checkbox').forEach(cb => {
         cb.addEventListener('change', function () {
             const campo = this.dataset.campo;
             const valor = this.value;
-            const parentCategoria = this.dataset.parent; // Para subcategorías
 
             if (this.checked) {
                 if (!filtrosSeleccionados[campo].includes(valor)) {
                     filtrosSeleccionados[campo].push(valor);
                 }
-
-                // Si es una categoría, mostrar sus subcategorías
-                if (campo === 'categoria') {
-                    mostrarSubcategorias(valor);
-                }
+                if (campo === 'categoria') mostrarSubcategorias(valor);
             } else {
                 filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
-
-                // Si es una categoría, ocultar y deseleccionar sus subcategorías
-                if (campo === 'categoria') {
-                    ocultarYLimpiarSubcategorias(valor);
-                }
+                if (campo === 'categoria') ocultarYLimpiarSubcategorias(valor);
             }
             actualizarFiltrosDinamicos();
             renderBadges();
-            mostrarProductos();
+            renderProductosPaginados();
         });
     });
+
+    // Filtro de precio
+    const pMinInput = document.getElementById('precioMin');
+    const pMaxInput = document.getElementById('precioMax');
+    
+    if (pMinInput) {
+        pMinInput.addEventListener('input', function () {
+            let min = parseInt(this.value);
+            let max = parseInt(pMaxInput.value);
+            if (min > max) {
+                min = max;
+                this.value = min;
+            }
+            precioFiltroMin = min;
+            document.getElementById('precioMinLabel').textContent = min;
+            renderProductosPaginados();
+        });
+    }
+    
+    if (pMaxInput) {
+        pMaxInput.addEventListener('input', function () {
+            let max = parseInt(this.value);
+            let min = parseInt(pMinInput.value);
+            if (max < min) {
+                max = min;
+                this.value = max;
+            }
+            precioFiltroMax = max;
+            document.getElementById('precioMaxLabel').textContent = max;
+            renderProductosPaginados();
+        });
+    }
+}
 
     // Funciones auxiliares para mostrar/ocultar subcategorías
     function mostrarSubcategorias(categoria) {
@@ -623,22 +723,51 @@ function asignarEventosProductos() {
 
 // --- MODIFICA LA CARGA DE PRODUCTOS PARA GUARDAR EL ID ---
 function mostrarProductos() {
-    document.getElementById('loaderProductos').style.display = 'block';
-    document.getElementById('productos').style.display = 'none';
+    const loader = document.getElementById('loaderProductos');
+    const container = document.getElementById('productos');
+    
+    if (loader) loader.style.display = 'block';
+    if (container) container.style.display = 'none';
+
+    console.log('Iniciando escucha de productos en Firestore...');
 
     if (unsubscribe) unsubscribe();
+    
+    if (typeof db === 'undefined' || !db) {
+        console.error('No se pudo iniciar mostrarProductos: db no está definido.');
+        if (loader) loader.innerHTML = '<div class="text-danger">Error: Firebase no inicializado.</div>';
+        return;
+    }
+
     unsubscribe = db.collection('productos').onSnapshot(snapshot => {
+        console.log('Snapshot de productos recibido. Cantidad:', snapshot.size);
         productosCache = [];
+        
+        if (snapshot.empty) {
+            console.warn('La colección "productos" está vacía en Firebase.');
+        }
+
         snapshot.forEach(doc => {
             const prod = doc.data();
-            prod.id = doc.id; // Guarda el ID aquí
+            prod.id = doc.id;
             productosCache.push(prod);
         });
+        
         paginaActual = 1;
-        renderProductosPaginados(); // <--- SOLO así, sin argumentos
+        renderProductosPaginados();
 
-        document.getElementById('loaderProductos').style.display = 'none';
-        document.getElementById('productos').style.display = '';
+        if (loader) loader.style.display = 'none';
+        if (container) container.style.display = '';
+    }, error => {
+        console.error('Error en onSnapshot productos:', error);
+        if (loader) {
+            loader.innerHTML = `
+                <div class="alert alert-danger mx-auto" style="max-width: 500px;">
+                    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+                    Error al conectar con Firebase: ${error.message}
+                    <br><small>Verifica las reglas de seguridad o la configuración del proyecto.</small>
+                </div>`;
+        }
     });
 }
 // --- FUNCIÓN PARA ORDENAR POR CAPACIDAD (asegúrate de que esté antes de renderProductosPaginados) ---
