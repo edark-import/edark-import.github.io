@@ -1,0 +1,20 @@
+/* Admin specific styles - can be expanded later */
+body {
+    font-family: Arial, sans-serif;
+}
+
+.container {
+    /* Example of a style that could override or add to base.html styles */
+    /* For now, base.html has most of the needed styles inline */
+}
+
+/* Add specific admin table styling if needed */
+/* table {} */
+
+/* Add specific admin form styling if needed */
+/* .form-group {} */
+
+.btn-primary {
+    /* Example: if we wanted admin primary buttons to be a different color */
+    /* background-color: #5a67d8; */
+}

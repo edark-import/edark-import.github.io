@@ -1,0 +1,33 @@
+{% extends "shop/base.html" %}
+
+{% block title %}Products - {{ super() }}{% endblock %}
+
+{% block content %}
+<h2>Our Products</h2>
+{% if products %}
+    <div class="product-grid">
+        {% for product in products %}
+            <div class="product-card">
+                <a href="{{ url_for('shop.view_product', product_id=product.id) }}">
+                    {% if product.image_url %}
+                        <img src="{{ product.image_url }}" alt="{{ product.name }}">
+                    {% else %}
+                        <img src="{{ url_for('static', filename='img/placeholder.png') }}" alt="No image available"> {# Assuming a placeholder image #}
+                    {% endif %}
+                </a>
+                <h3><a href="{{ url_for('shop.view_product', product_id=product.id) }}">{{ product.name }}</a></h3>
+                <p class="price">${{ "%.2f"|format(product.price) }}</p>
+                {% if product.stock > 0 %}
+                    <p class="stock-status">In Stock</p>
+                {% else %}
+                    <p class="stock-status out-of-stock">Out of Stock</p>
+                {% endif %}
+                <a href="{{ url_for('shop.view_product', product_id=product.id) }}" class="btn">View Details</a>
+                {# <a href="#" class="btn btn-add-to-cart">Add to Cart</a> (Future feature) #}
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>No products currently available. Please check back soon!</p>
+{% endif %}
+{% endblock %}

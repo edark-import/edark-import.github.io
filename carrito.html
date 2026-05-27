@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras - eDark Import</title>
+    <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="css/estilos.css" rel="stylesheet">
+    <style>
+        .cart-header {
+            background-color: #f8f9fa;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .quantity-input {
+            max-width: 80px;
+            text-align: center;
+        }
+
+        .product-img-small {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background: #fff;
+        }
+
+        .cart-summary {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        }
+
+        .empty-cart-state {
+            text-align: center;
+            padding: 60px 20px;
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
+            color: #dee2e6;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar (Loaded dynamically) -->
+    <div id="navbar-container"></div>
+
+    <div class="container py-5" style="min-height: 60vh;">
+        <h1 class="mb-4 fw-bold">Tu Carrito de Compras</h1>
+
+        <div class="row" id="cartContent">
+            <!-- Cart Items -->
+            <div class="col-lg-8" id="cartItemsContainer">
+                <div class="table-responsive">
+                    <table class="table align-middle">
+                        <thead class="cart-header">
+                            <tr>
+                                <th scope="col">Producto</th>
+                                <th scope="col">Precio</th>
+                                <th scope="col" class="text-center">Cantidad</th>
+                                <th scope="col" class="text-end">Subtotal</th>
+                                <th scope="col"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="cartTableBody">
+                            <!-- Items inserted by JS -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="d-flex justify-content-between mt-3">
+                    <button class="btn btn-outline-secondary" onclick="window.location.href='index.html'">
+                        <i class="bi bi-arrow-left"></i> Seguir Comprando
+                    </button>
+                    <button class="btn btn-outline-danger" onclick="vaciarCarrito()">
+                        <i class="bi bi-trash"></i> Vaciar Carrito
+                    </button>
+                </div>
+            </div>
+
+            <!-- Summary -->
+            <div class="col-lg-4 mt-4 mt-lg-0" id="cartSummaryContainer">
+                <div class="cart-summary sticky-top" style="top: 100px;">
+                    <h4 class="mb-3 fw-bold">Resumen del Pedido</h4>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span id="summarySubtotal" class="fw-bold">S/ 0.00</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3 text-success">
+                        <span>Descuento</span>
+                        <span>S/ 0.00</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4">
+                        <span class="h5 fw-bold">Total</span>
+                        <span id="summaryTotal" class="h5 fw-bold text-primary">S/ 0.00</span>
+                    </div>
+
+                    <button class="btn btn-success w-100 py-2 mb-3 fw-semibold" onclick="finalizarCompraWhatsApp()">
+                        <i class="bi bi-whatsapp"></i> Finalizar por WhatsApp
+                    </button>
+
+                    <div id="paypal-button-container" class="mt-3"></div>
+                    <p class="text-center mt-3 text-muted small"><i class="bi bi-shield-lock"></i> Compra segura
+                        protegida</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (Hidden by default) -->
+        <div id="emptyCartMessage" class="empty-cart-state d-none">
+            <i class="bi bi-cart-x empty-cart-icon"></i>
+            <h3>Tu carrito está vacío</h3>
+            <p class="text-muted">Parece que aún no has agregado productos.</p>
+            <a href="index.html#productos" class="btn btn-primary mt-3 px-4 py-2">Explorar Productos</a>
+        </div>
+    </div>
+
+    <!-- Footer (Loaded dynamically) -->
+    <div id="footer-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
+
+    <!-- Configs -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/scripts.js"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=USD"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderCartPage();
+
+            // Check for PayPal config
+            if (window.configGeneral && configGeneral.paypalClientId) {
+                // Reload SDK with correct ID if needed, but for now using sb or default from script
+            }
+            // Init PayPal if container exists
+            if (document.getElementById('paypal-button-container')) {
+                // Wait a bit for scripts.js to load functions
+                setTimeout(() => {
+                    if (typeof initPayPalButton === 'function') initPayPalButton();
+                }, 1000);
+            }
+        });
+
+        function renderCartPage() {
+            const tableBody = document.getElementById('cartTableBody');
+            const subtotalEl = document.getElementById('summarySubtotal');
+            const totalEl = document.getElementById('summaryTotal');
+            const cartContent = document.getElementById('cartContent');
+            const emptyMsg = document.getElementById('emptyCartMessage');
+
+            // Get carrito from localStorage (managed by scripts.js logic)
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+            if (carrito.length === 0) {
+                cartContent.classList.add('d-none');
+                emptyMsg.classList.remove('d-none');
+                return;
+            }
+
+            cartContent.classList.remove('d-none');
+            emptyMsg.classList.add('d-none');
+            tableBody.innerHTML = '';
+
+            let total = 0;
+
+            carrito.forEach((prod, index) => {
+                const precio = parseFloat(prod.precioVenta) || 0;
+                const subtotal = precio * prod.cantidad;
+                total += subtotal;
+
+                // Determine Image
+                let imgUrl = 'img/productos/default.png';
+                if (prod.imagenUrl) imgUrl = prod.imagenUrl;
+                else if (prod.imagen) imgUrl = prod.imagen;
+
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>
+                        <div class="d-flex align-items-center">
+                            <img src="${imgUrl}" alt="${prod.nombre}" class="product-img-small me-3">
+                            <div>
+                                <h6 class="mb-0 text-truncate" style="max-width: 200px;">${prod.nombre}</h6>
+                                <small class="text-muted text-uppercase">${prod.marca || ''}</small>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="fw-semibold">S/ ${precio.toFixed(2)}</td>
+                    <td>
+                        <div class="input-group input-group-sm quantity-input mx-auto">
+                            <button class="btn btn-outline-secondary" type="button" onclick="updatePageCart(${index}, -1)">-</button>
+                            <input type="text" class="form-control text-center" value="${prod.cantidad}" readonly>
+                            <button class="btn btn-outline-secondary" type="button" onclick="updatePageCart(${index}, 1)">+</button>
+                        </div>
+                    </td>
+                    <td class="text-end fw-bold">S/ ${subtotal.toFixed(2)}</td>
+                    <td class="text-end">
+                        <button class="btn btn-link text-danger p-0" onclick="removeFromPageCart(${index})">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tableBody.appendChild(tr);
+            });
+
+            subtotalEl.textContent = `S/ ${total.toFixed(2)}`;
+            totalEl.textContent = `S/ ${total.toFixed(2)}`;
+        }
+
+        function updatePageCart(index, change) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if (carrito[index]) {
+                carrito[index].cantidad += change;
+                if (carrito[index].cantidad < 1) carrito[index].cantidad = 1;
+                localStorage.setItem('carrito', JSON.stringify(carrito));
+                renderCartPage();
+                actualizarContadorCarrito(); // from scripts.js
+            }
+        }
+
+        function removeFromPageCart(index) {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            carrito.splice(index, 1);
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            renderCartPage();
+            actualizarContadorCarrito();
+        }
+
+        function vaciarCarrito() {
+            if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
+                localStorage.removeItem('carrito');
+                renderCartPage();
+                actualizarContadorCarrito();
+            }
+        }
+    </script>
+</body>
+
+</html>

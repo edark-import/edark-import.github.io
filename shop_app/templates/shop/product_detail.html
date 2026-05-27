@@ -1,0 +1,41 @@
+{% extends "shop/base.html" %}
+
+{% block title %}{{ product.name }} - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="product-detail-container">
+    <div class="product-detail-image">
+        {% if product.image_url %}
+            <img src="{{ product.image_url }}" alt="{{ product.name }}">
+        {% else %}
+            <img src="{{ url_for('static', filename='img/placeholder.png') }}" alt="No image available"> {# Assuming a placeholder image #}
+        {% endif %}
+    </div>
+    <div class="product-detail-info">
+        <h1>{{ product.name }}</h1>
+        <p class="price">${{ "%.2f"|format(product.price) }}</p>
+
+        <div class="description">
+            <h3>Product Description</h3>
+            <p>{{ product.description | nl2br if product.description else 'No description available.' }}</p>
+        </div>
+
+        <div class="stock">
+            {% if product.stock > 0 %}
+                <p><strong>Availability:</strong> In Stock ({{ product.stock }} available)</p>
+            {% else %}
+                <p><strong>Availability:</strong> <span class="out-of-stock">Out of Stock</span></p>
+            {% endif %}
+        </div>
+
+        {% if product.stock > 0 %}
+            {# <a href="#" class="btn btn-add-to-cart">Add to Cart</a> (Future feature) #}
+            <button type="button" class="btn-add-to-cart">Add to Cart (Placeholder)</button>
+        {% else %}
+            <button type="button" class="btn-add-to-cart" disabled>Out of Stock</button>
+        {% endif %}
+
+        <p style="margin-top: 20px;"><a href="{{ url_for('shop.list_products') }}">&laquo; Back to products</a></p>
+    </div>
+</div>
+{% endblock %}

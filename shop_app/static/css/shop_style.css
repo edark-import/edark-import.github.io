@@ -1,0 +1,23 @@
+/* Shop specific styles - can be expanded later */
+
+/* Example: Ensure product images in the grid are a consistent height */
+.product-card img {
+    height: 200px; /* From base.html inline style, can be adjusted here */
+    object-fit: cover; /* Ensures the image covers the area, may crop */
+}
+
+.product-detail-image img {
+    max-height: 450px; /* From base.html inline style, can be adjusted */
+    width: auto;
+    max-width: 100%;
+}
+
+.stock-status {
+    font-weight: bold;
+}
+
+.stock-status.out-of-stock {
+    color: #dc3545; /* Bootstrap danger color */
+}
+
+/* Further styling for product page, cart, etc. can go here */

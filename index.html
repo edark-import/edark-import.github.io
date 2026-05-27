@@ -1,276 +1,682 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>eDark</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="css/styles.css" rel="stylesheet" />
-    </head>
-    <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                <a class="navbar-brand" href="index.html"><img width="80" class="d-flex" alt="edark_logo" src="img/Logo/logo_2.png"></a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#!">Inicio</a></li>
-                        <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Tienda</a>
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">Todos los productos</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="#!">Productos Relevantes</a></li>
-                                <li><a class="dropdown-item" href="#!">Nuevos Productos</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <button class="btn btn-outline-dark" type="submit">
-                            <i class="bi-cart-fill me-1"></i>
-                            Carrito
-                            <span class="badge bg-dark text-white ms-1 rounded-pill">0</span>
-                        </button>
-                    </form>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description"
+    content="En eDark Alpha Technologies somos especialistas en productos tecnológicos, servicios de consultoría y soporte técnico para empresas y hogares en Perú. Descubre nuestro catálogo de laptops, computadoras, accesorios, software original, Microsoft 365 y mucho más, siempre con los mejores precios y atención personalizada. Ofrecemos asesoramiento tecnológico, mantenimiento, reciclaje de equipos y soluciones digitales innovadoras para potenciar tu negocio o mejorar tu experiencia en casa. Confía en eDark para encontrar productos de calidad, soporte profesional y la mejor experiencia de compra online en tecnología. ¡Compra con seguridad y recibe atención personalizada de expertos en tecnología! Envíos a todo el Perú. eDark Alpha Technologies – Innovación, confianza y tecnología a tu alcance." />
+  <meta name="author" content="eDark EIRL" />
+  <title>eDark</title>
+  <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link href="css/styles.css" rel="stylesheet" />
+  <link href="css/modern-styles.css" rel="stylesheet" />
+  <!-- Google Fonts Orbitron y Montserrat -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600&display=swap"
+    rel="stylesheet">
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9246515570012526"
+    crossorigin="anonymous"></script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1611560592421673"
+    crossorigin="anonymous"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'G-V89W8SCSH1');
+  </script>
+  <!-- PayPal SDK is loaded dynamically from config with PEN currency in scripts.js -->
+  <!-- Apply dark mode immediately from localStorage -->
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('modoOscuro') === 'true') {
+          document.documentElement.classList.add('modo-oscuro');
+        }
+      } catch (e) { }
+    })();
+  </script>
+</head>
+
+<script>
+  fetch('footer.html')
+    .then(res => res.text())
+    .then(html => {
+      document.getElementById('footer').innerHTML = html;
+    });
+
+  fetch('navbar.html')
+    .then(res => res.text())
+    .then(html => {
+      const navbarContainer = document.getElementById('navbar');
+      navbarContainer.innerHTML = html;
+
+      // Ejecutar scripts insertados dinámicamente
+      const scripts = navbarContainer.querySelectorAll('script');
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement('script');
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+        oldScript.remove();
+      });
+    });
+</script>
+
+<body>
+  <!-- Navigation-->
+  <div id="navbar"></div>
+  <!-- Header-->
+  <!-- Banner Mejorado eDark -->
+  <header class="gradient-bg py-5 position-relative">
+    <div class="container px-4 px-lg-5 my-5 d-flex justify-content-center">
+      <div class="banner-card text-center text-white p-4 rounded-3 shadow-lg">
+        <h1 class="display-4 fw-bold gradient-text mb-1">EDARK</h1>
+        <div class="h5 mb-4">Alpha Technologies</div>
+        <!-- Carrusel de frases célebres -->
+        <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
+          <div class="frase-carrusel-texto fs-4 fst-italic"></div>
+          <div class="frase-carrusel-autor text-end mt-2" style="font-size:1.1rem;"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Flechas del carrusel -->
+    <button id="frasePrev"
+      class="btn btn-outline-light position-absolute top-50 start-0 translate-middle-y ms-3 d-none d-md-block"
+      style="z-index:2;" aria-label="Anterior"><i class="bi bi-chevron-left"></i></button>
+    <button id="fraseNext"
+      class="btn btn-outline-light position-absolute top-50 end-0 translate-middle-y me-3 d-none d-md-block"
+      style="z-index:2;" aria-label="Siguiente"><i class="bi bi-chevron-right"></i></button>
+  </header>
+
+  <!-- Carrusel de Servicios -->
+  <div class="container my-4">
+    <div id="serviciosCarrusel" class="carousel slide" data-bs-ride="carousel">
+      <style>
+        #serviciosCarrusel .carousel-indicators {
+          display: none !important;
+        }
+      </style>
+      <button class="carousel-control-prev" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Anterior</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Siguiente</span>
+      </button>
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <div class="row justify-content-center g-3">
+            <div class="col-6 col-md-3">
+              <a href="consultoria.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-lightbulb icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">Consultoría tecnológica</h5>
+                    <p class="small text-muted">Soluciones y asesoría para empresas y hogares.</p>
+                  </div>
                 </div>
+              </a>
             </div>
+            <div class="col-6 col-md-3">
+              <a href="soporte.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-tools icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">Soporte técnico</h5>
+                    <p class="small text-muted">Atención presencial y remota, rápida y confiable.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="mantenimiento.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-gear-wide-connected icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">Mantenimiento y reparación</h5>
+                    <p class="small text-muted">Optimización y reparación de computadoras y laptops.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="recicla.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-recycle icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">Recicla tecnología</h5>
+                    <p class="small text-muted">Reciclaje responsable de equipos electrónicos.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <div class="row justify-content-center g-3">
+            <div class="col-6 col-md-3">
+              <a href="asesoramiento-hogar.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-house-door icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">Asesoramiento Hogar</h5>
+                    <p class="small text-muted">Tecnología y seguridad para tu hogar.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="asesoramiento-empresa.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-building icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">Asesoramiento Empresa</h5>
+                    <p class="small text-muted">Soluciones tecnológicas para tu negocio.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+            <div class="col-6 col-md-3">
+              <a href="pc-personalizada.html" class="text-decoration-none">
+                <div class="card h-100 text-center shadow-sm area">
+                  <div class="card-body">
+                    <i class="bi bi-pc-display-horizontal icono-servicio mb-2"></i>
+                    <h5 class="area-titulo mb-2">PC Personalizada</h5>
+                    <p class="small text-muted">Arma tu computadora a medida.</p>
+                  </div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button
+        class="carousel-control-prev btn btn-outline-light position-absolute top-50 start-0 translate-middle-x ms-3 d-none d-md-block"
+        style="z-index:2;" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
+        <i class="bi bi-chevron-left"></i>
+      </button>
+      <button
+        class="carousel-control-next btn btn-outline-light position-absolute top-50 end-0 translate-middle-xx me-3 d-none d-md-block"
+        style="z-index:2;" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
+        <i class="bi bi-chevron-right"></i>
+      </button>
+    </div>
+  </div>
+  <!-- Sección de productos -->
+  <!-- Filtros y productos -->
+  <div class="container-fluid px-5 my-5">
+    <div class="row">
+      <!-- Filtros -->
+      <div class="col-sm-3">
+        <div class="sticky-top" style="top: 80px; z-index: 1020;">
+          <div class="container mt-4">
+            <div class="sticky-top bg-white py-2 px-3 shadow-sm" style="top: 80px; z-index: 1030;">
+              <h2>Filtros Aplicados</h2>
+              <div id="selected-filters"></div>
+            </div>
+            <div class="filtros-container" style="max-height: 70vh; overflow-y: auto;">
+              <div class="accordion" id="filterAccordion">
+                <div id="dynamic-filters"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- Productos -->
+      <div class="col-sm-9">
+        <div class="d-flex justify-content-end align-items-center mb-3 flex-wrap gap-2">
+          <label class="me-2 fw-bold" for="ordenarSelect">Ordenar por:</label>
+          <select id="ordenarSelect" class="form-select ordenar-select">
+            <option value="">Por defecto</option>
+            <option value="precio-asc">Precio: Menor a mayor</option>
+            <option value="precio-desc">Precio: Mayor a menor</option>
+            <option value="capacidad-asc">Capacidad: Menor a mayor</option>
+            <option value="capacidad-desc">Capacidad: Mayor a menor</option>
+          </select>
+          <input type="text" id="buscadorProductos" class="form-control ms-2" style="max-width: 250px;"
+            placeholder="Buscar producto...">
+        </div>
+        <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
+        </div>
+        <!-- Loader de productos -->
+        <div id="loaderProductos" class="text-center my-5" style="display:none;">
+          <div class="spinner-border text-success role=" status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <div class="mt-2 text-success">Cargando productos...</div>
+        </div>
+        <!-- Paginación -->
+        <div id="paginacionProductos" class="mt-4">
+          <!-- Ejemplo de paginación -->
+          <nav>
+            <ul class="pagination justify-content-center">
+              <li class="page-item" id="anteriorPagina">
+                <button class="page-link">Anterior</button>
+              </li>
+              <!-- Aquí van los números de página si quieres -->
+              <li class="page-item" id="siguientePagina">
+                <button class="page-link">Siguiente</button>
+              </li>
+            </ul>
+          </nav>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Panel de Administrador removido del index; usar Admin Dashboard -->
+
+  <!-- Modal Detalles de Producto -->
+  <div class="modal fade" id="modalDetallesProducto" tabindex="-1" aria-labelledby="modalDetallesProductoLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalDetallesProductoLabel">Detalles del Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5 text-center mb-3 mb-md-0">
+              <img id="detalleImagen" src="" alt="Imagen producto" class="img-fluid rounded shadow-sm"
+                style="max-height:300px;">
+            </div>
+            <div class="col-md-7">
+              <h4 id="detalleNombre"></h4>
+              <p class="mb-1"><strong>Precio:</strong> S/ <span id="detallePrecio"></span></p>
+              <p class="mb-1"><strong>Marca:</strong> <span id="detalleMarca"></span></p>
+              <p class="mb-1"><strong>Modelo:</strong> <span id="detalleModelo"></span></p>
+              <p class="mb-1"><strong>Capacidad:</strong> <span id="detalleCapacidad"></span></p>
+              <p class="mb-1"><strong>Dimensión:</strong> <span id="detalleDimension"></span></p>
+              <p class="mb-1"><strong>Categoría:</strong> <span id="detalleCategoria"></span></p>
+              <p class="mb-1"><strong>Subcategoría:</strong> <span id="detalleSubcategoria"></span></p>
+              <p class="mb-1"><strong>Especificaciones técnicas:</strong> <span id="detalleEspecificaciones"
+                  class="small"></span></p>
+              <div class="mt-3">
+                <button class="btn btn-success" id="btnAgregarAlCarritoModal"><i class="bi bi-cart-plus"></i> Agregar al
+                  carrito</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal Carrito de Compras -->
+  <div class="modal fade" id="modalCarrito" tabindex="-1" aria-labelledby="modalCarritoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalCarritoLabel">Carrito de Compras</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div id="carritoContenido"></div>
+        </div>
+        <div class="modal-footer d-flex justify-content-between">
+          <div>
+            <button class="btn btn-danger" id="btnVaciarCarrito">Vaciar Carrito</button>
+          </div>
+          <div>
+            <button class="btn btn-success" id="btnEnviarWhatsapp"><i class="bi bi-whatsapp"></i> WhatsApp</button>
+            <!-- PayPal Button Container -->
+            <div id="paypal-button-container" class="ms-2 d-inline-block"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer-->
+  <div id="footer"></div>
+  <!-- Botón flotante de chat con SVG de gatito negro -->
+  <button id="chatbotBtn" style="position:fixed;bottom:30px;right:30px;z-index:1050;"
+    class="btn btn-primary rounded-circle shadow-lg p-0">
+    <img src="img/Logo/isotipo_Negro.png" style="width: 50px; height: auto;">
+  </button>
+
+  <!-- Modal de chat IA -->
+  <div class="modal fade" id="chatbotModal" tabindex="-1" aria-labelledby="chatbotModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-bottom modal-sm"
+      style="position:fixed;bottom:0;right:30px;max-width:350px;margin:0;">
+      <div class="modal-content">
+        <div class="modal-header py-2">
+          <h6 class="modal-title" id="chatbotModalLabel">Chimuelo IA - eDark</h6>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body" id="chatbotMessages" style="max-height:300px;overflow-y:auto;font-size:0.97em;">
+          <div class="text-muted small mb-2">¡Hola! Soy tu asistente virtual. Mi nombre es Chimuelo. ¿En qué puedo
+            ayudarte con tu compra?</div>
+        </div>
+        <div class="modal-footer py-2">
+          <input type="text" id="chatbotInput" class="form-control form-control-sm" placeholder="Escribe tu pregunta..."
+            autocomplete="off">
+          <button id="chatbotSend" class="btn btn-success btn-sm ms-2">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap core JS-->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics-compat.js"></script>
+  <!-- Firebase Configuration -->
+  <script src="js/firebase-config.js?v=20251203"></script>
+  <!-- Core scripts (cache busting) -->
+  <script src="js/scripts.js?v=20251203"></script>
+  <script>
+    // Frases célebres para el carrusel
+    const frases = [
+      { texto: "La ciencia no es sino una perversión de sí misma a menos que tenga como objetivo final el mejoramiento de la humanidad.", autor: "Nikola Tesla" },
+      { texto: "Cualquier cosa que pueda ser conectada, será conectada.", autor: "Kevin Ashton (Internet de las cosas)" },
+      { texto: "La tecnología es solo una herramienta. En términos de motivar a los niños y de conseguir que trabajen juntos, el profesor es lo más importante.", autor: "Bill Gates" },
+      { texto: "La mejor manera de predecir el futuro es inventarlo.", autor: "Alan Kay" },
+      { texto: "No me asusta que las computadoras lleguen a pensar como los humanos. Me asusta que los humanos piensen como computadoras.", autor: "Sydney J. Harris" },
+      { texto: "La innovación distingue a un líder de un seguidor.", autor: "Steve Jobs" },
+      { texto: "El software es como el sexo: es mejor cuando es libre.", autor: "Linus Torvalds" },
+      { texto: "La web es más una invención social que técnica. La diseñé para que la gente pudiera colaborar y compartir conocimiento.", autor: "Tim Berners-Lee" },
+      { texto: "La ciencia de hoy es la tecnología del mañana.", autor: "Edward Teller" },
+      { texto: "La tecnología es mejor cuando une a las personas.", autor: "Matt Mullenweg" },
+      { texto: "No es la fe en la tecnología. Es la fe en las personas.", autor: "Steve Jobs" },
+      { texto: "La tecnología mueve el mundo.", autor: "Steve Jobs" },
+      { texto: "La tecnología es solo tan buena como la gente que la usa.", autor: "Anónimo" },
+      { texto: "La tecnología es una palabra que describe algo que aún no funciona.", autor: "Douglas Adams" },
+      { texto: "La imaginación es más importante que el conocimiento.", autor: "Albert Einstein" },
+      { texto: "La tecnología es el arte de organizar el mundo para que no tengamos que experimentarlo.", autor: "Max Frisch" },
+      { texto: "El avance de la tecnología es basado en hacerla encajar para que no la notes, para que forme parte de la vida cotidiana.", autor: "Bill Gates" },
+      { texto: "El mayor enemigo del conocimiento no es la ignorancia, es la ilusión del conocimiento.", autor: "Stephen Hawking" },
+      { texto: "Nunca confíes en un ordenador que no puedas lanzar por una ventana.", autor: "Steve Wozniak" },
+      { texto: "El propósito de la computación es la percepción, la comprensión y la acción.", autor: "Marvin Minsky" },
+      { texto: "La tecnología debería mejorar tu vida, no convertirse en tu vida.", autor: "Harvey B. Mackay" },
+      { texto: "El hardware es lo que hace a una máquina rápida; el software es lo que hace que una máquina lenta.", autor: "Craig Bruce" },
+      { texto: "La tecnología es cualquier cosa que no estaba cuando naciste.", autor: "Alan Kay" },
+      { texto: "El verdadero progreso es el que pone la tecnología al alcance de todos.", autor: "Henry Ford" },
+      { texto: "La informática no trata sobre computadoras más que la astronomía sobre telescopios.", autor: "Edsger Dijkstra" }
+    ];
+    let fraseActual = 0;
+    const fraseTexto = () => document.querySelector('.frase-carrusel-texto');
+    const fraseAutor = () => document.querySelector('.frase-carrusel-autor');
+    function mostrarFrase(idx) {
+      fraseTexto().style.opacity = 0;
+      fraseAutor().style.opacity = 0;
+      setTimeout(() => {
+        fraseTexto().textContent = '"' + frases[idx].texto + '"';
+        fraseAutor().textContent = '— ' + frases[idx].autor;
+        fraseTexto().style.opacity = 1;
+        fraseAutor().style.opacity = 1;
+      }, 300);
+    }
+    function siguienteFrase() {
+      fraseActual = (fraseActual + 1) % frases.length;
+      mostrarFrase(fraseActual);
+    }
+    function anteriorFrase() {
+      fraseActual = (fraseActual - 1 + frases.length) % frases.length;
+      mostrarFrase(fraseActual);
+    }
+    document.addEventListener('DOMContentLoaded', function () {
+      mostrarFrase(fraseActual);
+      // Auto-carrusel
+      setInterval(siguienteFrase, 7000);
+      // Botones
+      const prev = document.getElementById('frasePrev');
+      const next = document.getElementById('fraseNext');
+      if (prev && next) {
+        prev.addEventListener('click', anteriorFrase);
+        next.addEventListener('click', siguienteFrase);
+      }
+    });
+
+    // Chatbot IA mejorado con Gemini
+    const chatbotBtn = document.getElementById('chatbotBtn');
+    const chatbotModal = new bootstrap.Modal(document.getElementById('chatbotModal'));
+    const chatbotMessages = document.getElementById('chatbotMessages');
+    const chatbotInput = document.getElementById('chatbotInput');
+    const chatbotSend = document.getElementById('chatbotSend');
+
+    chatbotBtn.addEventListener('click', () => {
+      chatbotModal.show();
+      setTimeout(() => {
+        chatbotInput.focus();
+        // Mensaje de bienvenida solo la primera vez
+        if (chatbotMessages.children.length === 0) {
+          agregarMensajeChat('bot', '¡Hola! 👋 Soy Chimuelo, tu asistente virtual de eDark. ¿En qué puedo ayudarte hoy?\n\nPuedo ayudarte con:\n• Información de productos\n• Recomendaciones tecnológicas\n• Precios y disponibilidad\n• Servicios de eDark');
+        }
+      }, 500);
+    });
+
+    chatbotSend.addEventListener('click', enviarMensajeChatbot);
+    chatbotInput.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        e.preventDefault();
+        enviarMensajeChatbot();
+      }
+    });
+
+    async function obtenerProductosDestacados() {
+      try {
+        const productos = [];
+        const snapshot = await db.collection('productos')
+          .where('activo', '==', true)
+          .orderBy('nombre')
+          .limit(30)
+          .get();
+
+        snapshot.forEach(doc => {
+          const data = doc.data();
+          productos.push({
+            nombre: data.nombre,
+            categoria: data.categoria,
+            marca: data.marca,
+            descripcion: data.descripcion || '',
+            precio: data.precio ? `S/ ${data.precio.toFixed(2)}` : 'Consultar',
+            stock: data.stock > 0 ? 'Disponible' : 'Agotado'
+          });
+        });
+        return productos;
+      } catch (error) {
+        console.error('Error al obtener productos:', error);
+        return [];
+      }
+    }
+
+    let historialChat = [];
+
+    async function enviarMensajeChatbot() {
+      const pregunta = chatbotInput.value.trim();
+      if (!pregunta) return;
+
+      agregarMensajeChat('user', pregunta);
+      chatbotInput.value = '';
+      chatbotInput.disabled = true;
+      chatbotSend.disabled = true;
+
+      historialChat.push({ role: 'user', text: pregunta });
+
+      // Indicador de "pensando..."
+      const thinkingId = 'thinking-msg-' + Date.now();
+      const divThinking = document.createElement('div');
+      divThinking.id = thinkingId;
+      divThinking.className = 'text-start mb-2';
+      divThinking.innerHTML = `<span class="badge bg-secondary text-break" style="white-space:pre-line;max-width:90%;display:inline-block;">
+        <span class="spinner-border spinner-border-sm me-2"></span>Chimuelo está pensando...
+    </span>`;
+      chatbotMessages.appendChild(divThinking);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+
+      try {
+        // Obtener productos para contexto
+        const productos = await obtenerProductosDestacados();
+        const productosTexto = productos.length > 0
+          ? productos.map(p => `• ${p.nombre} (${p.categoria}${p.marca ? ' - ' + p.marca : ''}): ${p.precio} - ${p.stock}`).join('\n')
+          : 'No hay productos disponibles actualmente.';
+
+        // Construir prompt mejorado para Gemini
+        const systemPrompt = `Eres Chimuelo, un asistente virtual amigable y experto en tecnología para eDark Alpha Technologies, una empresa peruana especializada en:
+        - Venta de productos tecnológicos (laptops, PCs, accesorios, software)
+        - Consultoría tecnológica empresarial y para hogares
+        - Soporte técnico profesional
+        - Mantenimiento y reparación de equipos
+        - Reciclaje de tecnología
+        - PC personalizadas a medida
+
+        Tu personalidad es profesional pero cercana, y siempre buscas ayudar al cliente.
+
+        PRODUCTOS DISPONIBLES:
+        ${productosTexto}
+
+        INSTRUCCIONES:
+        1. Responde de forma concisa (máximo 3-4 párrafos)
+        2. Si preguntan por productos, menciona los disponibles con precios
+        3. Si preguntan por servicios, describe brevemente nuestros servicios
+        4. Si preguntan algo fuera de tu conocimiento, sugiere contactar con soporte
+        5. Usa emojis ocasionales para ser más amigable 😊
+        6. Si el cliente muestra interés, invítalo a contactarnos por WhatsApp: +51 916 907 657
+
+HISTORIAL DE CONVERSACIÓN:
+${historialChat.slice(-6).map(m => `${m.role === 'user' ? 'Cliente' : 'Chimuelo'}: ${m.text}`).join('\n')}
+
+PREGUNTA ACTUAL: ${pregunta}
+
+Responde como Chimuelo:`;
+
+        // Llamada a Gemini API
+        const apiKey = 'AIzaSyCv2giDBnjsqNmdnnEylz0NaeEtL8xUZX8';
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+        const response = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{
+              parts: [{ text: systemPrompt }]
+            }],
+            generationConfig: {
+              temperature: 0.7,
+              topK: 40,
+              topP: 0.95,
+              maxOutputTokens: 500
+            }
+          })
+        });
+
+        const data = await response.json();
+
+        // Remover indicador de pensando
+        document.getElementById(thinkingId)?.remove();
+
+        if (data?.candidates?.[0]?.content?.parts?.[0]?.text) {
+          const respuesta = data.candidates[0].content.parts[0].text.trim();
+          agregarMensajeChat('bot', respuesta);
+          historialChat.push({ role: 'bot', text: respuesta });
+        } else if (data?.error) {
+          throw new Error(data.error.message || 'Error en la API');
+        } else {
+          throw new Error('Respuesta inválida de la API');
+        }
+
+      } catch (error) {
+        console.error('Error en chatbot:', error);
+        document.getElementById(thinkingId)?.remove();
+
+        const mensajeError = error.message.includes('quota') || error.message.includes('429')
+          ? '⚠️ Hemos alcanzado el límite de consultas. Por favor, contacta con nosotros directamente por WhatsApp: +51 916 907 657'
+          : '❌ Disculpa, tuve un problema al procesar tu mensaje. ¿Podrías intentarlo de nuevo? Si el problema persiste, escríbenos al +51 916 907 657';
+
+        agregarMensajeChat('bot', mensajeError);
+      } finally {
+        chatbotInput.disabled = false;
+        chatbotSend.disabled = false;
+        chatbotInput.focus();
+      }
+    }
+
+    function agregarMensajeChat(remitente, texto) {
+      const textoFormateado = texto.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+      const div = document.createElement('div');
+      div.className = remitente === 'user' ? 'text-end mb-2' : 'text-start mb-2';
+      const badgeClass = remitente === 'user' ? 'bg-primary' : 'bg-secondary';
+      div.innerHTML = `<span class="badge ${badgeClass} text-break" style="white-space:pre-line;max-width:90%;display:inline-block;text-align:left;">${textoFormateado}</span>`;
+      chatbotMessages.appendChild(div);
+      chatbotMessages.scrollTop = chatbotMessages.scrollHeight;
+    }
+
+    function renderizarPaginacion(paginaActual, totalPaginas) {
+      let paginacionHTML = `
+        <nav>
+          <ul class="pagination justify-content-center">
+            <li class="page-item${paginaActual === 1 ? ' disabled' : ''}">
+              <button class="page-link" id="primeraPagina" aria-label="Primera">&laquo;</button>
+            </li>
+            <li class="page-item${paginaActual === 1 ? ' disabled' : ''}">
+              <button class="page-link" id="anteriorPagina" aria-label="Anterior">&lsaquo;</button>
+            </li>
+        `;
+
+      // Números de página (máximo 5 visibles)
+      let start = Math.max(1, paginaActual - 2);
+      let end = Math.min(totalPaginas, paginaActual + 2);
+      if (paginaActual <= 3) end = Math.min(5, totalPaginas);
+      if (paginaActual >= totalPaginas - 2) start = Math.max(1, totalPaginas - 4);
+
+      for (let i = start; i <= end; i++) {
+        paginacionHTML += `
+            <li class="page-item${i === paginaActual ? ' active' : ''}">
+              <button class="page-link pagina-numero" data-pagina="${i}">${i}</button>
+            </li>`;
+      }
+
+      paginacionHTML += `
+            <li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}">
+              <button class="page-link" id="siguientePagina" aria-label="Siguiente">&rsaquo;</button>
+            </li>
+            <li class="page-item${paginaActual === totalPaginas ? ' disabled' : ''}">
+              <button class="page-link" id="ultimaPagina" aria-label="Última">&raquo;</button>
+            </li>
+          </ul>
         </nav>
-        <!-- Header-->
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <h1 class="display-4 fw-bolder">Compra con eDark</h1>
-                    <p class="lead fw-normal text-white-50 mb-0">Encuenta tus productos favoritos del lado oscuro</p>
-                </div>
-            </div>
-        </header>
-        <!-- Section-->
-        <section class="py-5">
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product image-->
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Cámara ip ezviz h6c</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    s/250.00
-                                    <br> *Incluye instalación y configuración
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Ver Opciones</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Sale badge-->
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">En venta</div>
-                            <!-- Product image-->
-                            <img class="card-img-top" src="img/Productos/microsoft-365-logo.png" alt="LogoOffice365" />
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <!-- Product name-->
-                                    <h5 class="fw-bolder">Instalación de Office365</h5>
-                                    <!-- Product reviews-->
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    <!-- Product price-->
-                                    <span class="text-muted text-decoration-line-through">s/64.90</span>
-                                    s/47.90
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" target="_blank" href="https://api.whatsapp.com/send?phone=956500807&text=Quisiera%20más%20información%20de%20lo%20que%20incluye%20la%20instalación%20de%20office365">Realizar Pedido</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">En venta</div>
-                            
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    
-                                    <h5 class="fw-bolder">Instalación de Microsoft Visio</h5>
-                                    
-                                    <span class="text-muted text-decoration-line-through">s/41.30</span>
-                                    s/29.50
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Realizar Pedido</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="col mb-5">
-                        <div class="card h-100">
-                           
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                   
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    
-                                    $40.00
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    
-                                    <h5 class="fw-bolder">Sale Item</h5>
-                                    
-                                    <span class="text-muted text-decoration-line-through">$50.00</span>
-                                    $25.00
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                           
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    
-                                    <h5 class="fw-bolder">Fancy Product</h5>
-                                    
-                                    $120.00 - $280.00
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            
-                            <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-                            
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    
-                                    <h5 class="fw-bolder">Special Item</h5>
-                                    
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    
-                                    <span class="text-muted text-decoration-line-through">$20.00</span>
-                                    $18.00
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            
-                            <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-                            
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    
-                                    <h5 class="fw-bolder">Popular Item</h5>
-                                    
-                                    <div class="d-flex justify-content-center small text-warning mb-2">
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                        <div class="bi-star-fill"></div>
-                                    </div>
-                                    
-                                    $40.00
-                                </div>
-                            </div>
-                            
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Agregar al carrito</a></div>
-                            </div>
-                        </div>
-                    </div> -->
-                </div>
-            </div>
-        </section>
-        <!-- Footer-->
-        <footer class="py-5 bg-dark">
-            <div class="container"><p class="m-0 text-center text-white">Copyright &copy; EDARK E.I.R.L. 2024</p></div>
-        </footer>
-        <!-- Bootstrap core JS-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-        <!-- Core theme JS-->
-        <script src="js/scripts.js"></script>
-    </body>
+        `;
+      document.getElementById('paginacionProductos').innerHTML = paginacionHTML;
+
+      // Listeners
+      document.getElementById('primeraPagina').onclick = function () {
+        if (paginaActual > 1) cargarProductos(1);
+      };
+      document.getElementById('anteriorPagina').onclick = function () {
+        if (paginaActual > 1) cargarProductos(paginaActual - 1);
+      };
+      document.getElementById('siguientePagina').onclick = function () {
+        if (paginaActual < totalPaginas) cargarProductos(paginaActual + 1);
+      };
+      document.getElementById('ultimaPagina').onclick = function () {
+        if (paginaActual < totalPaginas) cargarProductos(totalPaginas);
+      };
+      document.querySelectorAll('.pagina-numero').forEach(btn => {
+        btn.onclick = function () {
+          const pagina = parseInt(this.getAttribute('data-pagina'));
+          if (pagina !== paginaActual) cargarProductos(pagina);
+        };
+      });
+    }
+
+    // Llama a renderizarPaginacion(paginaActual, totalPaginas) cada vez que cambias de página
+  </script>
+
+</body>
+
 </html>
