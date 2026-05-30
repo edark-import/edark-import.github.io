@@ -65,7 +65,55 @@ async function inicializarTipoCambioSunat() {
     if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
 }
 
+// --- CARGA DINÁMICA GLOBAL DE NAVBAR Y FOOTER ---
+async function cargarNavbarYFooterGlobal() {
+    const navbarTarget = document.getElementById('navbar') || document.getElementById('navbar-container');
+    const footerTarget = document.getElementById('footer') || document.getElementById('footer-container');
+
+    if (navbarTarget && navbarTarget.innerHTML.trim() === '') {
+        try {
+            const res = await fetch('navbar.html');
+            if (res.ok) {
+                const html = await res.text();
+                navbarTarget.innerHTML = html;
+                // Ejecutar scripts del navbar
+                const scripts = navbarTarget.querySelectorAll('script');
+                scripts.forEach(oldScript => {
+                    const newScript = document.createElement('script');
+                    if (oldScript.src) {
+                        newScript.src = oldScript.src;
+                    } else {
+                        newScript.textContent = oldScript.textContent;
+                    }
+                    document.body.appendChild(newScript);
+                    oldScript.remove();
+                });
+                console.log('Navbar dinámico cargado.');
+                actualizarContadorCarrito();
+            }
+        } catch (e) {
+            console.warn('Fallo al cargar navbar dinámico:', e.message);
+        }
+    }
+
+    if (footerTarget && footerTarget.innerHTML.trim() === '') {
+        try {
+            const res = await fetch('footer.html');
+            if (res.ok) {
+                const html = await res.text();
+                footerTarget.innerHTML = html;
+                console.log('Footer dinámico cargado.');
+            }
+        } catch (e) {
+            console.warn('Fallo al cargar footer dinámico:', e.message);
+        }
+    }
+}
+
 document.addEventListener('DOMContentLoaded', async function () {
+    // Cargar navbar y footer primero
+    await cargarNavbarYFooterGlobal();
+
     // Asegurar que Firebase esté inicializado antes de proceder
     if (typeof db === 'undefined') {
         console.error('Firebase DB no inicializado. Verifica firebase-config.js');
@@ -93,19 +141,22 @@ async function iniciarTodo() {
         console.error('Error en inicializaciones base:', e);
     }
 
-    try {
-        console.log('Cargando filtros dinámicos...');
-        await cargarFiltrosDinamicos();
-        renderBadges();
-    } catch (e) {
-        console.error('Error al cargar filtros:', e);
-    }
+    // Solo cargar filtros y productos si el contenedor existe (catálogo/inicio)
+    if (document.getElementById('productos')) {
+        try {
+            console.log('Cargando filtros dinámicos...');
+            await cargarFiltrosDinamicos();
+            renderBadges();
+        } catch (e) {
+            console.error('Error al cargar filtros:', e);
+        }
 
-    try {
-        console.log('Llamando a mostrarProductos...');
-        mostrarProductos();
-    } catch (e) {
-        console.error('Error al llamar a mostrarProductos:', e);
+        try {
+            console.log('Llamando a mostrarProductos...');
+            mostrarProductos();
+        } catch (e) {
+            console.error('Error al llamar a mostrarProductos:', e);
+        }
     }
 }
 
@@ -1085,26 +1136,78 @@ function renderCarrito() {
     });
 }
 
-document.getElementById('cartBtn').addEventListener('click', function () {
-    renderCarrito();
-    const modal = new bootstrap.Modal(document.getElementById('modalCarrito'));
-    modal.show();
+// --- INTERACCIÓN CON EL CARRITO Y EL NAVBAR (DELEGACIÓN DE EVENTOS) ---
+let paypalButtonsRendered = false;
+
+document.addEventListener('click', function (e) {
+    // 1. Botón de Carrito (Navbar)
+    const cartBtn = e.target.closest('#cartBtn');
+    if (cartBtn) {
+        const modalEl = document.getElementById('modalCarrito');
+        if (modalEl) {
+            renderCarrito();
+            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
+            modal.show();
+            // Inicializar PayPal cuando se abre el modal
+            if (!paypalButtonsRendered) {
+                initPayPalButton();
+                paypalButtonsRendered = true;
+            }
+        } else {
+            // Si la página no tiene el modal (ej: nosotros.html), redirigir a la página de carrito dedicada
+            window.location.href = 'carrito.html';
+        }
+        return;
+    }
+
+    // 2. Botón Cerrar Sesión en Navbar
+    const logoutBtn = e.target.closest('#logoutBtnNav');
+    if (logoutBtn) {
+        if (typeof auth !== 'undefined') {
+            auth.signOut().then(() => {
+                window.location.reload();
+            });
+        }
+        return;
+    }
 });
 
-document.getElementById('btnVaciarCarrito').addEventListener('click', function () {
-    carrito = [];
-    guardarCarrito();
-    renderCarrito();
+// Registrar eventos del modalCarrito si está presente
+document.addEventListener('DOMContentLoaded', () => {
+    const modalEl = document.getElementById('modalCarrito');
+    if (modalEl) {
+        modalEl.addEventListener('hidden.bs.modal', function () {
+            const cont = document.querySelector('#paypal-button-container');
+            if (cont) cont.innerHTML = '';
+            paypalButtonsRendered = false;
+        });
+    }
 });
 
-document.getElementById('btnEnviarWhatsapp').addEventListener('click', function () {
-    if (carrito.length === 0) return;
-    let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
-    carrito.forEach(item => {
-        mensaje += `• ${item.nombre} %0A(S/ ${item.precio} x ${item.cantidad} UND)%0A`;
-    });
-    mensaje += `%0ATotal: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}`;
-    window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+// Listener Vaciar Carrito (Seguro)
+document.addEventListener('DOMContentLoaded', () => {
+    const btnVaciar = document.getElementById('btnVaciarCarrito');
+    if (btnVaciar) {
+        btnVaciar.addEventListener('click', function () {
+            carrito = [];
+            guardarCarrito();
+            renderCarrito();
+        });
+    }
+
+    // Listener Enviar WhatsApp (Seguro)
+    const btnWhatsapp = document.getElementById('btnEnviarWhatsapp');
+    if (btnWhatsapp) {
+        btnWhatsapp.addEventListener('click', function () {
+            if (carrito.length === 0) return;
+            let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
+            carrito.forEach(item => {
+                mensaje += `• ${item.nombre} %0A(S/ ${item.precio} x ${item.cantidad} UND)%0A`;
+            });
+            mensaje += `%0ATotal: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}`;
+            window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+        });
+    }
 });
 
 // --- PAYPAL PAYMENT INTEGRATION ---
@@ -1128,16 +1231,17 @@ function initPayPalButton() {
                 alert('El carrito está vacío');
                 return;
             }
-            // Total en soles (S/)
+            // Convertir total en soles (S/) a dólares (USD) para evitar error de divisa no soportada en PayPal local
             const totalSoles = calcularTotalCarritoSoles();
+            const totalUSD = totalSoles / tipoCambioGlobal;
 
             return actions.order.create({
                 purchase_units: [{
                     amount: {
-                        value: totalSoles.toFixed(2),
-                        currency_code: 'PEN'
+                        value: totalUSD.toFixed(2),
+                        currency_code: 'USD'
                     },
-                    description: `Compra en eDark - ${carrito.length} producto(s) (Total S/ ${totalSoles.toFixed(2)})`
+                    description: `Compra en eDark - ${carrito.length} producto(s) (S/ ${totalSoles.toFixed(2)} convertidos a USD)`
                 }]
             });
         },
@@ -1155,7 +1259,8 @@ function initPayPalButton() {
                 renderCarrito();
 
                 // Cerrar modal
-                const modal = bootstrap.Modal.getInstance(document.getElementById('modalCarrito'));
+                const modalEl = document.getElementById('modalCarrito');
+                const modal = modalEl ? bootstrap.Modal.getInstance(modalEl) : null;
                 if (modal) modal.hide();
             });
         },
@@ -1167,14 +1272,16 @@ function initPayPalButton() {
 }
 
 function guardarVentaPayPal(details) {
+    const totalSoles = calcularTotalCarritoSoles();
     const venta = {
         productos: carrito.map(item => ({
+            id: item.id || null,
             nombre: item.nombre,
             precio: item.precio,
             cantidad: item.cantidad,
             subtotal: item.precio * item.cantidad
         })),
-        total: carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0),
+        total: totalSoles,
         metodoPago: 'PayPal',
         paypalOrderId: details.id,
         paypalPayerId: details.payer.payer_id,
@@ -1187,29 +1294,6 @@ function guardarVentaPayPal(details) {
         .then(() => console.log('Venta guardada en Firestore'))
         .catch(error => console.error('Error guardando venta:', error));
 }
-
-// Inicializar PayPal cuando se abre el modal del carrito
-let paypalButtonsRendered = false;
-document.getElementById('cartBtn').addEventListener('click', function () {
-    const modalEl = document.getElementById('modalCarrito');
-    const modal = new bootstrap.Modal(modalEl);
-    modal.show();
-
-    // Render cuando el modal se muestra, evitar duplicados
-    modalEl.addEventListener('shown.bs.modal', function onShown() {
-        if (!paypalButtonsRendered) {
-            initPayPalButton();
-            paypalButtonsRendered = true;
-        }
-    }, { once: true });
-
-    // Al cerrar, limpiar contenedor y flag
-    modalEl.addEventListener('hidden.bs.modal', function onHidden() {
-        const cont = document.querySelector('#paypal-button-container');
-        if (cont) cont.innerHTML = '';
-        paypalButtonsRendered = false;
-    }, { once: true });
-});
 
 // === CARGA DINÁMICA DE SDK PAYPAL DESDE CONFIG (Firestore: config/general) ===
 let paypalScriptEstado = 'no-cargado';
@@ -1227,7 +1311,7 @@ async function cargarPayPalDesdeConfig() {
         }
         paypalScriptEstado = 'cargando';
         const s = document.createElement('script');
-        s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=PEN`;
+        s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(clientId)}&currency=USD`;
         s.onload = () => { paypalScriptEstado = 'cargado'; console.log('PayPal SDK cargado'); };
         s.onerror = () => { paypalScriptEstado = 'error'; console.error('Error cargando PayPal SDK'); };
         document.head.appendChild(s);
@@ -1237,7 +1321,7 @@ async function cargarPayPalDesdeConfig() {
             try {
                 paypalScriptEstado = 'cargando';
                 const s = document.createElement('script');
-                s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID_FALLBACK)}&currency=PEN`;
+                s.src = `https://www.paypal.com/sdk/js?client-id=${encodeURIComponent(PAYPAL_CLIENT_ID_FALLBACK)}&currency=USD`;
                 s.onload = () => { paypalScriptEstado = 'cargado'; console.log('PayPal SDK (fallback) cargado'); };
                 s.onerror = () => { paypalScriptEstado = 'error'; console.error('Error cargando PayPal SDK (fallback)'); };
                 document.head.appendChild(s);
@@ -1264,6 +1348,44 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 });
 
+// --- FUNCIÓN GLOBAL PARA AGREGAR AL CARRITO ---
+function agregarAlCarrito(producto, cantidad = 1) {
+    try {
+        if (!producto || !producto.nombre) return;
+        const precio = parseFloat(producto.precio) || parseFloat(producto.precioVenta) || parseFloat(producto.precioFinal) || 0;
+        if (isNaN(precio) || precio <= 0) return;
+
+        let idx = -1;
+        if (producto.id) {
+            idx = carrito.findIndex(item => item.id === producto.id);
+        }
+        if (idx < 0) {
+            idx = carrito.findIndex(item => item.nombre === producto.nombre && Math.abs(Number(item.precio) - precio) < 0.01);
+        }
+
+        const imagenUrl = producto.imagenUrl || producto.imagen || '';
+
+        if (idx >= 0) {
+            carrito[idx].cantidad += cantidad;
+        } else {
+            carrito.push({
+                id: producto.id || undefined,
+                nombre: producto.nombre,
+                precio: precio,
+                imagen: imagenUrl,
+                cantidad: cantidad
+            });
+        }
+
+        guardarCarrito();
+        actualizarContadorCarrito();
+        console.log(`[Cart] Agregado: ${producto.nombre} x ${cantidad}`);
+    } catch (err) {
+        console.error('[Cart] Error al agregar producto:', err);
+    }
+}
+window.agregarAlCarrito = agregarAlCarrito;
+
 // --- AGREGAR AL CARRITO DESDE EL MODAL ---
 document.addEventListener('DOMContentLoaded', function () {
     const btnAgregar = document.getElementById('btnAgregarAlCarritoModal');
@@ -1284,29 +1406,14 @@ document.addEventListener('DOMContentLoaded', function () {
             let precioCalc = producto ? parseFloat(calcularPrecioProducto(producto)) : parseFloat(precioTexto);
             if (!nombre || isNaN(precioCalc) || precioCalc <= 0) return;
 
-            // Buscar por id si disponible, de lo contrario por nombre+precio
-            let idx = -1;
-            if (productId) {
-                idx = carrito.findIndex(item => item.id === productId);
-            }
-            if (idx < 0) {
-                idx = carrito.findIndex(item => item.nombre === nombre && Math.abs(Number(item.precio) - precioCalc) < 0.01);
-            }
+            const productToAdd = {
+                id: productId || (producto ? producto.id : undefined),
+                nombre: nombre,
+                precio: precioCalc,
+                imagen: (producto && (producto.imagenUrl || producto.imagen)) || imagenSrc || ''
+            };
 
-            if (idx >= 0) {
-                carrito[idx].cantidad++;
-            } else {
-                carrito.push({
-                    id: productId || undefined,
-                    nombre: nombre,
-                    precio: precioCalc,
-                    imagen: (producto && (producto.imagenUrl || producto.imagen)) || imagenSrc || '',
-                    cantidad: 1
-                });
-            }
-
-            guardarCarrito();
-            actualizarContadorCarrito();
+            agregarAlCarrito(productToAdd, 1);
 
             const toastHtml = `<div class="toast align-items-center text-white bg-success border-0 position-fixed top-0 start-50 translate-middle-x mt-3" style="z-index:9999" role="alert">
                 <div class="d-flex"><div class="toast-body">✓ Producto agregado al carrito</div>
@@ -1320,7 +1427,7 @@ document.addEventListener('DOMContentLoaded', function () {
             const modal = bootstrap.Modal.getInstance(document.getElementById('modalDetallesProducto'));
             if (modal) modal.hide();
         } catch (err) {
-            console.error('[Cart] Error agregando al carrito:', err);
+            console.error('[Cart] Error adding item to cart:', err);
         }
     });
 });

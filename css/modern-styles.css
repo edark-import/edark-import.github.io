@@ -1077,15 +1077,33 @@ body {
     background: linear-gradient(90deg, var(--edark-blue), var(--edark-blue-light));
     opacity: 0;
     transition: opacity var(--transition-normal);
+    z-index: 10;
 }
 
 .card:hover::before {
     opacity: 1;
 }
 
+.card {
+    position: relative;
+    overflow: hidden;
+    transition: all var(--transition-normal);
+}
+
+.card .card-img-top {
+    transition: transform var(--transition-slow);
+    aspect-ratio: 16/11;
+    object-fit: cover;
+}
+
+.card:hover .card-img-top {
+    transform: scale(1.05);
+}
+
 .card:hover {
-    box-shadow: var(--shadow-lg);
-    transform: translateY(-4px);
+    box-shadow: var(--shadow-xl) !important;
+    transform: translateY(-6px);
+    border-color: rgba(0, 123, 255, 0.2) !important;
 }
 
 .card-header {
@@ -1098,6 +1116,37 @@ body {
 
 .card-body {
     padding: var(--spacing-lg);
+}
+
+/* Premium Outline Buttons */
+.btn-outline-dark {
+    border: 2px solid var(--text-primary) !important;
+    color: var(--text-primary) !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+    transition: all var(--transition-normal) !important;
+}
+
+.btn-outline-dark:hover {
+    background: var(--text-primary) !important;
+    color: var(--bg-primary) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: var(--shadow-md) !important;
+}
+
+.btn-outline-primary {
+    border: 2px solid var(--edark-blue) !important;
+    color: var(--edark-blue) !important;
+    background: transparent !important;
+    font-weight: 600 !important;
+    transition: all var(--transition-normal) !important;
+}
+
+.btn-outline-primary:hover {
+    background: var(--edark-blue) !important;
+    color: white !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3) !important;
 }
 
 /* Enhanced Forms */

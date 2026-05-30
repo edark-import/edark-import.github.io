@@ -177,7 +177,7 @@
             let total = 0;
 
             carrito.forEach((prod, index) => {
-                const precio = parseFloat(prod.precioVenta) || 0;
+                const precio = parseFloat(prod.precio) || parseFloat(prod.precioVenta) || 0;
                 const subtotal = precio * prod.cantidad;
                 total += subtotal;
 
@@ -226,7 +226,7 @@
                 if (carrito[index].cantidad < 1) carrito[index].cantidad = 1;
                 localStorage.setItem('carrito', JSON.stringify(carrito));
                 renderCartPage();
-                actualizarContadorCarrito(); // from scripts.js
+                if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito(); // from scripts.js
             }
         }
 
@@ -235,16 +235,37 @@
             carrito.splice(index, 1);
             localStorage.setItem('carrito', JSON.stringify(carrito));
             renderCartPage();
-            actualizarContadorCarrito();
+            if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
         }
 
         function vaciarCarrito() {
             if (confirm('¿Estás seguro de que deseas vaciar el carrito?')) {
                 localStorage.removeItem('carrito');
                 renderCartPage();
-                actualizarContadorCarrito();
+                if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
             }
         }
+
+        function finalizarCompraWhatsApp() {
+            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+            if (carrito.length === 0) {
+                alert('El carrito está vacío');
+                return;
+            }
+            let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
+            carrito.forEach(item => {
+                const price = parseFloat(item.precio) || parseFloat(item.precioVenta) || 0;
+                mensaje += `• ${item.nombre} %0A(S/ ${price.toFixed(2)} x ${item.cantidad} UND)%0A`;
+            });
+            const total = carrito.reduce((acc, item) => {
+                const price = parseFloat(item.precio) || parseFloat(item.precioVenta) || 0;
+                return acc + price * item.cantidad;
+            }, 0);
+            mensaje += `%0ATotal: S/ ${total.toFixed(2)}`;
+            const phone = '51916907657'; // Número de whatsapp
+            window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+        }
+        window.finalizarCompraWhatsApp = finalizarCompraWhatsApp;
     </script>
 </body>
 

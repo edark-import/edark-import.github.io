@@ -238,6 +238,43 @@
             }
         }
 
+        async function cargarConfiguracionSilencioso() {
+            try {
+                const snap = await db.collection('config').doc('general').get();
+                window.configuracionCache = snap.exists ? snap.data() : {};
+            } catch (e) {
+                console.warn('No se pudo precargar la configuración:', e.message);
+                window.configuracionCache = {};
+            }
+        }
+
+        async function verificarYSembrarCategorias() {
+            try {
+                const snap = await db.collection('categorias').limit(1).get();
+                if (snap.empty) {
+                    console.log('Sembrando categorías base del negocio...');
+                    const categoriasBase = [
+                        { nombre: 'Laptops', subcategorias: ['Gaming', 'Oficina', 'Ultrabooks'] },
+                        { nombre: 'Computadoras', subcategorias: ['PC Escritorio', 'All-in-One', 'Servidores'] },
+                        { nombre: 'Componentes', subcategorias: ['Procesadores', 'Memoria RAM', 'Discos de Almacenamiento', 'Tarjetas de Video', 'Placas Madre'] },
+                        { nombre: 'Accesorios', subcategorias: ['Teclados', 'Mouses', 'Audífonos', 'Cámaras Web'] },
+                        { nombre: 'Software', subcategorias: ['Sistemas Operativos', 'Antivirus', 'Licencias de Oficina'] }
+                    ];
+                    for (const cat of categoriasBase) {
+                        await db.collection('categorias').add({
+                            nombre: cat.nombre,
+                            subcategorias: cat.subcategorias,
+                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp(),
+                            fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                        });
+                    }
+                    console.log('Categorías base sembradas.');
+                }
+            } catch (e) {
+                console.warn('Error al verificar/sembrar categorías:', e.message);
+            }
+        }
+
         const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
         window.auth.onAuthStateChanged(async (user) => {
             if (!user) { window.location.href = 'login.html'; return; }
@@ -253,16 +290,32 @@
                 const wl = EMAIL_ADMIN_WHITELIST.includes((user.email || '').toLowerCase());
                 const isAdmin = claimAdmin || fsAdmin || wl;
                 window.isAdmin = !!isAdmin;
+                
                 // Actualizar estado de edición de la sección Configuración
                 actualizarEdicionConfiguracion(window.isAdmin);
 
                 if (!isAdmin) {
-                    // Mantener la redirección de seguridad si no es admin
                     alert('Acceso denegado: Se requiere rol de administrador');
                     await auth.signOut();
                     window.location.href = 'login.html';
+                    return;
                 }
-            } catch {
+
+                // Configurar UI para administrador autorizado
+                const nameEl = document.getElementById('adminName');
+                if (nameEl) nameEl.textContent = user.email;
+
+                // Carga inicial y silenciosa de la configuración
+                await cargarConfiguracionSilencioso();
+
+                // Sembrar categorías si no existen
+                await verificarYSembrarCategorias();
+
+                // Cargar panel
+                if (typeof cargarDashboard === 'function') cargarDashboard();
+
+            } catch (e) {
+                console.error('Error en verificación de rol:', e);
                 window.location.href = 'login.html';
             }
         });
@@ -920,8 +973,9 @@
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Subcategoría</label>
-                                <input type="text" class="form-control" id="productoSubcategoria"
-                                    placeholder="Ej: Gaming, Oficina">
+                                <select class="form-select" id="productoSubcategoria">
+                                    <option value="">Primero selecciona una categoría...</option>
+                                </select>
                             </div>
                         </div>
 
@@ -1010,25 +1064,7 @@
         // Variables globales
         let ventasChart, metodoPagoChart;
 
-        // Verificar autenticación
-        auth.onAuthStateChanged(async (user) => {
-            if (!user) {
-                window.location.href = 'login.html';
-                return;
-            }
-
-            // Verificar rol de administrador
-            const userDoc = await db.collection('usuarios').doc(user.uid).get();
-            if (!userDoc.exists || userDoc.data().rol !== 'admin') {
-                alert('Acceso denegado: Se requiere rol de administrador');
-                auth.signOut();
-                window.location.href = 'login.html';
-                return;
-            }
-
-            document.getElementById('adminName').textContent = user.email;
-            cargarDashboard();
-        });
+        // (La verificación de autenticación se maneja globalmente en el bloque de inicialización del head)
 
         // Fecha actual
         document.getElementById('fechaActual').textContent = new Date().toLocaleDateString('es-PE', {
@@ -1763,7 +1799,8 @@
             let productosFiltrados = productosData.filter(p => {
                 const matchBuscar = !buscar || p.nombre.toLowerCase().includes(buscar);
                 const matchCategoria = !filtroCategoria || p.categoria === filtroCategoria;
-                const matchEstado = !filtroEstado || p.activo?.toString() === filtroEstado;
+                const pActivo = (p.activo !== false);
+                const matchEstado = !filtroEstado || pActivo.toString() === filtroEstado;
                 return matchBuscar && matchCategoria && matchEstado;
             });
 
@@ -1823,6 +1860,10 @@
             document.getElementById('productoId').value = '';
             document.getElementById('productoActivo').checked = true;
             document.getElementById('productoMoneda').value = 'PEN';
+            document.getElementById('productoPrecioVenta').readOnly = false;
+            document.getElementById('productoSubcategoria').innerHTML = '<option value="">Primero selecciona una categoría...</option>';
+            imagenUrlActual = '';
+            ocultarPreviewImagen();
 
             // Cargar categorías
             await cargarCategoriasEnSelect();
@@ -1860,6 +1901,8 @@
                 // Calcular precio si hay datos
                 if (producto.precioCompra) {
                     calcularPrecioVentaAutomatico();
+                } else {
+                    document.getElementById('productoPrecioVenta').readOnly = false;
                 }
 
                 // Manejar imagen - usar URL tab por defecto para edición (soporta imagenUrl o imagen legacy)
@@ -1869,15 +1912,17 @@
                 document.getElementById('url-tab').click(); // Activar tab URL
                 if (imagenUrlActual) {
                     mostrarPreviewImagen(imagenUrlActual);
+                } else {
+                    ocultarPreviewImagen();
                 }
 
                 document.getElementById('productoCategoria').value = producto.categoria || '';
+                
+                // Cargar subcategorías síncronamente
+                cargarSubcategorias();
+                
                 document.getElementById('productoSubcategoria').value = producto.subcategoria || '';
 
-                // Cargar subcategorías si hay categoría seleccionada
-                if (producto.categoria) {
-                    setTimeout(() => cargarSubcategorias(), 100);
-                }
                 document.getElementById('productoMarca').value = producto.marca || '';
                 document.getElementById('productoCapacidad').value = producto.capacidad || '';
                 document.getElementById('productoModelo').value = producto.modelo || '';
@@ -2045,15 +2090,18 @@
 
         // Calcular precio de venta automáticamente
         function calcularPrecioVentaAutomatico() {
-            const precioCompra = parseFloat(document.getElementById('productoPrecioCompra').value) || 0;
+            const precioCompraVal = document.getElementById('productoPrecioCompra').value.trim();
+            const precioCompra = parseFloat(precioCompraVal) || 0;
             const moneda = document.getElementById('productoMoneda').value;
             const tipoGanancia = document.getElementById('productoTipoGanancia').value;
             const valorGanancia = parseFloat(document.getElementById('productoValorGanancia').value) || 0;
 
-            if (precioCompra <= 0) {
-                document.getElementById('productoPrecioVenta').value = '';
+            if (!precioCompraVal || precioCompra <= 0) {
+                document.getElementById('productoPrecioVenta').readOnly = false;
                 return;
             }
+
+            document.getElementById('productoPrecioVenta').readOnly = true;
 
             // Tipo de cambio: usar manual si está habilitado en configuración
             let tc = tipoCambioGlobal;

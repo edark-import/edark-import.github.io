@@ -164,6 +164,7 @@
                 // Ensure config is loaded for pricing
                 if (window.inicializarTipoCambioSunat) await window.inicializarTipoCambioSunat();
                 if (window.cargarConfiguracionGeneral) await window.cargarConfiguracionGeneral();
+                else if (window.cargarConfigGeneral) await window.cargarConfigGeneral();
 
                 const doc = await db.collection('productos').doc(productId).get();
                 if (!doc.exists) {
