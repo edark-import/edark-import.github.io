@@ -524,30 +524,7 @@ function asignarEventosFiltros() {
         });
     }
 
-    // Filtro de precio
-    document.getElementById('precioMin').addEventListener('input', function () {
-        let min = parseInt(this.value);
-        let max = parseInt(document.getElementById('precioMax').value);
-        if (min > max) {
-            min = max;
-            this.value = min;
-        }
-        precioFiltroMin = min;
-        document.getElementById('precioMinLabel').textContent = min;
-        mostrarProductos();
-    });
-    document.getElementById('precioMax').addEventListener('input', function () {
-        let max = parseInt(this.value);
-        let min = parseInt(document.getElementById('precioMin').value);
-        if (max < min) {
-            max = min;
-            this.value = max;
-        }
-        precioFiltroMax = max;
-        document.getElementById('precioMaxLabel').textContent = max;
-        mostrarProductos();
-    });
-}
+
 
 function renderBadges() {
     const container = document.getElementById('selected-filters');
@@ -998,6 +975,10 @@ document.addEventListener('DOMContentLoaded', function () {
 
 // --- FUNCIÓN PARA FILTRAR PRODUCTOS SEGÚN LOS FILTROS SELECCIONADOS ---
 function productoCoincideFiltros(producto) {
+    // Ocultar productos inactivos
+    if (producto.activo === false) {
+        return false;
+    }
     // Filtros por campos con lógica anidada
     for (const campo of Object.keys(filtrosSeleccionados)) {
         const valores = filtrosSeleccionados[campo];
