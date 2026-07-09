@@ -267,6 +267,23 @@
                 }
 
                 if (isAdmin) {
+                    // Auto-crear documento en Firestore si el usuario está en el whitelist de admins pero no tiene documento
+                    try {
+                        const docSnap = await db.collection('usuarios').doc(user.uid).get();
+                        if (!docSnap.exists) {
+                            await db.collection('usuarios').doc(user.uid).set({
+                                email: user.email,
+                                nombre: "Administrador",
+                                role: "admin",
+                                activo: true,
+                                fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            console.log('Documento de administrador creado automáticamente.');
+                        }
+                    } catch (e) {
+                        console.warn('No se pudo verificar/crear el documento del usuario en Firestore:', e);
+                    }
+
                     showAlert('¡Bienvenido! Redirigiendo...', 'success');
                     setTimeout(() => window.location.href = 'dashboard.html', 1000);
                 } else {
