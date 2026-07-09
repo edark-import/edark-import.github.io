@@ -1079,10 +1079,32 @@
                 fechaInicio.setDate(fechaInicio.getDate() - 30);
 
                 // Obtener ventas
-                const ventasSnapshot = await db.collection('ventas')
-                    .where('fechaCreacion', '>=', fechaInicio)
-                    .where('fechaCreacion', '<=', fechaFin)
-                    .get();
+                let ventasSnapshot;
+                try {
+                    ventasSnapshot = await db.collection('ventas')
+                        .where('fechaCreacion', '>=', fechaInicio)
+                        .where('fechaCreacion', '<=', fechaFin)
+                        .get();
+                } catch (indexError) {
+                    console.warn('Falta índice compuesto para filtrar por fecha, obteniendo todas las ventas y filtrando en memoria:', indexError);
+                    try {
+                        const allVentas = await db.collection('ventas').get();
+                        const docs = [];
+                        allVentas.forEach(doc => {
+                            const data = doc.data();
+                            const fecha = data.fechaCreacion?.toDate ? data.fechaCreacion.toDate() : null;
+                            if (!fecha || (fecha >= fechaInicio && fecha <= fechaFin)) {
+                                docs.push(doc);
+                            }
+                        });
+                        ventasSnapshot = {
+                            forEach: (cb) => docs.forEach(cb)
+                        };
+                    } catch (fallbackError) {
+                        console.error('Error en el fallback de ventas:', fallbackError);
+                        ventasSnapshot = { forEach: () => {} };
+                    }
+                }
 
                 let totalVentas = 0;
                 let totalIngresos = 0;
