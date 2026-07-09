@@ -86,11 +86,15 @@
 
 body {
     font-family: 'Montserrat', sans-serif;
-    background: var(--bg-secondary);
-    color: var(--text-primary);
+    background: linear-gradient(-45deg, #ffffff, #f1f7fc, #e3effa, #ffffff);
+    background-size: 400% 400%;
+    animation: liquidGradient 20s ease infinite;
+    color: #1e293b;
     line-height: 1.5;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    padding-top: 100px !important;
+    transition: background 0.5s ease, color 0.5s ease;
 }
 
 /* Typography */
@@ -460,8 +464,10 @@ p {
 
 /* Manual Dark Mode Toggle */
 body.modo-oscuro {
-    background-color: #181a1b !important;
-    color: #e0e0e0 !important;
+    background: linear-gradient(-45deg, #000000, #030a16, #091322, #000000) !important;
+    background-size: 400% 400% !important;
+    animation: liquidGradient 20s ease infinite !important;
+    color: #f1f5f9 !important;
 }
 
 body.modo-oscuro .bg-light {
@@ -693,12 +699,10 @@ body.modo-oscuro .paso {
 
 /* Gradient Backgrounds */
 .gradient-bg {
-    background: linear-gradient(-45deg, #020617, #0b1528, #070f1e, #020617);
-    background-size: 400% 400%;
-    animation: liquidGradient 15s ease infinite;
+    background: transparent !important;
     position: relative;
     z-index: 1;
-    border-bottom: 1px solid rgba(0, 173, 181, 0.15);
+    border-bottom: none !important;
 }
 
 /* Banner card contrast */
@@ -1375,27 +1379,42 @@ body.modo-oscuro .glass-btn:hover {
 }
 
 .glass-navbar {
-    background: rgba(255, 255, 255, 0.75) !important;
-    backdrop-filter: blur(20px) !important;
-    -webkit-backdrop-filter: blur(20px) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2) !important;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
-    transition: background 0.3s, border 0.3s;
+    position: fixed !important;
+    top: 15px !important;
+    left: 24px !important;
+    right: 24px !important;
+    width: auto !important;
+    border-radius: 20px !important;
+    background: rgba(255, 255, 255, 0.65) !important;
+    backdrop-filter: blur(25px) !important;
+    -webkit-backdrop-filter: blur(25px) !important;
+    border: 1px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 123, 255, 0.06) !important;
+    z-index: 1050 !important;
+    transition: all 0.3s ease;
+    padding: 0.5rem 1.5rem !important;
 }
 
 body.modo-oscuro .glass-navbar {
-    background: rgba(18, 22, 30, 0.8) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.15);
+    background: rgba(10, 14, 23, 0.6) !important;
+    border: 1px solid rgba(255, 255, 255, 0.08) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
 }
 
-/* Adjust body padding for fixed navbar */
+/* Adjust body padding for fixed capsule navbar */
 body {
-    padding-top: 85px !important;
+    padding-top: 115px !important;
 }
 
 @media (max-width: 991px) {
     body {
-        padding-top: 75px !important;
+        padding-top: 105px !important;
+    }
+    .glass-navbar {
+        top: 10px !important;
+        left: 12px !important;
+        right: 12px !important;
+        border-radius: 16px !important;
+        padding: 0.3rem 0.8rem !important;
     }
 }
