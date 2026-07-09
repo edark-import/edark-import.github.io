@@ -261,7 +261,7 @@
                         const docSnap = await db.collection('usuarios').doc(user.uid).get();
                         if (docSnap.exists) {
                             const u = docSnap.data();
-                            if (u.rol === 'admin' || u.admin === true) isAdmin = true;
+                            if (u.rol === 'admin' || u.role === 'admin' || u.admin === true) isAdmin = true;
                         }
                     } catch (e) { }
                 }
