@@ -54,5 +54,17 @@ service cloud.firestore {
       allow read: if true;
       allow write: if isAdmin();
     }
+    
+    // Categorías - lectura pública, escritura solo admin
+    match /categorias/{categoria} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+    
+    // Configuración - lectura pública, escritura solo admin
+    match /config/{documento} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
   }
 }
