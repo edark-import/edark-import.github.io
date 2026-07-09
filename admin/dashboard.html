@@ -285,9 +285,33 @@
                 let fsAdmin = false;
                 try {
                     const snap = await db.collection('usuarios').doc(user.uid).get();
-                    if (snap.exists) { const u = snap.data(); fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true); }
+                    if (snap.exists) { 
+                        const u = snap.data(); 
+                        fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true); 
+                    }
                 } catch { }
                 const wl = EMAIL_ADMIN_WHITELIST.includes((user.email || '').toLowerCase());
+                
+                // Si el usuario es de la lista blanca pero no tiene documento de administrador en Firestore, crearlo de forma reactiva
+                if (wl && !fsAdmin) {
+                    try {
+                        const snap = await db.collection('usuarios').doc(user.uid).get();
+                        if (!snap.exists) {
+                            await db.collection('usuarios').doc(user.uid).set({
+                                email: user.email,
+                                nombre: "Administrador",
+                                role: "admin",
+                                activo: true,
+                                fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                            console.log('Documento de administrador creado automáticamente desde el dashboard.');
+                            fsAdmin = true;
+                        }
+                    } catch (e) {
+                        console.warn('Fallo al auto-crear documento de administrador en Firestore:', e.message);
+                    }
+                }
+                
                 const isAdmin = claimAdmin || fsAdmin || wl;
                 window.isAdmin = !!isAdmin;
                 
