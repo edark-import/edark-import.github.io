@@ -482,7 +482,7 @@
             categoria: data.categoria,
             marca: data.marca,
             descripcion: data.descripcion || '',
-            precio: data.precio ? \`S/ \${data.precio.toFixed(2)}\` : 'Consultar',
+            precio: data.precio ? 'S/ ' + data.precio.toFixed(2) : 'Consultar',
             stock: data.stock > 0 ? 'Disponible' : 'Consultar'
           });
         });
