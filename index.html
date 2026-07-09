@@ -35,8 +35,14 @@
   <script>
     (function () {
       try {
-        if (localStorage.getItem('modoOscuro') === 'true') {
+        if (localStorage.getItem('modoOscuro') !== 'false') {
           document.documentElement.classList.add('modo-oscuro');
+          // Also apply immediately to body when it exists
+          document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('modoOscuro') !== 'false') {
+              document.body.classList.add('modo-oscuro');
+            }
+          });
         }
       } catch (e) { }
     })();
@@ -76,15 +82,15 @@
   <div id="navbar"></div>
   <!-- Header-->
   <!-- Banner Mejorado eDark -->
-  <header class="gradient-bg py-5 position-relative">
-    <div class="container px-4 px-lg-5 my-5 d-flex justify-content-center">
-      <div class="banner-card text-center p-4 rounded-3 shadow-lg">
+  <header class="gradient-bg position-relative" style="min-height: 340px; display: flex; align-items: center; padding: 2rem 0;">
+    <div class="container px-4 px-lg-5 d-flex justify-content-center w-100">
+      <div class="banner-card text-center p-4 rounded-3 shadow-lg w-100" style="max-width:720px; min-height: 240px; display: flex; flex-direction: column; justify-content: center;">
         <div class="logo-edark">EDARK</div>
         <div class="sub-edark">Alpha Technologies</div>
         <!-- Carrusel de frases célebres -->
-        <div id="frasesCarrusel" class="mx-auto" style="max-width:600px; min-height:60px;">
-          <div class="frase-carrusel-texto fs-4 fst-italic"></div>
-          <div class="frase-carrusel-autor text-end mt-2" style="font-size:1.1rem;"></div>
+        <div id="frasesCarrusel" class="mx-auto" style="max-width:580px;">
+          <div class="frase-carrusel-texto fs-5 fst-italic"></div>
+          <div class="frase-carrusel-autor text-end mt-2" style="font-size:1rem;"></div>
         </div>
       </div>
     </div>
@@ -98,118 +104,168 @@
   </header>
 
   <!-- Carrusel de Servicios -->
-  <div class="container my-4">
-    <div id="serviciosCarrusel" class="carousel slide" data-bs-ride="carousel">
-      <style>
-        #serviciosCarrusel .carousel-indicators {
-          display: none !important;
-        }
-      </style>
-      <button class="carousel-control-prev" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Anterior</span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Siguiente</span>
-      </button>
-      <div class="carousel-inner">
-        <div class="carousel-item active">
-          <div class="row justify-content-center g-3">
-            <div class="col-6 col-md-3">
-              <a href="consultoria.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-lightbulb icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">Consultoría tecnológica</h5>
-                    <p class="small text-muted">Soluciones y asesoría para empresas y hogares.</p>
-                  </div>
-                </div>
-              </a>
+  <!-- Carrusel de Servicios Continuo (Marquee) -->
+  <div class="container-fluid my-4 overflow-hidden position-relative" style="padding: 0;">
+    <div class="services-marquee">
+      <div class="services-marquee-track">
+        <!-- Set 1 -->
+        <div class="services-marquee-item">
+          <a href="consultoria.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-lightbulb icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Consultoría tecnológica</h5>
+                <p class="small text-muted">Soluciones y asesoría para empresas y hogares.</p>
+              </div>
             </div>
-            <div class="col-6 col-md-3">
-              <a href="soporte.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-tools icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">Soporte técnico</h5>
-                    <p class="small text-muted">Atención presencial y remota, rápida y confiable.</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div class="col-6 col-md-3">
-              <a href="mantenimiento.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-gear-wide-connected icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">Mantenimiento y reparación</h5>
-                    <p class="small text-muted">Optimización y reparación de computadoras y laptops.</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-            <div class="col-6 col-md-3">
-              <a href="recicla.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-recycle icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">Recicla tecnología</h5>
-                    <p class="small text-muted">Reciclaje responsable de equipos electrónicos.</p>
-                  </div>
-                </div>
-              </a>
-            </div>
-          </div>
+          </a>
         </div>
-        <div class="carousel-item">
-          <div class="row justify-content-center g-3">
-            <div class="col-6 col-md-3">
-              <a href="asesoramiento-hogar.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-house-door icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">Asesoramiento Hogar</h5>
-                    <p class="small text-muted">Tecnología y seguridad para tu hogar.</p>
-                  </div>
-                </div>
-              </a>
+        <div class="services-marquee-item">
+          <a href="soporte.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-tools icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Soporte técnico</h5>
+                <p class="small text-muted">Atención presencial y remota, rápida y confiable.</p>
+              </div>
             </div>
-            <div class="col-6 col-md-3">
-              <a href="asesoramiento-empresa.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-building icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">Asesoramiento Empresa</h5>
-                    <p class="small text-muted">Soluciones tecnológicas para tu negocio.</p>
-                  </div>
-                </div>
-              </a>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="mantenimiento.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-gear-wide-connected icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Mantenimiento y reparación</h5>
+                <p class="small text-muted">Optimización y reparación de computadoras y laptops.</p>
+              </div>
             </div>
-            <div class="col-6 col-md-3">
-              <a href="pc-personalizada.html" class="text-decoration-none">
-                <div class="card h-100 text-center shadow-sm area">
-                  <div class="card-body">
-                    <i class="bi bi-pc-display-horizontal icono-servicio mb-2"></i>
-                    <h5 class="area-titulo mb-2">PC Personalizada</h5>
-                    <p class="small text-muted">Arma tu computadora a medida.</p>
-                  </div>
-                </div>
-              </a>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="recicla.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-recycle icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Recicla tecnología</h5>
+                <p class="small text-muted">Reciclaje responsable de equipos electrónicos.</p>
+              </div>
             </div>
-          </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="asesoramiento-hogar.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-house-door icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Asesoramiento Hogar</h5>
+                <p class="small text-muted">Tecnología y seguridad para tu hogar.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="asesoramiento-empresa.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-building icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Asesoramiento Empresa</h5>
+                <p class="small text-muted">Soluciones tecnológicas para tu negocio.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="pc-personalizada.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-pc-display-horizontal icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">PC Personalizada</h5>
+                <p class="small text-muted">Arma tu computadora a medida.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+
+        <!-- Set 2 (Clon para bucle infinito) -->
+        <div class="services-marquee-item">
+          <a href="consultoria.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-lightbulb icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Consultoría tecnológica</h5>
+                <p class="small text-muted">Soluciones y asesoría para empresas y hogares.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="soporte.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-tools icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Soporte técnico</h5>
+                <p class="small text-muted">Atención presencial y remota, rápida y confiable.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="mantenimiento.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-gear-wide-connected icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Mantenimiento y reparación</h5>
+                <p class="small text-muted">Optimización y reparación de computadoras y laptops.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="recicla.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-recycle icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Recicla tecnología</h5>
+                <p class="small text-muted">Reciclaje responsable de equipos electrónicos.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="asesoramiento-hogar.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-house-door icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Asesoramiento Hogar</h5>
+                <p class="small text-muted">Tecnología y seguridad para tu hogar.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="asesoramiento-empresa.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-building icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">Asesoramiento Empresa</h5>
+                <p class="small text-muted">Soluciones tecnológicas para tu negocio.</p>
+              </div>
+            </div>
+          </a>
+        </div>
+        <div class="services-marquee-item">
+          <a href="pc-personalizada.html" class="text-decoration-none">
+            <div class="card text-center shadow-sm area">
+              <div class="card-body">
+                <i class="bi bi-pc-display-horizontal icono-servicio mb-2"></i>
+                <h5 class="area-titulo mb-2">PC Personalizada</h5>
+                <p class="small text-muted">Arma tu computadora a medida.</p>
+              </div>
+            </div>
+          </a>
         </div>
       </div>
-      <button
-        class="carousel-control-prev btn btn-outline-light position-absolute top-50 start-0 translate-middle-x ms-3 d-none d-md-block"
-        style="z-index:2;" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="prev">
-        <i class="bi bi-chevron-left"></i>
-      </button>
-      <button
-        class="carousel-control-next btn btn-outline-light position-absolute top-50 end-0 translate-middle-xx me-3 d-none d-md-block"
-        style="z-index:2;" type="button" data-bs-target="#serviciosCarrusel" data-bs-slide="next">
-        <i class="bi bi-chevron-right"></i>
-      </button>
     </div>
   </div>
   <!-- Sección de productos -->
@@ -445,7 +501,7 @@
 
     // Chatbot IA mejorado con Gemini
     const chatbotBtn = document.getElementById('chatbotBtn');
-    const chatbotModal = new bootstrap.Modal(document.getElementById('chatbotModal'));
+    const chatbotModal = bootstrap.Modal.getOrCreateInstance(document.getElementById('chatbotModal'));
     const chatbotMessages = document.getElementById('chatbotMessages');
     const chatbotInput = document.getElementById('chatbotInput');
     const chatbotSend = document.getElementById('chatbotSend');

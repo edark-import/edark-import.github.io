@@ -185,8 +185,8 @@ p {
 }
 
 .card:hover {
-    box-shadow: 0 16px 36px 0 rgba(0, 173, 181, 0.25) !important;
-    border-color: rgba(0, 173, 181, 0.45) !important;
+    box-shadow: 0 16px 36px 0 rgba(0, 123, 255, 0.25) !important;
+    border-color: rgba(0, 123, 255, 0.45) !important;
     transform: translateY(-6px);
 }
 
@@ -463,7 +463,8 @@ p {
 } */
 
 /* Manual Dark Mode Toggle */
-body.modo-oscuro {
+body.modo-oscuro,
+html.modo-oscuro body {
     background: linear-gradient(-45deg, #000000, #030a16, #091322, #000000) !important;
     background-size: 400% 400% !important;
     animation: liquidGradient 20s ease infinite !important;
@@ -498,13 +499,26 @@ body.modo-oscuro .card {
 }
 
 body.modo-oscuro .card:hover {
-    box-shadow: 0 16px 36px 0 rgba(0, 173, 181, 0.35) !important;
-    border-color: rgba(0, 173, 181, 0.4) !important;
+    box-shadow: 0 16px 36px 0 rgba(0, 123, 255, 0.35) !important;
+    border-color: rgba(0, 123, 255, 0.4) !important;
 }
 
 body.modo-oscuro .modal-content {
     background-color: #23272b !important;
     color: #e0e0e0 !important;
+}
+
+body.modo-oscuro .modal-header {
+    border-bottom-color: rgba(255,255,255,0.1) !important;
+}
+
+body.modo-oscuro .modal-footer {
+    border-top-color: rgba(255,255,255,0.1) !important;
+}
+
+body.modo-oscuro .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%) !important;
+    opacity: 0.8 !important;
 }
 
 body.modo-oscuro .form-control,
@@ -539,9 +553,9 @@ body.modo-oscuro .pagination .page-link {
 }
 
 body.modo-oscuro .page-item.active .page-link {
-    background-color: #00adb5 !important;
+    background-color: #007BFF !important;
     color: #fff !important;
-    border-color: #00adb5 !important;
+    border-color: #007BFF !important;
 }
 
 body.modo-oscuro .btn-outline-dark {
@@ -555,8 +569,8 @@ body.modo-oscuro .btn-outline-dark:hover {
 }
 
 body.modo-oscuro .btn-primary {
-    background-color: #00adb5 !important;
-    border-color: #00adb5 !important;
+    background-color: #007BFF !important;
+    border-color: #007BFF !important;
     color: #fff !important;
 }
 
@@ -566,7 +580,7 @@ body.modo-oscuro .btn-primary:hover {
 }
 
 body.modo-oscuro .text-primary {
-    color: #00adb5 !important;
+    color: #007BFF !important;
 }
 
 body.modo-oscuro .text-light {
@@ -591,7 +605,7 @@ body.modo-oscuro .navbar-light .navbar-nav .nav-link {
 body.modo-oscuro .navbar-light .navbar-nav .nav-link:hover,
 body.modo-oscuro .navbar-light .navbar-nav .nav-link:focus,
 body.modo-oscuro .navbar-light .navbar-nav .nav-link.active {
-    color: #00adb5 !important;
+    color: #007BFF !important;
 }
 
 body.modo-oscuro .navbar-light .dropdown-item {
@@ -601,7 +615,7 @@ body.modo-oscuro .navbar-light .dropdown-item {
 body.modo-oscuro .navbar-light .dropdown-item:hover,
 body.modo-oscuro .navbar-light .dropdown-item:focus {
     background-color: #222 !important;
-    color: #00adb5 !important;
+    color: #007BFF !important;
 }
 
 /* Additional dark mode styles */
@@ -619,12 +633,12 @@ body.modo-oscuro .area {
 }
 
 body.modo-oscuro .area:hover {
-    box-shadow: 0 16px 36px rgba(0, 173, 181, 0.35) !important;
-    border-color: rgba(0, 173, 181, 0.4) !important;
+    box-shadow: 0 16px 36px rgba(0, 123, 255, 0.35) !important;
+    border-color: rgba(0, 123, 255, 0.4) !important;
 }
 
 body.modo-oscuro .area .area-titulo {
-    color: #00adb5 !important;
+    color: #007BFF !important;
 }
 
 body.modo-oscuro .paso {
@@ -636,7 +650,7 @@ body.modo-oscuro .paso {
 /* Common styles for all pages */
 .icono-servicio {
     font-size: 2.5rem;
-    color: #00adb5;
+    color: #007BFF;
 }
 
 .paso {
@@ -655,7 +669,7 @@ body.modo-oscuro .paso {
 .paso-num {
     font-size: 1.2rem;
     font-weight: bold;
-    color: #00adb5;
+    color: #007BFF;
 }
 
 .area {
@@ -671,8 +685,8 @@ body.modo-oscuro .paso {
 }
 
 .area:hover {
-    box-shadow: 0 16px 36px rgba(0, 173, 181, 0.2) !important;
-    border-color: rgba(0, 173, 181, 0.4) !important;
+    box-shadow: 0 16px 36px rgba(0, 123, 255, 0.2) !important;
+    border-color: rgba(0, 123, 255, 0.4) !important;
     transform: translateY(-6px);
 }
 
@@ -683,7 +697,7 @@ body.modo-oscuro .paso {
 .area-titulo {
     font-size: 1.1rem;
     font-weight: bold;
-    color: #00adb5;
+    color: #007BFF;
 }
 
 /* Copilot-inspired Code-like Styling */
@@ -699,42 +713,61 @@ body.modo-oscuro .paso {
 
 /* Gradient Backgrounds */
 .gradient-bg {
-    background: transparent !important;
+    background: #000000 !important;
     position: relative;
     z-index: 1;
-    border-bottom: none !important;
+    border-bottom: 2px solid rgba(0, 123, 255, 0.3) !important;
+}
+
+/* Force solid black headers across all pages */
+header, 
+.blog-hero, 
+.post-hero {
+    background: #000000 !important;
+    border-bottom: 2px solid rgba(0, 123, 255, 0.3) !important;
+    color: #ffffff !important;
 }
 
 /* Banner card contrast */
 .banner-card {
     max-width: 720px;
-    background: rgba(255, 255, 255, 0.04);
-    backdrop-filter: blur(25px);
-    -webkit-backdrop-filter: blur(25px);
-    border: 1px solid rgba(0, 173, 181, 0.3) !important;
-    box-shadow: 0 20px 50px rgba(0, 173, 181, 0.12) !important;
+    background: rgba(0, 0, 0, 0.7) !important;
+    border: 2px solid #007BFF !important;
     border-radius: 20px !important;
+    box-shadow: 0 20px 50px rgba(0, 123, 255, 0.15) !important;
 }
 
 body.modo-oscuro .banner-card {
-    background: rgba(0, 0, 0, 0.35);
-    border: 1px solid rgba(0, 173, 181, 0.25) !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4) !important;
+    background: rgba(0, 0, 0, 0.85) !important;
+    border: 2px solid #007BFF !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
 }
 
 #frasesCarrusel {
-    background: rgba(255, 255, 255, 0.08) !important;
-    border: 1px solid rgba(255, 255, 255, 0.12) !important;
-    backdrop-filter: blur(10px) !important;
-    -webkit-backdrop-filter: blur(10px) !important;
+    background: #000000 !important;
+    border: 1px solid rgba(0, 123, 255, 0.45) !important;
     border-radius: 16px !important;
-    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.1), 0 10px 30px rgba(0, 0, 0, 0.15) !important;
-    padding: 1.5rem !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    padding: 1.2rem 1.5rem !important;
+    min-height: 140px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: center !important;
 }
 
 body.modo-oscuro #frasesCarrusel {
-    background: rgba(0, 0, 0, 0.25) !important;
-    border: 1px solid rgba(255, 255, 255, 0.05) !important;
+    background: #000000 !important;
+    border: 1px solid rgba(0, 123, 255, 0.35) !important;
+}
+
+.frase-carrusel-texto,
+.frase-carrusel-autor {
+    transition: opacity 0.3s ease;
+}
+
+.frase-carrusel-texto {
+    font-size: 0.92rem !important;
+    line-height: 1.5;
 }
 
 /* Carousel controls – keep chevrons, remove big circles on cards */
@@ -1063,12 +1096,18 @@ body.modo-oscuro #frasesCarrusel {
     bottom: 0;
     background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="10" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="10" cy="50" r="0.5" fill="rgba(255,255,255,0.1)"/><circle cx="90" cy="30" r="0.5" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
     opacity: 0.3;
+    pointer-events: none;
 }
 
 .modal-title {
     font-weight: 600;
     position: relative;
     z-index: 1;
+}
+
+.modal-header .btn-close {
+    position: relative;
+    z-index: 2;
 }
 
 .modal-body {
@@ -1143,8 +1182,11 @@ body {
 
 .card .card-img-top {
     transition: transform var(--transition-slow);
-    aspect-ratio: 16/11;
+    aspect-ratio: 4/3;
     object-fit: cover;
+    width: 100%;
+    height: 200px !important;
+    object-position: center;
 }
 
 .card:hover .card-img-top {
@@ -1152,9 +1194,9 @@ body {
 }
 
 .card:hover {
-    box-shadow: 0 16px 36px 0 rgba(0, 173, 181, 0.25) !important;
+    box-shadow: 0 16px 36px 0 rgba(0, 123, 255, 0.25) !important;
     transform: translateY(-6px);
-    border-color: rgba(0, 173, 181, 0.45) !important;
+    border-color: rgba(0, 123, 255, 0.45) !important;
 }
 
 .card-header {
@@ -1321,13 +1363,13 @@ body.modo-oscuro .glass-card {
 
 .glass-card-hover:hover {
     transform: translateY(-6px);
-    box-shadow: 0 16px 36px 0 rgba(0, 173, 181, 0.25);
-    border-color: rgba(0, 173, 181, 0.45);
+    box-shadow: 0 16px 36px 0 rgba(0, 123, 255, 0.25);
+    border-color: rgba(0, 123, 255, 0.45);
 }
 
 body.modo-oscuro .glass-card-hover:hover {
-    box-shadow: 0 16px 36px 0 rgba(0, 173, 181, 0.35);
-    border-color: rgba(0, 173, 181, 0.4);
+    box-shadow: 0 16px 36px 0 rgba(0, 123, 255, 0.35);
+    border-color: rgba(0, 123, 255, 0.4);
 }
 
 .liquid-glass-bg {
@@ -1344,37 +1386,37 @@ body.modo-oscuro .glass-card-hover:hover {
 }
 
 .gradient-text-glass {
-    background: linear-gradient(135deg, #00adb5 0%, #007bff 100%);
+    background: linear-gradient(135deg, #007BFF 0%, #007bff 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-    text-shadow: 0 0 30px rgba(0, 173, 181, 0.25);
+    text-shadow: 0 0 30px rgba(0, 123, 255, 0.25);
 }
 
 .glass-btn {
-    background: rgba(0, 173, 181, 0.12);
+    background: rgba(0, 123, 255, 0.12);
     backdrop-filter: blur(4px);
     -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(0, 173, 181, 0.45);
-    color: #00adb5 !important;
+    border: 1px solid rgba(0, 123, 255, 0.45);
+    color: #007BFF !important;
     font-weight: 600;
     transition: all 0.3s ease;
     border-radius: 10px;
 }
 
 .glass-btn:hover {
-    background: #00adb5;
+    background: #007BFF;
     color: #ffffff !important;
-    box-shadow: 0 0 15px rgba(0, 173, 181, 0.45);
+    box-shadow: 0 0 15px rgba(0, 123, 255, 0.45);
     transform: translateY(-2px);
 }
 
 body.modo-oscuro .glass-btn {
-    border-color: rgba(0, 173, 181, 0.35);
-    background: rgba(0, 173, 181, 0.08);
+    border-color: rgba(0, 123, 255, 0.35);
+    background: rgba(0, 123, 255, 0.08);
 }
 
 body.modo-oscuro .glass-btn:hover {
-    background: #00adb5;
+    background: #007BFF;
     color: #ffffff !important;
 }
 
@@ -1427,48 +1469,264 @@ body {
     font-weight: 900;
     font-size: clamp(2.5rem, 7vw, 5rem);
     margin-bottom: 0.2em !important;
-    color: #030a16 !important;
-    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    color: #ffffff !important;
+    text-shadow: 0 0 25px rgba(0, 123, 255, 0.55), 0 2px 16px rgba(0,0,0,0.6) !important;
 }
 
 body.modo-oscuro .logo-edark {
     color: #ffffff !important;
-    text-shadow: 0 0 25px rgba(0, 173, 181, 0.5), 0 2px 16px rgba(0,0,0,0.6) !important;
+    text-shadow: 0 0 25px rgba(0, 123, 255, 0.55), 0 2px 16px rgba(0,0,0,0.6) !important;
 }
 
 .sub-edark {
     font-family: 'Montserrat', Arial, sans-serif !important;
     font-weight: 600 !important;
     font-size: clamp(1.1rem, 3vw, 2.2rem);
-    color: #007bff !important;
+    color: #007BFF !important;
     letter-spacing: 0.08em;
     margin-bottom: 1.2em !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
 }
 
 body.modo-oscuro .sub-edark {
-    color: #00adb5 !important;
+    color: #007BFF !important;
 }
 
-/* Quotes readability */
+/* Quotes readability - always white text inside black block */
 .frase-carrusel-texto {
     font-family: 'Montserrat', sans-serif !important;
     font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
-    color: #1e293b !important;
+    color: #ffffff !important;
     font-weight: 600 !important;
     line-height: 1.6 !important;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 body.modo-oscuro .frase-carrusel-texto {
     color: #ffffff !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 .frase-carrusel-autor {
     font-family: 'Montserrat', sans-serif !important;
-    color: #007bff !important;
+    color: #007BFF !important;
     font-weight: 600 !important;
 }
 
 body.modo-oscuro .frase-carrusel-autor {
-    color: #00adb5 !important;
+    color: #007BFF !important;
+}
+
+/* Unify all page header main titles to use the Orbitron/Montserrat premium brand styling */
+header h1, 
+.blog-hero h1,
+.post-hero h1 {
+    font-family: 'Orbitron', Arial, sans-serif !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.12em !important;
+    font-weight: 900 !important;
+    color: #ffffff !important;
+    text-shadow: 0 0 25px rgba(0, 123, 255, 0.55), 0 2px 16px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Subtitles under headers */
+header p,
+.blog-hero p,
+.post-hero p {
+    font-family: 'Montserrat', Arial, sans-serif !important;
+    font-weight: 600 !important;
+    color: #007BFF !important;
+    letter-spacing: 0.08em !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4) !important;
+}
+
+body.modo-oscuro header p,
+body.modo-oscuro .blog-hero p,
+body.modo-oscuro .post-hero p {
+    color: #007BFF !important;
+}
+
+/* Premium Navigation Link Styling and Active Indicator Animation */
+.glass-navbar .nav-link {
+    position: relative;
+    padding: 0.5rem 1rem !important;
+    transition: color 0.3s ease;
+}
+
+.glass-navbar .nav-link::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    width: 0;
+    height: 3px;
+    background: #007BFF;
+    border-radius: 2px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    transform: translateX(-50%);
+}
+
+.glass-navbar .nav-link:hover::after,
+.glass-navbar .nav-link.active::after {
+    width: 80%;
+    box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+}
+
+.glass-navbar .nav-link:hover,
+.glass-navbar .nav-link.active {
+    color: #007BFF !important;
+}
+
+body.modo-oscuro .glass-navbar .nav-link:hover,
+body.modo-oscuro .glass-navbar .nav-link.active {
+    color: #ffffff !important;
+}
+
+body.modo-oscuro .glass-navbar .nav-link::after {
+    background: #007BFF;
+}
+
+/* Glassmorphic List Groups for service pages */
+.list-group-item {
+    background: transparent !important;
+    color: #1e293b !important;
+    border-color: rgba(255, 255, 255, 0.15) !important;
+}
+
+body.modo-oscuro .list-group-item {
+    color: #ffffff !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Glassmorphic Dropdown Menu for Navbar */
+.glass-navbar .dropdown-menu {
+    background: rgba(0, 0, 0, 0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border: 1px solid rgba(0, 123, 255, 0.25) !important;
+    border-radius: 14px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+    padding: 0.5rem !important;
+    margin-top: 8px !important;
+}
+
+.glass-navbar .dropdown-item {
+    font-family: 'Montserrat', sans-serif !important;
+    color: rgba(255, 255, 255, 0.85) !important;
+    font-weight: 500 !important;
+    border-radius: 8px !important;
+    padding: 0.5rem 1rem !important;
+    transition: all 0.2s ease !important;
+}
+
+.glass-navbar .dropdown-item:hover,
+.glass-navbar .dropdown-item.active {
+    background: rgba(0, 123, 255, 0.2) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 0 5px rgba(0, 123, 255, 0.3) !important;
+}
+
+body:not(.modo-oscuro) .glass-navbar .dropdown-menu {
+    background: rgba(255, 255, 255, 0.9) !important;
+    border-color: rgba(0, 123, 255, 0.15) !important;
+    box-shadow: 0 10px 30px rgba(31, 38, 135, 0.08) !important;
+}
+
+body:not(.modo-oscuro) .glass-navbar .dropdown-item {
+    color: #1e293b !important;
+}
+
+body:not(.modo-oscuro) .glass-navbar .dropdown-item:hover,
+body:not(.modo-oscuro) .glass-navbar .dropdown-item.active {
+    background: rgba(0, 123, 255, 0.1) !important;
+    color: #007BFF !important;
+}
+
+/* Infinite services marquee slider */
+.services-marquee {
+    display: flex;
+    overflow: hidden;
+    user-select: none;
+    width: 100%;
+    padding: 1rem 0;
+}
+
+.services-marquee-track {
+    display: flex;
+    width: max-content;
+    animation: scrollMarquee 40s linear infinite;
+    gap: 1.5rem;
+}
+
+.services-marquee-track:hover {
+    animation-play-state: paused;
+}
+
+.services-marquee-item {
+    width: 280px;
+    flex-shrink: 0;
+}
+
+@keyframes scrollMarquee {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(calc(-280px * 7 - 1.5rem * 7));
+    }
+}
+
+/* Dark mode: fix filter sidebar white bg */
+body.modo-oscuro .bg-white {
+    background-color: #1a1d20 !important;
+    color: #e0e0e0 !important;
+}
+body.modo-oscuro .shadow-sm {
+    box-shadow: 0 4px 16px rgba(0,0,0,0.5) !important;
+}
+
+/* Uniform product card height */
+#productos .col > .card,
+#productos-home .col > .card {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+#productos .card-body,
+#productos-home .card-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
+#productos .card-footer,
+#productos-home .card-footer {
+    margin-top: auto;
+}
+
+/* Uniform services marquee card height */
+.services-marquee-item .card {
+    height: 175px !important;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    overflow: hidden;
+    margin-bottom: 0 !important;
+}
+.services-marquee-item .area {
+    margin-bottom: 0 !important;
+    height: 175px !important;
+}
+.services-marquee-item .card-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+.services-marquee-item .card-body .small {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    font-size: 0.8rem !important;
 }

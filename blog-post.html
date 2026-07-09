@@ -18,7 +18,7 @@
         <!-- Google AdSense -->
         <script>
             try {
-                if (localStorage.getItem('modoOscuro') === 'true') {
+                if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
                     document.body.classList.add('modo-oscuro');
                 }
@@ -77,7 +77,7 @@
         }
         
         .post-content blockquote {
-            border-left: 4px solid #00adb5;
+            border-left: 4px solid #007BFF;
             padding-left: 20px;
             margin: 20px 0;
             font-style: italic;

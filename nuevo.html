@@ -16,7 +16,7 @@
     <link href="css/styles.css" rel="stylesheet" />
     <script>
         try {
-            if (localStorage.getItem('modoOscuro') === 'true') {
+            if (localStorage.getItem('modoOscuro') !== 'false') {
                 document.documentElement.classList.add('modo-oscuro');
                 document.body.classList.add('modo-oscuro');
             }
@@ -62,7 +62,7 @@
         </div>
     </nav>
     <!-- Header-->
-    <header class="bg-dark py-5">
+    <header class="py-5" style="background: #000000; border-bottom: 2px solid rgba(0, 123, 255, 0.3);">
         <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
                 <h1 class="display-4 fw-bolder">Tienda eDark</h1>

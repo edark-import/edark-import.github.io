@@ -14,7 +14,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
         <script>
             try {
-                if (localStorage.getItem('modoOscuro') === 'true') {
+                if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
                     document.body.classList.add('modo-oscuro');
                 }

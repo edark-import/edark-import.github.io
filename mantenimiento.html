@@ -14,7 +14,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
         <script>
             try {
-                if (localStorage.getItem('modoOscuro') === 'true') {
+                if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
                     document.body.classList.add('modo-oscuro');
                 }
@@ -63,19 +63,19 @@ fetch('navbar.html')
 <body>
     <!-- Navigation-->
     <div id="navbar"></div>
-    <main class="container my-5">
-        <div class="text-center mb-5">
-            <span class="icono-servicio d-block mb-2"><i class="bi bi-wrench-adjustable-circle"></i></span>
-            <h1 class="fw-bold">Mantenimiento y Reparación</h1>
-            <p class="lead mt-3">
-                <i class="bi bi-gear-wide-connected text-info"></i>
-                En <strong>eDark</strong> nos apasiona la excelencia y la calidad en cada servicio de mantenimiento y reparación. Sabemos que tus equipos tecnológicos son esenciales para tu vida y tu trabajo, por eso nos comprometemos a cuidarlos como si fueran nuestros.
-            </p>
-            <p class="fs-5">
-                Nuestro objetivo es que disfrutes de un funcionamiento óptimo, seguro y duradero en todos tus dispositivos. Utilizamos repuestos originales, herramientas de última generación y seguimos procesos rigurosos para garantizar resultados superiores. <br>
-                <i class="bi bi-award-fill text-warning"></i> <b>¡La calidad y tu satisfacción son nuestra prioridad!</b>
-            </p>
+    <!-- Header Moderno -->
+    <header class="py-5 mb-0" style="background: #000000; border-bottom: 2px solid rgba(0, 123, 255, 0.3);">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder mb-3">Mantenimiento y Reparaci&oacute;n</h1>
+                <p class="lead fw-normal text-white-50 mb-0" style="font-size:1.2rem;">
+                    En <strong>eDark</strong> nos apasiona la excelencia y la calidad en cada servicio de mantenimiento y reparaci&oacute;n. Sabemos que tus equipos tecnol&oacute;gicos son esenciales para tu vida y tu trabajo.
+                </p>
+            </div>
         </div>
+    </header>
+
+    <main class="container my-5">
         <div class="row mb-4">
             <div class="col-md-4">
                 <div class="area text-center">

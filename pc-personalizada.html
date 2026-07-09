@@ -14,7 +14,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
         <script>
             try {
-                if (localStorage.getItem('modoOscuro') === 'true') {
+                if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
                     document.body.classList.add('modo-oscuro');
                 }
@@ -63,15 +63,19 @@ fetch('navbar.html')
     <!-- Navigation-->
     <div id="navbar"></div>
 
-    <main class="container my-5">
-        <div class="text-center mb-5">
-            <span class="icono-servicio d-block mb-2"><i class="bi bi-pc-display-horizontal"></i></span>
-            <h1 class="fw-bold">PC Personalizada</h1>
-            <p class="lead mt-3">
-                <i class="bi bi-tools text-info"></i>
-                En <strong>eDark</strong> puedes armar tu computadora a medida eligiendo los componentes que mejor se adapten a tus necesidades y presupuesto. ¡Recibe una cotización instantánea y asesoría personalizada!
-            </p>
+    <!-- Header Moderno -->
+    <header class="py-5 mb-0" style="background: #000000; border-bottom: 2px solid rgba(0, 123, 255, 0.3);">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder mb-3">PC Personalizada</h1>
+                <p class="lead fw-normal text-white-50 mb-0" style="font-size:1.2rem;">
+                    En <strong>eDark</strong> puedes armar tu computadora a medida eligiendo los componentes que mejor se adapten a tus necesidades y presupuesto. &iexcl;Recibe una cotizaci&oacute;n instant&aacute;nea y asesor&iacute;a personalizada!
+                </p>
+            </div>
         </div>
+    </header>
+
+    <main class="container my-5">
         <form id="formPC">
             <div class="row g-3">
                 <div class="col-md-6">

@@ -14,7 +14,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
         <script>
             try {
-                if (localStorage.getItem('modoOscuro') === 'true') {
+                if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
                     document.body.classList.add('modo-oscuro');
                 }
@@ -63,15 +63,19 @@ fetch('navbar.html')
 <body>
     <!-- Navigation-->
     <div id="navbar"></div>
-    <main class="container my-5">
-        <div class="text-center mb-5">
-            <span class="icono-servicio d-block mb-2"><i class="bi bi-house-door-fill"></i></span>
-            <h1 class="fw-bold">Asesoramiento Tecnológico para el Hogar</h1>
-            <p class="lead mt-3">
-                <i class="bi bi-lightbulb-fill text-warning"></i>
-                En <strong>eDark</strong> te ayudamos a transformar tu hogar en un espacio inteligente, seguro y eficiente, aprovechando al máximo la tecnología disponible.
-            </p>
+    <!-- Header Moderno -->
+    <header class="py-5 mb-0" style="background: #000000; border-bottom: 2px solid rgba(0, 123, 255, 0.3);">
+        <div class="container px-4 px-lg-5 my-5">
+            <div class="text-center text-white">
+                <h1 class="display-4 fw-bolder mb-3">Asesoramiento Tecnol&oacute;gico para el Hogar</h1>
+                <p class="lead fw-normal text-white-50 mb-0" style="font-size:1.2rem;">
+                    En <strong>eDark</strong> te ayudamos a transformar tu hogar en un espacio inteligente, seguro y eficiente, aprovechando al m&aacute;ximo la tecnolog&iacute;a disponible.
+                </p>
+            </div>
         </div>
+    </header>
+
+    <main class="container my-5">
         <div class="row mb-4">
             <div class="col-md-4">
                 <div class="area text-center">

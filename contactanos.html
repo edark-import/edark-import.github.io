@@ -19,7 +19,7 @@
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
         <script>
             try {
-                if (localStorage.getItem('modoOscuro') === 'true') {
+                if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
                     document.body.classList.add('modo-oscuro');
                 }
@@ -69,15 +69,12 @@ fetch('navbar.html')
     <!-- Navigation-->
     <div id="navbar"></div>
     <!-- Header Moderno -->
-    <header style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%); padding: 80px 0 60px;">
-        <div class="container">
+    <header class="py-5 mb-0" style="background: #000000; border-bottom: 2px solid rgba(0, 123, 255, 0.3);">
+        <div class="container px-4 px-lg-5 my-5">
             <div class="text-center text-white">
-                <div style="display: inline-block; background: rgba(0, 173, 181, 0.1); padding: 12px 24px; border-radius: 50px; margin-bottom: 20px;">
-                    <i class="bi bi-chat-dots" style="font-size: 24px; color: #00adb5;"></i>
-                </div>
-                <h1 style="font-size: 48px; font-weight: 700; margin-bottom: 16px; letter-spacing: -1px;">Contáctanos</h1>
-                <p style="font-size: 18px; color: rgba(255,255,255,0.7); max-width: 600px; margin: 0 auto; line-height: 1.6;">
-                    ¿Tienes dudas o necesitas asesoría? Completa el formulario y nos pondremos en contacto contigo.
+                <h1 class="display-4 fw-bolder mb-3">Cont&aacute;ctanos</h1>
+                <p class="lead fw-normal text-white-50 mb-0" style="font-size:1.2rem;">
+                    &iquest;Tienes dudas o necesitas asesor&iacute;a? Completa el formulario y nos pondremos en contacto contigo.
                 </p>
             </div>
         </div>
@@ -100,7 +97,7 @@ fetch('navbar.html')
                             required 
                             maxlength="60"
                             style="width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; transition: all 0.3s; outline: none;"
-                            onfocus="this.style.borderColor='#00adb5'; this.style.boxShadow='0 0 0 3px rgba(0,173,181,0.1)'"
+                            onfocus="this.style.borderColor='#007BFF'; this.style.boxShadow='0 0 0 3px rgba(0, 123, 255,0.1)'"
                             onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'"
                             placeholder="Tu nombre completo">
                     </div>
@@ -117,7 +114,7 @@ fetch('navbar.html')
                             required 
                             maxlength="60"
                             style="width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; transition: all 0.3s; outline: none;"
-                            onfocus="this.style.borderColor='#00adb5'; this.style.boxShadow='0 0 0 3px rgba(0,173,181,0.1)'"
+                            onfocus="this.style.borderColor='#007BFF'; this.style.boxShadow='0 0 0 3px rgba(0, 123, 255,0.1)'"
                             onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'"
                             placeholder="ejemplo@correo.com">
                     </div>
@@ -134,7 +131,7 @@ fetch('navbar.html')
                             maxlength="20" 
                             pattern="[0-9+ ]*"
                             style="width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; transition: all 0.3s; outline: none;"
-                            onfocus="this.style.borderColor='#00adb5'; this.style.boxShadow='0 0 0 3px rgba(0,173,181,0.1)'"
+                            onfocus="this.style.borderColor='#007BFF'; this.style.boxShadow='0 0 0 3px rgba(0, 123, 255,0.1)'"
                             onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'"
                             placeholder="+51 999 999 999">
                     </div>
@@ -151,7 +148,7 @@ fetch('navbar.html')
                             required 
                             maxlength="300"
                             style="width: 100%; padding: 14px 16px; border: 1.5px solid #e0e0e0; border-radius: 12px; font-size: 16px; transition: all 0.3s; outline: none; resize: vertical; font-family: inherit;"
-                            onfocus="this.style.borderColor='#00adb5'; this.style.boxShadow='0 0 0 3px rgba(0,173,181,0.1)'"
+                            onfocus="this.style.borderColor='#007BFF'; this.style.boxShadow='0 0 0 3px rgba(0, 123, 255,0.1)'"
                             onblur="this.style.borderColor='#e0e0e0'; this.style.boxShadow='none'"
                             placeholder="Cuéntanos cómo podemos ayudarte..."></textarea>
                     </div>

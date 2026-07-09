@@ -104,7 +104,29 @@
         actualizarLogoNav();
     }
 
+    function destacarEnlaceActivo() {
+        try {
+            const path = window.location.pathname;
+            const page = path.split('/').pop() || 'index.html';
+            const links = document.querySelectorAll('.nav-link, .dropdown-item');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href === page) {
+                    link.classList.add('active');
+                    const parentDropdown = link.closest('.dropdown-menu');
+                    if (parentDropdown) {
+                        const toggle = parentDropdown.parentElement.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.classList.add('active');
+                    }
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
     // Ejecutar inmediatamente
     initDarkModeSwitch();
+    destacarEnlaceActivo();
 })();
 </script>
