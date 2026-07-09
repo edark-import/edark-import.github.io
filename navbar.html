@@ -73,8 +73,8 @@
         
         if (!switchOscuro) return;
 
-        // Aplicar estado inicial desde localStorage
-        const dark = localStorage.getItem('modoOscuro') === 'true';
+        // Aplicar estado inicial desde localStorage - por defecto modo oscuro (true)
+        const dark = localStorage.getItem('modoOscuro') !== 'false';
         if (dark) {
             document.body.classList.add('modo-oscuro');
             document.documentElement.classList.add('modo-oscuro');
