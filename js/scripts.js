@@ -33,34 +33,64 @@ const productosPorPagina = 12;
 let unsubscribe = null;
 let textoBusqueda = '';
 
-// --- OBTENER Y MOSTRAR TIPO DE CAMBIO SUNAT UNA SOLA VEZ ---
+// --- OBTENER Y MOSTRAR TIPO DE CAMBIO SUNAT O MANUAL ---
 async function inicializarTipoCambioSunat() {
-    try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3000);
-        // Usando un proxy más robusto y añadiendo timeout
-        const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.apis.net.pe/v1/tipo-cambio-sunat'), { signal: controller.signal });
-        clearTimeout(timeoutId);
-        const data = await res.json();
-        if (data && data.venta) {
-            tipoCambioGlobal = parseFloat(data.venta);
-            const v = document.getElementById('tipoCambioValor');
-            const m = document.getElementById('tipoCambioMoneda');
-            const f = document.getElementById('tipoCambioFecha');
-            const o = document.getElementById('tipoCambioOrigen');
-            if (v) v.textContent = tipoCambioGlobal.toFixed(3);
-            if (m) m.textContent = `${data.moneda ? data.moneda : 'USD/PEN'}`;
-            if (f) f.textContent = data.fecha ? `(${data.fecha})` : '';
-            if (o) o.textContent = data.origen ? `- ${data.origen}` : '';
-        }
-    } catch (e) {
-        console.warn('Error al obtener tipo de cambio, usando default 3.8:', e.message);
-        tipoCambioGlobal = 3.8;
+    if (!configGeneral && typeof db !== 'undefined') {
+        try {
+            const snap = await db.collection('config').doc('general').get();
+            if (snap.exists) configGeneral = snap.data();
+        } catch (e) { console.warn('Error al precargar configGeneral para TC:', e); }
+    }
+
+    if (configGeneral && configGeneral.usarTcManual && configGeneral.tipoCambioManual) {
+        tipoCambioGlobal = parseFloat(configGeneral.tipoCambioManual) || 3.8;
         const v = document.getElementById('tipoCambioValor');
         const m = document.getElementById('tipoCambioMoneda');
-        if (v) v.textContent = tipoCambioGlobal.toFixed(2);
+        const f = document.getElementById('tipoCambioFecha');
+        const o = document.getElementById('tipoCambioOrigen');
+        if (v) v.textContent = tipoCambioGlobal.toFixed(3);
         if (m) m.textContent = 'USD/PEN';
+        if (f) f.textContent = '(Fijo / Manual)';
+        if (o) o.textContent = '- Tienda';
+        const tcText = document.getElementById('tipoCambioText');
+        if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
+        return;
     }
+
+    try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 6000);
+        let res = await fetch('https://corsproxy.io/?https://api.apis.net.pe/v1/tipo-cambio-sunat', { signal: controller.signal }).catch(() => null);
+        if (!res || !res.ok) {
+            res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent('https://api.apis.net.pe/v1/tipo-cambio-sunat'), { signal: controller.signal });
+        }
+        clearTimeout(timeoutId);
+        if (res && res.ok) {
+            const data = await res.json();
+            if (data && (data.venta || data.compra)) {
+                tipoCambioGlobal = parseFloat(data.venta || data.compra);
+                const v = document.getElementById('tipoCambioValor');
+                const m = document.getElementById('tipoCambioMoneda');
+                const f = document.getElementById('tipoCambioFecha');
+                const o = document.getElementById('tipoCambioOrigen');
+                if (v) v.textContent = tipoCambioGlobal.toFixed(3);
+                if (m) m.textContent = `${data.moneda ? data.moneda : 'USD/PEN'}`;
+                if (f) f.textContent = data.fecha ? `(${data.fecha})` : '';
+                if (o) o.textContent = data.origen ? `- ${data.origen}` : '';
+                const tcText = document.getElementById('tipoCambioText');
+                if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
+                return;
+            }
+        }
+    } catch (e) {
+        console.warn('Error al obtener tipo de cambio SUNAT, usando fallback:', e.message || e);
+    }
+
+    tipoCambioGlobal = (configGeneral && configGeneral.tipoCambioManual) ? parseFloat(configGeneral.tipoCambioManual) : 3.80;
+    const v = document.getElementById('tipoCambioValor');
+    const m = document.getElementById('tipoCambioMoneda');
+    if (v) v.textContent = tipoCambioGlobal.toFixed(2);
+    if (m) m.textContent = 'USD/PEN';
     const tcText = document.getElementById('tipoCambioText');
     if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
 }
