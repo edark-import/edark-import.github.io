@@ -1730,3 +1730,248 @@ body.modo-oscuro .shadow-sm {
     overflow: hidden;
     font-size: 0.8rem !important;
 }
+
+/* ==========================================================================
+   SISTEMA TOTALMENTE RESPONSIVO E INTELIGENTE PARA DISPOSITIVOS Y CELULARES
+   ========================================================================== */
+
+/* 0. Protección contra Desbordamiento Horizontal Global */
+html, body {
+    max-width: 100%;
+    overflow-x: hidden !important;
+    -webkit-tap-highlight-color: transparent;
+}
+
+/* 1. Responsividad en Tablets y Pantallas Medianas (menos de 992px) */
+@media (max-width: 991.98px) {
+    /* Navbar Glassmorphism - Ajustes para Menú Desplegado en Móvil */
+    .glass-navbar {
+        padding: 0.6rem 1rem !important;
+    }
+    .glass-navbar .navbar-collapse {
+        background: rgba(10, 15, 29, 0.96) !important;
+        backdrop-filter: blur(25px) !important;
+        -webkit-backdrop-filter: blur(25px) !important;
+        border-radius: 16px !important;
+        padding: 1.25rem !important;
+        margin-top: 0.75rem !important;
+        border: 1px solid rgba(0, 123, 255, 0.3) !important;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.6) !important;
+    }
+    body:not(.modo-oscuro) .glass-navbar .navbar-collapse {
+        background: rgba(255, 255, 255, 0.97) !important;
+        border: 1px solid rgba(0, 123, 255, 0.2) !important;
+        box-shadow: 0 15px 35px rgba(31, 38, 135, 0.15) !important;
+    }
+    .glass-navbar .navbar-nav {
+        margin-bottom: 1rem !important;
+    }
+    .glass-navbar .nav-link {
+        padding: 0.65rem 0.85rem !important;
+        border-radius: 10px !important;
+    }
+
+    /* Controles #adminNav y Botones de Carrito en Móvil */
+    #adminNav {
+        display: flex !important;
+        flex-wrap: wrap !important;
+        gap: 0.65rem !important;
+        justify-content: flex-start !important;
+        align-items: center !important;
+        width: 100% !important;
+        padding-top: 1rem !important;
+        border-top: 1px solid rgba(255, 255, 255, 0.15) !important;
+        margin-left: 0 !important;
+    }
+    body:not(.modo-oscuro) #adminNav {
+        border-top-color: rgba(0, 0, 0, 0.1) !important;
+    }
+    #adminNav .btn {
+        flex: 1 1 auto;
+        min-width: 110px;
+        margin: 0 !important;
+        font-size: 0.85rem;
+        padding: 0.5rem 0.75rem;
+    }
+    #adminNav .form-check {
+        margin: 0 0 0 auto !important;
+        display: flex;
+        align-items: center;
+        padding-left: 2.2rem;
+    }
+
+    /* Ajuste de Hero Principal */
+    header.gradient-bg {
+        padding: 4rem 0 2.5rem 0 !important;
+    }
+}
+
+/* 2. Responsividad en Celulares Estándar (menos de 768px) */
+@media (max-width: 767.98px) {
+    /* Héroes y Banners Adaptables */
+    header.gradient-bg {
+        min-height: auto !important;
+        padding: 3rem 0 2rem 0 !important;
+    }
+    .banner-card {
+        padding: 1.5rem 1rem !important;
+        min-height: auto !important;
+        width: 96% !important;
+        margin: 0 auto !important;
+    }
+    .logo-edark {
+        font-size: clamp(2.2rem, 11vw, 3.2rem) !important;
+        letter-spacing: 0.08em !important;
+    }
+    .sub-edark {
+        font-size: clamp(1rem, 4.5vw, 1.4rem) !important;
+        margin-bottom: 0.8em !important;
+    }
+    .frase-carrusel-texto {
+        font-size: 0.95rem !important;
+        line-height: 1.4 !important;
+    }
+    .blog-hero, .post-hero, header.py-5 {
+        padding: 40px 15px !important;
+    }
+    header h1, .blog-hero h1, .post-hero h1 {
+        font-size: clamp(1.6rem, 7vw, 2.4rem) !important;
+        line-height: 1.25 !important;
+    }
+    header p.lead, .blog-hero p.lead, .post-hero p.lead {
+        font-size: 0.95rem !important;
+    }
+
+    /* Tarjetas de Blog y Artículos */
+    .article-card {
+        margin-bottom: 20px !important;
+        border-radius: 16px !important;
+    }
+    .article-card img {
+        height: 180px !important;
+    }
+    .article-title {
+        font-size: 1.15rem !important;
+    }
+    .post-meta {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 0.75rem !important;
+        padding: 1rem !important;
+    }
+    .post-actions {
+        width: 100% !important;
+        justify-content: flex-start !important;
+    }
+    .ad-space {
+        min-height: 180px !important;
+        padding: 15px !important;
+    }
+
+    /* Modales e Interfaces de Carrito Optimizadas para Táctil */
+    .table-responsive {
+        border: none !important;
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+    }
+    #modalCarrito .modal-dialog,
+    #modalDetallesProducto .modal-dialog {
+        margin: 0.5rem !important;
+        max-width: calc(100% - 1rem) !important;
+    }
+    #modalCarrito .modal-content,
+    #modalDetallesProducto .modal-content {
+        border-radius: 18px !important;
+        padding: 0.5rem !important;
+    }
+    .cantidad-input {
+        width: 65px !important;
+        padding: 0.3rem 0.5rem !important;
+    }
+    .cart-summary {
+        padding: 1.25rem !important;
+        margin-top: 1.5rem !important;
+    }
+
+    /* Formularios y Selectores de PC Personalizada y Soporte */
+    .component-select {
+        font-size: 0.85rem !important;
+    }
+    .summary-box {
+        position: static !important;
+        margin-top: 2rem !important;
+        padding: 1.25rem !important;
+    }
+    /* Prevenir auto-zoom de iOS en inputs */
+    form input, form select, form textarea {
+        font-size: 16px !important;
+    }
+
+    /* Pie de Página / Footer Colapsado */
+    footer .row.gy-4 > [class*="col-"] {
+        width: 100% !important;
+        text-align: center !important;
+        margin-bottom: 1.75rem !important;
+    }
+    footer ul.list-unstyled {
+        margin-bottom: 0 !important;
+    }
+    footer .mt-3 a {
+        margin: 0 0.5rem !important;
+    }
+    footer hr {
+        margin: 1.5rem 0 1rem 0 !important;
+    }
+    footer .col.text-center.small a {
+        display: inline-block !important;
+        margin: 0.35rem 0.5rem 0 0.5rem !important;
+    }
+}
+
+/* 3. Responsividad en Celulares Compactos (menos de 576px) */
+@media (max-width: 575.98px) {
+    /* Cuadrícula de Productos de Tienda e Inicio */
+    #productos .col, #productos-home .col {
+        width: 100% !important;
+        flex: 0 0 100% !important;
+        max-width: 100% !important;
+    }
+    #productos .card, #productos-home .card {
+        border-radius: 18px !important;
+    }
+    #productos .card-img-top, #productos-home .card-img-top {
+        max-height: 230px !important;
+        object-fit: contain !important;
+        padding: 1.25rem !important;
+    }
+    .filter-badge {
+        font-size: 0.78rem !important;
+        padding: 0.4rem 0.7rem !important;
+        margin-bottom: 0.4rem !important;
+        display: inline-flex !important;
+        align-items: center !important;
+    }
+
+    /* Carrusel y Marquee Infinito de Servicios */
+    .services-marquee-item {
+        width: 240px !important;
+    }
+    .services-marquee-item .card,
+    .services-marquee-item .area {
+        height: 160px !important;
+    }
+    @keyframes scrollMarquee {
+        0% { transform: translateX(0); }
+        100% { transform: translateX(calc(-240px * 7 - 1.5rem * 7)); }
+    }
+
+    /* Ajuste en Botones de Categorías y Paginación */
+    .pagination .page-link {
+        padding: 0.45rem 0.75rem !important;
+        font-size: 0.9rem !important;
+    }
+    .btn-ver-detalles, .btn-editar-producto {
+        padding: 0.5rem 1rem !important;
+        font-size: 0.9rem !important;
+    }
+}

@@ -387,7 +387,7 @@
             </div>
             <div>
                 <span class="me-3" id="adminName"></span>
-                <button class="btn btn-sm btn-outline-primary d-md-none" onclick="toggleSidebar()">
+                <button class="btn btn-sm btn-outline-primary d-md-none" onclick="toggleSidebar()" aria-label="Alternar menú lateral" title="Alternar menú lateral">
                     <i class="bi bi-list"></i>
                 </button>
             </div>
@@ -803,25 +803,25 @@
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalBlogTitulo">Nueva Entrada</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formBlog">
                             <input type="hidden" id="blogId">
                             <div class="mb-3">
-                                <label class="form-label">Título</label>
+                                <label class="form-label" for="blogTitulo">Título</label>
                                 <input type="text" class="form-control" id="blogTitulo" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Imagen (URL)</label>
+                                <label class="form-label" for="blogImagen">Imagen (URL)</label>
                                 <input type="text" class="form-control" id="blogImagen">
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Contenido</label>
+                                <label class="form-label" for="blogContenido">Contenido</label>
                                 <textarea class="form-control" id="blogContenido" rows="6" required></textarea>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Autor</label>
+                                <label class="form-label" for="blogAutor">Autor</label>
                                 <input type="text" class="form-control" id="blogAutor" placeholder="eDark Team">
                             </div>
                         </form>
@@ -847,7 +847,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalCategoriaTitulo">Nueva Categoría</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formCategoria">
@@ -881,7 +881,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalProductoTitulo">Nuevo Producto</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
                     <form id="formProducto">
@@ -904,21 +904,21 @@
                                     placeholder="0.00">
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Moneda</label>
+                                <label class="form-label" for="productoMoneda">Moneda</label>
                                 <select class="form-select" id="productoMoneda">
                                     <option value="PEN">Soles (S/)</option>
                                     <option value="USD">Dólares (USD)</option>
                                 </select>
                             </div>
                             <div class="col-md-3 mb-3">
-                                <label class="form-label">Margen de Ganancia</label>
+                                <label class="form-label" for="productoTipoGanancia">Margen de Ganancia</label>
                                 <div class="input-group">
-                                    <select class="form-select" id="productoTipoGanancia">
+                                    <select class="form-select" id="productoTipoGanancia" aria-label="Tipo de margen de ganancia">
                                         <option value="porcentaje" selected>Porcentaje (%)</option>
                                         <option value="monto">Monto fijo (S/)</option>
                                     </select>
                                     <input type="number" step="0.01" class="form-control" id="productoValorGanancia"
-                                        placeholder="30.00" value="30.00">
+                                        placeholder="30.00" value="30.00" aria-label="Valor del margen de ganancia">
                                 </div>
                                 <small class="text-muted">Aplicado sobre el precio con IGV</small>
                             </div>
@@ -960,16 +960,21 @@
                                 <div class="tab-content" id="imagenTabContent">
                                     <!-- Panel URL -->
                                     <div class="tab-pane fade show active" id="url-panel" role="tabpanel">
+                                        <label for="productoImagenUrl" class="visually-hidden">URL de la imagen del producto</label>
                                         <input type="url" class="form-control" id="productoImagenUrl"
-                                            placeholder="https://ejemplo.com/imagen.jpg">
+                                            placeholder="https://ejemplo.com/imagen.jpg"
+                                            aria-label="URL de la imagen del producto"
+                                            title="URL de la imagen del producto">
                                         <small class="text-muted">Puedes usar servicios como Imgur, Cloudinary o enlaces
                                             directos</small>
                                     </div>
 
                                     <!-- Panel Archivo -->
                                     <div class="tab-pane fade" id="file-panel" role="tabpanel">
+                                        <label for="productoImagenFile" class="visually-hidden">Subir archivo de imagen del producto</label>
                                         <input type="file" class="form-control" id="productoImagenFile"
-                                            accept="image/*">
+                                            accept="image/*" aria-label="Subir archivo de imagen del producto"
+                                            title="Subir archivo de imagen del producto">
                                         <small class="text-muted">Formatos soportados: JPG, PNG, GIF, WebP (máx.
                                             5MB)</small>
                                         <div id="uploadProgress" class="progress mt-2 d-none">
@@ -990,13 +995,13 @@
                         <!-- Fila 4: Categoría y Subcategoría -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Categoría *</label>
+                                <label class="form-label" for="productoCategoria">Categoría *</label>
                                 <select class="form-select" id="productoCategoria" required>
                                     <option value="">Seleccionar categoría...</option>
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <label class="form-label">Subcategoría</label>
+                                <label class="form-label" for="productoSubcategoria">Subcategoría</label>
                                 <select class="form-select" id="productoSubcategoria">
                                     <option value="">Primero selecciona una categoría...</option>
                                 </select>

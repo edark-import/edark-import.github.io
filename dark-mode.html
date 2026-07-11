@@ -38,11 +38,11 @@ function initDarkMode() {
     if (dark) {
         body.classList.add('modo-oscuro');
         switchOscuro.checked = true;
-        if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
+        if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i><span class="visually-hidden">Alternar modo oscuro</span>';
     } else {
         body.classList.remove('modo-oscuro');
         switchOscuro.checked = false;
-        if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
+        if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i><span class="visually-hidden">Alternar modo oscuro</span>';
     }
 
     // Agregar event listener
@@ -50,11 +50,11 @@ function initDarkMode() {
         if (this.checked) {
             body.classList.add('modo-oscuro');
             localStorage.setItem('modoOscuro', 'true');
-            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i>';
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun"></i><span class="visually-hidden">Alternar modo oscuro</span>';
         } else {
             body.classList.remove('modo-oscuro');
             localStorage.setItem('modoOscuro', 'false');
-            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i>';
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon"></i><span class="visually-hidden">Alternar modo oscuro</span>';
         }
         actualizarLogoNav();
     });

@@ -528,6 +528,7 @@ function asignarEventosFiltros() {
 
 function renderBadges() {
     const container = document.getElementById('selected-filters');
+    if (!container) return;
     container.innerHTML = '';
     camposFiltro.forEach(f => {
         filtrosSeleccionados[f.campo].forEach(valor => {
@@ -554,28 +555,37 @@ function renderBadges() {
     }
 }
 
-document.getElementById('selected-filters').addEventListener('click', function (e) {
-    if (e.target.classList.contains('remove-filter')) {
-        const campo = e.target.dataset.campo;
-        const valor = e.target.dataset.valor;
-        const id = e.target.dataset.id;
-        if (campo === "precio") {
-            // Reset precio
-            precioFiltroMin = precioMin;
-            precioFiltroMax = precioMax;
-            document.getElementById('precioMin').value = precioMin;
-            document.getElementById('precioMax').value = precioMax;
-            document.getElementById('precioMinLabel').textContent = precioMin;
-            document.getElementById('precioMaxLabel').textContent = precioMax;
-        } else {
-            const cb = document.getElementById(id);
-            if (cb) cb.checked = false;
-            filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+const selectedFiltersElem = document.getElementById('selected-filters');
+if (selectedFiltersElem) {
+    selectedFiltersElem.addEventListener('click', function (e) {
+        if (e.target.classList.contains('remove-filter')) {
+            const campo = e.target.dataset.campo;
+            const valor = e.target.dataset.valor;
+            const id = e.target.dataset.id;
+            if (campo === "precio") {
+                // Reset precio
+                precioFiltroMin = precioMin;
+                precioFiltroMax = precioMax;
+                const pMinEl = document.getElementById('precioMin');
+                const pMaxEl = document.getElementById('precioMax');
+                const pMinLbl = document.getElementById('precioMinLabel');
+                const pMaxLbl = document.getElementById('precioMaxLabel');
+                if (pMinEl) pMinEl.value = precioMin;
+                if (pMaxEl) pMaxEl.value = precioMax;
+                if (pMinLbl) pMinLbl.textContent = precioMin;
+                if (pMaxLbl) pMaxLbl.textContent = precioMax;
+            } else {
+                const cb = document.getElementById(id);
+                if (cb) cb.checked = false;
+                if (filtrosSeleccionados[campo]) {
+                    filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
+                }
+            }
+            renderBadges();
+            mostrarProductos();
         }
-        renderBadges();
-        mostrarProductos();
-    }
-});
+    });
+}
 
 function renderPaginacion(totalPaginas) {
     const pag = document.getElementById('paginacionProductos');
@@ -593,17 +603,21 @@ function renderPaginacion(totalPaginas) {
     pag.querySelectorAll('.page-link').forEach(btn => {
         btn.addEventListener('click', function () {
             paginaActual = parseInt(this.dataset.pag);
-            renderProductosPaginados();
+            renderProductosPaginados(true);
         });
     });
 }
 
 // Modifica renderProductosPaginados para filtrar por búsqueda
 // --- RENDERIZA LOS PRODUCTOS Y AGREGA BOTÓN EDITAR SOLO PARA ADMIN ---
-function renderProductosPaginados() {
+function renderProductosPaginados(shouldScroll = false) {
+    const contenedor = document.getElementById('productos');
+    if (!contenedor) return;
+
     let productos = productosCache.filter(productoCoincideFiltros);
     // Ordenamiento y paginación
-    const orden = document.getElementById('ordenarSelect').value;
+    const ordenarEl = document.getElementById('ordenarSelect');
+    const orden = ordenarEl ? ordenarEl.value : '';
     if (orden === "precio-asc") {
         productos.sort((a, b) => parseFloat(calcularPrecioProducto(a)) - parseFloat(calcularPrecioProducto(b)));
     } else if (orden === "precio-desc") {
@@ -618,7 +632,6 @@ function renderProductosPaginados() {
     const inicio = (paginaActual - 1) * productosPorPagina;
     const fin = inicio + productosPorPagina;
     const productosPagina = productos.slice(inicio, fin);
-    const contenedor = document.getElementById('productos');
     contenedor.innerHTML = '';
 
     // Detecta si el usuario está autenticado (admin)
@@ -659,12 +672,14 @@ function renderProductosPaginados() {
     renderPaginacion(totalPaginas);
 
     // --- Scroll al primer producto al cambiar de página ---
-    setTimeout(() => {
-        const primerCard = contenedor.querySelector('.card');
-        if (primerCard) {
-            primerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-    }, 0);
+    if (shouldScroll) {
+        setTimeout(() => {
+            const primerCard = contenedor.querySelector('.card') || contenedor;
+            if (primerCard) {
+                primerCard.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }, 0);
+    }
 }
 
 // --- AGREGA EVENTO PARA BOTÓN EDITAR SOLO PARA ADMIN ---
@@ -818,9 +833,12 @@ function parseCapacidad(valor) {
 }
 
 // --- EVENTO PARA ORDENAR ---
-document.getElementById('ordenarSelect').addEventListener('change', function () {
-    renderProductosPaginados();
-});
+const ordenarSelectEl = document.getElementById('ordenarSelect');
+if (ordenarSelectEl) {
+    ordenarSelectEl.addEventListener('change', function () {
+        renderProductosPaginados();
+    });
+}
 
 
 // --- REGLA DE SEGURIDAD FIRESTORE (configura en la consola de Firebase) ---
