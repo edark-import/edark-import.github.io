@@ -261,12 +261,15 @@
                         { nombre: 'Software', subcategorias: ['Sistemas Operativos', 'Antivirus', 'Licencias de Oficina'] }
                     ];
                     for (const cat of categoriasBase) {
-                        await db.collection('categorias').add({
-                            nombre: cat.nombre,
-                            subcategorias: cat.subcategorias,
-                            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp(),
-                            fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
-                        });
+                        const exist = await db.collection('categorias').where('nombre', '==', cat.nombre).limit(1).get();
+                        if (exist.empty) {
+                            await db.collection('categorias').add({
+                                nombre: cat.nombre,
+                                subcategorias: cat.subcategorias,
+                                fechaCreacion: firebase.firestore.FieldValue.serverTimestamp(),
+                                fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+                            });
+                        }
                     }
                     console.log('Categorías base sembradas.');
                 }
@@ -1600,6 +1603,51 @@
         let categoriasData = [];
         let modalCategoriaInstance;
 
+        async function deduplicarYLimpiarCategoriasBD(snapshot) {
+            const mapCategorias = new Map();
+            const docsToDelete = [];
+
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const nombreRaw = (data.nombre || '').trim();
+                const nombreKey = nombreRaw.toLowerCase();
+                if (!nombreKey) return;
+
+                if (!mapCategorias.has(nombreKey)) {
+                    mapCategorias.set(nombreKey, {
+                        id: doc.id,
+                        nombre: nombreRaw,
+                        subcategorias: Array.isArray(data.subcategorias) ? [...data.subcategorias] : []
+                    });
+                } else {
+                    const principal = mapCategorias.get(nombreKey);
+                    const subDuplicadas = Array.isArray(data.subcategorias) ? data.subcategorias : [];
+                    let nuevasSub = false;
+                    subDuplicadas.forEach(sub => {
+                        if (!principal.subcategorias.some(s => s.trim().toLowerCase() === sub.trim().toLowerCase())) {
+                            principal.subcategorias.push(sub.trim());
+                            nuevasSub = true;
+                        }
+                    });
+                    if (nuevasSub) {
+                        db.collection('categorias').doc(principal.id).update({ subcategorias: principal.subcategorias }).catch(() => {});
+                    }
+                    docsToDelete.push(doc.id);
+                }
+            });
+
+            if (docsToDelete.length > 0) {
+                console.log(`Eliminando ${docsToDelete.length} categorías duplicadas en Firestore...`);
+                for (const dupId of docsToDelete) {
+                    await db.collection('categorias').doc(dupId).delete().catch(() => {});
+                }
+            }
+
+            const listaDeduplicada = Array.from(mapCategorias.values());
+            listaDeduplicada.sort((a, b) => a.nombre.localeCompare(b.nombre));
+            return listaDeduplicada;
+        }
+
         async function cargarCategorias() {
             try {
                 const tbody = document.getElementById('tablaCategorias');
@@ -1611,17 +1659,9 @@
                 try {
                     snapshot = await ref.orderBy('nombre').get();
                 } catch (e) {
-                    // Si falla por permisos o por falta de índice, intenta sin orderBy
                     snapshot = await ref.get();
                 }
-                categoriasData = [];
-
-                snapshot.forEach(doc => {
-                    categoriasData.push({
-                        id: doc.id,
-                        ...doc.data()
-                    });
-                });
+                categoriasData = await deduplicarYLimpiarCategoriasBD(snapshot);
 
                 if (categoriasData.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No hay categorías. Crea la primera categoría.</td></tr>';
@@ -1723,6 +1763,11 @@
                     await db.collection('categorias').doc(id).update(categoria);
                     alert('Categoría actualizada exitosamente');
                 } else {
+                    const existSnap = await db.collection('categorias').where('nombre', '==', nombre).limit(1).get();
+                    if (!existSnap.empty) {
+                        alert(`La categoría "${nombre}" ya existe en el sistema. Puedes editarla en la lista en lugar de crear un duplicado.`);
+                        return;
+                    }
                     categoria.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
                     await db.collection('categorias').add(categoria);
                     alert('Categoría creada exitosamente');
@@ -1800,16 +1845,7 @@
         async function cargarCategoriasEnSelect() {
             try {
                 const snapshot = await db.collection('categorias').orderBy('nombre').get();
-                categoriasGlobal = [];
-
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    categoriasGlobal.push({
-                        id: doc.id,
-                        nombre: data.nombre,
-                        subcategorias: data.subcategorias || []
-                    });
-                });
+                categoriasGlobal = await deduplicarYLimpiarCategoriasBD(snapshot);
 
                 // Actualizar select de filtro
                 const selectFiltro = document.getElementById('filtroCategoria');

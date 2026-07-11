@@ -7,7 +7,16 @@
   <meta name="description"
     content="En eDark Alpha Technologies somos especialistas en productos tecnológicos, servicios de consultoría y soporte técnico para empresas y hogares en Perú. Descubre nuestro catálogo de laptops, computadoras, accesorios, software original, Microsoft 365 y mucho más, siempre con los mejores precios y atención personalizada. Ofrecemos asesoramiento tecnológico, mantenimiento, reciclaje de equipos y soluciones digitales innovadoras para potenciar tu negocio o mejorar tu experiencia en casa. Confía en eDark para encontrar productos de calidad, soporte profesional y la mejor experiencia de compra online en tecnología. ¡Compra con seguridad y recibe atención personalizada de expertos en tecnología! Envíos a todo el Perú. eDark Alpha Technologies – Innovación, confianza y tecnología a tu alcance." />
   <meta name="author" content="eDark EIRL" />
-  <title>eDark</title>
+  <meta property="og:title" content="eDark Alpha Technologies | Tecnología, Laptops y Accesorios en Perú" />
+  <meta property="og:description" content="Especialistas en productos tecnológicos, consultoría y soporte técnico para empresas y hogares en Perú. Laptops, PCs, accesorios gamer y más." />
+  <meta property="og:image" content="https://edark-import.github.io/img/Logo/isotipo_Negro.png" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://edark-import.github.io/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="eDark Alpha Technologies" />
+  <meta name="twitter:description" content="Innovación, confianza y tecnología a tu alcance. Envíos a todo el Perú." />
+  <meta name="twitter:image" content="https://edark-import.github.io/img/Logo/isotipo_Negro.png" />
+  <title>eDark - Tecnología & Consultoría en Perú</title>
   <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
@@ -370,25 +379,29 @@
     </div>
   </div>
 
-  <!-- Modal Carrito de Compras -->
-  <div class="modal fade" id="modalCarrito" tabindex="-1" aria-labelledby="modalCarritoLabel" aria-hidden="true">
-    <div class="modal-dialog modal-lg">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="modalCarritoLabel">Carrito de Compras</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+  <!-- Carrito Slide-over (Offcanvas) -->
+  <div class="offcanvas offcanvas-end shadow-lg border-0" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel" style="width: 420px; z-index: 1060;">
+    <div class="offcanvas-header bg-primary text-white py-3 shadow-sm">
+      <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2 mb-0" id="offcanvasCarritoLabel">
+        <i class="bi bi-cart3"></i> Mi Carrito de Compras
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body p-3 d-flex flex-column" id="offcanvasBodyContainer">
+      <div id="carritoContenido" class="flex-grow-1 overflow-auto pe-1"></div>
+      <div class="border-top pt-3 mt-auto bg-white" id="offcanvasFooter">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="text-muted fw-semibold">Total a pagar:</span>
+          <span class="fs-4 fw-bold text-primary" id="carritoTotalDisplay">S/ 0.00</span>
         </div>
-        <div class="modal-body">
-          <div id="carritoContenido"></div>
-        </div>
-        <div class="modal-footer d-flex justify-content-between">
-          <div>
-            <button class="btn btn-danger" id="btnVaciarCarrito">Vaciar Carrito</button>
-          </div>
-          <div>
-            <button class="btn btn-success" id="btnEnviarWhatsapp"><i class="bi bi-whatsapp"></i> WhatsApp</button>
-            <!-- PayPal Button Container -->
-            <div id="paypal-button-container" class="ms-2 d-inline-block"></div>
+        <div class="d-grid gap-2">
+          <button class="btn btn-success fw-bold d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm" id="btnEnviarWhatsappOffcanvas" onclick="procesarPedidoWhatsApp()">
+            <i class="bi bi-whatsapp fs-5"></i> Pedir por WhatsApp
+          </button>
+          <div id="paypal-button-container" class="mt-1"></div>
+          <div class="d-flex gap-2 mt-1">
+            <a href="carrito.html" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold">Ver Carrito Completo</a>
+            <button class="btn btn-outline-danger btn-sm" id="btnVaciarCarritoOffcanvas" onclick="if(confirm('¿Vaciar carrito?')){carrito=[];guardarCarrito();renderCarrito();}" title="Vaciar carrito"><i class="bi bi-trash"></i></button>
           </div>
         </div>
       </div>

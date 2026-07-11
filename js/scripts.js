@@ -672,7 +672,7 @@ function renderProductosPaginados(shouldScroll = false) {
             <div class="col mb-5">
                 <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
                     <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark d-block text-center overflow-hidden" style="height: 220px;">
-                        <img class="card-img-top w-100 h-100 p-3" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+                        <img class="card-img-top w-100 h-100 p-3" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" loading="lazy" decoding="async" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
                     </a>
                     <div class="card-body p-3 d-flex flex-column">
                         <div class="text-center flex-grow-1">
@@ -1119,54 +1119,255 @@ function actualizarContadorCarrito() {
     const count = carrito.reduce((acc, item) => acc + item.cantidad, 0);
     const badge = document.getElementById('cartCount');
     if (badge) badge.textContent = count;
+    const btn = document.getElementById('cartBtn');
+    if (btn && count > 0) {
+        btn.classList.add('cart-bounce');
+        setTimeout(() => btn.classList.remove('cart-bounce'), 600);
+    }
 }
 
 function renderCarrito() {
+    // Soportar tanto el contenedor en Offcanvas como en página/modal
     const cont = document.getElementById('carritoContenido');
     if (!cont) return;
+
     if (carrito.length === 0) {
-        cont.innerHTML = '<div class="text-center text-muted">El carrito está vacío.</div>';
+        cont.innerHTML = `
+            <div class="text-center py-5">
+                <i class="bi bi-cart-x fs-1 text-muted opacity-50 d-block mb-3"></i>
+                <h6 class="text-muted fw-bold">Tu carrito está vacío</h6>
+                <p class="small text-secondary mb-3">Agrega algunos productos tecnológicos de nuestro catálogo para comenzar.</p>
+                <a href="index.html" class="btn btn-sm btn-primary px-3">Explorar Tienda</a>
+            </div>`;
+        const totalDisp = document.getElementById('carritoTotalDisplay');
+        if (totalDisp) totalDisp.textContent = 'S/ 0.00';
         return;
     }
-    let html = '<ul class="list-group mb-3">';
-    carrito.forEach((item, idx) => {
-        html += `<li class="list-group-item d-flex justify-content-between align-items-center">
-            <div>
-                <img src="${safeImageUrl(item.imagen)}" alt="${sanitize(item.nombre)}" style="width:50px;height:50px;object-fit:cover;" class="me-2 rounded">
-                <span class="fw-bold">${sanitize(item.nombre)}</span><br>
-                <small>S/ ${item.precio} x </small>
-                <input type="number" min="1" class="form-control d-inline-block cantidad-input" data-idx="${idx}" value="${item.cantidad}" style="width:70px;display:inline-block;">
-            </div>
-            <div>
-                <button class="btn btn-sm btn-danger btn-eliminar" data-idx="${idx}"><i class="bi bi-trash"></i></button>
-            </div>
-        </li>`;
-    });
-    html += '</ul>';
+
     const totalSoles = carrito.reduce((acc, item) => acc + Number(item.precio) * Number(item.cantidad), 0);
-    html += `<div class="text-end fw-bold">Total: S/ ${totalSoles.toFixed(2)}</div>`;
+    const faltaEnvio = 250 - totalSoles;
+
+    let html = '';
+    if (faltaEnvio > 0) {
+        const porcentaje = Math.min(100, Math.round((totalSoles / 250) * 100));
+        html += `
+            <div class="bg-light p-2 rounded-3 border mb-3 small">
+                <div class="d-flex justify-content-between mb-1">
+                    <span>Envío GRATIS en Lima:</span>
+                    <strong class="text-primary">Te faltan S/ ${faltaEnvio.toFixed(2)}</strong>
+                </div>
+                <div class="progress" style="height: 6px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: ${porcentaje}%"></div>
+                </div>
+            </div>`;
+    } else {
+        html += `
+            <div class="alert alert-success py-2 px-3 small mb-3 d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill text-success fs-5"></i>
+                <div>¡Felicidades! Tienes <strong>Envío GRATIS</strong> en Lima Metropolitana. 🎉</div>
+            </div>`;
+    }
+
+    html += '<div class="d-flex flex-column gap-2 mb-3">';
+    carrito.forEach((item, idx) => {
+        html += `
+            <div class="cart-item-card p-2 rounded-3 border bg-white d-flex align-items-center gap-3 shadow-sm">
+                <img src="${safeImageUrl(item.imagen)}" alt="${sanitize(item.nombre)}" loading="lazy" decoding="async" class="rounded-2 flex-shrink-0" style="width: 60px; height: 60px; object-fit: contain; background: #f8f9fa; padding: 2px;">
+                <div class="flex-grow-1 min-w-0">
+                    <h6 class="mb-1 text-truncate fw-bold text-dark" style="font-size: 0.9rem;" title="${sanitize(item.nombre)}">${sanitize(item.nombre)}</h6>
+                    <div class="d-flex justify-content-between align-items-center mt-1">
+                        <span class="text-primary fw-bold small">S/ ${Number(item.precio).toFixed(2)}</span>
+                        <div class="input-group input-group-sm" style="width: 90px;">
+                            <button class="btn btn-outline-secondary btn-restar-cantidad px-2" type="button" data-idx="${idx}">-</button>
+                            <input type="text" class="form-control text-center px-0 bg-light fw-bold" value="${item.cantidad}" readonly style="font-size:0.85rem;">
+                            <button class="btn btn-outline-secondary btn-sumar-cantidad px-2" type="button" data-idx="${idx}">+</button>
+                        </div>
+                    </div>
+                </div>
+                <button class="btn btn-link text-danger p-1 btn-eliminar flex-shrink-0" title="Eliminar producto" data-idx="${idx}">
+                    <i class="bi bi-trash3 fs-6"></i>
+                </button>
+            </div>`;
+    });
+    html += '</div>';
+
     cont.innerHTML = html;
-    // Evento para cambiar cantidad
-    cont.querySelectorAll('.cantidad-input').forEach(input => {
-        input.addEventListener('change', function () {
+
+    const totalDisp = document.getElementById('carritoTotalDisplay');
+    if (totalDisp) totalDisp.textContent = `S/ ${totalSoles.toFixed(2)}`;
+
+    // Eventos para sumar/restar/eliminar
+    cont.querySelectorAll('.btn-sumar-cantidad').forEach(btn => {
+        btn.addEventListener('click', function () {
             const idx = parseInt(this.dataset.idx);
-            let val = parseInt(this.value);
-            if (isNaN(val) || val < 1) val = 1;
-            carrito[idx].cantidad = val;
-            guardarCarrito();
-            renderCarrito();
+            if (carrito[idx]) {
+                carrito[idx].cantidad++;
+                guardarCarrito();
+                renderCarrito();
+            }
         });
     });
-    // Evento eliminar
+
+    cont.querySelectorAll('.btn-restar-cantidad').forEach(btn => {
+        btn.addEventListener('click', function () {
+            const idx = parseInt(this.dataset.idx);
+            if (carrito[idx]) {
+                if (carrito[idx].cantidad > 1) {
+                    carrito[idx].cantidad--;
+                } else {
+                    carrito.splice(idx, 1);
+                }
+                guardarCarrito();
+                renderCarrito();
+            }
+        });
+    });
+
     cont.querySelectorAll('.btn-eliminar').forEach(btn => {
         btn.addEventListener('click', function () {
             const idx = parseInt(this.dataset.idx);
-            carrito.splice(idx, 1);
-            guardarCarrito();
-            renderCarrito();
+            if (carrito[idx]) {
+                carrito.splice(idx, 1);
+                guardarCarrito();
+                renderCarrito();
+            }
         });
     });
 }
+
+// Guardar historial de pedido local y en la nube
+function guardarHistorialPedido(ventaData) {
+    let historial = JSON.parse(localStorage.getItem('historialPedidos')) || [];
+    const idPedido = 'ED-' + Math.floor(100000 + Math.random() * 900000);
+    const fechaStr = new Date().toLocaleDateString('es-PE', { year: 'numeric', month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+    const userEm = (typeof auth !== 'undefined' && auth.currentUser && auth.currentUser.email)
+        ? auth.currentUser.email
+        : (localStorage.getItem('userEmail') || ventaData.paypalEmail || 'Cliente Invitado');
+
+    const nuevoPedido = {
+        id: idPedido,
+        fecha: fechaStr,
+        timestamp: Date.now(),
+        productos: ventaData.productos || [],
+        total: Number(ventaData.total) || 0,
+        metodoPago: ventaData.metodoPago || 'WhatsApp',
+        estado: 'En Proceso',
+        usuarioEmail: userEm
+    };
+
+    historial.unshift(nuevoPedido);
+    localStorage.setItem('historialPedidos', JSON.stringify(historial));
+
+    // Si Firestore está activo, intentar guardar también en colección 'ventas'
+    if (typeof db !== 'undefined' && db.collection) {
+        db.collection('ventas').add({
+            ...nuevoPedido,
+            fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
+        }).then(() => console.log('Pedido registrado en Firestore exitosamente.'))
+        .catch(err => console.warn('Aviso al guardar en Firestore:', err));
+    }
+    return nuevoPedido;
+}
+window.guardarHistorialPedido = guardarHistorialPedido;
+
+function procesarPedidoWhatsApp() {
+    if (carrito.length === 0) return;
+    const totalSoles = carrito.reduce((acc, item) => acc + Number(item.precio) * Number(item.cantidad), 0);
+
+    const pedido = guardarHistorialPedido({
+        productos: carrito.map(item => ({
+            id: item.id || null,
+            nombre: item.nombre,
+            precio: item.precio,
+            cantidad: item.cantidad,
+            subtotal: item.precio * item.cantidad,
+            imagen: item.imagen || ''
+        })),
+        total: totalSoles,
+        metodoPago: 'WhatsApp'
+    });
+
+    let mensaje = `¡Hola eDark Import! 🐉 Quiero realizar el pedido *#${pedido.id}* con lo siguiente:%0A%0A`;
+    carrito.forEach(item => {
+        mensaje += `• *${item.nombre}*%0A  Cantidad: ${item.cantidad} x S/ ${Number(item.precio).toFixed(2)} = S/ ${(Number(item.precio) * Number(item.cantidad)).toFixed(2)}%0A`;
+    });
+    mensaje += `%0A*TOTAL A PAGAR: S/ ${totalSoles.toFixed(2)}*%0A`;
+    mensaje += `Método de envío/pago a coordinar. ¡Quedo atento!`;
+
+    window.open(`https://wa.me/${typeof phone !== 'undefined' ? phone : '51999999999'}?text=${mensaje}`, '_blank');
+
+    setTimeout(() => {
+        if (confirm('¿Tu pedido se abrió en WhatsApp correctamente? Presiona Aceptar para vaciar el carrito y guardar en tu historial.')) {
+            carrito = [];
+            guardarCarrito();
+            renderCarrito();
+        }
+    }, 1200);
+}
+
+function abrirCarritoOffcanvas() {
+    let offcanvasEl = document.getElementById('offcanvasCarrito');
+    if (!offcanvasEl) {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <div class="offcanvas offcanvas-end shadow-lg border-0" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel" style="width: 420px; z-index: 1060;">
+                <div class="offcanvas-header bg-primary text-white py-3 shadow-sm">
+                    <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2 mb-0" id="offcanvasCarritoLabel">
+                        <i class="bi bi-cart3"></i> Mi Carrito de Compras
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+                </div>
+                <div class="offcanvas-body p-3 d-flex flex-column" id="offcanvasBodyContainer">
+                    <div id="carritoContenido" class="flex-grow-1 overflow-auto pe-1"></div>
+                    <div class="border-top pt-3 mt-auto bg-white" id="offcanvasFooter">
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            <span class="text-muted fw-semibold">Total a pagar:</span>
+                            <span class="fs-4 fw-bold text-primary" id="carritoTotalDisplay">S/ 0.00</span>
+                        </div>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-success fw-bold d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm" id="btnEnviarWhatsappOffcanvas">
+                                <i class="bi bi-whatsapp fs-5"></i> Pedir por WhatsApp
+                            </button>
+                            <div id="paypal-button-container" class="mt-1"></div>
+                            <div class="d-flex gap-2 mt-1">
+                                <a href="carrito.html" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold">Ver Carrito Completo</a>
+                                <button class="btn btn-outline-danger btn-sm" id="btnVaciarCarritoOffcanvas" title="Vaciar carrito"><i class="bi bi-trash"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.body.appendChild(div);
+        offcanvasEl = document.getElementById('offcanvasCarrito');
+
+        const btnVaciar = document.getElementById('btnVaciarCarritoOffcanvas');
+        if (btnVaciar) {
+            btnVaciar.addEventListener('click', function () {
+                if (carrito.length > 0 && confirm('¿Estás seguro de vaciar todo tu carrito?')) {
+                    carrito = [];
+                    guardarCarrito();
+                    renderCarrito();
+                }
+            });
+        }
+        const btnWhatsapp = document.getElementById('btnEnviarWhatsappOffcanvas');
+        if (btnWhatsapp) {
+            btnWhatsapp.addEventListener('click', function () {
+                procesarPedidoWhatsApp();
+            });
+        }
+    }
+
+    renderCarrito();
+    const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl) || new bootstrap.Offcanvas(offcanvasEl);
+    offcanvas.show();
+
+    if (!paypalButtonsRendered) {
+        initPayPalButton();
+        paypalButtonsRendered = true;
+    }
+}
+window.abrirCarritoOffcanvas = abrirCarritoOffcanvas;
 
 // --- INTERACCIÓN CON EL CARRITO Y EL NAVBAR (DELEGACIÓN DE EVENTOS) ---
 let paypalButtonsRendered = false;
@@ -1175,20 +1376,7 @@ document.addEventListener('click', function (e) {
     // 1. Botón de Carrito (Navbar)
     const cartBtn = e.target.closest('#cartBtn');
     if (cartBtn) {
-        const modalEl = document.getElementById('modalCarrito');
-        if (modalEl) {
-            renderCarrito();
-            const modal = bootstrap.Modal.getInstance(modalEl) || new bootstrap.Modal(modalEl);
-            modal.show();
-            // Inicializar PayPal cuando se abre el modal
-            if (!paypalButtonsRendered) {
-                initPayPalButton();
-                paypalButtonsRendered = true;
-            }
-        } else {
-            // Si la página no tiene el modal (ej: nosotros.html), redirigir a la página de carrito dedicada
-            window.location.href = 'carrito.html';
-        }
+        abrirCarritoOffcanvas();
         return;
     }
 
@@ -1398,15 +1586,19 @@ function agregarAlCarritoDesdeCard(id, event) {
 window.agregarAlCarritoDesdeCard = agregarAlCarritoDesdeCard;
 
 function mostrarToastCarrito(mensaje) {
-    const toastHtml = `<div class="toast align-items-center text-white bg-primary border-0 position-fixed top-0 end-0 m-3 shadow" style="z-index:9999" role="alert">
-        <div class="d-flex">
-            <div class="toast-body fw-bold"><i class="bi bi-cart-check-fill me-2"></i> ${mensaje}</div>
-            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+    const toastHtml = `<div class="toast align-items-center text-white bg-primary border-0 position-fixed top-0 end-0 m-3 shadow-lg rounded-3 overflow-hidden" style="z-index:9999" role="alert">
+        <div class="d-flex align-items-center p-1">
+            <div class="toast-body fw-bold d-flex align-items-center gap-2">
+                <i class="bi bi-cart-check-fill fs-5 text-warning"></i> 
+                <span>${mensaje}</span>
+            </div>
+            <button type="button" class="btn btn-sm btn-light text-primary fw-bold ms-auto me-2 px-2 py-1 shadow-sm flex-shrink-0" onclick="abrirCarritoOffcanvas(); const t = bootstrap.Toast.getInstance(this.closest('.toast')); if(t) t.hide();" style="font-size: 0.8rem; border-radius: 6px;">Ver Carrito <i class="bi bi-arrow-right"></i></button>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto flex-shrink-0" data-bs-dismiss="toast"></button>
         </div>
     </div>`;
     document.body.insertAdjacentHTML('beforeend', toastHtml);
     const toastEl = document.body.lastElementChild;
-    const toast = new bootstrap.Toast(toastEl, { delay: 2500 });
+    const toast = new bootstrap.Toast(toastEl, { delay: 3500 });
     toast.show();
     toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
 }
@@ -1663,7 +1855,7 @@ function inicializarBusquedaPredictiva() {
                 const imgSrc = safeImageUrl(prod.imagenUrl || prod.imagen || 'img/productos/default.png');
                 html += `
                     <a href="producto.html?id=${prod.id}" class="live-search-item" data-index="${idx}">
-                        <img src="${imgSrc}" class="live-search-img" alt="${sanitize(prod.nombre)}" onerror="this.src='img/productos/default.png'">
+                        <img src="${imgSrc}" class="live-search-img" alt="${sanitize(prod.nombre)}" loading="lazy" decoding="async" onerror="this.src='img/productos/default.png'">
                         <div class="live-search-info">
                             <div class="live-search-title">${sanitize(prod.nombre)}</div>
                             <div class="live-search-meta">${sanitize(prod.marca || 'eDark')} • ${sanitize(prod.capacidad || prod.categoria || '')}</div>

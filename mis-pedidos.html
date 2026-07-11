@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <meta name="description" content="Historial de pedidos y compras realizadas en eDark Alpha Technologies." />
+  <meta name="author" content="eDark EIRL" />
+  <title>Mis Pedidos - eDark Alpha Technologies</title>
+  <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css" rel="stylesheet">
+  <link href="css/styles.css" rel="stylesheet" />
+  <link href="css/modern-styles.css" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600&display=swap" rel="stylesheet">
+  
+  <style>
+    .header-pedidos-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      padding: 3.5rem 0 2.5rem;
+      position: relative;
+      overflow: hidden;
+      border-bottom: 3px solid #0d6efd;
+    }
+    .header-pedidos-banner::after {
+      content: '';
+      position: absolute;
+      top: -50%;
+      right: -10%;
+      width: 400px;
+      height: 400px;
+      background: radial-gradient(circle, rgba(13, 110, 253, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+      pointer-events: none;
+    }
+    .stat-card-pedido {
+      background: #ffffff;
+      border-radius: 16px;
+      padding: 1.25rem;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.06);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .stat-card-pedido:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 25px rgba(13, 110, 253, 0.12);
+    }
+    body.modo-oscuro .stat-card-pedido {
+      background: #1e2430;
+      border-color: rgba(255,255,255,0.08);
+      color: #f8f9fa;
+    }
+    .pedido-card {
+      background: #ffffff;
+      border-radius: 18px;
+      border: 1px solid rgba(0,0,0,0.08);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.04);
+      transition: all 0.25s ease;
+      overflow: hidden;
+    }
+    .pedido-card:hover {
+      box-shadow: 0 10px 30px rgba(0,0,0,0.09);
+      border-color: #0d6efd;
+    }
+    body.modo-oscuro .pedido-card {
+      background: #1a202c;
+      border-color: rgba(255,255,255,0.08);
+      color: #e2e8f0;
+    }
+    .pedido-item-thumb {
+      width: 54px;
+      height: 54px;
+      object-fit: contain;
+      border-radius: 10px;
+      background: #f8f9fa;
+      padding: 4px;
+      border: 1px solid #e9ecef;
+    }
+    body.modo-oscuro .pedido-item-thumb {
+      background: #141824;
+      border-color: rgba(255,255,255,0.1);
+    }
+    .filter-tab-btn {
+      border-radius: 30px;
+      padding: 0.45rem 1.2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+    }
+  </style>
+
+  <script>
+    (function () {
+      try {
+        if (localStorage.getItem('modoOscuro') !== 'false') {
+          document.documentElement.classList.add('modo-oscuro');
+          document.addEventListener('DOMContentLoaded', function() {
+            if (localStorage.getItem('modoOscuro') !== 'false') {
+              document.body.classList.add('modo-oscuro');
+            }
+          });
+        }
+      } catch (e) { }
+    })();
+  </script>
+</head>
+
+<body>
+  <!-- Contenedor del Navbar dinámico -->
+  <div id="navbar-container"></div>
+
+  <!-- Header Banner -->
+  <header class="header-pedidos-banner text-white">
+    <div class="container position-relative z-1">
+      <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+        <div>
+          <span class="badge bg-primary px-3 py-2 rounded-pill mb-2 fw-bold text-uppercase" style="letter-spacing: 1px;">Área de Cliente</span>
+          <h1 class="fw-bold mb-1 d-flex align-items-center gap-2" style="font-family: 'Orbitron', sans-serif;">
+            <i class="bi bi-box-seam-fill text-primary"></i> MIS PEDIDOS
+          </h1>
+          <p class="text-light opacity-75 mb-0">Consulta, filtra, gestiona y vuelve a ordenar cualquiera de tus compras en eDark.</p>
+        </div>
+        <div class="d-flex gap-2">
+          <a href="index.html" class="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold d-flex align-items-center gap-2">
+            <i class="bi bi-shop"></i> Ir al Catálogo
+          </a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="container my-5">
+    <!-- Resumen / Métricas -->
+    <div class="row g-4 mb-5" id="statsContainer">
+      <div class="col-12 col-md-4">
+        <div class="stat-card-pedido d-flex align-items-center gap-3">
+          <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 58px; height: 58px;">
+            <i class="bi bi-bag-check-fill fs-3"></i>
+          </div>
+          <div>
+            <span class="text-muted small fw-semibold text-uppercase d-block">Pedidos Registrados</span>
+            <h3 class="fw-bold mb-0" id="statTotalPedidos">0</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="stat-card-pedido d-flex align-items-center gap-3">
+          <div class="bg-success bg-opacity-10 text-success rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 58px; height: 58px;">
+            <i class="bi bi-cash-stack fs-3"></i>
+          </div>
+          <div>
+            <span class="text-muted small fw-semibold text-uppercase d-block">Total Gastado</span>
+            <h3 class="fw-bold mb-0 text-success" id="statTotalInvertido">S/ 0.00</h3>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-4">
+        <div class="stat-card-pedido d-flex align-items-center gap-3">
+          <div class="bg-info bg-opacity-10 text-info rounded-circle p-3 d-flex align-items-center justify-content-center" style="width: 58px; height: 58px;">
+            <i class="bi bi-calendar-check fs-3"></i>
+          </div>
+          <div>
+            <span class="text-muted small fw-semibold text-uppercase d-block">Último Pedido</span>
+            <h6 class="fw-bold mb-0 text-truncate" id="statUltimoPedido" style="max-width: 180px;">Sin registros</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra de Filtros y Búsqueda -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4 bg-light p-3 rounded-4 border">
+      <div class="d-flex flex-wrap gap-2" id="filterTabsContainer">
+        <button class="btn btn-primary filter-tab-btn active" data-filter="todos">
+          <i class="bi bi-grid-fill me-1"></i> Todos
+        </button>
+        <button class="btn btn-outline-secondary filter-tab-btn" data-filter="WhatsApp">
+          <i class="bi bi-whatsapp text-success me-1"></i> WhatsApp
+        </button>
+        <button class="btn btn-outline-secondary filter-tab-btn" data-filter="PayPal">
+          <i class="bi bi-paypal text-primary me-1"></i> PayPal
+        </button>
+      </div>
+
+      <div class="input-group" style="max-width: 340px;">
+        <span class="input-group-text bg-white border-end-0"><i class="bi bi-search text-muted"></i></span>
+        <input type="text" class="form-control border-start-0 ps-0" id="buscarPedidoInput" placeholder="Buscar por código # o producto...">
+        <button class="btn btn-outline-secondary d-none" type="button" id="limpiarBusquedaPedido"><i class="bi bi-x-lg"></i></button>
+      </div>
+    </div>
+
+    <!-- Contenedor de Lista de Pedidos -->
+    <div id="listaPedidosContainer" class="d-flex flex-column gap-4">
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Cargando pedidos...</span>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Modal Detalle del Pedido -->
+  <div class="modal fade" id="modalDetallePedido" tabindex="-1" aria-labelledby="modalDetallePedidoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header bg-primary text-white py-3">
+          <h5 class="modal-title fw-bold d-flex align-items-center gap-2" id="modalDetallePedidoLabel">
+            <i class="bi bi-receipt-cutoff"></i> Detalle de Pedido
+          </h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body p-4" id="modalDetalleBody"></div>
+        <div class="modal-footer bg-light py-2">
+          <button type="button" class="btn btn-outline-secondary btn-sm rounded-pill px-3" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 d-flex align-items-center gap-1" id="btnRepetirPedidoModal">
+            <i class="bi bi-arrow-repeat"></i> Volver a Pedir Todos
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Carrito Slide-over (Offcanvas) -->
+  <div class="offcanvas offcanvas-end shadow-lg border-0" tabindex="-1" id="offcanvasCarrito" aria-labelledby="offcanvasCarritoLabel" style="width: 420px; z-index: 1060;">
+    <div class="offcanvas-header bg-primary text-white py-3 shadow-sm">
+      <h5 class="offcanvas-title fw-bold d-flex align-items-center gap-2 mb-0" id="offcanvasCarritoLabel">
+        <i class="bi bi-cart3"></i> Mi Carrito de Compras
+      </h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Cerrar"></button>
+    </div>
+    <div class="offcanvas-body p-3 d-flex flex-column" id="offcanvasBodyContainer">
+      <div id="carritoContenido" class="flex-grow-1 overflow-auto pe-1"></div>
+      <div class="border-top pt-3 mt-auto bg-white" id="offcanvasFooter">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <span class="text-muted fw-semibold">Total a pagar:</span>
+          <span class="fs-4 fw-bold text-primary" id="carritoTotalDisplay">S/ 0.00</span>
+        </div>
+        <div class="d-grid gap-2">
+          <button class="btn btn-success fw-bold d-flex align-items-center justify-content-center gap-2 py-2 shadow-sm" id="btnEnviarWhatsappOffcanvas" onclick="procesarPedidoWhatsApp()">
+            <i class="bi bi-whatsapp fs-5"></i> Pedir por WhatsApp
+          </button>
+          <div id="paypal-button-container" class="mt-1"></div>
+          <div class="d-flex gap-2 mt-1">
+            <a href="carrito.html" class="btn btn-outline-primary btn-sm flex-grow-1 fw-bold">Ver Carrito Completo</a>
+            <button class="btn btn-outline-danger btn-sm" id="btnVaciarCarritoOffcanvas" onclick="if(confirm('¿Vaciar carrito?')){carrito=[];guardarCarrito();renderCarrito();}" title="Vaciar carrito"><i class="bi bi-trash"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- IA Chatbot Chimuelo -->
+  <div id="ai-chimuelo-container" class="position-fixed bottom-0 end-0 m-4" style="z-index: 1055;">
+    <button id="ai-chimuelo-toggle" class="btn btn-primary rounded-circle shadow-lg p-3 d-flex align-items-center justify-content-center position-relative" style="width: 64px; height: 64px; border: 3px solid #fff;">
+      <i class="bi bi-robot fs-2"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">IA</span>
+    </button>
+    
+    <div id="ai-chimuelo-panel" class="card shadow-lg border-0 d-none" style="width: 360px; height: 500px; position: absolute; bottom: 80px; right: 0; border-radius: 18px; overflow: hidden; display: flex; flex-direction: column;">
+      <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center py-3">
+        <div class="d-flex align-items-center gap-2">
+          <div class="bg-white rounded-circle p-1 d-flex align-items-center justify-content-center" style="width: 32px; height: 32px;">
+            <i class="bi bi-lightning-charge-fill text-primary"></i>
+          </div>
+          <div>
+            <h6 class="mb-0 fw-bold">Chimuelo IA</h6>
+            <small class="text-light opacity-75" style="font-size: 0.75rem;">Asistente de Pedidos eDark</small>
+          </div>
+        </div>
+        <button type="button" class="btn-close btn-close-white" id="ai-chimuelo-close" aria-label="Cerrar"></button>
+      </div>
+      <div id="ai-chimuelo-messages" class="card-body p-3 overflow-auto flex-grow-1 bg-light d-flex flex-column gap-2"></div>
+      <div class="card-footer bg-white border-top p-2">
+        <form id="ai-chimuelo-form" class="d-flex gap-2">
+          <input type="text" id="ai-chimuelo-input" class="form-control rounded-pill" placeholder="Consulta sobre tu pedido..." autocomplete="off">
+          <button type="submit" class="btn btn-primary rounded-circle px-3"><i class="bi bi-send-fill"></i></button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor del Footer dinámico -->
+  <div id="footer-container"></div>
+
+  <!-- Bootstrap & Firebase -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+  <script src="js/firebase-config.js?v=20251203"></script>
+  <script src="js/scripts.js?v=20251203"></script>
+
+  <script>
+    // Cargar navbar y footer
+    fetch('navbar.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('navbar-container').innerHTML = html;
+        if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
+      });
+
+    fetch('footer.html')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('footer-container').innerHTML = html;
+      });
+
+    // Lógica principal de Pedidos
+    let pedidosGlobal = [];
+    let filtroActual = 'todos';
+    let busquedaActual = '';
+
+    document.addEventListener('DOMContentLoaded', () => {
+      cargarYRenderizarPedidos();
+
+      // Eventos de pestañas
+      document.querySelectorAll('.filter-tab-btn').forEach(btn => {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.filter-tab-btn').forEach(b => {
+            b.classList.remove('btn-primary', 'active');
+            b.classList.add('btn-outline-secondary');
+          });
+          this.classList.remove('btn-outline-secondary');
+          this.classList.add('btn-primary', 'active');
+          filtroActual = this.dataset.filter;
+          renderizarListaPedidos();
+        });
+      });
+
+      // Búsqueda en vivo de pedidos
+      const inputBuscar = document.getElementById('buscarPedidoInput');
+      const btnLimpiar = document.getElementById('limpiarBusquedaPedido');
+      if (inputBuscar) {
+        inputBuscar.addEventListener('input', (e) => {
+          busquedaActual = e.target.value.trim().toLowerCase();
+          if (busquedaActual) btnLimpiar.classList.remove('d-none');
+          else btnLimpiar.classList.add('d-none');
+          renderizarListaPedidos();
+        });
+      }
+      if (btnLimpiar) {
+        btnLimpiar.addEventListener('click', () => {
+          inputBuscar.value = '';
+          busquedaActual = '';
+          btnLimpiar.classList.add('d-none');
+          renderizarListaPedidos();
+        });
+      }
+    });
+
+    async function cargarYRenderizarPedidos() {
+      // 1. Obtener de localStorage
+      let pedidosLocal = JSON.parse(localStorage.getItem('historialPedidos')) || [];
+      pedidosGlobal = [...pedidosLocal];
+
+      // 2. Si el usuario ha iniciado sesión y hay Firestore, traer pedidos de la nube y fusionar
+      try {
+        if (typeof db !== 'undefined' && db.collection && typeof auth !== 'undefined') {
+          auth.onAuthStateChanged(async (user) => {
+            if (user) {
+              const snapshot = await db.collection('ventas').where('usuarioEmail', '==', user.email).get();
+              let pedidosNube = [];
+              snapshot.forEach(doc => {
+                const data = doc.data();
+                pedidosNube.push({
+                  id: data.id || ('ED-' + doc.id.slice(0,6).toUpperCase()),
+                  fecha: data.fecha || 'Reciente',
+                  timestamp: data.timestamp || Date.now(),
+                  productos: data.productos || [],
+                  total: Number(data.total) || 0,
+                  metodoPago: data.metodoPago || 'PayPal/Nube',
+                  estado: data.estado || 'Completado'
+                });
+              });
+
+              // Fusionar evitando duplicados por ID
+              const idsExistentes = new Set(pedidosGlobal.map(p => p.id));
+              pedidosNube.forEach(pNube => {
+                if (!idsExistentes.has(pNube.id)) {
+                  pedidosGlobal.push(pNube);
+                }
+              });
+
+              // Ordenar por fecha o timestamp descendente
+              pedidosGlobal.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+              actualizarMetricas();
+              renderizarListaPedidos();
+            }
+          });
+        }
+      } catch (err) {
+        console.warn('No se pudo obtener pedidos de Firestore:', err);
+      }
+
+      actualizarMetricas();
+      renderizarListaPedidos();
+    }
+
+    function actualizarMetricas() {
+      const elTotal = document.getElementById('statTotalPedidos');
+      const elInvertido = document.getElementById('statTotalInvertido');
+      const elUltimo = document.getElementById('statUltimoPedido');
+
+      if (elTotal) elTotal.textContent = pedidosGlobal.length;
+      if (elInvertido) {
+        const suma = pedidosGlobal.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
+        elInvertido.textContent = `S/ ${suma.toFixed(2)}`;
+      }
+      if (elUltimo) {
+        if (pedidosGlobal.length > 0) {
+          elUltimo.textContent = `${pedidosGlobal[0].id} (${pedidosGlobal[0].fecha})`;
+        } else {
+          elUltimo.textContent = 'Sin registros';
+        }
+      }
+    }
+
+    function renderizarListaPedidos() {
+      const contenedor = document.getElementById('listaPedidosContainer');
+      if (!contenedor) return;
+
+      // Filtrar
+      let filtrados = pedidosGlobal.filter(p => {
+        // Por método de pago
+        if (filtroActual !== 'todos') {
+          if (filtroActual === 'WhatsApp' && !p.metodoPago.toLowerCase().includes('whatsapp')) return false;
+          if (filtroActual === 'PayPal' && !p.metodoPago.toLowerCase().includes('paypal')) return false;
+        }
+        // Por búsqueda (id o nombre de producto)
+        if (busquedaActual) {
+          const idMatch = (p.id || '').toLowerCase().includes(busquedaActual);
+          const prodMatch = (p.productos || []).some(prod => (prod.nombre || '').toLowerCase().includes(busquedaActual));
+          if (!idMatch && !prodMatch) return false;
+        }
+        return true;
+      });
+
+      if (filtrados.length === 0) {
+        contenedor.innerHTML = `
+          <div class="pedido-card p-5 text-center my-3">
+            <div class="mb-3">
+              <i class="bi bi-box-seam fs-1 text-muted opacity-50"></i>
+            </div>
+            <h5 class="fw-bold">No se encontraron pedidos</h5>
+            <p class="text-secondary small mb-4">
+              ${pedidosGlobal.length === 0 ? 'Aún no has realizado ninguna compra desde este navegador o cuenta.' : 'No hay pedidos que coincidan con los filtros seleccionados.'}
+            </p>
+            ${pedidosGlobal.length === 0 ? '<a href="index.html" class="btn btn-primary rounded-pill px-4 py-2"><i class="bi bi-shop me-2"></i>Explorar Tienda y Comprar</a>' : '<button class="btn btn-outline-primary rounded-pill px-4 btn-sm" onclick="location.reload()">Ver Todos</button>'}
+          </div>`;
+        return;
+      }
+
+      let html = '';
+      filtrados.forEach((pedido, idx) => {
+        const metodoBadge = pedido.metodoPago.toLowerCase().includes('whatsapp')
+          ? '<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 py-1 px-2"><i class="bi bi-whatsapp me-1"></i> WhatsApp</span>'
+          : '<span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 py-1 px-2"><i class="bi bi-paypal me-1"></i> PayPal/Tarjeta</span>';
+        
+        const estadoBadge = '<span class="badge bg-info bg-opacity-10 text-info border border-info border-opacity-25 py-1 px-2"><i class="bi bi-clock-history me-1"></i> Registrado</span>';
+
+        // Primeros 3 productos con miniatura
+        let productosPreview = '<div class="d-flex flex-wrap gap-2 mt-2">';
+        const prods = pedido.productos || [];
+        prods.slice(0, 4).forEach(prod => {
+          const img = prod.imagen ? safeImageUrl(prod.imagen) : 'img/default.jpg';
+          productosPreview += `
+            <div class="d-flex align-items-center gap-2 bg-light px-2 py-1 rounded-3 border small" title="${sanitize(prod.nombre)}">
+              <img src="${img}" class="pedido-item-thumb" style="width:36px; height:36px;" alt="${sanitize(prod.nombre)}">
+              <span class="text-truncate" style="max-width: 140px; font-weight:500;">${sanitize(prod.nombre)}</span>
+              <span class="badge bg-secondary rounded-pill">x${prod.cantidad || 1}</span>
+            </div>`;
+        });
+        if (prods.length > 4) {
+          productosPreview += `<span class="badge bg-light text-dark border align-self-center py-2 px-3">+${prods.length - 4} más...</span>`;
+        }
+        productosPreview += '</div>';
+
+        html += `
+          <div class="pedido-card p-4">
+            <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 border-bottom pb-3 mb-3">
+              <div>
+                <div class="d-flex align-items-center gap-2 flex-wrap mb-1">
+                  <span class="fs-5 fw-bold text-primary" style="font-family: 'Orbitron', sans-serif;">#${pedido.id}</span>
+                  ${metodoBadge}
+                  ${estadoBadge}
+                </div>
+                <small class="text-muted d-block"><i class="bi bi-calendar3 me-1"></i> Fecha: ${pedido.fecha || 'Reciente'}</small>
+              </div>
+              <div class="d-flex align-items-center gap-3">
+                <div class="text-md-end">
+                  <span class="text-muted small d-block">Monto Total:</span>
+                  <span class="fs-4 fw-bold text-dark">S/ ${Number(pedido.total).toFixed(2)}</span>
+                </div>
+                <div class="d-flex gap-2">
+                  <button class="btn btn-outline-primary btn-sm rounded-pill px-3 fw-semibold" onclick="verDetallePedido(${idx})">
+                    <i class="bi bi-eye"></i> Detalle
+                  </button>
+                  <button class="btn btn-primary btn-sm rounded-pill px-3 fw-semibold d-flex align-items-center gap-1 shadow-sm" onclick="repetirPedido(${idx})">
+                    <i class="bi bi-arrow-repeat"></i> Volver a Pedir
+                  </button>
+                </div>
+              </div>
+            </div>
+            
+            <div class="mt-2">
+              <span class="small fw-semibold text-muted text-uppercase" style="letter-spacing: 0.5px;">Productos en esta compra (${prods.reduce((acc, p) => acc + (p.cantidad || 1), 0)} ítems):</span>
+              ${productosPreview}
+            </div>
+          </div>`;
+      });
+
+      contenedor.innerHTML = html;
+    }
+
+    function verDetallePedido(idx) {
+      const pedido = pedidosGlobal[idx];
+      if (!pedido) return;
+
+      const modalBody = document.getElementById('modalDetalleBody');
+      const btnRepetir = document.getElementById('btnRepetirPedidoModal');
+      
+      let itemsHtml = '<div class="d-flex flex-column gap-3 mb-3">';
+      (pedido.productos || []).forEach(prod => {
+        const img = prod.imagen ? safeImageUrl(prod.imagen) : 'img/default.jpg';
+        const subtotal = Number(prod.precio || 0) * Number(prod.cantidad || 1);
+        itemsHtml += `
+          <div class="d-flex align-items-center justify-content-between p-2 rounded-3 bg-light border">
+            <div class="d-flex align-items-center gap-3 min-w-0">
+              <img src="${img}" class="pedido-item-thumb" style="width: 50px; height: 50px;" alt="">
+              <div class="min-w-0">
+                <h6 class="mb-1 text-truncate fw-bold" style="font-size:0.9rem;">${sanitize(prod.nombre)}</h6>
+                <small class="text-muted">S/ ${Number(prod.precio || 0).toFixed(2)} x ${prod.cantidad || 1} UND</small>
+              </div>
+            </div>
+            <span class="fw-bold text-primary flex-shrink-0">S/ ${subtotal.toFixed(2)}</span>
+          </div>`;
+      });
+      itemsHtml += '</div>';
+
+      modalBody.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center mb-3 p-3 bg-primary bg-opacity-10 rounded-3">
+          <div>
+            <span class="text-muted small">Código de Pedido:</span>
+            <h5 class="fw-bold mb-0 text-primary" style="font-family: 'Orbitron', sans-serif;">#${pedido.id}</h5>
+          </div>
+          <div class="text-end">
+            <span class="text-muted small">Fecha:</span>
+            <div class="fw-semibold">${pedido.fecha}</div>
+          </div>
+        </div>
+        <h6 class="fw-bold mb-3"><i class="bi bi-box me-2"></i>Listado de Productos:</h6>
+        ${itemsHtml}
+        <div class="border-top pt-3 d-flex justify-content-between align-items-center">
+          <span class="fs-5 fw-bold">Total Pagado:</span>
+          <span class="fs-4 fw-bold text-primary">S/ ${Number(pedido.total).toFixed(2)}</span>
+        </div>`;
+
+      if (btnRepetir) {
+        btnRepetir.onclick = () => {
+          bootstrap.Modal.getInstance(document.getElementById('modalDetallePedido')).hide();
+          repetirPedido(idx);
+        };
+      }
+
+      const modal = new bootstrap.Modal(document.getElementById('modalDetallePedido'));
+      modal.show();
+    }
+
+    function repetirPedido(idx) {
+      const pedido = pedidosGlobal[idx];
+      if (!pedido || !pedido.productos || pedido.productos.length === 0) return;
+
+      pedido.productos.forEach(prod => {
+        if (typeof agregarAlCarrito === 'function') {
+          agregarAlCarrito({
+            id: prod.id || undefined,
+            nombre: prod.nombre,
+            precio: prod.precio,
+            imagen: prod.imagen || ''
+          }, prod.cantidad || 1);
+        }
+      });
+
+      mostrarToastCarrito(`¡Se añadieron ${pedido.productos.length} productos de tu pedido #${pedido.id} al carrito!`);
+      setTimeout(() => {
+        if (typeof abrirCarritoOffcanvas === 'function') abrirCarritoOffcanvas();
+      }, 300);
+    }
+  </script>
+</body>
+
+</html>
