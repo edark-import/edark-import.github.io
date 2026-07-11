@@ -30,7 +30,16 @@
                 <li class="nav-item"><a class="nav-link" href="nosotros.html">Nosotros</a></li>
                 <li class="nav-item"><a class="nav-link" href="contactanos.html">Contáctanos</a></li>
             </ul>
-            <form class="d-flex align-items-center" id="adminNav">
+            <form class="d-flex align-items-center position-relative" id="adminNav">
+                <!-- Búsqueda predictiva universal en Navbar -->
+                <div class="position-relative me-2 d-none d-lg-block" style="width: 230px;">
+                    <div class="input-group input-group-sm">
+                        <span class="input-group-text bg-transparent border-end-0 text-muted"><i class="bi bi-search"></i></span>
+                        <input type="text" class="form-control border-start-0 ps-0 live-search-input" id="navLiveSearchInput" placeholder="Buscar en eDark..." aria-label="Buscar en eDark" autocomplete="off">
+                    </div>
+                    <!-- Dropdown flotante predictivo -->
+                    <div class="live-search-dropdown shadow-lg position-absolute start-0 w-100 bg-white border mt-1 d-none" id="navLiveSearchDropdown" style="z-index: 1060; max-height: 380px; overflow-y: auto; min-width: 310px;"></div>
+                </div>
                 <button class="btn btn-outline-dark" type="button" id="tipoCambioBtn" disabled style="min-width:120px">
                     <i class="bi-currency-exchange me-1"></i>
                     <span id="tipoCambioText">S/ 3.8</span>

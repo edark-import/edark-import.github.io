@@ -1102,16 +1102,8 @@ function productoCoincideFiltros(producto) {
     return true;
 }
 
-// --- EVENTO DE BÚSQUEDA ---
-document.addEventListener('DOMContentLoaded', function () {
-    const inputBusqueda = document.getElementById('buscadorProductos');
-    if (inputBusqueda) {
-        inputBusqueda.addEventListener('input', function () {
-            textoBusqueda = this.value.trim().toLowerCase();
-            renderProductosPaginados();
-        });
-    }
-});
+// --- EVENTO DE BÚSQUEDA PREDICTIVA EN VIVO ---
+// (Gestionado globalmente por inicializarBusquedaPredictiva y sincronizado con renderProductosPaginados)
 
 // (Se eliminó una redefinición duplicada de asignarEventosProductos que sobrescribía el precio mostrado)
 
@@ -1583,4 +1575,344 @@ document.addEventListener('DOMContentLoaded', function () {
         carouselObserver.observe(carousel);
     }
 });
-// Modo oscuro: delegar totalmente a dark-mode.html (sin duplicaciones)
+
+// =========================================================
+// MOTOR DE BÚSQUEDA PREDICTIVA EN VIVO (LIVE PREDICTIVE SEARCH)
+// =========================================================
+function inicializarBusquedaPredictiva() {
+    const inputs = document.querySelectorAll('.live-search-input, #buscadorProductos, #navLiveSearchInput');
+    if (inputs.length === 0) return;
+
+    // Asegurar que haya productos en caché
+    async function garantizarCacheProductos() {
+        if (window.productosCache && window.productosCache.length > 0) return window.productosCache;
+        if (!firebase || !firebase.firestore) return [];
+        try {
+            const snap = await firebase.firestore().collection('productos').where('activo', '==', true).get();
+            if (!window.productosCache) window.productosCache = [];
+            snap.forEach(doc => {
+                const data = { id: doc.id, ...doc.data() };
+                if (!window.productosCache.some(p => p.id === doc.id)) {
+                    window.productosCache.push(data);
+                }
+            });
+            return window.productosCache;
+        } catch (e) {
+            console.warn('Error cargando caché para búsqueda predictiva:', e);
+            return window.productosCache || [];
+        }
+    }
+
+    inputs.forEach(input => {
+        // Encontrar el dropdown asociado
+        let dropdown = input.id === 'buscadorProductos'
+            ? document.getElementById('homeLiveSearchDropdown')
+            : (input.id === 'navLiveSearchInput'
+                ? document.getElementById('navLiveSearchDropdown')
+                : input.parentElement.querySelector('.live-search-dropdown'));
+
+        if (!dropdown && input.parentElement) {
+            dropdown = input.parentElement.querySelector('.live-search-dropdown');
+        }
+        if (!dropdown) return;
+
+        let activeIndex = -1;
+
+        input.addEventListener('input', async function () {
+            const query = this.value.trim().toLowerCase();
+
+            // Si es el buscador principal de index.html, actualizar también la cuadrícula general
+            if (this.id === 'buscadorProductos') {
+                window.textoBusqueda = query;
+                if (typeof renderProductosPaginados === 'function') renderProductosPaginados();
+            }
+
+            if (query.length < 2) {
+                dropdown.classList.add('d-none');
+                dropdown.innerHTML = '';
+                activeIndex = -1;
+                return;
+            }
+
+            const lista = await garantizarCacheProductos();
+            const resultados = lista.filter(p => {
+                const nom = (p.nombre || '').toLowerCase();
+                const mar = (p.marca || '').toLowerCase();
+                const mod = (p.modelo || '').toLowerCase();
+                const cat = (p.categoria || '').toLowerCase();
+                const sub = (p.subcategoria || '').toLowerCase();
+                return nom.includes(query) || mar.includes(query) || mod.includes(query) || cat.includes(query) || sub.includes(query);
+            }).slice(0, 6);
+
+            if (resultados.length === 0) {
+                dropdown.innerHTML = `
+                    <div class="p-3 text-center text-muted small">
+                        <i class="bi bi-search me-1"></i>No encontramos resultados para "<strong>${sanitize(this.value)}</strong>"
+                    </div>`;
+                dropdown.classList.remove('d-none');
+                activeIndex = -1;
+                return;
+            }
+
+            let html = '';
+            resultados.forEach((prod, idx) => {
+                let precio = parseFloat(prod.precioVenta);
+                if (window.calcularPrecioProducto) precio = window.calcularPrecioProducto(prod);
+                if (!precio || isNaN(precio)) precio = parseFloat(prod.precio) || 0;
+
+                const imgSrc = safeImageUrl(prod.imagenUrl || prod.imagen || 'img/productos/default.png');
+                html += `
+                    <a href="producto.html?id=${prod.id}" class="live-search-item" data-index="${idx}">
+                        <img src="${imgSrc}" class="live-search-img" alt="${sanitize(prod.nombre)}" onerror="this.src='img/productos/default.png'">
+                        <div class="live-search-info">
+                            <div class="live-search-title">${sanitize(prod.nombre)}</div>
+                            <div class="live-search-meta">${sanitize(prod.marca || 'eDark')} • ${sanitize(prod.capacidad || prod.categoria || '')}</div>
+                        </div>
+                        <div class="live-search-price">S/ ${precio.toFixed(2)}</div>
+                    </a>`;
+            });
+
+            dropdown.innerHTML = html;
+            dropdown.classList.remove('d-none');
+            activeIndex = -1;
+        });
+
+        // Navegación por teclado
+        input.addEventListener('keydown', function (e) {
+            const items = dropdown.querySelectorAll('.live-search-item');
+            if (!items || items.length === 0 || dropdown.classList.contains('d-none')) return;
+
+            if (e.key === 'ArrowDown') {
+                e.preventDefault();
+                activeIndex = (activeIndex + 1) % items.length;
+                items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
+                if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'ArrowUp') {
+                e.preventDefault();
+                activeIndex = (activeIndex - 1 + items.length) % items.length;
+                items.forEach((it, i) => it.classList.toggle('active', i === activeIndex));
+                if (items[activeIndex]) items[activeIndex].scrollIntoView({ block: 'nearest' });
+            } else if (e.key === 'Enter') {
+                if (activeIndex >= 0 && items[activeIndex]) {
+                    e.preventDefault();
+                    items[activeIndex].click();
+                }
+            } else if (e.key === 'Escape') {
+                dropdown.classList.add('d-none');
+            }
+        });
+
+        // Cerrar dropdown al enfocar fuera
+        document.addEventListener('click', function (e) {
+            if (!input.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.add('d-none');
+            }
+        });
+
+        input.addEventListener('focus', function () {
+            if (this.value.trim().length >= 2 && dropdown.innerHTML !== '') {
+                dropdown.classList.remove('d-none');
+            }
+        });
+    });
+}
+
+// =========================================================
+// ASISTENTE VIRTUAL CHIMUELO IA (CHATBOT INTELIGENTE)
+// =========================================================
+function inicializarChimueloIA() {
+    let btn = document.getElementById('chatbotBtn');
+    let modalEl = document.getElementById('chatbotModal');
+
+    // Si no existe el chatbot en esta página (ej. producto.html, soporte.html), inyectarlo automáticamente
+    if (!btn || !modalEl) {
+        const divContainer = document.createElement('div');
+        divContainer.innerHTML = `
+            <button id="chatbotBtn" style="position:fixed;bottom:30px;right:30px;z-index:1050;"
+                class="btn btn-primary rounded-circle shadow-lg p-0" aria-label="Abrir chat virtual Chimuelo IA" title="Asistente virtual Chimuelo IA">
+                <img src="img/Logo/isotipo_Negro.png" alt="Icono de Chimuelo IA" style="width: 50px; height: auto;">
+            </button>
+            <div class="modal fade" id="chatbotModal" tabindex="-1" aria-labelledby="chatbotModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-bottom modal-sm" style="position:fixed;bottom:0;right:30px;max-width:360px;margin:0;z-index:1060;">
+                    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden">
+                        <div class="modal-header py-2 bg-primary text-white">
+                            <div class="d-flex align-items-center gap-2">
+                                <img src="img/Logo/isotipo_Negro.png" alt="Chimuelo" style="width:28px;height:28px;filter:brightness(10);">
+                                <h6 class="modal-title mb-0 fw-bold" id="chatbotModalLabel">Chimuelo IA</h6>
+                            </div>
+                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                        </div>
+                        <div class="modal-body" id="chatbotMessages" style="max-height:340px;overflow-y:auto;font-size:0.95em;">
+                            <div class="chat-bubble-bot">
+                                ¡Hola! 🐉 Soy <strong>Chimuelo IA</strong>, tu asistente tecnológico en eDark Import. ¿En qué puedo ayudarte hoy?
+                                <div class="chat-quick-chips">
+                                    <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Discos SSD')">🔍 Discos SSD</span>
+                                    <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Laptops')">💻 Laptops</span>
+                                    <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Tiempos de envío')">🚚 Envíos</span>
+                                    <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Métodos de pago')">💳 Pagos</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer py-2 bg-light border-top">
+                            <div class="input-group input-group-sm">
+                                <input type="text" id="chatbotInput" class="form-control" placeholder="Escribe tu consulta..." autocomplete="off">
+                                <button id="chatbotSend" class="btn btn-primary px-3"><i class="bi bi-send-fill"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>`;
+        document.body.appendChild(divContainer);
+        btn = document.getElementById('chatbotBtn');
+        modalEl = document.getElementById('chatbotModal');
+    } else {
+        // Asegurar estructura del modal existente si venía de index.html básico
+        const msgContainer = document.getElementById('chatbotMessages');
+        if (msgContainer && !msgContainer.querySelector('.chat-bubble-bot')) {
+            msgContainer.innerHTML = `
+                <div class="chat-bubble-bot">
+                    ¡Hola! 🐉 Soy <strong>Chimuelo IA</strong>, tu asistente tecnológico en eDark Import. ¿En qué puedo ayudarte hoy?
+                    <div class="chat-quick-chips">
+                        <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Discos SSD')">🔍 Discos SSD</span>
+                        <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Laptops')">💻 Laptops</span>
+                        <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Tiempos de envío')">🚚 Envíos</span>
+                        <span class="chat-chip" onclick="enviarMensajeRapidoChimuelo('Métodos de pago')">💳 Pagos</span>
+                    </div>
+                </div>`;
+        }
+    }
+
+    if (!btn || !modalEl) return;
+
+    btn.addEventListener('click', function () {
+        const modal = new bootstrap.Modal(modalEl);
+        modal.show();
+        setTimeout(() => {
+            const input = document.getElementById('chatbotInput');
+            if (input) input.focus();
+        }, 300);
+    });
+
+    const inputEl = document.getElementById('chatbotInput');
+    const sendBtn = document.getElementById('chatbotSend');
+
+    function procesarYResponder(texto) {
+        if (!texto || !texto.trim()) return;
+        const msgCont = document.getElementById('chatbotMessages');
+        if (!msgCont) return;
+
+        // 1. Burbuja del usuario
+        const userDiv = document.createElement('div');
+        userDiv.className = 'chat-bubble-user';
+        userDiv.textContent = texto;
+        msgCont.appendChild(userDiv);
+        inputEl.value = '';
+        msgCont.scrollTop = msgCont.scrollHeight;
+
+        // 2. Indicador de escritura
+        const typingDiv = document.createElement('div');
+        typingDiv.className = 'chat-bubble-bot typing-dots';
+        typingDiv.innerHTML = 'Chimuelo está pensando <span></span><span></span><span></span>';
+        msgCont.appendChild(typingDiv);
+        msgCont.scrollTop = msgCont.scrollHeight;
+
+        // 3. Evaluar respuesta
+        setTimeout(async () => {
+            if (typingDiv && typingDiv.parentNode) typingDiv.parentNode.removeChild(typingDiv);
+
+            const t = texto.toLowerCase().trim();
+            let respuestaHtml = '';
+
+            if (t.includes('envio') || t.includes('envío') || t.includes('demora') || t.includes('olva') || t.includes('llega') || t.includes('lima')) {
+                respuestaHtml = `
+                    <strong>🚚 Tiempos y Envíos eDark Import:</strong><br>
+                    • <strong>Lima Metropolitana:</strong> Entrega rápida en 24 a 48 horas hábiles directamente en tu domicilio.<br>
+                    • <strong>Provincias:</strong> Despachamos diariamente por Olva Courier o Shalom (tiempo estimado de 2 a 4 días hábiles con tracking seguro).<br>
+                    ¡Todos nuestros paquetes viajan protegidos contra accidentes!`;
+            } else if (t.includes('pago') || t.includes('pagar') || t.includes('yape') || t.includes('plin') || t.includes('tarjeta') || t.includes('paypal')) {
+                respuestaHtml = `
+                    <strong>💳 Métodos de Pago Seguros:</strong><br>
+                    • <strong>Yape y Plin:</strong> Aceptamos pagos instantáneos sin recargos.<br>
+                    • <strong>Transferencias:</strong> BCP, Interbank y BBVA.<br>
+                    • <strong>Tarjetas:</strong> Visa, Mastercard, American Express y PayPal a través de nuestra pasarela encriptada.`;
+            } else if (t.includes('garant') || t.includes('devoluc') || t.includes('fallas') || t.includes('cambio')) {
+                respuestaHtml = `
+                    <strong>🛡️ Garantía Oficial:</strong><br>
+                    Todos los productos y repuestos vendidos en eDark Import cuentan con garantía por defectos de fábrica. Tienes 7 días para cambios directos con el empaque original intacto.`;
+            } else if (t.includes('hola') || t.includes('buenas') || t.includes('quién eres') || t.includes('quien eres') || t.includes('chimuelo')) {
+                respuestaHtml = `
+                    ¡Hola! 🐉 Soy <strong>Chimuelo IA</strong>, tu asistente y dragón cibernético en eDark Import. Puedo ayudarte a buscar productos (como SSDs, memorias RAM, laptops) o responder tus dudas sobre compras. ¿Qué necesitas encontrar hoy?`;
+            } else {
+                // Búsqueda en caché de productos
+                let cache = window.productosCache || [];
+                if (cache.length === 0 && firebase && firebase.firestore) {
+                    try {
+                        const snap = await firebase.firestore().collection('productos').where('activo', '==', true).get();
+                        snap.forEach(doc => cache.push({ id: doc.id, ...doc.data() }));
+                        window.productosCache = cache;
+                    } catch (err) { }
+                }
+
+                const coincidencias = cache.filter(p => {
+                    const n = (p.nombre || '').toLowerCase();
+                    const c = (p.categoria || '').toLowerCase();
+                    const s = (p.subcategoria || '').toLowerCase();
+                    const m = (p.marca || '').toLowerCase();
+                    return n.includes(t) || c.includes(t) || s.includes(t) || m.includes(t);
+                }).slice(0, 3);
+
+                if (coincidencias.length > 0) {
+                    respuestaHtml = `¡Encontré estos productos para ti en nuestro catálogo! 🐉🔥:<br><br>`;
+                    coincidencias.forEach(p => {
+                        let pr = parseFloat(p.precioVenta) || parseFloat(p.precio) || 0;
+                        if (window.calcularPrecioProducto) pr = window.calcularPrecioProducto(p);
+                        respuestaHtml += `
+                            <div class="p-2 mb-2 bg-light rounded border d-flex align-items-center justify-content-between">
+                                <div class="text-truncate me-2" style="max-width: 180px;">
+                                    <strong class="d-block text-truncate" title="${sanitize(p.nombre)}">${sanitize(p.nombre)}</strong>
+                                    <span class="text-primary fw-bold">S/ ${pr.toFixed(2)}</span>
+                                </div>
+                                <a href="producto.html?id=${p.id}" class="btn btn-sm btn-primary flex-shrink-0">Ver</a>
+                            </div>`;
+                    });
+                } else {
+                    respuestaHtml = `
+                        ¡Entendido! 🐉 Por el momento no encontré una coincidencia exacta para "<strong>${sanitize(texto)}</strong>" en el catálogo en línea, pero nuestro equipo puede importarlo o verificar almacén.<br><br>
+                        ¿Deseas chatear con un asesor humano en WhatsApp?
+                        <div class="mt-2 text-center">
+                            <a href="https://wa.me/51999999999?text=Hola,%20busco%20información%20sobre:%20${encodeURIComponent(texto)}" target="_blank" class="btn btn-sm btn-success w-100"><i class="bi bi-whatsapp me-1"></i>Consultar por WhatsApp</a>
+                        </div>`;
+                }
+            }
+
+            const botDiv = document.createElement('div');
+            botDiv.className = 'chat-bubble-bot';
+            botDiv.innerHTML = respuestaHtml;
+            msgCont.appendChild(botDiv);
+            msgCont.scrollTop = msgCont.scrollHeight;
+        }, 650);
+    }
+
+    if (sendBtn) {
+        sendBtn.addEventListener('click', () => procesarYResponder(inputEl.value));
+    }
+    if (inputEl) {
+        inputEl.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                procesarYResponder(inputEl.value);
+            }
+        });
+    }
+
+    // Exponer globalmente para las chips rápidas
+    window.enviarMensajeRapidoChimuelo = function (texto) {
+        procesarYResponder(texto);
+    };
+}
+
+// Inicializar ambos motores en el arranque del sitio
+document.addEventListener('DOMContentLoaded', function () {
+    inicializarBusquedaPredictiva();
+    inicializarChimueloIA();
+});

@@ -298,9 +298,10 @@
             <option value="precio-desc">Precio: Mayor a menor</option>
             <option value="capacidad-asc">Capacidad: Menor a mayor</option>
             <option value="capacidad-desc">Capacidad: Mayor a menor</option>
-          </select>
-          <input type="text" id="buscadorProductos" class="form-control ms-2" style="max-width: 250px;"
-            placeholder="Buscar producto...">
+          <div class="position-relative ms-2" style="width: 260px;">
+            <input type="text" id="buscadorProductos" class="form-control live-search-input" placeholder="Buscar producto..." autocomplete="off">
+            <div class="live-search-dropdown shadow-lg position-absolute start-0 w-100 bg-white border mt-1 d-none" id="homeLiveSearchDropdown" style="z-index: 1060; max-height: 380px; overflow-y: auto;"></div>
+          </div>
         </div>
         <div id="productos" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
         </div>
