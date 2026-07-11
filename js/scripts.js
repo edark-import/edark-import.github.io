@@ -670,25 +670,32 @@ function renderProductosPaginados(shouldScroll = false) {
     productosPagina.forEach((prod, idx) => {
         contenedor.innerHTML += `
             <div class="col mb-5">
-                <div class="card h-100">
-                    <img class="card-img-top" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" />
-                    <div class="card-body p-4">
-                        <div class="text-center">
-                            <h5 class="fw-bolder">${sanitize(prod.nombre || 'Producto')}</h5>
+                <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
+                    <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark d-block text-center overflow-hidden" style="height: 220px;">
+                        <img class="card-img-top w-100 h-100 p-3" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+                    </a>
+                    <div class="card-body p-3 d-flex flex-column">
+                        <div class="text-center flex-grow-1">
+                            <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark">
+                                <h6 class="fw-bolder mb-2 text-truncate" title="${sanitize(prod.nombre || 'Producto')}">${sanitize(prod.nombre || 'Producto')}</h6>
+                            </a>
                             <div class="d-flex justify-content-center small text-warning mb-2">
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
-                                <div class="bi-star-fill"></div>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
+                                <i class="bi bi-star-fill"></i>
                             </div>
-                            s/${sanitize(calcularPrecioProducto(prod))}
+                            <span class="fs-5 fw-bold text-primary">S/ ${sanitize(calcularPrecioProducto(prod))}</span>
                         </div>
                     </div>
-                    <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center">
-                            <button class="btn btn-outline-dark mt-auto btn-ver-detalles" data-idx="${productosCache.indexOf(prod)}">Ver Detalles</button>
-                            ${user ? `<button class="btn btn-outline-primary mt-auto ms-2 btn-editar-producto" data-id="${prod.id}">Editar</button>` : ''}
+                    <div class="card-footer p-3 pt-0 border-top-0 bg-transparent">
+                        <div class="d-flex justify-content-center gap-2">
+                            <a href="producto.html?id=${prod.id}" class="btn btn-sm btn-outline-dark flex-grow-1">Ver Detalles</a>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarAlCarritoDesdeCard('${prod.id}', event)" title="Agregar al Carrito">
+                                <i class="bi bi-cart-plus"></i>
+                            </button>
+                            ${user ? `<button class="btn btn-sm btn-outline-secondary btn-editar-producto" data-id="${prod.id}" title="Editar"><i class="bi bi-pencil"></i></button>` : ''}
                         </div>
                     </div>
                 </div>
@@ -720,6 +727,10 @@ function asignarEventosProductos() {
             const idx = parseInt(this.getAttribute('data-idx'));
             const producto = productosCache[idx];
             if (!producto) return;
+            if (producto.id) {
+                window.location.href = `producto.html?id=${producto.id}`;
+                return;
+            }
             // Guardar ID del producto en el modal para usarlo al agregar al carrito
             const modalEl = document.getElementById('modalDetallesProducto');
             if (modalEl) modalEl.dataset.productId = producto.id || '';
@@ -1376,6 +1387,38 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 });
+
+// --- FUNCIÓN PARA AGREGAR DESDE TARJETA DE PRODUCTO ---
+function agregarAlCarritoDesdeCard(id, event) {
+    if (event && event.stopPropagation) event.stopPropagation();
+    if (event && event.preventDefault) event.preventDefault();
+    const producto = productosCache.find(p => p.id === id);
+    if (!producto) return;
+    const productToAdd = {
+        id: producto.id,
+        nombre: producto.nombre,
+        precio: parseFloat(calcularPrecioProducto(producto)),
+        imagen: producto.imagenUrl || producto.imagen || ''
+    };
+    agregarAlCarrito(productToAdd, 1);
+    mostrarToastCarrito(`¡${sanitize(producto.nombre)} agregado al carrito!`);
+}
+window.agregarAlCarritoDesdeCard = agregarAlCarritoDesdeCard;
+
+function mostrarToastCarrito(mensaje) {
+    const toastHtml = `<div class="toast align-items-center text-white bg-primary border-0 position-fixed top-0 end-0 m-3 shadow" style="z-index:9999" role="alert">
+        <div class="d-flex">
+            <div class="toast-body fw-bold"><i class="bi bi-cart-check-fill me-2"></i> ${mensaje}</div>
+            <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+        </div>
+    </div>`;
+    document.body.insertAdjacentHTML('beforeend', toastHtml);
+    const toastEl = document.body.lastElementChild;
+    const toast = new bootstrap.Toast(toastEl, { delay: 2500 });
+    toast.show();
+    toastEl.addEventListener('hidden.bs.toast', () => toastEl.remove());
+}
+window.mostrarToastCarrito = mostrarToastCarrito;
 
 // --- FUNCIÓN GLOBAL PARA AGREGAR AL CARRITO ---
 function agregarAlCarrito(producto, cantidad = 1) {

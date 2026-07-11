@@ -11,44 +11,111 @@
     <link href="css/modern-styles.css" rel="stylesheet">
     <style>
         .product-image-container {
-            background: rgba(255, 255, 255, 0.45);
+            background: rgba(255, 255, 255, 0.65);
             backdrop-filter: blur(15px);
             -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(0, 0, 0, 0.08);
             border-radius: 16px;
-            padding: 2rem;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.05);
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
             text-align: center;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 420px;
         }
         body.modo-oscuro .product-image-container {
-            background: rgba(30, 35, 45, 0.55);
+            background: rgba(30, 35, 45, 0.75);
             border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .product-main-img {
             max-width: 100%;
-            max-height: 500px;
+            max-height: 420px;
             object-fit: contain;
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            cursor: zoom-in;
+        }
+        .product-main-img:hover {
+            transform: scale(1.08);
+        }
+
+        .gallery-thumb {
+            width: 75px;
+            height: 75px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fff;
+            padding: 4px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+        .gallery-thumb:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.25);
+        }
+        .gallery-thumb.active {
+            border-color: #0d6efd;
+            box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
         }
 
         .price-tag {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #007BFF;
+            font-size: 2.6rem;
+            font-weight: 800;
+            color: #0d6efd;
+            letter-spacing: -0.5px;
         }
 
         .spec-item {
-            background-color: rgba(255, 255, 255, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 10px 15px;
-            border-radius: 8px;
-            margin-bottom: 8px;
+            background-color: rgba(0, 0, 0, 0.02);
+            border: 1px solid rgba(0, 0, 0, 0.06);
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s ease;
+        }
+        .spec-item:hover {
+            background-color: rgba(13, 110, 253, 0.04);
         }
         body.modo-oscuro .spec-item {
             background-color: rgba(30, 35, 45, 0.4);
-            border-color: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.06);
+        }
+
+        .nav-tabs .nav-link {
+            font-weight: 600;
+            color: #6c757d;
+            border: none;
+            border-bottom: 3px solid transparent;
+            padding: 12px 20px;
+        }
+        .nav-tabs .nav-link.active {
+            color: #0d6efd;
+            background: transparent;
+            border-color: #0d6efd;
+        }
+
+        .qty-selector {
+            max-width: 150px;
+        }
+        .qty-selector input {
+            text-align: center;
+            font-weight: bold;
+        }
+        .trust-badge {
+            font-size: 0.85rem;
+            color: #6c757d;
+        }
+        .trust-badge i {
+            font-size: 1.2rem;
+            color: #0d6efd;
         }
     </style>
 </head>
@@ -56,98 +123,168 @@
 <body>
     <div id="navbar-container"></div>
 
-    <div class="container py-5 mt-4">
+    <div class="container py-4 mt-4">
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="mb-4">
-            <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Inicio</a></li>
-                <li class="breadcrumb-item"><a href="index.html#productos" class="text-decoration-none">Productos</a>
-                </li>
-                <li class="breadcrumb-item active" aria-current="page" id="breadcrumbName">Cargando...</li>
+            <ol class="breadcrumb bg-light p-3 rounded-3 shadow-sm">
+                <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none text-primary"><i class="bi bi-house-door me-1"></i>Inicio</a></li>
+                <li class="breadcrumb-item"><a href="index.html#productos" class="text-decoration-none text-primary">Productos</a></li>
+                <li class="breadcrumb-item active fw-semibold text-truncate" aria-current="page" id="breadcrumbName" style="max-width: 300px;">Cargando...</li>
             </ol>
         </nav>
 
-        <div id="loadingSpinner" class="text-center py-5">
-            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;"></div>
-            <p class="mt-2 text-muted">Cargando detalles del producto...</p>
+        <div id="loadingSpinner" class="text-center py-5 my-5">
+            <div class="spinner-border text-primary" role="status" style="width: 3.5rem; height: 3.5rem; border-width: 0.35rem;"></div>
+            <h5 class="mt-3 fw-bold text-muted">Cargando información del producto...</h5>
         </div>
 
-        <div class="row d-none" id="productContent">
+        <div class="row g-5 d-none" id="productContent">
             <!-- Image Column -->
             <div class="col-lg-6 mb-4">
-                <div class="product-image-container position-relative">
-                    <span id="badgeStock" class="position-absolute top-0 start-0 m-3 badge bg-success fs-6">En
-                        Stock</span>
-                    <img src="" alt="Producto" id="productImg" class="product-main-img">
+                <div class="product-image-container mb-3" id="mainImgContainer">
+                    <span id="badgeStock" class="position-absolute top-0 start-0 m-3 badge bg-success fs-6 shadow-sm z-index-1">En Stock</span>
+                    <img src="" alt="Producto" id="productImg" class="product-main-img" onclick="abrirImagenZoom(this.src)">
+                </div>
+                <!-- Miniaturas de la galería -->
+                <div id="galleryContainer" class="d-flex flex-wrap gap-2 justify-content-center">
+                    <!-- Se cargan dinámicamente -->
                 </div>
             </div>
 
             <!-- Info Column -->
             <div class="col-lg-6">
-                <h1 class="fw-bold mb-2" id="productName">Nombre del Producto</h1>
-                <div class="text-muted mb-3">
-                    <span id="productBrand">Marca</span> | <span id="productModel">Modelo</span>
+                <div class="d-flex align-items-center gap-2 mb-2">
+                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold" id="productCategoryBadge">Categoría</span>
+                    <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill fw-semibold" id="productBrandBadge">Marca</span>
                 </div>
 
-                <div class="mb-4">
-                    <span class="price-tag" id="productPrice">S/ 0.00</span>
-                    <div class="text-muted small">Incluye IGV</div>
+                <h1 class="fw-bolder mb-3 display-6" id="productName">Nombre del Producto</h1>
+                
+                <div class="d-flex align-items-center gap-3 text-muted mb-4 pb-3 border-bottom">
+                    <span><i class="bi bi-upc-scan me-1"></i>Modelo: <strong id="productModel" class="text-dark">-</strong></span>
+                    <span>|</span>
+                    <span class="text-warning d-flex align-items-center">
+                        <i class="bi bi-star-fill me-1"></i>
+                        <i class="bi bi-star-fill me-1"></i>
+                        <i class="bi bi-star-fill me-1"></i>
+                        <i class="bi bi-star-fill me-1"></i>
+                        <i class="bi bi-star-fill me-1"></i>
+                        <span class="text-muted ms-1">(5.0)</span>
+                    </span>
                 </div>
 
-                <div class="card bg-light border-0 mb-4">
-                    <div class="card-body">
-                        <h6 class="fw-bold mb-3">Descripción</h6>
-                        <p id="productDescription" class="mb-0">Descripción no disponible.</p>
+                <div class="mb-4 bg-light p-3 rounded-3 border">
+                    <div class="d-flex align-items-baseline justify-content-between">
+                        <div>
+                            <small class="text-muted text-uppercase fw-bold d-block">Precio Exclusivo Online</small>
+                            <span class="price-tag" id="productPrice">S/ 0.00</span>
+                        </div>
+                        <span class="badge bg-success px-3 py-2"><i class="bi bi-shield-check me-1"></i>Garantía Oficial</span>
+                    </div>
+                    <small class="text-muted"><i class="bi bi-info-circle me-1"></i>El precio ya incluye IGV (18%). Emitimos Boleta y Factura electrónica.</small>
+                </div>
+
+                <!-- Cantidad y Botones de Acción -->
+                <div class="mb-4 p-3 border rounded-3 bg-white shadow-sm">
+                    <label class="form-label fw-bold mb-2">Cantidad deseada:</label>
+                    <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
+                        <div class="input-group qty-selector">
+                            <button class="btn btn-outline-secondary" type="button" onclick="cambiarCantidad(-1)"><i class="bi bi-dash"></i></button>
+                            <input type="number" class="form-control text-center" value="1" min="1" max="99" id="qtyInput" aria-label="Cantidad">
+                            <button class="btn btn-outline-secondary" type="button" onclick="cambiarCantidad(1)"><i class="bi bi-plus"></i></button>
+                        </div>
+                        <span class="text-muted small" id="stockInfoText">Unidades disponibles en almacén</span>
+                    </div>
+
+                    <div class="d-grid gap-2 d-md-flex">
+                        <button class="btn btn-primary btn-lg flex-grow-1 py-3 fw-bold shadow-sm" onclick="addToCartCurrent()" id="btnAddToCart">
+                            <i class="bi bi-cart-plus-fill me-2"></i>Agregar al Carrito
+                        </button>
+                        <button class="btn btn-success btn-lg flex-grow-1 py-3 fw-bold shadow-sm" onclick="buyNowCurrent()" id="btnBuyNow">
+                            <i class="bi bi-lightning-charge-fill me-2"></i>Comprar Ahora
+                        </button>
                     </div>
                 </div>
 
-                <!-- Actions -->
-                <div class="d-flex gap-3 mb-4 align-items-end">
-                    <div style="width: 120px;">
-                        <label for="qtyInput" class="form-label small fw-bold">Cantidad</label>
-                        <input type="number" class="form-control" value="1" min="1" id="qtyInput" aria-label="Cantidad">
+                <!-- Trust Badges -->
+                <div class="row g-3 text-center py-3 border-top border-bottom mb-4 bg-light rounded-3">
+                    <div class="col-4 trust-badge">
+                        <i class="bi bi-truck d-block mb-1"></i>
+                        <span class="fw-semibold text-dark d-block">Envío Rápido</span>
+                        <small>A todo el Perú</small>
                     </div>
-                    <button class="btn btn-primary flex-grow-1 py-2" onclick="addToCartCurrent()">
-                        <i class="bi bi-cart-plus me-2"></i>Agregar al Carrito
-                    </button>
-                    <button class="btn btn-success flex-grow-1 py-2" onclick="buyNowCurrent()">
-                        Comprar Ahora
-                    </button>
+                    <div class="col-4 trust-badge border-start border-end">
+                        <i class="bi bi-shield-lock d-block mb-1"></i>
+                        <span class="fw-semibold text-dark d-block">Pago Seguro</span>
+                        <small>100% Protegido</small>
+                    </div>
+                    <div class="col-4 trust-badge">
+                        <i class="bi bi-headset d-block mb-1"></i>
+                        <span class="fw-semibold text-dark d-block">Soporte 24/7</span>
+                        <small>Asesoría Técnica</small>
+                    </div>
                 </div>
 
-                <!-- Specs -->
-                <h5 class="fw-bold mb-3 border-bottom pb-2">Especificaciones Técnicas</h5>
-                <div class="row">
-                    <div class="col-md-12" id="specsContainer">
-                        <!-- Dynamic specs -->
+                <!-- Pestañas (Tabs) -->
+                <ul class="nav nav-tabs mb-3" id="productTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="desc-tab" data-bs-toggle="tab" data-bs-target="#desc-pane" type="button" role="tab"><i class="bi bi-file-text me-1"></i>Descripción</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="specs-tab" data-bs-toggle="tab" data-bs-target="#specs-pane" type="button" role="tab"><i class="bi bi-cpu me-1"></i>Especificaciones</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping-pane" type="button" role="tab"><i class="bi bi-box-seam me-1"></i>Envío y Garantía</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content p-3 border rounded-3 bg-white shadow-sm mb-5" id="productTabsContent">
+                    <div class="tab-pane fade show active" id="desc-pane" role="tabpanel">
+                        <div id="productDescription" class="lh-lg text-secondary">Descripción no disponible.</div>
+                    </div>
+                    <div class="tab-pane fade" id="specs-pane" role="tabpanel">
+                        <div id="specsContainer"></div>
+                    </div>
+                    <div class="tab-pane fade" id="shipping-pane" role="tabpanel">
+                        <h6 class="fw-bold"><i class="bi bi-truck text-primary me-2"></i>Tiempos y Costos de Envío</h6>
+                        <p class="small text-muted mb-3">Realizamos envíos diarios a Lima Metropolitana (entrega de 24 a 48 horas en días hábiles) y a provincias mediante Olva Courier o agencias de transporte (2 a 4 días hábiles).</p>
+                        <h6 class="fw-bold"><i class="bi bi-shield-check text-success me-2"></i>Garantía del Producto</h6>
+                        <p class="small text-muted mb-0">Todos nuestros equipos e importaciones cuentan con garantía contra defectos de fábrica. Se requiere conservar el comprobante de pago y empaque original para cualquier trámite de cambio o servicio técnico.</p>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div id="errorState" class="text-center py-5 d-none">
-            <i class="bi bi-exclamation-circle text-danger display-4"></i>
-            <h3 class="mt-3">Producto no encontrado</h3>
-            <p class="text-muted">El producto que buscas no existe o ha sido eliminado.</p>
-            <a href="index.html" class="btn btn-primary mt-2">Volver al Inicio</a>
+        <!-- Productos Relacionados -->
+        <div id="relatedProductsSection" class="mt-5 pt-4 border-top d-none">
+            <h3 class="fw-bold mb-4"><i class="bi bi-bag-heart-fill text-primary me-2"></i>También te podría interesar</h3>
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="relatedProductsGrid"></div>
+        </div>
+
+        <!-- Error State -->
+        <div id="errorState" class="text-center py-5 my-5 d-none">
+            <div class="display-1 text-danger mb-3"><i class="bi bi-exclamation-octagon"></i></div>
+            <h2 class="fw-bold">Producto no encontrado</h2>
+            <p class="text-muted lead mb-4">El producto que buscas ya no se encuentra disponible o el enlace es incorrecto.</p>
+            <a href="index.html" class="btn btn-primary btn-lg px-4 shadow-sm"><i class="bi bi-arrow-left me-2"></i>Volver al Catálogo</a>
+        </div>
+    </div>
+
+    <!-- Modal de Zoom de Imagen -->
+    <div class="modal fade" id="modalZoomImagen" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-xl">
+            <div class="modal-content bg-transparent border-0">
+                <div class="modal-header border-0 pb-0 justify-content-end">
+                    <button type="button" class="btn-close btn-close-white fs-4" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+                </div>
+                <div class="modal-body text-center p-2">
+                    <img id="imgZoomModal" src="" alt="Zoom" class="img-fluid rounded shadow" style="max-height: 85vh; object-fit: contain;">
+                </div>
+            </div>
         </div>
     </div>
 
     <div id="footer-container"></div>
-
-    <!-- Toast Notification -->
-    <div class="position-fixed bottom-0 end-0 p-3" style="z-index: 11">
-        <div id="liveToast" class="toast align-items-center text-white bg-success border-0" role="alert"
-            aria-live="assertive" aria-atomic="true">
-            <div class="d-flex">
-                <div class="toast-body">
-                    <i class="bi bi-check-circle-fill me-2"></i>Producto agregado al carrito
-                </div>
-                <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"
-                    aria-label="Close"></button>
-            </div>
-        </div>
-    </div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -159,9 +296,24 @@
     <script src="js/scripts.js"></script>
 
     <script>
-        // Global var for current product data
         let currentProduct = null;
         let db = firebase.firestore();
+
+        function cambiarCantidad(delta) {
+            const input = document.getElementById('qtyInput');
+            let val = parseInt(input.value) || 1;
+            val += delta;
+            if (val < 1) val = 1;
+            if (currentProduct && currentProduct.stock && val > currentProduct.stock) val = currentProduct.stock;
+            input.value = val;
+        }
+
+        function abrirImagenZoom(src) {
+            if (!src) return;
+            document.getElementById('imgZoomModal').src = src;
+            const modal = new bootstrap.Modal(document.getElementById('modalZoomImagen'));
+            modal.show();
+        }
 
         document.addEventListener('DOMContentLoaded', async () => {
             const urlParams = new URLSearchParams(window.location.search);
@@ -173,7 +325,6 @@
             }
 
             try {
-                // Ensure config is loaded for pricing
                 if (window.inicializarTipoCambioSunat) await window.inicializarTipoCambioSunat();
                 if (window.cargarConfiguracionGeneral) await window.cargarConfiguracionGeneral();
                 else if (window.cargarConfigGeneral) await window.cargarConfigGeneral();
@@ -186,6 +337,7 @@
 
                 currentProduct = { id: doc.id, ...doc.data() };
                 renderProduct(currentProduct);
+                cargarProductosRelacionados(currentProduct.categoria, currentProduct.id);
             } catch (e) {
                 console.error(e);
                 showError();
@@ -200,62 +352,150 @@
             document.getElementById('breadcrumbName').textContent = prod.nombre;
             document.getElementById('productName').textContent = prod.nombre;
             document.getElementById('productBrand').textContent = prod.marca || 'Genérico';
-            document.getElementById('productModel').textContent = prod.modelo || '-';
+            document.getElementById('productBrandBadge').textContent = prod.marca || 'Importado';
+            document.getElementById('productCategoryBadge').textContent = prod.categoria || 'General';
+            document.getElementById('productModel').textContent = prod.modelo || 'Estándar';
 
-            // Image
+            // Imagen Principal y Galería
+            const mainSrc = safeImageUrl(prod.imagenUrl || prod.imagen || 'img/productos/default.png');
             const imgEl = document.getElementById('productImg');
-            imgEl.src = prod.imagenUrl || prod.imagen || 'img/productos/default.png';
+            imgEl.src = mainSrc;
 
-            // Price using scripts.js global logic if available
+            const galleryCont = document.getElementById('galleryContainer');
+            const todasLasImagenes = [mainSrc];
+            if (Array.isArray(prod.imagenes) && prod.imagenes.length > 0) {
+                prod.imagenes.forEach(u => {
+                    if (u && !todasLasImagenes.includes(u)) todasLasImagenes.push(u);
+                });
+            }
+
+            if (todasLasImagenes.length > 1) {
+                galleryCont.innerHTML = todasLasImagenes.map((url, idx) => `
+                    <img src="${url}" class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="cambiarImagenPrincipal('${url}', this)" alt="Miniatura ${idx + 1}" onerror="this.style.display='none'">
+                `).join('');
+            } else {
+                galleryCont.innerHTML = '';
+            }
+
+            // Precio
             let precio = parseFloat(prod.precioVenta);
             if (window.calcularPrecioProducto) {
-                // re-calculate to ensure latest settings
                 precio = window.calcularPrecioProducto(prod);
-                // Attach calculated price to object for cart
                 prod.precioFinal = precio;
             }
-            if (!precio) precio = parseFloat(prod.precio) || 0; // Fallback
+            if (!precio || isNaN(precio)) precio = parseFloat(prod.precio) || 0;
 
             document.getElementById('productPrice').textContent = `S/ ${precio.toFixed(2)}`;
 
-            // Description
+            // Descripción
             const desc = prod.descripcion || prod.especificaciones || 'Sin descripción detallada.';
             document.getElementById('productDescription').innerHTML = desc.replace(/\n/g, '<br>');
 
-            // Stock
+            // Stock y Cantidad Max
             const stockBadge = document.getElementById('badgeStock');
+            const qtyInput = document.getElementById('qtyInput');
+            const stockInfo = document.getElementById('stockInfoText');
+
             if (prod.stock <= 0) {
-                stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-danger fs-6';
+                stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-danger fs-6 shadow-sm';
                 stockBadge.textContent = 'Agotado';
-                document.querySelector('button[onclick="addToCartCurrent()"]').disabled = true;
-                document.querySelector('button[onclick="buyNowCurrent()"]').disabled = true;
-            } else if (prod.stock < 5) {
-                stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-warning text-dark fs-6';
-                stockBadge.textContent = 'Últimas unidades';
+                stockInfo.textContent = 'Sin stock disponible actualmente';
+                stockInfo.className = 'text-danger fw-bold small';
+                document.getElementById('btnAddToCart').disabled = true;
+                document.getElementById('btnBuyNow').disabled = true;
+                qtyInput.disabled = true;
+            } else {
+                qtyInput.max = prod.stock;
+                stockInfo.textContent = `Stock disponible: ${prod.stock} unidades`;
+                if (prod.stock < 5) {
+                    stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-warning text-dark fs-6 shadow-sm';
+                    stockBadge.textContent = '¡Últimas unidades!';
+                }
             }
 
-            // Specs
+            // Especificaciones Técnicas
             const specsContainer = document.getElementById('specsContainer');
-            const specs = [
-                { label: 'Categoría', value: prod.categoria },
-                { label: 'Subcategoría', value: prod.subcategoria },
-                { label: 'Dimensiones', value: prod.dimension },
-                { label: 'Capacidad', value: prod.capacidad }
-            ];
+            const especificacionesRaw = prod.especificaciones || '';
+            const lineas = especificacionesRaw.split(/\n|<br>|\/n/g).map(l => l.trim()).filter(l => l);
+            const esTabla = lineas.filter(l => l.includes(':')).length > lineas.length / 2;
 
-            let specsHtml = '';
-            specs.forEach(s => {
-                if (s.value) {
-                    specsHtml += `
-                        <div class="spec-item">
-                            <span class="fw-bold text-muted">${s.label}</span>
-                            <span class="text-dark">${s.value}</span>
+            let specsHtml = '<div class="table-responsive"><table class="table table-sm table-striped mb-0">';
+            specsHtml += `
+                <tr><th class="py-2 text-muted" style="width: 35%;">Categoría</th><td class="py-2 fw-semibold">${sanitize(prod.categoria || '-')}</td></tr>
+                <tr><th class="py-2 text-muted">Subcategoría</th><td class="py-2">${sanitize(prod.subcategoria || '-')}</td></tr>
+                <tr><th class="py-2 text-muted">Marca</th><td class="py-2">${sanitize(prod.marca || '-')}</td></tr>
+                <tr><th class="py-2 text-muted">Modelo</th><td class="py-2">${sanitize(prod.modelo || '-')}</td></tr>
+                <tr><th class="py-2 text-muted">Capacidad</th><td class="py-2">${sanitize(prod.capacidad || '-')}</td></tr>
+                <tr><th class="py-2 text-muted">Dimensiones</th><td class="py-2">${sanitize(prod.dimension || '-')}</td></tr>
+            `;
+
+            if (lineas.length > 0) {
+                specsHtml += `<tr><td colspan="2" class="bg-primary bg-opacity-10 fw-bold py-2 text-primary mt-2">Detalles Adicionales</td></tr>`;
+                if (esTabla) {
+                    lineas.forEach(l => {
+                        const partes = l.split(':');
+                        if (partes.length > 1) {
+                            specsHtml += `<tr><th class="py-2 text-muted fw-normal">${partes[0].trim()}</th><td class="py-2">${partes.slice(1).join(':').trim()}</td></tr>`;
+                        } else {
+                            specsHtml += `<tr><td colspan="2" class="py-2">${l}</td></tr>`;
+                        }
+                    });
+                } else {
+                    lineas.forEach(l => {
+                        specsHtml += `<tr><td colspan="2" class="py-2"><i class="bi bi-check2 text-primary me-2"></i>${l}</td></tr>`;
+                    });
+                }
+            }
+            specsHtml += '</table></div>';
+            specsContainer.innerHTML = specsHtml;
+        }
+
+        function cambiarImagenPrincipal(url, thumbEl) {
+            document.getElementById('productImg').src = url;
+            document.querySelectorAll('.gallery-thumb').forEach(el => el.classList.remove('active'));
+            if (thumbEl) thumbEl.classList.add('active');
+        }
+
+        async function cargarProductosRelacionados(categoria, actualId) {
+            if (!categoria) return;
+            try {
+                const snap = await db.collection('productos').where('categoria', '==', categoria).limit(6).get();
+                if (snap.empty) return;
+                const grid = document.getElementById('relatedProductsGrid');
+                let html = '';
+                let count = 0;
+                snap.forEach(doc => {
+                    if (doc.id === actualId) return;
+                    if (count >= 4) return;
+                    const p = { id: doc.id, ...doc.data() };
+                    if (p.activo === false) return;
+                    const precio = window.calcularPrecioProducto ? window.calcularPrecioProducto(p) : (p.precio || 0);
+                    const imgSrc = safeImageUrl(p.imagenUrl || p.imagen || 'img/productos/default.png');
+                    html += `
+                        <div class="col">
+                            <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
+                                <a href="producto.html?id=${p.id}" class="text-decoration-none text-dark d-block text-center overflow-hidden" style="height: 180px;">
+                                    <img src="${imgSrc}" alt="${sanitize(p.nombre)}" class="card-img-top w-100 h-100 p-3" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                                </a>
+                                <div class="card-body p-3 d-flex flex-column text-center">
+                                    <a href="producto.html?id=${p.id}" class="text-decoration-none text-dark flex-grow-1">
+                                        <h6 class="fw-bold mb-1 text-truncate" title="${sanitize(p.nombre)}">${sanitize(p.nombre)}</h6>
+                                    </a>
+                                    <span class="fs-6 fw-bold text-primary mb-2">S/ ${precio}</span>
+                                    <a href="producto.html?id=${p.id}" class="btn btn-sm btn-outline-dark w-100">Ver Producto</a>
+                                </div>
+                            </div>
                         </div>
                     `;
+                    count++;
+                });
+                if (count > 0) {
+                    grid.innerHTML = html;
+                    document.getElementById('relatedProductsSection').classList.remove('d-none');
                 }
-            });
-            // Parse text specs if possible or just append generic fields
-            specsContainer.innerHTML = specsHtml;
+            } catch (err) {
+                console.warn('Error cargando relacionados:', err);
+            }
         }
 
         function showError() {
@@ -266,18 +506,17 @@
         function addToCartCurrent() {
             if (!currentProduct) return;
             const qty = parseInt(document.getElementById('qtyInput').value) || 1;
-
-            // Use script.js functionality
-            // Make sure price is set correctly on the object
-            // If precioFinal was calculated in render, use it
             let productToAdd = { ...currentProduct };
             if (productToAdd.precioFinal) productToAdd.precioVenta = productToAdd.precioFinal;
 
-            agregarAlCarrito(productToAdd, qty); // This function is in scripts.js
-
-            // Show toast
-            const toast = new bootstrap.Toast(document.getElementById('liveToast'));
-            toast.show();
+            if (window.agregarAlCarrito) {
+                agregarAlCarrito(productToAdd, qty);
+                if (window.mostrarToastCarrito) {
+                    mostrarToastCarrito(`¡${qty}x ${sanitize(currentProduct.nombre)} agregado al carrito!`);
+                } else {
+                    alert(`¡Producto agregado al carrito!`);
+                }
+            }
         }
 
         function buyNowCurrent() {
