@@ -166,15 +166,15 @@
         }
         #modalZoomImagen .btn-close {
             margin: 0;
-            padding: 0;
             opacity: 0.8;
-            filter: invert(1);
-            width: 14px;
-            height: 14px;
-            background-size: contain;
+            filter: none !important;
+            transition: opacity 0.2s ease;
         }
         #modalZoomImagen .modal-header:hover .btn-close {
             opacity: 1;
+        }
+        body.modo-oscuro #modalZoomImagen .modal-header {
+            background: rgba(0, 0, 0, 0.45);
         }
     </style>
 </head>
