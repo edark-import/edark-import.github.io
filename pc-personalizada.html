@@ -238,6 +238,9 @@ fetch('navbar.html')
     <!-- Footer-->
     <div id="footer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+    <script src="js/firebase-config.js?v=20260712"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Soporte para submenús en Bootstrap 5
@@ -254,43 +257,128 @@ fetch('navbar.html')
     });
     </script>
     <script>
-fetch('dark-mode.html')
-  .then(res => res.text())
-  .then(html => {
-    const script = document.createElement('div');
-    script.innerHTML = html;
-    document.body.appendChild(script);
-  });
-</script>
+    fetch('dark-mode.html')
+      .then(res => res.text())
+      .then(html => {
+        const script = document.createElement('div');
+        script.innerHTML = html;
+        document.body.appendChild(script);
+      });
+    </script>
     <script>
-    // Ejemplo de precios base (puedes obtenerlos de tu base de datos si lo deseas)
-    const precios = {
-        "Intel i3 10th Gen": 600, "Intel i3 11th Gen": 650, "Intel i3 12th Gen": 700, "Intel i3 13th Gen": 750, "Intel i3 14th Gen": 800,
-        "Intel i5 10th Gen": 800, "Intel i5 11th Gen": 850, "Intel i5 12th Gen": 900, "Intel i5 13th Gen": 950, "Intel i5 14th Gen": 1000,
-        "Intel i7 10th Gen": 1100, "Intel i7 11th Gen": 1150, "Intel i7 12th Gen": 1200, "Intel i7 13th Gen": 1250, "Intel i7 14th Gen": 1300,
-        "Intel i9 10th Gen": 1500, "Intel i9 11th Gen": 1550, "Intel i9 12th Gen": 1600, "Intel i9 13th Gen": 1650, "Intel i9 14th Gen": 1700,
-        "AMD Ryzen 3 4000": 600, "AMD Ryzen 3 5000": 650, "AMD Ryzen 3 7000": 700,
-        "AMD Ryzen 5 4000": 800, "AMD Ryzen 5 5000": 850, "AMD Ryzen 5 7000": 900,
-        "AMD Ryzen 7 4000": 1100, "AMD Ryzen 7 5000": 1150, "AMD Ryzen 7 7000": 1200,
-        "AMD Ryzen 9 4000": 1500, "AMD Ryzen 9 5000": 1550, "AMD Ryzen 9 7000": 1600,
-        "8GB": 150, "16GB": 250, "32GB": 400, "64GB": 700,
-        "SSD 128GB": 100, "SSD 256GB": 180, "SSD 512GB": 300, "SSD 1TB": 500, "SSD 2TB": 900, "SSD 4TB": 1600,
-        "M.2 128GB": 120, "M.2 256GB": 200, "M.2 512GB": 350, "M.2 1TB": 600, "M.2 2TB": 1000, "M.2 4TB": 1800,
-        "HDD 500GB": 120, "HDD 1TB": 220, "HDD 2TB": 400, "HDD 4TB": 700,
-        "NVIDIA GTX 1050": 400, "NVIDIA GTX 1060": 500, "NVIDIA GTX 1070": 600, "NVIDIA GTX 1080": 700,
-        "NVIDIA GTX 1650": 800, "NVIDIA GTX 1660": 900,
-        "NVIDIA RTX 2060": 1200, "NVIDIA RTX 2070": 1400, "NVIDIA RTX 2080": 1600,
-        "NVIDIA RTX 3060": 1800, "NVIDIA RTX 3070": 2200, "NVIDIA RTX 3080": 2600,
-        "NVIDIA RTX 4060": 2000, "NVIDIA RTX 4070": 2500, "NVIDIA RTX 4080": 3000,
-        "NVIDIA RTX 5060": 2200, "NVIDIA RTX 5070": 2700, "NVIDIA RTX 5080": 3200,
-        "AMD Radeon RX 6600": 1200, "AMD Radeon RX 6700": 1500, "AMD Radeon RX 6800": 1800,
-        "AMD Radeon RX 7600": 2000, "AMD Radeon RX 7700": 2300, "AMD Radeon RX 7800": 2600, "AMD Radeon RX 7900": 3000,
-        "Integrada": 0
+    // Configuración Base de Precios (Por si no hay conexión a internet o base de datos aún)
+    const CONFIG_PC_DEFAULT = {
+        procesadores: [
+            { nombre: "Intel Core i3 12th Gen", precio: 520 },
+            { nombre: "Intel Core i3 13th Gen", precio: 580 },
+            { nombre: "Intel Core i3 14th Gen", precio: 650 },
+            { nombre: "Intel Core i5 12th Gen", precio: 780 },
+            { nombre: "Intel Core i5 13th Gen", precio: 920 },
+            { nombre: "Intel Core i5 14th Gen", precio: 1080 },
+            { nombre: "Intel Core i7 13th Gen", precio: 1450 },
+            { nombre: "Intel Core i7 14th Gen", precio: 1650 },
+            { nombre: "Intel Core i9 14th Gen K", precio: 2400 },
+            { nombre: "AMD Ryzen 5 5600G", precio: 550 },
+            { nombre: "AMD Ryzen 5 7600X", precio: 980 },
+            { nombre: "AMD Ryzen 7 5700X", precio: 820 },
+            { nombre: "AMD Ryzen 7 7800X3D", precio: 1750 },
+            { nombre: "AMD Ryzen 9 7900X", precio: 1950 }
+        ],
+        rams: [
+            { nombre: "8GB DDR4 3200MHz", precio: 110 },
+            { nombre: "16GB (2x8GB) DDR4 3200MHz", precio: 210 },
+            { nombre: "32GB (2x16GB) DDR4 3600MHz", precio: 380 },
+            { nombre: "16GB (2x8GB) DDR5 5600MHz", precio: 320 },
+            { nombre: "32GB (2x16GB) DDR5 6000MHz", precio: 540 },
+            { nombre: "64GB (2x32GB) DDR5 6000MHz", precio: 980 }
+        ],
+        almacenamientos: [
+            { nombre: "SSD SATA 512GB", precio: 160 },
+            { nombre: "SSD SATA 1TB", precio: 280 },
+            { nombre: "M.2 NVMe 512GB PCIe 4.0", precio: 220 },
+            { nombre: "M.2 NVMe 1TB PCIe 4.0", precio: 360 },
+            { nombre: "M.2 NVMe 2TB PCIe 4.0", precio: 680 },
+            { nombre: "M.2 NVMe 4TB PCIe 4.0", precio: 1350 },
+            { nombre: "HDD 2TB 7200RPM", precio: 290 }
+        ],
+        graficas: [
+            { nombre: "Integrada (Radeon / UHD Graphics)", precio: 0 },
+            { nombre: "NVIDIA GTX 1650 4GB", precio: 680 },
+            { nombre: "NVIDIA RTX 3060 12GB", precio: 1250 },
+            { nombre: "NVIDIA RTX 4060 8GB", precio: 1480 },
+            { nombre: "NVIDIA RTX 4060 Ti 16GB", precio: 2100 },
+            { nombre: "NVIDIA RTX 4070 Super 12GB", precio: 2890 },
+            { nombre: "NVIDIA RTX 4080 Super 16GB", precio: 4800 },
+            { nombre: "AMD Radeon RX 6600 8GB", precio: 950 },
+            { nombre: "AMD Radeon RX 7600 8GB", precio: 1320 },
+            { nombre: "AMD Radeon RX 7700 XT 12GB", precio: 2150 },
+            { nombre: "AMD Radeon RX 7800 XT 16GB", precio: 2600 }
+        ]
     };
 
-    document.getElementById('formPC').addEventListener('submit', function(e) {
-        e.preventDefault();
-        const nombre = document.getElementById('nombre').value.trim();
+    let preciosPCMapa = {};
+    let configActiva = null;
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        await cargarConfiguracionPreciosPC();
+
+        // Vincular eventos de cambio para cotización en tiempo real
+        ['procesador', 'ram', 'almacenamiento', 'grafica', 'nombre', 'pantalla', 'teclado', 'mouse', 'mousepad', 'wifi', 'bluetooth'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) {
+                el.addEventListener('change', actualizarResumenPC);
+                if (el.tagName === 'INPUT' && el.type === 'text') el.addEventListener('input', actualizarResumenPC);
+            }
+        });
+    });
+
+    async function cargarConfiguracionPreciosPC() {
+        try {
+            // Intentar cargar de Firestore nube primero
+            if (typeof db !== 'undefined' && db.collection) {
+                const snap = await db.collection('configuraciones').doc('precios_pc').get();
+                if (snap.exists) {
+                    configActiva = snap.data();
+                    localStorage.setItem('eDark_precios_pc', JSON.stringify(configActiva));
+                }
+            }
+        } catch (e) {
+            console.warn('Cargando desde almacenamiento local:', e.message);
+        }
+
+        if (!configActiva) {
+            const loc = localStorage.getItem('eDark_precios_pc');
+            configActiva = loc ? JSON.parse(loc) : JSON.parse(JSON.stringify(CONFIG_PC_DEFAULT));
+        }
+
+        // Construir mapa de precios por nombre y rellenar los selects
+        preciosPCMapa = {};
+        
+        // 1. Procesador
+        poblarSelectComponente('procesador', configActiva.procesadores || CONFIG_PC_DEFAULT.procesadores);
+        // 2. RAM
+        poblarSelectComponente('ram', configActiva.rams || CONFIG_PC_DEFAULT.rams);
+        // 3. Almacenamiento
+        poblarSelectComponente('almacenamiento', configActiva.almacenamientos || CONFIG_PC_DEFAULT.almacenamientos);
+        // 4. Gráfica
+        poblarSelectComponente('grafica', configActiva.graficas || CONFIG_PC_DEFAULT.graficas);
+    }
+
+    function poblarSelectComponente(selectId, lista) {
+        const select = document.getElementById(selectId);
+        if (!select) return;
+        select.innerHTML = '<option value="">Selecciona una opción...</option>';
+        lista.forEach(item => {
+            preciosPCMapa[item.nombre] = Number(item.precio) || 0;
+            const option = document.createElement('option');
+            option.value = item.nombre;
+            option.textContent = `${item.nombre} ${item.precio > 0 ? '(+ S/ ' + Number(item.precio).toFixed(2) + ')' : '(S/ 0.00)'}`;
+            select.appendChild(option);
+        });
+    }
+
+    function actualizarResumenPC() {
+        const nombre = document.getElementById('nombre').value.trim() || 'Cliente eDark';
         const proc = document.getElementById('procesador').value;
         const ram = document.getElementById('ram').value;
         const alm = document.getElementById('almacenamiento').value;
@@ -300,46 +388,99 @@ fetch('dark-mode.html')
             if (document.getElementById(id).checked) complementos.push(document.getElementById(id).value);
         });
 
-        let total = (precios[proc] || 0) + (precios[ram] || 0) + (precios[alm] || 0) + (precios[graf] || 0);
+        if (!proc && !ram && !alm && !graf) {
+            document.getElementById('cotizacionResultado').innerHTML = '';
+            document.getElementById('enviarWhatsapp').style.display = 'none';
+            return;
+        }
+
+        let costoProc = preciosPCMapa[proc] || 0;
+        let costoRam = preciosPCMapa[ram] || 0;
+        let costoAlm = preciosPCMapa[alm] || 0;
+        let costoGraf = preciosPCMapa[graf] || 0;
+        let total = costoProc + costoRam + costoAlm + costoGraf;
+
         let resumen = `
-            <h4>Tu cotización:</h4>
-            <ul>
-                <li><strong>Nombre:</strong> ${nombre}</li>
-                <li><strong>Procesador:</strong> ${proc}</li>
-                <li><strong>RAM:</strong> ${ram}</li>
-                <li><strong>Almacenamiento:</strong> ${alm}</li>
-                <li><strong>Gráfica:</strong> ${graf}</li>
-                <li><strong>Complementos:</strong> ${complementos.length ? complementos.join(', ') : 'Ninguno'}</li>
-            </ul>
-            <h5>Total estimado: <span class="text-success">S/ ${total}</span></h5>
-            <p class="text-muted">*Precio referencial. Para una cotización exacta y asesoría personalizada, contáctanos.</p>
+            <div class="card border-0 shadow-lg rounded-4 overflow-hidden mt-4 bg-white">
+                <div class="card-header bg-primary text-white py-3 px-4 d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0 fw-bold"><i class="bi bi-pc-display-horizontal me-2"></i>Cotización en Tiempo Real</h5>
+                    <span class="badge bg-light text-primary fw-bold px-3 py-1 rounded-pill">PC Gamer / Trabajo</span>
+                </div>
+                <div class="card-body p-4">
+                    <div class="row g-3 mb-3 border-bottom pb-3">
+                        <div class="col-sm-6">
+                            <span class="text-muted small d-block">Cliente</span>
+                            <strong class="text-dark fs-6">${nombre}</strong>
+                        </div>
+                        <div class="col-sm-6 text-sm-end">
+                            <span class="text-muted small d-block">Total Estimado</span>
+                            <strong class="text-success fs-3 font-orbitron">S/ ${total.toFixed(2)}</strong>
+                        </div>
+                    </div>
+                    <ul class="list-group list-group-flush mb-3">
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span><i class="bi bi-cpu text-primary me-2"></i><strong>Procesador:</strong> ${proc || 'No seleccionado'}</span>
+                            <span class="fw-semibold text-dark">${proc ? 'S/ ' + costoProc.toFixed(2) : '-'}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span><i class="bi bi-memory text-primary me-2"></i><strong>Memoria RAM:</strong> ${ram || 'No seleccionado'}</span>
+                            <span class="fw-semibold text-dark">${ram ? 'S/ ' + costoRam.toFixed(2) : '-'}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span><i class="bi bi-device-ssd text-primary me-2"></i><strong>Almacenamiento:</strong> ${alm || 'No seleccionado'}</span>
+                            <span class="fw-semibold text-dark">${alm ? 'S/ ' + costoAlm.toFixed(2) : '-'}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span><i class="bi bi-gpu-card text-primary me-2"></i><strong>Tarjeta Gráfica:</strong> ${graf || 'No seleccionado'}</span>
+                            <span class="fw-semibold text-dark">${graf ? 'S/ ' + costoGraf.toFixed(2) : '-'}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center px-0 py-2">
+                            <span><i class="bi bi-plus-circle text-info me-2"></i><strong>Complementos:</strong> ${complementos.length ? complementos.join(', ') : 'Ninguno'}</span>
+                            <span class="badge bg-secondary rounded-pill">${complementos.length} ítems</span>
+                        </li>
+                    </ul>
+                    <p class="text-muted small mb-0"><i class="bi bi-info-circle me-1"></i> *Precio referencial en Soles (S/). La cotización final está sujeta a stock disponible al momento de confirmar el pedido con un asesor.</p>
+                </div>
+            </div>
         `;
         document.getElementById('cotizacionResultado').innerHTML = resumen;
         document.getElementById('enviarWhatsapp').style.display = 'inline-block';
+    }
+
+    document.getElementById('formPC').addEventListener('submit', function(e) {
+        e.preventDefault();
+        actualizarResumenPC();
+        const element = document.getElementById('cotizacionResultado');
+        if (element) element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     });
 
     // Enviar por WhatsApp
     document.getElementById('enviarWhatsapp').addEventListener('click', function() {
-        const nombre = document.getElementById('nombre').value.trim();
-        const proc = document.getElementById('procesador').value;
-        const ram = document.getElementById('ram').value;
-        const alm = document.getElementById('almacenamiento').value;
-        const graf = document.getElementById('grafica').value;
+        const nombre = document.getElementById('nombre').value.trim() || 'Cliente';
+        const proc = document.getElementById('procesador').value || 'Sin definir';
+        const ram = document.getElementById('ram').value || 'Sin definir';
+        const alm = document.getElementById('almacenamiento').value || 'Sin definir';
+        const graf = document.getElementById('grafica').value || 'Sin definir';
         const complementos = [];
         ['pantalla', 'teclado', 'mouse', 'mousepad', 'wifi', 'bluetooth'].forEach(id => {
             if (document.getElementById(id).checked) complementos.push(document.getElementById(id).value);
         });
-        let total = (precios[proc] || 0) + (precios[ram] || 0) + (precios[alm] || 0) + (precios[graf] || 0);
 
-        let mensaje = `Hola, soy ${nombre} y deseo una cotización para una PC personalizada:%0A` +
-            `Procesador: ${proc}%0A` +
-            `RAM: ${ram}%0A` +
-            `Almacenamiento: ${alm}%0A` +
-            `Gráfica: ${graf}%0A` +
-            `Complementos: ${complementos.length ? complementos.join(', ') : 'Ninguno'}%0A` +
-            `Total estimado: S/ ${total} (precio referencial)`;
+        let costoProc = preciosPCMapa[proc] || 0;
+        let costoRam = preciosPCMapa[ram] || 0;
+        let costoAlm = preciosPCMapa[alm] || 0;
+        let costoGraf = preciosPCMapa[graf] || 0;
+        let total = costoProc + costoRam + costoAlm + costoGraf;
 
-        // Reemplaza el número por el tuyo de WhatsApp en formato internacional, por ejemplo: 51999999999
+        let mensaje = `*Hola eDark! Soy ${nombre} y solicito una cotización formal para mi PC Personalizada:*%0A%0A` +
+            `*Procesador:* ${proc} (S/ ${costoProc.toFixed(2)})%0A` +
+            `*RAM:* ${ram} (S/ ${costoRam.toFixed(2)})%0A` +
+            `*Almacenamiento:* ${alm} (S/ ${costoAlm.toFixed(2)})%0A` +
+            `*Tarjeta Gráfica:* ${graf} (S/ ${costoGraf.toFixed(2)})%0A` +
+            `*Complementos:* ${complementos.length ? complementos.join(', ') : 'Ninguno'}%0A%0A` +
+            `*TOTAL ESTIMADO:* S/ ${total.toFixed(2)}%0A` +
+            `_Por favor confirmar disponibilidad y tiempo de entrega._`;
+
         window.open(`https://wa.me/51916907657?text=${mensaje}`, '_blank');
     });
     </script>

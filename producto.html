@@ -332,13 +332,33 @@
                 return;
             }
 
+            // Iniciar cargas generales en paralelo sin bloquear la lectura del producto
             try {
-                if (window.inicializarTipoCambioSunat) await window.inicializarTipoCambioSunat();
-                if (window.cargarConfiguracionGeneral) await window.cargarConfiguracionGeneral();
-                else if (window.cargarConfigGeneral) await window.cargarConfigGeneral();
+                if (window.inicializarTipoCambioSunat) window.inicializarTipoCambioSunat().catch(() => {});
+                if (window.cargarConfiguracionGeneral) window.cargarConfiguracionGeneral().catch(() => {});
+                else if (window.cargarConfigGeneral) window.cargarConfigGeneral().catch(() => {});
+            } catch (err) { console.warn('Aviso en carga paralela de config:', err); }
 
-                const doc = await db.collection('productos').doc(productId).get();
-                if (!doc.exists) {
+            try {
+                if (!db && typeof firebase !== 'undefined') db = firebase.firestore();
+                let doc = null;
+                try {
+                    doc = await db.collection('productos').doc(productId).get();
+                } catch (errDb) {
+                    console.warn('Fallo inicial con doc(productId), intentando por campo id:', errDb);
+                }
+
+                if (!doc || !doc.exists) {
+                    // Intentar buscar si está en caché de ventana
+                    if (window.productosCache) {
+                        const pCache = window.productosCache.find(p => p.id === productId);
+                        if (pCache) {
+                            currentProduct = pCache;
+                            renderProduct(currentProduct);
+                            cargarProductosRelacionados(currentProduct.categoria, currentProduct.id);
+                            return;
+                        }
+                    }
                     showError();
                     return;
                 }
@@ -347,7 +367,7 @@
                 renderProduct(currentProduct);
                 cargarProductosRelacionados(currentProduct.categoria, currentProduct.id);
             } catch (e) {
-                console.error(e);
+                console.error('Error al cargar producto:', e);
                 showError();
             }
         });
@@ -379,6 +399,10 @@
 
             // Imagen Principal y Galería
             const imgEl = document.getElementById('productImg');
+            imgEl.onerror = function() {
+                this.src = 'https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=800&q=80';
+                this.onerror = null;
+            };
             imgEl.src = mainSrc;
 
             const galleryCont = document.getElementById('galleryContainer');
@@ -391,27 +415,40 @@
 
             if (todasLasImagenes.length > 1) {
                 galleryCont.innerHTML = todasLasImagenes.map((url, idx) => `
-                    <img src="${url}" class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="cambiarImagenPrincipal('${url}', this)" alt="Miniatura ${idx + 1}" onerror="this.style.display='none'">
+                    <img src="${url}" class="gallery-thumb ${idx === 0 ? 'active' : ''}" onclick="cambiarImagenPrincipal('${url}', this)" alt="Miniatura ${idx + 1}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=200&q=80'">
                 `).join('');
             } else {
                 galleryCont.innerHTML = '';
             }
 
-            // Precio
+            // Precio robusto (siempre flotante, evitando caídas por cadenas)
             let precio = parseFloat(prod.precioVenta);
             if (window.calcularPrecioProducto) {
-                precio = window.calcularPrecioProducto(prod);
-                prod.precioFinal = precio;
+                const pCalc = parseFloat(window.calcularPrecioProducto(prod));
+                if (!isNaN(pCalc) && pCalc > 0) {
+                    precio = pCalc;
+                    prod.precioFinal = precio;
+                }
             }
-            if (!precio || isNaN(precio)) precio = parseFloat(prod.precio) || 0;
+            if (!precio || isNaN(precio) || precio <= 0) {
+                precio = parseFloat(prod.precio) || 0;
+            }
 
-            document.getElementById('productPrice').textContent = `S/ ${precio.toFixed(2)}`;
+            if (precio > 0) {
+                document.getElementById('productPrice').textContent = `S/ ${precio.toFixed(2)}`;
+            } else {
+                document.getElementById('productPrice').textContent = `Consultar Precio / S/ 0.00`;
+            }
 
             // Descripción
             const desc = prod.descripcion || prod.especificaciones || 'Sin descripción detallada.';
             document.getElementById('productDescription').innerHTML = desc.replace(/\n/g, '<br>');
 
-            // Stock y Cantidad Max
+            // Stock y Cantidad Max (normalización robusta de stock)
+            let stockNum = parseInt(prod.stock);
+            if (isNaN(stockNum) || stockNum < 0) stockNum = 10; // Valor seguro si no está especificado
+            prod.stock = stockNum;
+
             const stockBadge = document.getElementById('badgeStock');
             const qtyInput = document.getElementById('qtyInput');
             const stockInfo = document.getElementById('stockInfoText');
@@ -493,9 +530,9 @@
                     const imgSrc = safeImageUrl(p.imagenUrl || p.imagen || 'img/productos/default.png');
                     html += `
                         <div class="col">
-                            <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
+                            <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden product-card-premium">
                                 <a href="producto.html?id=${p.id}" class="text-decoration-none text-dark d-block text-center overflow-hidden" style="height: 180px;">
-                                    <img src="${imgSrc}" alt="${sanitize(p.nombre)}" loading="lazy" decoding="async" class="card-img-top w-100 h-100 p-3" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'">
+                                    <img src="${imgSrc}" alt="${sanitize(p.nombre)}" loading="lazy" decoding="async" class="card-img-top w-100 h-100 p-3" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=400&q=80'">
                                 </a>
                                 <div class="card-body p-3 d-flex flex-column text-center">
                                     <a href="producto.html?id=${p.id}" class="text-decoration-none text-dark flex-grow-1">

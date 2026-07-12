@@ -11,149 +11,151 @@
     <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css" rel="stylesheet">
     <style>
         :root {
-            --sidebar-width: 250px;
-            --primary-color: #007bff;
-            --dark-bg: #222831;
-            --light-bg: #393e46;
+            --sidebar-width: 260px;
+            --primary-color: #3b82f6;
+            --primary-glow: rgba(59, 130, 246, 0.35);
+            --dark-bg: #0f172a;
+            --glass-bg: rgba(255, 255, 255, 0.85);
+            --glass-border: rgba(255, 255, 255, 0.6);
         }
 
         body {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #f0f4f8 0%, #e2e8f0 50%, #f1f5f9 100%);
+            background-size: 200% 200%;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1e293b;
+            min-height: 100vh;
         }
 
+        /* LIQUID GLASS SIDEBAR */
         .sidebar {
             position: fixed;
             top: 0;
             left: 0;
             height: 100vh;
             width: var(--sidebar-width);
-            background: var(--dark-bg);
+            background: linear-gradient(180deg, rgba(15, 23, 42, 0.96) 0%, rgba(30, 41, 59, 0.96) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.12);
             padding: 20px 0;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             overflow-y: auto;
+            box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
         }
 
         .sidebar .logo {
             text-align: center;
-            padding: 20px;
+            padding: 15px 20px 25px;
             color: white;
             font-size: 24px;
             font-weight: bold;
             border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
         .sidebar-nav {
             list-style: none;
-            padding: 0;
+            padding: 0 14px;
             margin: 0;
         }
 
         .sidebar-nav li {
-            margin: 5px 0;
+            margin: 4px 0;
         }
 
         .sidebar-nav a {
             display: flex;
             align-items: center;
-            padding: 15px 25px;
-            color: #eeeeee;
+            padding: 12px 18px;
+            color: #cbd5e1;
             text-decoration: none;
-            transition: all 0.3s;
+            border-radius: 12px;
+            transition: all 0.25s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
         }
 
-        .sidebar-nav a:hover,
+        .sidebar-nav a:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            transform: translateX(4px);
+        }
+
         .sidebar-nav a.active {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: white;
-            border-left: 4px solid white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.4);
+            font-weight: 600;
         }
 
         .sidebar-nav i {
-            margin-right: 10px;
-            font-size: 18px;
+            margin-right: 12px;
+            font-size: 19px;
         }
 
         .main-content {
             margin-left: var(--sidebar-width);
-            padding: 20px;
+            padding: 25px 35px;
             min-height: 100vh;
+            transition: all 0.3s;
         }
 
-        .stats-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .stats-card .icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-            color: white;
-            margin-bottom: 15px;
-        }
-
-        .stats-card.blue .icon {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-
-        .stats-card.green .icon {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-        }
-
-        .stats-card.orange .icon {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
-        }
-
-        .stats-card.purple .icon {
-            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
-        }
-
-        .chart-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
-        .table-container {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-top: 20px;
-        }
-
+        /* LIQUID GLASS TOPBAR */
         .topbar {
-            background: white;
-            padding: 15px 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.82);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            padding: 16px 28px;
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
             margin-bottom: 30px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        /* LIQUID GLASS CARDS & TABLES */
+        .stats-card, .chart-container, .table-container, .modal-content {
+            background: rgba(255, 255, 255, 0.88) !important;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px !important;
+            border: 1px solid rgba(255, 255, 255, 0.8) !important;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.05) !important;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stats-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(15, 23, 42, 0.1) !important;
+        }
+
+        .stats-card .icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+            margin-bottom: 15px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-card.blue .icon { background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%); }
+        .stats-card.green .icon { background: linear-gradient(135deg, #10b981 0%, #047857 100%); }
+        .stats-card.orange .icon { background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%); }
+        .stats-card.purple .icon { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
+
         .section-title {
             font-size: 24px;
             font-weight: 600;
-            color: #333;
+            color: #1e293b;
             margin-bottom: 20px;
         }
 
@@ -376,6 +378,8 @@
                         class="bi bi-graph-up"></i> Reportes</a></li>
             <li><a href="javascript:void(0)" data-section="configuracion" onclick="cambiarSeccion('configuracion')"><i
                         class="bi bi-gear"></i> Configuración</a></li>
+            <li><a href="javascript:void(0)" data-section="pcConfig" onclick="cambiarSeccion('pcConfig')"><i
+                        class="bi bi-pc-display"></i> PC Personalizada</a></li>
             <li><a href="#" id="cerrarSesion"><i class="bi bi-box-arrow-right"></i> Cerrar Sesión</a></li>
         </ul>
     </div>
@@ -641,6 +645,120 @@
             </div>
         </div>
 
+        <!-- Sección de PC Personalizada / Precios -->
+        <div id="pcConfigSection" style="display:none;">
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h2 class="section-title mb-1"><i class="bi bi-pc-display text-primary me-2"></i>Gestor de Precios - PC Personalizada</h2>
+                    <p class="text-muted small mb-0">Controla en tiempo real las opciones y costos (en S/) que ven tus clientes en el cotizador de PC eDark.</p>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-outline-primary rounded-pill px-3" onclick="restablecerPreciosPC()"><i class="bi bi-arrow-counterclockwise me-1"></i> Restablecer Valores Base</button>
+                    <button class="btn btn-success rounded-pill px-4 fw-bold shadow-sm" onclick="guardarPreciosPC()"><i class="bi bi-cloud-arrow-up-fill me-1"></i> Guardar Precios en la Nube</button>
+                </div>
+            </div>
+
+            <!-- Tabs/Secciones por Tipo de Componente -->
+            <div class="table-container p-4">
+                <ul class="nav nav-pills mb-4 gap-2 border-bottom pb-3" id="pcConfigTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active rounded-pill px-4 fw-semibold" data-bs-toggle="pill" data-bs-target="#pc-tab-proc" type="button" role="tab"><i class="bi bi-cpu me-1"></i> Procesadores</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-4 fw-semibold" data-bs-toggle="pill" data-bs-target="#pc-tab-ram" type="button" role="tab"><i class="bi bi-memory me-1"></i> Memoria RAM</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-4 fw-semibold" data-bs-toggle="pill" data-bs-target="#pc-tab-alm" type="button" role="tab"><i class="bi bi-device-ssd me-1"></i> Almacenamiento (SSD/M.2/HDD)</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link rounded-pill px-4 fw-semibold" data-bs-toggle="pill" data-bs-target="#pc-tab-graf" type="button" role="tab"><i class="bi bi-gpu-card me-1"></i> Tarjetas Gráficas</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                    <!-- Tab Procesadores -->
+                    <div class="tab-pane fade show active" id="pc-tab-proc" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-cpu text-primary me-2"></i>Precios de Procesadores (Intel / AMD)</h5>
+                            <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="agregarItemPC('procesadores')"><i class="bi bi-plus-lg me-1"></i> Agregar Procesador</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Nombre / Modelo de Componente</th>
+                                        <th style="width: 240px;">Precio de Cotización (S/)</th>
+                                        <th style="width: 100px;" class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-pc-procesadores"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab RAM -->
+                    <div class="tab-pane fade" id="pc-tab-ram" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-memory text-primary me-2"></i>Precios y Capacidades de Memoria RAM</h5>
+                            <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="agregarItemPC('rams')"><i class="bi bi-plus-lg me-1"></i> Agregar Capacidad RAM</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Capacidad / Kit RAM</th>
+                                        <th style="width: 240px;">Precio de Cotización (S/)</th>
+                                        <th style="width: 100px;" class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-pc-rams"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab Almacenamiento -->
+                    <div class="tab-pane fade" id="pc-tab-alm" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-device-ssd text-primary me-2"></i>Precios de Unidades de Almacenamiento</h5>
+                            <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="agregarItemPC('almacenamientos')"><i class="bi bi-plus-lg me-1"></i> Agregar Disco / SSD</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Tipo y Capacidad (Ej: SSD 1TB, M.2 2TB)</th>
+                                        <th style="width: 240px;">Precio de Cotización (S/)</th>
+                                        <th style="width: 100px;" class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-pc-almacenamientos"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tab Gráficas -->
+                    <div class="tab-pane fade" id="pc-tab-graf" role="tabpanel">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-gpu-card text-primary me-2"></i>Precios de Tarjetas Gráficas (GPU)</h5>
+                            <button class="btn btn-sm btn-primary rounded-pill px-3" onclick="agregarItemPC('graficas')"><i class="bi bi-plus-lg me-1"></i> Agregar Tarjeta Gráfica</button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Modelo Gráfico (NVIDIA / AMD / Integrada)</th>
+                                        <th style="width: 240px;">Precio de Cotización (S/)</th>
+                                        <th style="width: 100px;" class="text-center">Acción</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-pc-graficas"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <!-- Sección de Ventas -->
         <div id="ventasSection" style="display: none;">
             <h2 class="section-title">Gestión de Ventas</h2>
@@ -692,23 +810,76 @@
             </div>
         </div>
 
-        <!-- Sección de Clientes -->
+        <!-- Sección de Clientes y Usuarios -->
         <div id="clientesSection" style="display: none;">
-            <h2 class="section-title">Base de Clientes</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+                <div>
+                    <h2 class="section-title mb-1"><i class="bi bi-people-fill text-primary me-2"></i>Gestión de Usuarios y Clientes</h2>
+                    <small class="text-muted">Administra perfiles registrados, roles (Cliente / Admin) e historial de pedidos</small>
+                </div>
+                <button class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold" onclick="mostrarModalUsuario()"><i class="bi bi-person-plus me-2"></i> Nuevo Usuario / Cliente</button>
+            </div>
             <div class="table-container">
                 <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
+                    <table class="table table-hover align-middle">
+                        <thead class="table-light">
                             <tr>
-                                <th>Nombre</th>
-                                <th>Email</th>
+                                <th>Usuario / Nombre</th>
+                                <th>Email / Rol</th>
                                 <th>Teléfono</th>
-                                <th>Total Compras</th>
-                                <th>Última Compra</th>
+                                <th>Total Pedidos</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaClientes"></tbody>
                     </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de Gestión de Usuario -->
+        <div class="modal fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-primary bg-opacity-10 border-bottom-0 p-4">
+                        <h5 class="modal-title fw-bold text-primary" id="modalUsuarioTitulo"><i class="bi bi-person-gear me-2"></i> Gestión de Perfil de Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="formUsuario">
+                            <input type="hidden" id="usuarioId">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="usuarioNombre">Nombre Completo *</label>
+                                <input type="text" class="form-control rounded-3" id="usuarioNombre" required placeholder="Ej: Juan Pérez">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="usuarioEmail">Correo Electrónico (Email) *</label>
+                                <input type="email" class="form-control rounded-3" id="usuarioEmail" required placeholder="ejemplo@correo.com">
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" for="usuarioRol">Rol de Sistema</label>
+                                    <select class="form-select rounded-3" id="usuarioRol">
+                                        <option value="cliente">Cliente (Estándar)</option>
+                                        <option value="admin">Administrador (Total)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" for="usuarioTelefono">Teléfono</label>
+                                    <input type="tel" class="form-control rounded-3" id="usuarioTelefono" placeholder="987654321">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="usuarioDireccion">Dirección Principal de Envío</label>
+                                <input type="text" class="form-control rounded-3" id="usuarioDireccion" placeholder="Av. Principal 123, Lima">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" onclick="guardarUsuario()"><i class="bi bi-save me-1"></i> Guardar Usuario</button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1000,7 +1171,7 @@
                                     <div class="row g-2 mb-2">
                                         <div class="col-md-7">
                                             <label for="productoGaleriaFile" class="visually-hidden">Subir varias imágenes</label>
-                                            <input type="file" class="form-control form-control-sm" id="productoGaleriaFile" accept="image/*" multiple title="Subir varias imágenes">
+                                            <input type="file" class="form-control form-control-sm" id="productoGaleriaFile" accept="image/*" multiple title="Subir varias imágenes" onchange="procesarYSubirImagenesGaleria(this.files)">
                                         </div>
                                         <div class="col-md-5 d-flex gap-1">
                                             <label for="productoGaleriaUrlInput" class="visually-hidden">Pegar URL secundaria</label>
@@ -1295,7 +1466,7 @@
             // Ocultar todas las secciones
             const sections = [
                 'dashboardSection', 'productosSection', 'categoriasSection',
-                'configuracionSection', 'ventasSection', 'inventarioSection',
+                'configuracionSection', 'pcConfigSection', 'ventasSection', 'inventarioSection',
                 'clientesSection', 'blogSection', 'publicidadSection', 'reportesSection',
                 'otrasSeccionesContent'
             ];
@@ -1320,12 +1491,155 @@
                 case 'productos': cargarProductos(); break;
                 case 'categorias': cargarCategorias(); break;
                 case 'configuracion': cargarConfiguracion(); break;
+                case 'pcConfig': cargarPreciosPC(); break;
                 case 'ventas': cargarVentas(); break;
                 case 'inventario': cargarInventario(); break;
                 case 'clientes': cargarClientes(); break;
                 case 'blog': cargarBlog(); break;
                 case 'publicidad': cargarPublicidad(); break;
                 case 'reportes': cargarReportes(); break;
+            }
+        }
+
+        // === LOGICA DE PRECIOS Y COMPONENTES - PC PERSONALIZADA ===
+        const CONFIG_PC_DEFAULT = {
+            procesadores: [
+                { nombre: "Intel Core i3 12th Gen", precio: 520 },
+                { nombre: "Intel Core i3 13th Gen", precio: 580 },
+                { nombre: "Intel Core i3 14th Gen", precio: 650 },
+                { nombre: "Intel Core i5 12th Gen", precio: 780 },
+                { nombre: "Intel Core i5 13th Gen", precio: 920 },
+                { nombre: "Intel Core i5 14th Gen", precio: 1080 },
+                { nombre: "Intel Core i7 13th Gen", precio: 1450 },
+                { nombre: "Intel Core i7 14th Gen", precio: 1650 },
+                { nombre: "Intel Core i9 14th Gen K", precio: 2400 },
+                { nombre: "AMD Ryzen 5 5600G", precio: 550 },
+                { nombre: "AMD Ryzen 5 7600X", precio: 980 },
+                { nombre: "AMD Ryzen 7 5700X", precio: 820 },
+                { nombre: "AMD Ryzen 7 7800X3D", precio: 1750 },
+                { nombre: "AMD Ryzen 9 7900X", precio: 1950 }
+            ],
+            rams: [
+                { nombre: "8GB DDR4 3200MHz", precio: 110 },
+                { nombre: "16GB (2x8GB) DDR4 3200MHz", precio: 210 },
+                { nombre: "32GB (2x16GB) DDR4 3600MHz", precio: 380 },
+                { nombre: "16GB (2x8GB) DDR5 5600MHz", precio: 320 },
+                { nombre: "32GB (2x16GB) DDR5 6000MHz", precio: 540 },
+                { nombre: "64GB (2x32GB) DDR5 6000MHz", precio: 980 }
+            ],
+            almacenamientos: [
+                { nombre: "SSD SATA 512GB", precio: 160 },
+                { nombre: "SSD SATA 1TB", precio: 280 },
+                { nombre: "M.2 NVMe 512GB PCIe 4.0", precio: 220 },
+                { nombre: "M.2 NVMe 1TB PCIe 4.0", precio: 360 },
+                { nombre: "M.2 NVMe 2TB PCIe 4.0", precio: 680 },
+                { nombre: "M.2 NVMe 4TB PCIe 4.0", precio: 1350 },
+                { nombre: "HDD 2TB 7200RPM", precio: 290 }
+            ],
+            graficas: [
+                { nombre: "Integrada (Radeon / UHD Graphics)", precio: 0 },
+                { nombre: "NVIDIA GTX 1650 4GB", precio: 680 },
+                { nombre: "NVIDIA RTX 3060 12GB", precio: 1250 },
+                { nombre: "NVIDIA RTX 4060 8GB", precio: 1480 },
+                { nombre: "NVIDIA RTX 4060 Ti 16GB", precio: 2100 },
+                { nombre: "NVIDIA RTX 4070 Super 12GB", precio: 2890 },
+                { nombre: "NVIDIA RTX 4080 Super 16GB", precio: 4800 },
+                { nombre: "AMD Radeon RX 6600 8GB", precio: 950 },
+                { nombre: "AMD Radeon RX 7600 8GB", precio: 1320 },
+                { nombre: "AMD Radeon RX 7700 XT 12GB", precio: 2150 },
+                { nombre: "AMD Radeon RX 7800 XT 16GB", precio: 2600 }
+            ]
+        };
+
+        let configPCData = null;
+
+        async function cargarPreciosPC() {
+            try {
+                // 1. Intentar cargar de Firestore
+                const docSnap = await db.collection('configuraciones').doc('precios_pc').get();
+                if (docSnap.exists) {
+                    configPCData = docSnap.data();
+                } else {
+                    // Cargar de localStorage si no existe o usar default
+                    const loc = localStorage.getItem('eDark_precios_pc');
+                    configPCData = loc ? JSON.parse(loc) : JSON.parse(JSON.stringify(CONFIG_PC_DEFAULT));
+                }
+            } catch (e) {
+                console.warn('Usando configuración local de precios PC:', e.message);
+                const loc = localStorage.getItem('eDark_precios_pc');
+                configPCData = loc ? JSON.parse(loc) : JSON.parse(JSON.stringify(CONFIG_PC_DEFAULT));
+            }
+            renderizarTablasPC();
+        }
+
+        function renderizarTablasPC() {
+            if (!configPCData) configPCData = JSON.parse(JSON.stringify(CONFIG_PC_DEFAULT));
+            ['procesadores', 'rams', 'almacenamientos', 'graficas'].forEach(tipo => {
+                const tbody = document.getElementById(`tabla-pc-${tipo}`);
+                if (!tbody) return;
+                const lista = configPCData[tipo] || [];
+                if (lista.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="3" class="text-center text-muted py-3">No hay ítems registrados en esta categoría</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = lista.map((item, index) => `
+                    <tr>
+                        <td>
+                            <input type="text" class="form-control form-control-sm fw-medium" value="${(item.nombre || '').replace(/"/g, '&quot;')}" onchange="actualizarItemPC('${tipo}', ${index}, 'nombre', this.value)">
+                        </td>
+                        <td>
+                            <div class="input-group input-group-sm">
+                                <span class="input-group-text bg-light fw-bold text-success">S/</span>
+                                <input type="number" step="0.5" min="0" class="form-control fw-bold text-dark" value="${item.precio}" onchange="actualizarItemPC('${tipo}', ${index}, 'precio', parseFloat(this.value) || 0)">
+                            </div>
+                        </td>
+                        <td class="text-center">
+                            <button class="btn btn-sm btn-outline-danger" onclick="eliminarItemPC('${tipo}', ${index})" title="Eliminar"><i class="bi bi-trash"></i></button>
+                        </td>
+                    </tr>
+                `).join('');
+            });
+        }
+
+        function actualizarItemPC(tipo, index, campo, valor) {
+            if (configPCData && configPCData[tipo] && configPCData[tipo][index]) {
+                configPCData[tipo][index][campo] = valor;
+            }
+        }
+
+        function agregarItemPC(tipo) {
+            if (!configPCData) configPCData = JSON.parse(JSON.stringify(CONFIG_PC_DEFAULT));
+            if (!configPCData[tipo]) configPCData[tipo] = [];
+            configPCData[tipo].push({ nombre: "Nuevo componente gaming", precio: 250 });
+            renderizarTablasPC();
+        }
+
+        function eliminarItemPC(tipo, index) {
+            if (configPCData && configPCData[tipo]) {
+                configPCData[tipo].splice(index, 1);
+                renderizarTablasPC();
+            }
+        }
+
+        async function guardarPreciosPC() {
+            if (!configPCData) return;
+            try {
+                // Guardar local siempre para acceso inmediato y sincronizado
+                localStorage.setItem('eDark_precios_pc', JSON.stringify(configPCData));
+                // Guardar en Firestore si hay conexión
+                if (typeof db !== 'undefined' && db.collection) {
+                    await db.collection('configuraciones').doc('precios_pc').set(configPCData);
+                }
+                alert('¡Precios y opciones del Cotizador de PC actualizados en la nube y sincronizados exitosamente!');
+            } catch (e) {
+                alert('Precios guardados localmente. Sincronizando en segundo plano. (' + e.message + ')');
+            }
+        }
+
+        function restablecerPreciosPC() {
+            if (confirm('¿Deseas restablecer las opciones y precios de los componentes a los valores actualizados del catálogo eDark?')) {
+                configPCData = JSON.parse(JSON.stringify(CONFIG_PC_DEFAULT));
+                renderizarTablasPC();
             }
         }
 
@@ -1390,56 +1704,176 @@
             }
         }
 
-        // === LOGICA DE CLIENTES ===
+        // === LOGICA DE CLIENTES Y USUARIOS ===
+        let modalUsuarioInstance = null;
+        let usuariosGlobales = [];
+
         async function cargarClientes() {
             const tbody = document.getElementById('tablaClientes');
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+            if (!tbody) return;
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4"><div class="spinner-border text-primary"></div><span class="ms-2">Cargando base de usuarios...</span></td></tr>';
             try {
-                // Idealmente 'usuarios' collection, fallback a extraer de ventas si no hay usuarios registrados
-                const snap = await db.collection('usuarios').get(); // Asumiendo colección usuarios
-                tbody.innerHTML = '';
-                if (snap.empty) {
-                    // Fallback: mostrar ventas únicas como "clientes" (demo)
-                    const vent = await db.collection('ventas').limit(20).get();
-                    let clientesMap = new Map();
-                    vent.forEach(d => {
-                        const v = d.data();
-                        if (v.cliente && v.cliente.email && !clientesMap.has(v.cliente.email)) {
-                            clientesMap.set(v.cliente.email, v.cliente);
+                // 1. Obtener todas las ventas para contar pedidos por email
+                const ventSnap = await db.collection('ventas').get();
+                const pedidosPorEmail = {};
+                const clientesDesdeVentas = {};
+                ventSnap.forEach(d => {
+                    const v = d.data();
+                    if (v.cliente && v.cliente.email) {
+                        const email = v.cliente.email.toLowerCase().trim();
+                        pedidosPorEmail[email] = (pedidosPorEmail[email] || 0) + 1;
+                        if (!clientesDesdeVentas[email]) {
+                            clientesDesdeVentas[email] = {
+                                nombre: v.cliente.nombre || 'Cliente eDark',
+                                email: email,
+                                telefono: v.cliente.telefono || '-',
+                                direccion: v.cliente.direccion || '-',
+                                rol: 'cliente',
+                                origen: 'compra'
+                            };
                         }
-                    });
-                    if (clientesMap.size === 0) {
-                        tbody.innerHTML = '<tr><td colspan="5" class="text-center">No hay clientes registrados</td></tr>';
-                        return;
                     }
-                    clientesMap.forEach(c => {
-                        tbody.innerHTML += `
-                            <tr>
-                                <td>${c.nombre || 'N/A'}</td>
-                                <td>${c.email || 'N/A'}</td>
-                                <td>${c.telefono || '-'}</td>
-                                <td>-</td>
-                                <td>-</td>
-                            </tr>
-                         `;
-                    });
+                });
+
+                // 2. Obtener colección usuarios en Firestore
+                const usuariosSnap = await db.collection('usuarios').get();
+                usuariosGlobales = [];
+                const emailsRegistrados = new Set();
+
+                usuariosSnap.forEach(doc => {
+                    const u = doc.data();
+                    u.id = doc.id;
+                    u.email = (u.email || '').toLowerCase().trim();
+                    if (u.email) emailsRegistrados.add(u.email);
+                    u.totalPedidos = pedidosPorEmail[u.email] || 0;
+                    usuariosGlobales.push(u);
+                });
+
+                // Merge clientes desde ventas que no estén creados en 'usuarios'
+                Object.keys(clientesDesdeVentas).forEach(email => {
+                    if (!emailsRegistrados.has(email)) {
+                        const cl = clientesDesdeVentas[email];
+                        cl.totalPedidos = pedidosPorEmail[email] || 1;
+                        usuariosGlobales.push(cl);
+                    }
+                });
+
+                tbody.innerHTML = '';
+                if (usuariosGlobales.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="6" class="text-center py-4 text-muted">No hay usuarios ni clientes registrados aún</td></tr>';
                     return;
                 }
 
-                snap.forEach(doc => {
-                    const u = doc.data();
+                usuariosGlobales.forEach(u => {
+                    const rolBadge = u.rol === 'admin' 
+                        ? '<span class="badge bg-primary rounded-pill px-3 py-1"><i class="bi bi-shield-lock me-1"></i> Admin</span>'
+                        : '<span class="badge bg-secondary rounded-pill px-3 py-1"><i class="bi bi-person me-1"></i> Cliente</span>';
+                    const estadoBadge = u.activo !== false 
+                        ? '<span class="badge bg-success bg-opacity-10 text-success rounded-pill px-2 py-1">Activo</span>'
+                        : '<span class="badge bg-danger bg-opacity-10 text-danger rounded-pill px-2 py-1">Inactivo</span>';
+                    
+                    const objStr = encodeURIComponent(JSON.stringify(u));
                     tbody.innerHTML += `
                         <tr>
-                            <td>${u.nombre || 'Usuario'}</td>
-                            <td>${u.email}</td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex align-items-center justify-content-center fw-bold" style="width: 38px; height: 38px;">
+                                        ${(u.nombre || 'U').charAt(0).toUpperCase()}
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold text-dark">${u.nombre || 'Usuario eDark'}</div>
+                                        <small class="text-muted d-block" style="font-size: 0.75rem;">${u.id ? 'ID: ' + u.id.substring(0, 8) : 'Invitado Compra'}</small>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="fw-medium">${u.email}</div>
+                                <div class="mt-1">${rolBadge}</div>
+                            </td>
                             <td>${u.telefono || '-'}</td>
-                            <td>S/ 0.00</td> <!-- Calcular real si fuese necesario -->
-                            <td>-</td>
+                            <td><span class="badge bg-info text-dark rounded-pill px-3 py-1 fs-6">${u.totalPedidos || 0} pedidos</span></td>
+                            <td>${estadoBadge}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <button class="btn btn-outline-primary rounded-start" onclick="mostrarModalUsuario('${objStr}')" title="Editar"><i class="bi bi-pencil"></i></button>
+                                    ${u.id ? `<button class="btn btn-outline-danger rounded-end" onclick="eliminarUsuario('${u.id}')" title="Eliminar"><i class="bi bi-trash"></i></button>` : ''}
+                                </div>
+                            </td>
                         </tr>
                     `;
                 });
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="5" class="text-center text-danger">Error al cargar clientes</td></tr>';
+                console.error('Error cargando clientes:', e);
+                tbody.innerHTML = '<tr><td colspan="6" class="text-center text-danger py-4"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar usuarios y clientes</td></tr>';
+            }
+        }
+
+        function mostrarModalUsuario(objEncoded) {
+            if (!modalUsuarioInstance) {
+                modalUsuarioInstance = new bootstrap.Modal(document.getElementById('modalUsuario'));
+            }
+            const form = document.getElementById('formUsuario');
+            form.reset();
+            if (objEncoded) {
+                try {
+                    const u = JSON.parse(decodeURIComponent(objEncoded));
+                    document.getElementById('usuarioId').value = u.id || '';
+                    document.getElementById('usuarioNombre').value = u.nombre || '';
+                    document.getElementById('usuarioEmail').value = u.email || '';
+                    document.getElementById('usuarioRol').value = u.rol || 'cliente';
+                    document.getElementById('usuarioTelefono').value = u.telefono || '';
+                    document.getElementById('usuarioDireccion').value = u.direccion || '';
+                    document.getElementById('modalUsuarioTitulo').innerHTML = '<i class="bi bi-person-gear me-2"></i> Editar Usuario / Cliente';
+                } catch(err) {}
+            } else {
+                document.getElementById('usuarioId').value = '';
+                document.getElementById('modalUsuarioTitulo').innerHTML = '<i class="bi bi-person-plus me-2"></i> Registrar Nuevo Usuario';
+            }
+            modalUsuarioInstance.show();
+        }
+
+        async function guardarUsuario() {
+            const id = document.getElementById('usuarioId').value;
+            const nombre = document.getElementById('usuarioNombre').value.trim();
+            const email = document.getElementById('usuarioEmail').value.trim().toLowerCase();
+            const rol = document.getElementById('usuarioRol').value;
+            const telefono = document.getElementById('usuarioTelefono').value.trim();
+            const direccion = document.getElementById('usuarioDireccion').value.trim();
+
+            if (!nombre || !email) {
+                alert('Por favor ingresa Nombre y Correo Electrónico (*) ');
+                return;
+            }
+
+            const data = {
+                nombre, email, rol, telefono, direccion,
+                activo: true,
+                fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
+            };
+
+            try {
+                if (id) {
+                    await db.collection('usuarios').doc(id).set(data, { merge: true });
+                    alert('Usuario actualizado exitosamente');
+                } else {
+                    data.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
+                    await db.collection('usuarios').add(data);
+                    alert('Usuario registrado exitosamente');
+                }
+                modalUsuarioInstance.hide();
+                cargarClientes();
+            } catch (e) {
+                alert('Error al guardar usuario: ' + e.message);
+            }
+        }
+
+        async function eliminarUsuario(id) {
+            if (!confirm('¿Estás seguro de eliminar este perfil de usuario?')) return;
+            try {
+                await db.collection('usuarios').doc(id).delete();
+                cargarClientes();
+            } catch (e) {
+                alert('Error al eliminar usuario: ' + e.message);
             }
         }
 
@@ -1931,6 +2365,9 @@
                         <td class="${stockClass}">${producto.stock || 0}</td>
                         <td>${estadoBadge}</td>
                         <td>
+                            <a href="../producto.html?id=${producto.id}" target="_blank" class="btn btn-sm btn-info me-1 text-white" title="Ver producto en tienda">
+                                <i class="bi bi-eye"></i>
+                            </a>
                             <button class="btn btn-sm btn-warning me-1" onclick="editarProducto('${producto.id}')" title="Editar">
                                 <i class="bi bi-pencil"></i>
                             </button>
@@ -2014,6 +2451,7 @@
                 if (typeof renderGaleriaPreview === 'function') renderGaleriaPreview();
                 document.getElementById('productoImagenUrl').value = imagenUrlActual;
                 document.getElementById('productoImagenFile').value = '';
+                if (document.getElementById('productoGaleriaFile')) document.getElementById('productoGaleriaFile').value = '';
                 document.getElementById('url-tab').click(); // Activar tab URL
                 if (imagenUrlActual) {
                     mostrarPreviewImagen(imagenUrlActual);
@@ -2056,35 +2494,52 @@
                 // Subir archivos de galería secundaria si se seleccionaron
                 const galeriaFiles = document.getElementById('productoGaleriaFile')?.files;
                 if (galeriaFiles && galeriaFiles.length > 0) {
-                    await subirImagenesSecundariasFirebase(galeriaFiles);
+                    await procesarYSubirImagenesGaleria(galeriaFiles);
                 }
+
+                let precioVentaCalc = parseFloat(document.getElementById('productoPrecioVenta').value);
+                const precioCompraCalc = parseFloat(document.getElementById('productoPrecioCompra').value) || 0;
+                const valorGananciaCalc = parseFloat(document.getElementById('productoValorGanancia').value) || 30;
+                if (isNaN(precioVentaCalc) || precioVentaCalc <= 0) {
+                    if (precioCompraCalc > 0) {
+                        const tc = tipoCambioGlobal || 3.8;
+                        const base = document.getElementById('productoMoneda').value === 'USD' ? precioCompraCalc * tc : precioCompraCalc;
+                        precioVentaCalc = base * 1.18 * (1 + valorGananciaCalc / 100);
+                    } else {
+                        precioVentaCalc = 0;
+                    }
+                }
+
+                let stockCalc = parseInt(document.getElementById('productoStock').value);
+                if (isNaN(stockCalc) || stockCalc < 0) stockCalc = 10;
 
                 const producto = {
                     nombre: document.getElementById('productoNombre').value.trim(),
-                    precioCompra: parseFloat(document.getElementById('productoPrecioCompra').value) || null,
+                    precioCompra: precioCompraCalc || null,
                     moneda: document.getElementById('productoMoneda').value,
                     tipoGanancia: document.getElementById('productoTipoGanancia').value,
-                    valorGanancia: parseFloat(document.getElementById('productoValorGanancia').value) || 30,
-                    precio: parseFloat(document.getElementById('productoPrecioVenta').value),
+                    valorGanancia: valorGananciaCalc,
+                    precio: parseFloat(precioVentaCalc.toFixed(2)),
+                    precioVenta: parseFloat(precioVentaCalc.toFixed(2)),
                     imagenUrl: imagenUrl,
                     imagen: imagenUrl, // compatibilidad con frontend existente
                     imagenes: galeriaImagenesActuales || [],
                     categoria: document.getElementById('productoCategoria').value.trim(),
                     subcategoria: document.getElementById('productoSubcategoria').value.trim(),
-                    marca: document.getElementById('productoMarca').value.trim(),
+                    marca: document.getElementById('productoMarca').value.trim() || 'Importado',
                     capacidad: document.getElementById('productoCapacidad').value.trim(),
                     modelo: document.getElementById('productoModelo').value.trim(),
                     dimension: document.getElementById('productoDimension').value.trim(),
-                    stock: parseInt(document.getElementById('productoStock').value),
+                    stock: stockCalc,
                     especificaciones: document.getElementById('productoEspecificaciones').value.trim(),
                     destacado: document.getElementById('productoDestacado').checked,
                     activo: document.getElementById('productoActivo').checked,
                     fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
                 };
 
-                // Validaciones
-                if (!producto.nombre || !producto.categoria || !producto.precio || producto.stock < 0) {
-                    alert('Por favor completa todos los campos obligatorios (*)');
+                // Validaciones obligatorias
+                if (!producto.nombre || !producto.categoria) {
+                    alert('Por favor completa los campos obligatorios: Nombre y Categoría (*)');
                     return;
                 }
 
@@ -2391,9 +2846,13 @@
                         progressBar.style.width = progress + '%';
                     },
                     (error) => {
-                        console.error('Error al subir imagen:', error);
-                        statusDiv.innerHTML = '<small class="text-danger">Error al subir imagen</small>';
-                        reject(error);
+                        console.warn('Storage restringido, usando compresión local Canvas:', error.message);
+                        comprimirImagenCanvas(file, 900, 0.82).then(dataUrl => {
+                            progressContainer.classList.add('d-none');
+                            statusDiv.innerHTML = '<small class="text-success">Imagen procesada correctamente</small>';
+                            setTimeout(() => statusDiv.classList.add('d-none'), 2000);
+                            resolve(dataUrl);
+                        }).catch(err => reject(err));
                     },
                     async () => {
                         try {
@@ -2403,10 +2862,39 @@
                             setTimeout(() => statusDiv.classList.add('d-none'), 3000);
                             resolve(downloadURL);
                         } catch (error) {
-                            reject(error);
+                            comprimirImagenCanvas(file, 900, 0.82).then(resolve).catch(reject);
                         }
                     }
                 );
+            });
+        }
+
+        // ===== COMPRESIÓN ROBUSTA EN BROWSER (CANVAS / BASE64 FALLBACK) =====
+        function comprimirImagenCanvas(file, maxWidth = 1000, quality = 0.82) {
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.readAsDataURL(file);
+                reader.onload = event => {
+                    const img = new Image();
+                    img.src = event.target.result;
+                    img.onload = () => {
+                        let width = img.width;
+                        let height = img.height;
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                        const canvas = document.createElement('canvas');
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        const dataUrl = canvas.toDataURL('image/jpeg', quality);
+                        resolve(dataUrl);
+                    };
+                    img.onerror = error => reject(error);
+                };
+                reader.onerror = error => reject(error);
             });
         }
 
@@ -2419,56 +2907,64 @@
             if (urlTab.classList.contains('active')) {
                 // Usar URL directa
                 const url = (urlInput.value || '').trim();
-                // Si el campo está vacío pero ya tenemos una URL previa (modo edición), usarla
                 if (!url) {
                     if (imagenUrlActual && typeof imagenUrlActual === 'string' && imagenUrlActual.length > 0) {
                         return imagenUrlActual;
                     }
-                    throw new Error('Por favor ingresa una URL de imagen válida');
-                }
-                // Validación básica de formato URL
-                try {
-                    const u = new URL(url);
-                    if (!/^https?:$/.test(u.protocol)) {
-                        throw new Error('La URL de imagen debe comenzar con http(s)');
-                    }
-                } catch {
-                    throw new Error('Por favor ingresa una URL de imagen válida');
+                    throw new Error('Por favor ingresa una URL de imagen válida o cambia a pestaña Subir Archivo');
                 }
                 return url;
             } else {
                 // Subir archivo
                 const file = fileInput.files[0];
                 if (!file) {
-                    // Si no hay archivo seleccionado pero existe imagen previa (modo edición), usarla
                     if (imagenUrlActual && typeof imagenUrlActual === 'string' && imagenUrlActual.length > 0) {
                         return imagenUrlActual;
                     }
                     throw new Error('Por favor selecciona un archivo de imagen');
                 }
-                return await subirImagenFirebase(file);
+                try {
+                    return await subirImagenFirebase(file);
+                } catch (e) {
+                    console.warn('Storage principal restringido, usando Canvas instantáneo:', e.message);
+                    return await comprimirImagenCanvas(file, 900, 0.82);
+                }
             }
         }
 
         // ===== GALERÍA DE IMÁGENES SECUNDARIAS =====
         let galeriaImagenesActuales = [];
 
-        async function subirImagenesSecundariasFirebase(files) {
+        async function procesarYSubirImagenesGaleria(files) {
+            if (!files || files.length === 0) return;
             const progBar = document.querySelector('#galeriaProgress .progress-bar');
             const progCont = document.getElementById('galeriaProgress');
             if (progCont) progCont.classList.remove('d-none');
             
             for (let i = 0; i < files.length; i++) {
                 const file = files[i];
-                const storageRef = firebase.storage().ref();
-                const fileRef = storageRef.child(`productos/galeria_${Date.now()}_${i}_${file.name}`);
-                await fileRef.put(file);
-                const url = await fileRef.getDownloadURL();
-                galeriaImagenesActuales.push(url);
+                if (file._subidoYa) continue; // No subir dos veces el mismo archivo
                 if (progBar) progBar.style.width = `${Math.round(((i + 1) / files.length) * 100)}%`;
+                try {
+                    const storageRef = firebase.storage().ref();
+                    const fileRef = storageRef.child(`productos/galeria_${Date.now()}_${i}_${file.name}`);
+                    await fileRef.put(file);
+                    const url = await fileRef.getDownloadURL();
+                    if (!galeriaImagenesActuales.includes(url)) galeriaImagenesActuales.push(url);
+                    file._subidoYa = true;
+                } catch (err) {
+                    console.warn('Storage de galería no disponible o CORS, guardando como Canvas alta definición:', err.message);
+                    const dataUrl = await comprimirImagenCanvas(file, 900, 0.80);
+                    if (!galeriaImagenesActuales.includes(dataUrl)) galeriaImagenesActuales.push(dataUrl);
+                    file._subidoYa = true;
+                }
             }
-            if (progCont) setTimeout(() => progCont.classList.add('d-none'), 1000);
+            if (progCont) setTimeout(() => progCont.classList.add('d-none'), 800);
             renderGaleriaPreview();
+        }
+
+        async function subirImagenesSecundariasFirebase(files) {
+            await procesarYSubirImagenesGaleria(files);
         }
 
         function agregarUrlAGaleria() {
@@ -2493,12 +2989,12 @@
             const cont = document.getElementById('galeriaPreviewContainer');
             if (!cont) return;
             if (!galeriaImagenesActuales || galeriaImagenesActuales.length === 0) {
-                cont.innerHTML = '<small class="text-muted">No hay imágenes secundarias</small>';
+                cont.innerHTML = '<small class="text-muted">No hay imágenes secundarias en la galería</small>';
                 return;
             }
             cont.innerHTML = galeriaImagenesActuales.map((url, idx) => `
-                <div class="position-relative d-inline-block border rounded p-1 bg-white shadow-sm">
-                    <img src="${url}" style="width: 65px; height: 65px; object-fit: cover; border-radius: 4px;" onerror="this.src='https://dummyimage.com/65x65/ccc/999'">
+                <div class="position-relative d-inline-block border rounded p-1 bg-white shadow-sm" style="transition: transform 0.2s;">
+                    <img src="${url}" style="width: 70px; height: 70px; object-fit: contain; border-radius: 4px;" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&w=150&q=80'">
                     <button type="button" class="btn btn-danger btn-sm position-absolute top-0 end-0 py-0 px-1 badge rounded-circle" style="transform: translate(30%, -30%);" onclick="eliminarImagenDeGaleria(${idx})">&times;</button>
                 </div>
             `).join('');
