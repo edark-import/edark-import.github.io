@@ -1051,15 +1051,45 @@ auth.onAuthStateChanged(user => {
 })();
 
 // Mostrar/ocultar botones de login/logout y email
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(async user => {
     const logoutBtn = document.getElementById('logoutBtnNav');
+    const logoutLi = document.getElementById('logoutLi');
+    const loginLi = document.getElementById('loginLi');
     const userEmail = document.getElementById('userEmail');
+    const userEmailShort = document.getElementById('userEmailShort');
+    const userEmailFull = document.getElementById('userEmailFull');
+    const adminLinkLi = document.getElementById('adminLinkLi');
+
     if (user) {
         if (logoutBtn) logoutBtn.classList.remove('d-none');
+        if (logoutLi) logoutLi.classList.remove('d-none');
+        if (loginLi) loginLi.classList.add('d-none');
+        
         if (userEmail) { userEmail.textContent = user.email || ''; userEmail.classList.remove('d-none'); }
+        if (userEmailShort) userEmailShort.textContent = user.email || 'Usuario';
+        if (userEmailFull) userEmailFull.textContent = user.email || 'Usuario Activo';
+        
+        if (adminLinkLi) {
+            try {
+                const idTokenResult = await user.getIdTokenResult();
+                if (idTokenResult.claims && idTokenResult.claims.admin) {
+                    adminLinkLi.classList.remove('d-none');
+                } else {
+                    adminLinkLi.classList.add('d-none');
+                }
+            } catch (e) {
+                adminLinkLi.classList.add('d-none');
+            }
+        }
     } else {
         if (logoutBtn) logoutBtn.classList.add('d-none');
+        if (logoutLi) logoutLi.classList.add('d-none');
+        if (loginLi) loginLi.classList.remove('d-none');
+        
         if (userEmail) userEmail.classList.add('d-none');
+        if (userEmailShort) userEmailShort.textContent = 'Ingresar';
+        if (userEmailFull) userEmailFull.textContent = 'Invitado';
+        if (adminLinkLi) adminLinkLi.classList.add('d-none');
     }
 });
 
