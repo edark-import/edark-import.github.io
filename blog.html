@@ -306,6 +306,7 @@
         async function cargarArticulos() {
             try {
                 const snapshot = await db.collection('blog')
+                    .where('publicado', '==', true)
                     .limit(100)
                     .get();
 

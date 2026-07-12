@@ -1065,7 +1065,7 @@ auth.onAuthStateChanged(async user => {
         if (logoutLi) logoutLi.classList.remove('d-none');
         if (loginLi) loginLi.classList.add('d-none');
         
-        if (userEmail) { userEmail.textContent = user.email || ''; userEmail.classList.remove('d-none'); }
+        if (userEmail) { userEmail.textContent = user.email || ''; }
         if (userEmailShort) userEmailShort.textContent = user.email || 'Usuario';
         if (userEmailFull) userEmailFull.textContent = user.email || 'Usuario Activo';
         
