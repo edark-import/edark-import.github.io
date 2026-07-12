@@ -90,10 +90,10 @@ body {
     background-size: 400% 400%;
     animation: liquidGradient 20s ease infinite;
     color: #1e293b;
-    line-height: 1.5;
+    line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    padding-top: 100px !important;
+    padding-top: 84px !important;
     transition: background 0.5s ease, color 0.5s ease;
 }
 
@@ -1705,16 +1705,29 @@ body.modo-oscuro .shadow-sm {
 
 /* Uniform services marquee card height */
 .services-marquee-item .card {
-    height: 175px !important;
+    height: 180px !important;
     display: flex;
     flex-direction: column;
     justify-content: center;
     overflow: hidden;
     margin-bottom: 0 !important;
+    border-radius: 18px !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    background: #ffffff !important;
+}
+body.modo-oscuro .services-marquee-item .card {
+    background: #1e293b !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+.services-marquee-item .card:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 16px 32px -12px rgba(13, 110, 253, 0.25) !important;
+    border-color: rgba(13, 110, 253, 0.45) !important;
 }
 .services-marquee-item .area {
     margin-bottom: 0 !important;
-    height: 175px !important;
+    height: 180px !important;
 }
 .services-marquee-item .card-body {
     display: flex;
@@ -1722,13 +1735,15 @@ body.modo-oscuro .shadow-sm {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    padding: 1.2rem !important;
 }
 .services-marquee-item .card-body .small {
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
-    font-size: 0.8rem !important;
+    font-size: 0.82rem !important;
+    line-height: 1.35;
 }
 
 /* ==========================================================================
@@ -2206,3 +2221,115 @@ body.modo-oscuro .cart-item-card img {
     80% { transform: scale(0.95) rotate(2deg); }
     100% { transform: scale(1); }
 }
+
+/* =========================================================
+   DISEÑO ARMÓNICO Y ALTA ESTÉTICA (REDISEÑO VISUAL PREMIUM)
+========================================================= */
+
+/* Navbar Premium Glassmorphism */
+.glass-navbar {
+    background: rgba(255, 255, 255, 0.88) !important;
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
+    min-height: 72px;
+}
+body.modo-oscuro .glass-navbar {
+    background: rgba(15, 23, 42, 0.90) !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+}
+
+/* Dropdown Glass */
+.glass-dropdown {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(0, 0, 0, 0.08) !important;
+}
+body.modo-oscuro .glass-dropdown {
+    background: rgba(26, 32, 44, 0.96) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+}
+
+/* Tarjetas de Producto Ultra-Premium */
+.product-card-premium {
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+.product-card-premium:hover {
+    transform: translateY(-8px) scale(1.015);
+    box-shadow: 0 20px 40px -15px rgba(13, 110, 253, 0.18) !important;
+    border-color: rgba(13, 110, 253, 0.4) !important;
+}
+.product-card-premium .product-img {
+    transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.product-card-premium:hover .product-img {
+    transform: scale(1.1);
+}
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    height: 2.8em;
+    line-height: 1.4em;
+}
+.pointer-events-none {
+    pointer-events: none;
+}
+
+/* Filtros y Barra de Control Modernas */
+.filter-card-modern, .control-bar-modern {
+    border: 1px solid rgba(226, 232, 240, 0.8) !important;
+}
+body.modo-oscuro .product-card-premium,
+body.modo-oscuro .filter-card-modern,
+body.modo-oscuro .control-bar-modern {
+    background: #1e293b !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+}
+body.modo-oscuro .product-card-premium .product-img-wrapper {
+    background: #0f172a !important;
+}
+body.modo-oscuro .control-bar-modern .input-group {
+    background: #0f172a !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+}
+body.modo-oscuro .control-bar-modern input {
+    color: #f8f9fa !important;
+}
+body.modo-oscuro .product-card-premium .product-title {
+    color: #f8f9fa !important;
+}
+
+/* Indicador de Tipo de Cambio en Navbar */
+.nav-pill-indicator {
+    border-color: rgba(226, 232, 240, 0.8) !important;
+}
+body.modo-oscuro .nav-pill-indicator {
+    background: #1e293b !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+    color: #e2e8f0 !important;
+}
+
+/* Paginación Moderna */
+.pagination-modern .page-link {
+    color: #475569;
+    background-color: #ffffff;
+    transition: all 0.2s ease;
+}
+.pagination-modern .page-link:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+    transform: translateY(-2px);
+}
+body.modo-oscuro .pagination-modern .page-link {
+    background-color: #1e293b;
+    color: #e2e8f0;
+}
+body.modo-oscuro .pagination-modern .page-link:hover {
+    background-color: #0d6efd;
+    color: #ffffff;
+}
+

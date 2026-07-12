@@ -664,38 +664,76 @@ function renderProductosPaginados(shouldScroll = false) {
     const productosPagina = productos.slice(inicio, fin);
     contenedor.innerHTML = '';
 
+    // Actualizar contadores en la nueva barra del catálogo si existen
+    const contadorEl = document.getElementById('contadorProductosText');
+    if (contadorEl) {
+        contadorEl.textContent = `${productos.length} ${productos.length === 1 ? 'producto' : 'productos'}`;
+    }
+    const infoPagEl = document.getElementById('infoPaginacionText');
+    if (infoPagEl) {
+        infoPagEl.textContent = productos.length > 0
+            ? `Mostrando ${inicio + 1} - ${Math.min(fin, productos.length)} de ${productos.length} disponibles`
+            : 'No se encontraron productos con esos criterios';
+    }
+
     // Detecta si el usuario está autenticado (admin)
-    const user = firebase.auth().currentUser;
+    const user = typeof firebase !== 'undefined' && firebase.auth ? firebase.auth().currentUser : null;
 
     productosPagina.forEach((prod, idx) => {
+        const precioSoles = calcularPrecioProducto(prod);
+        const precioDolares = typeof prod.precio === 'number' && typeof tipoCambio === 'number' && tipoCambio > 0
+            ? (prod.precio / tipoCambio).toFixed(2)
+            : null;
+
         contenedor.innerHTML += `
-            <div class="col mb-5">
-                <div class="card h-100 shadow-sm border-0 position-relative overflow-hidden">
-                    <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark d-block text-center overflow-hidden" style="height: 220px;">
-                        <img class="card-img-top w-100 h-100 p-3" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" loading="lazy" decoding="async" style="object-fit: contain; transition: transform 0.3s ease;" onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
-                    </a>
-                    <div class="card-body p-3 d-flex flex-column">
-                        <div class="text-center flex-grow-1">
-                            <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark">
-                                <h6 class="fw-bolder mb-2 text-truncate" title="${sanitize(prod.nombre || 'Producto')}">${sanitize(prod.nombre || 'Producto')}</h6>
-                            </a>
-                            <div class="d-flex justify-content-center small text-warning mb-2">
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                                <i class="bi bi-star-fill"></i>
-                            </div>
-                            <span class="fs-5 fw-bold text-primary">S/ ${sanitize(calcularPrecioProducto(prod))}</span>
-                        </div>
+            <div class="col">
+                <div class="card h-100 border-0 shadow-sm rounded-4 position-relative overflow-hidden product-card-premium transition-all bg-white">
+                    <!-- Badge superior -->
+                    <div class="position-absolute top-0 start-0 m-3 z-2 d-flex flex-column gap-1 pointer-events-none">
+                        ${prod.enStock !== false ? '<span class="badge bg-success-subtle text-success border border-success-subtle rounded-pill px-2 py-1 small fw-bold"><i class="bi bi-check-circle-fill me-1"></i>En Stock</span>' : '<span class="badge bg-secondary rounded-pill px-2 py-1 small">Agotado</span>'}
                     </div>
-                    <div class="card-footer p-3 pt-0 border-top-0 bg-transparent">
-                        <div class="d-flex justify-content-center gap-2">
-                            <a href="producto.html?id=${prod.id}" class="btn btn-sm btn-outline-dark flex-grow-1">Ver Detalles</a>
-                            <button type="button" class="btn btn-sm btn-primary" onclick="agregarAlCarritoDesdeCard('${prod.id}', event)" title="Agregar al Carrito">
-                                <i class="bi bi-cart-plus"></i>
-                            </button>
-                            ${user ? `<button class="btn btn-sm btn-outline-secondary btn-editar-producto" data-id="${prod.id}" title="Editar"><i class="bi bi-pencil"></i></button>` : ''}
+                    
+                    <!-- Contenedor de Imagen -->
+                    <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark d-flex align-items-center justify-content-center p-4 bg-light position-relative overflow-hidden product-img-wrapper" style="height: 230px;">
+                        <img class="img-fluid transition-all product-img" src="${safeImageUrl(prod.imagenUrl || prod.imagen || '')}" alt="${sanitize(prod.nombre)}" loading="lazy" decoding="async" style="max-height: 180px; object-fit: contain;" />
+                    </a>
+
+                    <!-- Cuerpo de la Tarjeta -->
+                    <div class="card-body p-3 d-flex flex-column justify-content-between">
+                        <div>
+                            <div class="d-flex align-items-center justify-content-between mb-1">
+                                <small class="text-muted text-uppercase fw-semibold" style="font-size: 0.75rem;">${sanitize(prod.marca || 'eDark Alpha')}</small>
+                                <div class="d-flex text-warning small" style="font-size: 0.75rem;">
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                    <i class="bi bi-star-fill"></i>
+                                </div>
+                            </div>
+                            <a href="producto.html?id=${prod.id}" class="text-decoration-none text-dark">
+                                <h6 class="fw-bold mb-2 text-dark product-title line-clamp-2" title="${sanitize(prod.nombre || 'Producto')}">${sanitize(prod.nombre || 'Producto')}</h6>
+                            </a>
+                        </div>
+
+                        <div class="mt-2 pt-2 border-top">
+                            <div class="d-flex align-items-baseline justify-content-between mb-3">
+                                <div>
+                                    <span class="fs-5 fw-bolder text-primary">S/ ${sanitize(precioSoles)}</span>
+                                    ${precioDolares ? `<small class="text-muted d-block" style="font-size:0.75rem;">$ ${precioDolares} USD</small>` : ''}
+                                </div>
+                                <span class="badge bg-light text-primary border rounded-pill small px-2 py-1"><i class="bi bi-truck me-1"></i>Envío Rápido</span>
+                            </div>
+
+                            <div class="d-flex gap-2">
+                                <a href="producto.html?id=${prod.id}" class="btn btn-outline-dark btn-sm rounded-pill flex-grow-1 fw-semibold transition-all d-flex align-items-center justify-content-center gap-1">
+                                    <span>Detalles</span>
+                                </a>
+                                <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 fw-semibold transition-all d-flex align-items-center justify-content-center gap-1 shadow-sm" onclick="agregarAlCarritoDesdeCard('${prod.id}', event)" title="Agregar al Carrito" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none;">
+                                    <i class="bi bi-cart-plus-fill fs-6"></i>
+                                </button>
+                                ${user ? `<button class="btn btn-sm btn-outline-secondary rounded-circle btn-editar-producto d-flex align-items-center justify-content-center flex-shrink-0" data-id="${prod.id}" title="Editar" style="width:32px;height:32px;"><i class="bi bi-pencil"></i></button>` : ''}
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -703,7 +741,7 @@ function renderProductosPaginados(shouldScroll = false) {
         `;
     });
     if (contenedor.innerHTML === '') {
-        contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5">No hay productos que coincidan con los filtros seleccionados.</div>`;
+        contenedor.innerHTML = `<div class="col-12 text-center text-muted py-5 my-4 bg-white rounded-4 shadow-sm border"><i class="bi bi-search fs-1 text-muted mb-2 d-block"></i><h5 class="fw-bold text-dark">No se encontraron productos</h5><p class="m-0 small">Intenta ajustar o limpiar los filtros seleccionados.</p></div>`;
     }
     asignarEventosProductos();
     renderPaginacion(totalPaginas);
