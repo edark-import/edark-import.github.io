@@ -392,7 +392,6 @@
             const twD = document.getElementById('twDesc'); if (twD) twD.setAttribute('content', `${prod.especificaciones || prod.nombre}`);
             const twI = document.getElementById('twImage'); if (twI) twI.setAttribute('content', absImage);
 
-            document.getElementById('productBrand').textContent = prod.marca || 'Genérico';
             document.getElementById('productBrandBadge').textContent = prod.marca || 'Importado';
             document.getElementById('productCategoryBadge').textContent = prod.categoria || 'General';
             document.getElementById('productModel').textContent = prod.modelo || 'Estándar';
