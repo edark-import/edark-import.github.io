@@ -960,60 +960,66 @@
 
         <!-- Sección de Blog -->
         <div id="blogSection" style="display: none;">
-            <h2 class="section-title">Gestión del Blog</h2>
+            <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+                <div>
+                    <h2 class="section-title mb-1"><i class="bi bi-newspaper text-primary me-2"></i>Gestión de Publicaciones del Blog</h2>
+                    <small class="text-muted">Administra el contenido de tu blog, redacta noticias, guías y revisa el rendimiento</small>
+                </div>
+                <a href="blog-editor.html" class="btn btn-primary rounded-pill px-4 py-2 shadow-sm fw-semibold d-flex align-items-center gap-2">
+                    <i class="bi bi-pencil-square fs-5"></i> <span>Redactar Nuevo Artículo</span>
+                </a>
+            </div>
 
-            <!-- Cards de acceso rápido al editor -->
+            <!-- Resumen Estadístico del Blog -->
             <div class="row mb-4">
                 <div class="col-md-4 mb-3">
-                    <div class="stats-card blue" style="cursor:pointer;" onclick="window.location.href='blog-editor.html'">
-                        <div class="icon" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
-                            <i class="bi bi-pencil-square"></i>
-                        </div>
-                        <h6 class="text-muted">Editor Completo</h6>
-                        <h4 style="font-weight:700;">Nuevo Artículo</h4>
-                        <small class="text-muted">Editor WYSIWYG con formato enriquecido</small>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="stats-card green" style="cursor:pointer;" onclick="window.location.href='blog-editor.html'" id="blogStatPub">
+                    <div class="stats-card green">
                         <div class="icon" style="background:linear-gradient(135deg,#10b981,#047857);">
-                            <i class="bi bi-globe2"></i>
+                            <i class="bi bi-check-circle-fill"></i>
                         </div>
-                        <h6 class="text-muted">Publicados</h6>
-                        <h3 id="blogCountPub">—</h3>
-                        <small class="text-muted">Artículos activos en el blog</small>
+                        <h6 class="text-muted">Artículos Publicados</h6>
+                        <h3 id="blogCountPub">0</h3>
+                        <small class="text-muted">Visibles en la tienda en línea</small>
                     </div>
                 </div>
                 <div class="col-md-4 mb-3">
-                    <div class="stats-card orange" style="cursor:pointer;" onclick="window.location.href='blog-editor.html'" id="blogStatDraft">
+                    <div class="stats-card orange">
                         <div class="icon" style="background:linear-gradient(135deg,#f59e0b,#b45309);">
                             <i class="bi bi-file-earmark-text"></i>
                         </div>
-                        <h6 class="text-muted">Borradores</h6>
-                        <h3 id="blogCountDraft">—</h3>
-                        <small class="text-muted">Artículos pendientes de publicar</small>
+                        <h6 class="text-muted">Borradores en Revisión</h6>
+                        <h3 id="blogCountDraft">0</h3>
+                        <small class="text-muted">Pendientes de publicación</small>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-3">
+                    <div class="stats-card blue">
+                        <div class="icon" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+                            <i class="bi bi-bar-chart-fill"></i>
+                        </div>
+                        <h6 class="text-muted">Impacto y Lecturas</h6>
+                        <h3 id="blogCountViews">0</h3>
+                        <small class="text-muted">Total de vistas acumuladas</small>
                     </div>
                 </div>
             </div>
 
-            <!-- Table preview -->
+            <!-- Listado Principal -->
             <div class="table-container">
                 <div class="d-flex align-items-center justify-content-between mb-3 border-bottom pb-3">
-                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-2 text-primary"></i>Artículos Recientes</h5>
-                    <a href="blog-editor.html" class="btn btn-primary rounded-pill px-4 shadow-sm d-flex align-items-center gap-2">
-                        <i class="bi bi-pencil-square"></i> <span>Abrir Editor Completo</span>
-                    </a>
+                    <h5 class="mb-0 fw-bold text-dark"><i class="bi bi-journal-text me-2 text-primary"></i>Historial y Listado de Artículos</h5>
+                    <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-1 fw-semibold">Catálogo Activo</span>
                 </div>
                 <div class="table-responsive">
                     <table class="table table-hover align-middle">
                         <thead>
                             <tr>
-                                <th>Título</th>
+                                <th>Título del Artículo</th>
                                 <th>Categoría</th>
                                 <th>Estado</th>
                                 <th>Vistas</th>
-                                <th>Fecha</th>
-                                <th>Acciones</th>
+                                <th>Fecha de Creación</th>
+                                <th class="text-center">Acciones</th>
                             </tr>
                         </thead>
                         <tbody id="tablaBlog">
@@ -2137,28 +2143,37 @@
                     .get();
 
                 // Stats
-                let pubCount = 0, draftCount = 0;
+                let pubCount = 0, draftCount = 0, viewsCount = 0;
                 snap.forEach(doc => {
-                    if (doc.data().publicado) pubCount++; else draftCount++;
+                    const d = doc.data();
+                    if (d.publicado) pubCount++; else draftCount++;
+                    viewsCount += (d.vistas || 0);
                 });
 
                 // También hacer una query de totales
                 try {
                     const allSnap = await db.collection('blog').get();
-                    pubCount = 0; draftCount = 0;
-                    allSnap.forEach(d => { if (d.data().publicado) pubCount++; else draftCount++; });
+                    pubCount = 0; draftCount = 0; viewsCount = 0;
+                    allSnap.forEach(doc => {
+                        const d = doc.data();
+                        if (d.publicado) pubCount++; else draftCount++;
+                        viewsCount += (d.vistas || 0);
+                    });
                 } catch {}
 
                 const pubEl = document.getElementById('blogCountPub');
                 const draftEl = document.getElementById('blogCountDraft');
+                const viewsEl = document.getElementById('blogCountViews');
                 if (pubEl) pubEl.textContent = pubCount;
                 if (draftEl) draftEl.textContent = draftCount;
+                if (viewsEl) viewsEl.textContent = viewsCount.toLocaleString('es-PE');
 
                 tbody.innerHTML = '';
                 if (snap.empty) {
-                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">
-                        No hay artículos aún.
-                        <a href="blog-editor.html" class="btn btn-sm btn-primary ms-3"><i class="bi bi-plus-lg me-1"></i>Crear primero</a>
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-5 text-muted">
+                        <i class="bi bi-folder2-open fs-2 d-block mb-2 text-secondary"></i>
+                        <p class="m-0 fw-semibold">No hay artículos registrados aún</p>
+                        <small>Haz clic en "Redactar Nuevo Artículo" arriba para comenzar a publicar.</small>
                     </td></tr>`;
                     return;
                 }
