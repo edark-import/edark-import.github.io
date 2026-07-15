@@ -2282,10 +2282,13 @@
             return listaDeduplicada;
         }
 
+        let cargarCategoriasRunId = 0;
+
         async function cargarCategorias() {
+            const runId = ++cargarCategoriasRunId;
             try {
                 const tbody = document.getElementById('tablaCategorias');
-                const table = tbody ? tbody.closest('table') : null;
+                if (!tbody) return;
                 tbody.innerHTML = '<tr><td colspan="4" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
 
                 const ref = db.collection('categorias');
@@ -2297,22 +2300,43 @@
                 }
                 categoriasData = await deduplicarYLimpiarCategoriasBD(snapshot);
 
+                if (runId !== cargarCategoriasRunId) return; // Si se inició otra carga, cancelar la anterior
+
                 if (categoriasData.length === 0) {
                     tbody.innerHTML = '<tr><td colspan="4" class="text-center text-muted">No hay categorías. Crea la primera categoría.</td></tr>';
                     return;
                 }
 
-                tbody.innerHTML = '';
-                for (const categoria of categoriasData) {
-                    // Contar productos de esta categoría
-                    const productosSnap = await db.collection('productos').where('categoria', '==', categoria.nombre).get();
-                    const cantidadProductos = productosSnap.size;
+                // Cargar productos en lote una sola vez para conteo instantáneo
+                const conteoProductos = {};
+                try {
+                    const productosSnap = await db.collection('productos').get();
+                    productosSnap.forEach(doc => {
+                        const data = doc.data();
+                        if (data && data.categoria) {
+                            const key = data.categoria.trim().toLowerCase();
+                            conteoProductos[key] = (conteoProductos[key] || 0) + 1;
+                        }
+                    });
+                } catch (e) {
+                    console.warn('No se pudieron contar productos en lote:', e);
+                }
 
+                if (runId !== cargarCategoriasRunId) return; // Verificación antes de dibujar en DOM
+
+                const nombresRenderizados = new Set();
+                let htmlRows = '';
+                for (const categoria of categoriasData) {
+                    const nombreKey = (categoria.nombre || '').trim().toLowerCase();
+                    if (nombresRenderizados.has(nombreKey)) continue; // Garantía 100% de cero duplicados
+                    nombresRenderizados.add(nombreKey);
+
+                    const cantidadProductos = conteoProductos[nombreKey] || 0;
                     const subcategorias = categoria.subcategorias && categoria.subcategorias.length > 0
                         ? categoria.subcategorias.join(', ')
                         : '<span class="text-muted">Ninguna</span>';
 
-                    tbody.innerHTML += `
+                    htmlRows += `
                         <tr>
                             <td><strong>${categoria.nombre}</strong></td>
                             <td><small>${subcategorias}</small></td>
@@ -2328,6 +2352,8 @@
                         </tr>
                     `;
                 }
+
+                tbody.innerHTML = htmlRows;
             } catch (error) {
                 console.error('Error al cargar categorías:', error);
                 const tbody = document.getElementById('tablaCategorias');
@@ -2337,7 +2363,6 @@
                         <small>${(error && error.message) ? error.message : 'Verifica reglas de Firestore o conexión.'}</small>
                     </td></tr>`;
                 }
-                // Evitar alert bloqueante, mostrar info inline
             }
         }
 
@@ -2481,19 +2506,26 @@
                 const snapshot = await db.collection('categorias').orderBy('nombre').get();
                 categoriasGlobal = await deduplicarYLimpiarCategoriasBD(snapshot);
 
+                const nombresVistos = new Set();
+                let filtroHtml = '<option value="">Todas las categorías</option>';
+                let formHtml = '<option value="">Seleccionar categoría...</option>';
+
+                categoriasGlobal.forEach(cat => {
+                    const k = (cat.nombre || '').trim().toLowerCase();
+                    if (!nombresVistos.has(k)) {
+                        nombresVistos.add(k);
+                        filtroHtml += `<option value="${cat.nombre}">${cat.nombre}</option>`;
+                        formHtml += `<option value="${cat.nombre}">${cat.nombre}</option>`;
+                    }
+                });
+
                 // Actualizar select de filtro
                 const selectFiltro = document.getElementById('filtroCategoria');
-                selectFiltro.innerHTML = '<option value="">Todas las categorías</option>';
-                categoriasGlobal.forEach(cat => {
-                    selectFiltro.innerHTML += `<option value="${cat.nombre}">${cat.nombre}</option>`;
-                });
+                if (selectFiltro) selectFiltro.innerHTML = filtroHtml;
 
                 // Actualizar select del formulario
                 const selectForm = document.getElementById('productoCategoria');
-                selectForm.innerHTML = '<option value="">Seleccionar categoría...</option>';
-                categoriasGlobal.forEach(cat => {
-                    selectForm.innerHTML += `<option value="${cat.nombre}">${cat.nombre}</option>`;
-                });
+                if (selectForm) selectForm.innerHTML = formHtml;
 
             } catch (error) {
                 console.error('Error al cargar categorías:', error);
