@@ -886,23 +886,70 @@
 
         <!-- Sección de Blog -->
         <div id="blogSection" style="display: none;">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h2 class="section-title">Gestión del Blog</h2>
-                <button class="btn btn-primary" onclick="mostrarModalBlog()"><i class="bi bi-plus-circle"></i> Nueva
-                    Entrada</button>
+            <h2 class="section-title mb-4"><i class="bi bi-pencil-square me-2 text-primary"></i>Gestión del Blog</h2>
+
+            <!-- Cards de acceso rápido al editor -->
+            <div class="row g-4 mb-4">
+                <div class="col-md-4">
+                    <div class="stats-card blue" style="cursor:pointer;" onclick="window.location.href='blog-editor.html'">
+                        <div class="icon" style="background:linear-gradient(135deg,#2563eb,#1d4ed8);">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <h6 class="text-muted">Editor Completo</h6>
+                        <h4 style="font-weight:700;">Nuevo Artículo</h4>
+                        <small class="text-muted">Editor WYSIWYG con formato enriquecido</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card green" style="cursor:pointer;" onclick="window.location.href='blog-editor.html'" id="blogStatPub">
+                        <div class="icon" style="background:linear-gradient(135deg,#10b981,#047857);">
+                            <i class="bi bi-globe2"></i>
+                        </div>
+                        <h6 class="text-muted">Publicados</h6>
+                        <h3 id="blogCountPub">—</h3>
+                        <small class="text-muted">Artículos activos en el blog</small>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="stats-card orange" style="cursor:pointer;" onclick="window.location.href='blog-editor.html'" id="blogStatDraft">
+                        <div class="icon" style="background:linear-gradient(135deg,#f59e0b,#b45309);">
+                            <i class="bi bi-file-earmark-text"></i>
+                        </div>
+                        <h6 class="text-muted">Borradores</h6>
+                        <h3 id="blogCountDraft">—</h3>
+                        <small class="text-muted">Artículos pendientes de publicar</small>
+                    </div>
+                </div>
             </div>
+
+            <!-- Table preview -->
             <div class="table-container">
+                <div class="d-flex align-items-center justify-content-between p-3 border-bottom">
+                    <h6 class="mb-0 fw-semibold">Artículos Recientes</h6>
+                    <a href="blog-editor.html" class="btn btn-primary btn-sm">
+                        <i class="bi bi-pencil-square me-1"></i> Abrir Editor Completo
+                    </a>
+                </div>
                 <div class="table-responsive">
                     <table class="table table-hover">
                         <thead>
                             <tr>
                                 <th>Título</th>
-                                <th>Autor</th>
+                                <th>Categoría</th>
+                                <th>Estado</th>
+                                <th>Vistas</th>
                                 <th>Fecha</th>
                                 <th>Acciones</th>
                             </tr>
                         </thead>
-                        <tbody id="tablaBlog"></tbody>
+                        <tbody id="tablaBlog">
+                            <tr>
+                                <td colspan="6" class="text-center py-4 text-muted">
+                                    <div class="spinner-border spinner-border-sm text-primary me-2" role="status"></div>
+                                    Cargando artículos...
+                                </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -1901,88 +1948,102 @@
             }
         }
 
-        // === LOGICA DE BLOG ===
-        let modalBlogInstance;
+        // === LOGICA DE BLOG (mejorada) ===
         async function cargarBlog() {
             const tbody = document.getElementById('tablaBlog');
-            tbody.innerHTML = '<tr><td colspan="4" class="text-center"><div class="spinner-border text-primary"></div></td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="text-center py-3"><div class="spinner-border spinner-border-sm text-primary me-2"></div>Cargando...</td></tr>';
             try {
-                const snap = await db.collection('blog').orderBy('fecha', 'desc').get();
+                const snap = await db.collection('blog')
+                    .orderBy('fechaCreacion', 'desc')
+                    .limit(10)
+                    .get();
+
+                // Stats
+                let pubCount = 0, draftCount = 0;
+                snap.forEach(doc => {
+                    if (doc.data().publicado) pubCount++; else draftCount++;
+                });
+
+                // También hacer una query de totales
+                try {
+                    const allSnap = await db.collection('blog').get();
+                    pubCount = 0; draftCount = 0;
+                    allSnap.forEach(d => { if (d.data().publicado) pubCount++; else draftCount++; });
+                } catch {}
+
+                const pubEl = document.getElementById('blogCountPub');
+                const draftEl = document.getElementById('blogCountDraft');
+                if (pubEl) pubEl.textContent = pubCount;
+                if (draftEl) draftEl.textContent = draftCount;
+
                 tbody.innerHTML = '';
                 if (snap.empty) {
-                    tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay entradas</td></tr>';
+                    tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-muted">
+                        No hay artículos aún.
+                        <a href="blog-editor.html" class="btn btn-sm btn-primary ms-3"><i class="bi bi-plus-lg me-1"></i>Crear primero</a>
+                    </td></tr>`;
                     return;
                 }
+
                 snap.forEach(doc => {
                     const b = doc.data();
-                    const fecha = b.fecha?.toDate ? b.fecha.toDate().toLocaleDateString() : 'N/A';
+                    const fecha = (b.fechaCreacion?.toDate ? b.fechaCreacion.toDate() : new Date()).toLocaleDateString('es-PE', {day:'2-digit',month:'short',year:'numeric'});
+                    const badge = b.publicado
+                        ? '<span class="badge bg-success bg-opacity-10 text-success border border-success rounded-pill px-2">Publicado</span>'
+                        : '<span class="badge bg-warning bg-opacity-10 text-warning border border-warning rounded-pill px-2">Borrador</span>';
+
                     tbody.innerHTML += `
                         <tr>
-                            <td>${b.titulo}</td>
-                            <td>${b.autor}</td>
-                            <td>${fecha}</td>
                             <td>
-                                <button class="btn btn-sm btn-danger" onclick="eliminarBlog('${doc.id}')"><i class="bi bi-trash"></i></button>
+                                <div class="fw-semibold" style="max-width:260px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${b.titulo || '(sin título)'}</div>
+                                <small class="text-muted">${b.slug || ''}</small>
+                            </td>
+                            <td><span class="badge bg-secondary bg-opacity-10 text-secondary">${b.categoria || '—'}</span></td>
+                            <td>${badge}</td>
+                            <td><i class="bi bi-eye text-muted me-1"></i>${(b.vistas || 0).toLocaleString()}</td>
+                            <td><small class="text-muted">${fecha}</small></td>
+                            <td>
+                                <div class="d-flex gap-1">
+                                    <a href="blog-editor.html?edit=${doc.id}" class="btn btn-sm btn-outline-primary" title="Editar en editor completo">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a href="../blog-post.html?slug=${b.slug}" target="_blank" class="btn btn-sm btn-outline-secondary" title="Ver artículo">
+                                        <i class="bi bi-eye"></i>
+                                    </a>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="eliminarBlog('${doc.id}', '${(b.titulo||'').replace(/'/g,"\\'")}')" title="Eliminar">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </div>
                             </td>
                         </tr>
                     `;
                 });
             } catch (e) {
-                tbody.innerHTML = '<tr><td colspan="4" class="text-center text-danger">Error al cargar blog</td></tr>';
+                console.error(e);
+                tbody.innerHTML = `<tr><td colspan="6" class="text-center text-danger py-3"><i class="bi bi-exclamation-triangle me-2"></i>Error al cargar: ${e.message}</td></tr>`;
             }
         }
 
         function mostrarModalBlog() {
-            document.getElementById('formBlog').reset();
-            modalBlogInstance = new bootstrap.Modal(document.getElementById('modalBlog'));
-            modalBlogInstance.show();
+            // Redirigir al editor completo en lugar del modal básico
+            window.location.href = 'blog-editor.html';
         }
 
         async function guardarBlog() {
-            const titulo = document.getElementById('blogTitulo').value;
-            let slug = document.getElementById('blogSlug').value;
-            if (!slug) {
-                slug = titulo.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-            }
-
-            const tagsRaw = document.getElementById('blogTags').value;
-            const tags = tagsRaw ? tagsRaw.split(',').map(t => t.trim()).filter(t => t.length > 0) : [];
-
-            const data = {
-                titulo: titulo,
-                slug: slug,
-                categoria: document.getElementById('blogCategoria').value || 'General',
-                imagenDestacada: document.getElementById('blogImagen').value,
-                extracto: document.getElementById('blogExtracto').value,
-                contenido: document.getElementById('blogContenido').value,
-                autor: document.getElementById('blogAutor').value || 'eDark Team',
-                tags: tags,
-                publicado: document.getElementById('blogPublicado').checked,
-                fechaPublicacion: firebase.firestore.FieldValue.serverTimestamp()
-            };
-            
-            try {
-                const id = document.getElementById('blogId').value;
-                if (id) {
-                    await db.collection('blog').doc(id).update(data);
-                    alert('Entrada actualizada');
-                } else {
-                    await db.collection('blog').add(data);
-                    alert('Entrada publicada');
-                }
-                modalBlogInstance.hide();
-                cargarBlog();
-            } catch (e) {
-                alert('Error al guardar: ' + e.message);
-            }
+            // Deprecated — redirigir al editor completo
+            window.location.href = 'blog-editor.html';
         }
 
-        async function eliminarBlog(id) {
-            if (confirm('¿Eliminar entrada?')) {
+        async function eliminarBlog(id, titulo) {
+            if (!confirm(`¿Eliminar el artículo "${titulo || id}"? Esta acción no se puede deshacer.`)) return;
+            try {
                 await db.collection('blog').doc(id).delete();
                 cargarBlog();
+            } catch (e) {
+                alert('Error al eliminar: ' + e.message);
             }
         }
+
 
         // === LOGICA DE PUBLICIDAD ===
         async function cargarPublicidad() {

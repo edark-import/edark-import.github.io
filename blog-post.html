@@ -8,294 +8,877 @@
     <meta property="og:title" id="ogTitle" content="">
     <meta property="og:description" id="ogDescription" content="">
     <meta property="og:image" id="ogImage" content="">
+    <meta name="google-adsense-account" content="ca-pub-1611560592421673">
     <title id="pageTitle">Blog - eDark</title>
     <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="css/styles.css" rel="stylesheet">
     <link href="css/modern-styles.css" rel="stylesheet">
-    
-        <!-- Google AdSense -->
-        <script>
-            try {
-                if (localStorage.getItem('modoOscuro') !== 'false') {
-                    document.documentElement.classList.add('modo-oscuro');
-                    document.body.classList.add('modo-oscuro');
-                }
-            } catch {}
-        </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX"
-     crossorigin="anonymous"></script>
-    
+
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1611560592421673" crossorigin="anonymous"></script>
+
+    <!-- Dark mode init (antes del render para evitar flash) -->
+    <script>
+        try {
+            if (localStorage.getItem('modoOscuro') !== 'false') {
+                document.documentElement.classList.add('modo-oscuro');
+            }
+        } catch {}
+    </script>
+
     <style>
+        /* ============================================
+           VARIABLES & BASE
+        ============================================ */
+        :root {
+            --reading-bg: #fafaf8;
+            --text-primary: #1a1a1a;
+            --text-secondary: #555;
+            --text-muted: #888;
+            --border-color: #e5e0d8;
+            --accent: #2563eb;
+            --accent-light: #eff6ff;
+            --code-bg: #f4f4f0;
+            --hero-overlay: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.72) 100%);
+            --ad-bg: #f8f9fb;
+            --ad-border: #e2e8f0;
+            --card-bg: #ffffff;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.10);
+        }
+
+        .modo-oscuro {
+            --reading-bg: #121212;
+            --text-primary: #e8e6e1;
+            --text-secondary: #a8a49e;
+            --text-muted: #6b6760;
+            --border-color: #2a2a2a;
+            --accent: #60a5fa;
+            --accent-light: #1e2a3a;
+            --code-bg: #1e1e1e;
+            --ad-bg: #1a1a1a;
+            --ad-border: #2a2a2a;
+            --card-bg: #1e1e1e;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.4);
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            background: var(--reading-bg);
+            color: var(--text-primary);
+            font-family: 'Inter', sans-serif;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        /* ============================================
+           READING PROGRESS BAR
+        ============================================ */
+        #readingProgress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 3px;
+            background: linear-gradient(90deg, #2563eb, #7c3aed);
+            z-index: 9999;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 8px rgba(37, 99, 235, 0.5);
+        }
+
+        /* ============================================
+           HERO
+        ============================================ */
         .post-hero {
             position: relative;
-            height: 400px;
+            min-height: 480px;
             background-size: cover;
             background-position: center;
+            background-color: #1a1a2e;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-end;
         }
-        
+
         .post-hero::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.7));
+            inset: 0;
+            background: var(--hero-overlay);
         }
-        
+
         .post-hero-content {
             position: relative;
             z-index: 1;
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 50px 24px 40px;
             color: white;
-            text-align: center;
-            max-width: 800px;
-            padding: 20px;
         }
-        
-        .post-content {
-            font-size: 18px;
-            line-height: 1.8;
-            color: #333;
+
+        .post-category-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin-bottom: 18px;
         }
-        
-        .post-content h2, .post-content h3 {
-            margin-top: 30px;
-            margin-bottom: 15px;
+
+        .post-hero-title {
+            font-family: 'Lora', serif;
+            font-size: clamp(28px, 4vw, 48px);
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 8px rgba(0,0,0,0.3);
+        }
+
+        .post-hero-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            opacity: 0.88;
+            align-items: center;
+        }
+
+        .post-hero-meta span {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* ============================================
+           3-COLUMN LAYOUT
+        ============================================ */
+        .article-layout {
+            display: grid;
+            grid-template-columns: 168px 1fr 168px;
+            gap: 0;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 40px 16px;
+            align-items: start;
+        }
+
+        /* Sidebar ads */
+        .ad-sidebar {
+            position: sticky;
+            top: 80px;
+            padding: 0 12px;
+        }
+
+        .ad-sidebar-slot {
+            background: var(--ad-bg);
+            border: 1px dashed var(--ad-border);
+            border-radius: 10px;
+            min-height: 600px;
+            width: 160px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            margin-bottom: 16px;
+        }
+
+        /* Main article */
+        .article-main {
+            min-width: 0;
+            max-width: 760px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* ============================================
+           ARTICLE META BAR
+        ============================================ */
+        .article-meta-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 36px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .author-block {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .author-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent);
+        }
+
+        .author-name {
             font-weight: 600;
+            font-size: 15px;
+            color: var(--text-primary);
         }
-        
+
+        .author-label {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .meta-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .meta-right span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* ============================================
+           TABLE OF CONTENTS
+        ============================================ */
+        .toc-box {
+            background: var(--accent-light);
+            border-left: 4px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 20px 24px;
+            margin: 0 0 40px;
+        }
+
+        .toc-box h5 {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent);
+            margin-bottom: 12px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li { margin: 6px 0; }
+
+        .toc-list a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .toc-list a:hover { color: var(--accent); }
+
+        .toc-list .toc-h3 { padding-left: 16px; font-size: 13px; }
+
+        /* ============================================
+           ARTICLE BODY (ACADEMIC STYLE)
+        ============================================ */
+        .post-content {
+            font-family: 'Lora', serif;
+            font-size: 18px;
+            line-height: 1.85;
+            color: var(--text-secondary);
+        }
+
+        .post-content > p:first-child::first-letter {
+            font-size: 4em;
+            font-weight: 700;
+            float: left;
+            line-height: 0.75;
+            margin: 8px 12px 0 0;
+            color: var(--accent);
+            font-family: 'Lora', serif;
+        }
+
+        .post-content h2 {
+            font-family: 'Inter', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin: 52px 0 16px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--border-color);
+            counter-increment: section;
+        }
+
+        .post-content h2::before {
+            content: counter(section) ". ";
+            color: var(--accent);
+            font-weight: 800;
+        }
+
+        .post-content h3 {
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 36px 0 12px;
+        }
+
+        .post-content h4 {
+            font-family: 'Inter', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-secondary);
+            margin: 28px 0 10px;
+        }
+
+        .post-content p { margin-bottom: 20px; }
+
+        .post-content a {
+            color: var(--accent);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+        }
+
         .post-content img {
             max-width: 100%;
             height: auto;
             border-radius: 10px;
-            margin: 20px 0;
+            margin: 28px 0;
+            box-shadow: var(--shadow-md);
+            display: block;
         }
-        
+
         .post-content blockquote {
-            border-left: 4px solid #007BFF;
-            padding-left: 20px;
-            margin: 20px 0;
+            margin: 32px 0;
+            padding: 20px 28px;
+            background: var(--accent-light);
+            border-left: 5px solid var(--accent);
+            border-radius: 0 10px 10px 0;
             font-style: italic;
-            color: #666;
+            font-size: 19px;
+            color: var(--text-primary);
         }
-        
+
+        .post-content blockquote cite {
+            display: block;
+            margin-top: 10px;
+            font-size: 13px;
+            font-style: normal;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+        }
+
         .post-content pre {
-            background: #f8f9fa;
-            padding: 15px;
-            border-radius: 5px;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 20px 24px;
             overflow-x: auto;
+            margin: 24px 0;
+            font-size: 14px;
+            line-height: 1.7;
         }
-        
-        .post-meta {
+
+        .post-content code {
+            font-family: 'Fira Code', 'Consolas', monospace;
+            background: var(--code-bg);
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 15px;
+            color: #e83e8c;
+        }
+
+        .post-content pre code {
+            background: none;
+            padding: 0;
+            color: var(--text-primary);
+        }
+
+        .post-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 24px 0;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+        }
+
+        .post-content table th {
+            background: var(--accent);
+            color: white;
+            padding: 12px 16px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .post-content table td {
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .post-content table tr:nth-child(even) td {
+            background: var(--ad-bg);
+        }
+
+        .post-content ul, .post-content ol {
+            padding-left: 28px;
+            margin-bottom: 20px;
+        }
+
+        .post-content li { margin-bottom: 8px; }
+
+        .post-content hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 40px 0;
+        }
+
+        /* Section counter reset */
+        .post-content { counter-reset: section; }
+
+        /* ============================================
+           IN-ARTICLE AD
+        ============================================ */
+        .in-article-ad {
+            background: var(--ad-bg);
+            border: 1px dashed var(--ad-border);
+            border-radius: 10px;
+            padding: 16px;
+            margin: 40px 0;
+            text-align: center;
+            min-height: 100px;
             display: flex;
             align-items: center;
-            gap: 20px;
-            padding: 20px 0;
-            border-bottom: 1px solid #eee;
-            margin-bottom: 30px;
+            justify-content: center;
         }
-        
-        .author-info {
+
+        .in-article-ad .ad-label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        /* ============================================
+           TAGS & SHARE
+        ============================================ */
+        .tags-section {
+            margin: 40px 0 24px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .tag-pill {
+            display: inline-block;
+            background: var(--ad-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            padding: 5px 14px;
+            border-radius: 100px;
+            margin: 4px 4px 4px 0;
+            transition: all 0.2s;
+            text-decoration: none;
+        }
+
+        .tag-pill:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        .share-section {
             display: flex;
             align-items: center;
+            gap: 12px;
+            margin: 28px 0 40px;
+            flex-wrap: wrap;
         }
-        
-        .author-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            margin-right: 15px;
+
+        .share-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            font-family: 'Inter', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
         }
-        
-        .share-buttons {
-            display: flex;
-            gap: 10px;
-            margin: 30px 0;
-        }
-        
+
         .share-btn {
-            width: 40px;
-            height: 40px;
+            width: 38px;
+            height: 38px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             text-decoration: none;
-            transition: transform 0.3s;
-        }
-        
-        .share-btn:hover {
-            transform: scale(1.1);
-        }
-        
-        .share-btn.facebook { background: #3b5998; }
-        .share-btn.twitter { background: #1da1f2; }
-        .share-btn.linkedin { background: #0077b5; }
-        .share-btn.whatsapp { background: #25d366; }
-        
-        .related-posts {
-            background: white;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            margin: 40px 0;
-        }
-        
-        .related-post-card {
-            border: 1px solid #eee;
-            border-radius: 10px;
-            overflow: hidden;
-            transition: transform 0.3s;
-        }
-        
-        .related-post-card:hover {
-            transform: translateY(-5px);
-        }
-        
-        .related-post-card img {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-        }
-        
-        .sidebar-ad {
-            position: sticky;
-            top: 20px;
+            font-size: 15px;
+            transition: transform 0.25s, box-shadow 0.25s;
         }
 
-        .ad-space {
-            background: #f8f9fa;
-            border: 2px dashed #dee2e6;
-            border-radius: 10px;
-            padding: 20px;
+        .share-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .share-btn.facebook { background: #1877f2; }
+        .share-btn.twitter  { background: #1da1f2; }
+        .share-btn.linkedin { background: #0a66c2; }
+        .share-btn.whatsapp { background: #25d366; }
+        .share-btn.copy     { background: #64748b; }
+
+        /* ============================================
+           RELATED POSTS
+        ============================================ */
+        .related-section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 32px;
+            margin: 40px 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .related-section h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 24px;
+            color: var(--text-primary);
+        }
+
+        .related-card {
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            background: var(--reading-bg);
+            text-decoration: none;
+            display: block;
+        }
+
+        .related-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .related-card img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+        }
+
+        .related-card-body {
+            padding: 16px;
+        }
+
+        .related-card-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .related-card-meta {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        /* ============================================
+           SKELETON LOADER
+        ============================================ */
+        @keyframes shimmer {
+            0% { background-position: -800px 0; }
+            100% { background-position: 800px 0; }
+        }
+
+        .skeleton {
+            background: linear-gradient(90deg, var(--border-color) 25%, var(--ad-bg) 50%, var(--border-color) 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.5s infinite;
+            border-radius: 6px;
+        }
+
+        .skeleton-hero {
+            height: 480px;
+            border-radius: 0;
+        }
+
+        .skeleton-line {
+            height: 16px;
+            margin-bottom: 12px;
+        }
+
+        .skeleton-line.wide  { width: 90%; }
+        .skeleton-line.mid   { width: 70%; }
+        .skeleton-line.short { width: 45%; }
+        .skeleton-line.title { height: 40px; width: 80%; margin-bottom: 20px; }
+        .skeleton-line.para  { height: 14px; }
+
+        /* ============================================
+           ERROR STATE
+        ============================================ */
+        .error-state {
             text-align: center;
-            margin: 20px 0;
-            min-height: 250px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            padding: 80px 20px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .error-state .error-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.4;
+        }
+
+        .error-state h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+        }
+
+        .error-state p {
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            font-size: 16px;
+        }
+
+        /* ============================================
+           DARK MODE OVERRIDES
+        ============================================ */
+        .modo-oscuro .post-content h2::before { color: var(--accent); }
+        .modo-oscuro .post-content code { color: #f59e0b; }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 1100px) {
+            .article-layout {
+                grid-template-columns: 140px 1fr 140px;
+            }
+            .ad-sidebar-slot { width: 130px; }
+        }
+
+        @media (max-width: 900px) {
+            .article-layout {
+                grid-template-columns: 1fr;
+                padding: 24px 16px;
+            }
+
+            .ad-sidebar {
+                position: static;
+                padding: 0;
+            }
+
+            .ad-sidebar-slot {
+                width: 100%;
+                min-height: 100px;
+                margin-bottom: 24px;
+            }
+
+            .ad-sidebar-left  { order: 2; }
+            .ad-sidebar-right { order: 4; }
+            .article-main     { order: 3; }
+        }
+
+        @media (max-width: 600px) {
+            .post-hero { min-height: 320px; }
+            .post-hero-title { font-size: 24px; }
+            .post-content { font-size: 16px; }
+            .post-content h2 { font-size: 20px; }
         }
     </style>
 </head>
 <body>
+    <!-- Reading Progress Bar -->
+    <div id="readingProgress"></div>
+
     <!-- Navigation -->
     <div id="navbar"></div>
 
-    <!-- Post Hero -->
-    <div class="post-hero" id="postHero">
-        <div class="post-hero-content">
-            <div class="mb-3">
-                <span class="badge bg-primary" id="postCategoria"></span>
-            </div>
-            <h1 class="display-4 fw-bold" id="postTitulo"></h1>
-            <div class="mt-3">
-                <span id="postAutor"></span> &nbsp;•&nbsp; 
-                <span id="postFecha"></span> &nbsp;•&nbsp; 
-                <span><i class="bi bi-eye"></i> <span id="postVistas"></span> vistas</span>
-            </div>
-        </div>
+    <!-- ===== SKELETON / HERO (se reemplaza con contenido real) ===== -->
+    <div id="heroSection">
+        <!-- Skeleton hero -->
+        <div class="skeleton skeleton-hero" id="skeletonHero"></div>
     </div>
 
-    <!-- Content -->
-    <div class="container my-5">
-        <div class="row">
-            <!-- Main Content -->
-            <div class="col-lg-8">
-                <!-- Post Meta -->
-                <div class="post-meta">
-                    <div class="author-info">
-                        <img src="https://via.placeholder.com/50" alt="Autor" class="author-avatar">
+    <!-- ===== 3-COLUMN LAYOUT ===== -->
+    <div class="article-layout" id="articleLayout">
+
+        <!-- LEFT AD SIDEBAR -->
+        <aside class="ad-sidebar ad-sidebar-left">
+            <div class="ad-sidebar-slot">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:160px;height:600px"
+                     data-ad-client="ca-pub-1611560592421673"
+                     data-ad-slot="XXXXXXXXXX"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+
+        <!-- MAIN ARTICLE CONTENT -->
+        <main class="article-main">
+
+            <!-- Skeleton content (visible mientras carga) -->
+            <div id="skeletonContent">
+                <div class="skeleton skeleton-line title"></div>
+                <div class="skeleton skeleton-line wide"></div>
+                <div class="skeleton skeleton-line mid"></div>
+                <br>
+                <div class="skeleton skeleton-line para wide"></div>
+                <div class="skeleton skeleton-line para mid"></div>
+                <div class="skeleton skeleton-line para wide"></div>
+                <div class="skeleton skeleton-line para short"></div>
+                <br>
+                <div class="skeleton skeleton-line para wide"></div>
+                <div class="skeleton skeleton-line para wide"></div>
+                <div class="skeleton skeleton-line para mid"></div>
+            </div>
+
+            <!-- Real content (oculto hasta cargar) -->
+            <div id="realContent" style="display:none;">
+
+                <!-- Meta bar -->
+                <div class="article-meta-bar">
+                    <div class="author-block">
+                        <img src="https://ui-avatars.com/api/?name=eDark&background=2563eb&color=fff&size=88" alt="Autor" class="author-avatar" id="authorAvatar">
                         <div>
-                            <div class="fw-bold" id="postAutorDetalle"></div>
-                            <small class="text-muted">Autor</small>
+                            <div class="author-name" id="postAutorDetalle">—</div>
+                            <div class="author-label">Autor · eDark Blog</div>
                         </div>
                     </div>
-                    <div class="ms-auto">
-                        <small class="text-muted">Tiempo de lectura: <span id="tiempoLectura">5 min</span></small>
+                    <div class="meta-right">
+                        <span><i class="bi bi-calendar3"></i> <span id="postFechaMeta">—</span></span>
+                        <span><i class="bi bi-clock"></i> <span id="tiempoLectura">—</span> min</span>
+                        <span><i class="bi bi-eye"></i> <span id="postVistaMeta">0</span></span>
                     </div>
                 </div>
 
-                <!-- Post Content -->
-                <div class="post-content" id="postContenido">
-                    <!-- El contenido se carga dinámicamente -->
+                <!-- Table of Contents (se genera dinámicamente) -->
+                <div class="toc-box" id="tocBox" style="display:none;">
+                    <h5><i class="bi bi-list-ul me-2"></i>Contenido del artículo</h5>
+                    <ul class="toc-list" id="tocList"></ul>
                 </div>
 
-                <!-- In-Content Ad -->
-                <div class="ad-space">
-                    <ins class="adsbygoogle"
-                         style="display:block; text-align:center;"
-                         data-ad-layout="in-article"
-                         data-ad-format="fluid"
-                         data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                         data-ad-slot="XXXXXXXXXX"></ins>
-                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                <!-- In-article Ad 1 (aparece tras primer párrafo) -->
+                <div class="in-article-ad" id="inArticleAd1">
+                    <div>
+                        <div class="ad-label">Publicidad</div>
+                        <ins class="adsbygoogle"
+                             style="display:block;text-align:center;"
+                             data-ad-layout="in-article"
+                             data-ad-format="fluid"
+                             data-ad-client="ca-pub-1611560592421673"
+                             data-ad-slot="XXXXXXXXXX"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
+                </div>
+
+                <!-- Article Body -->
+                <article class="post-content" id="postContenido"></article>
+
+                <!-- In-article Ad 2 (al final del artículo) -->
+                <div class="in-article-ad">
+                    <div>
+                        <div class="ad-label">Publicidad</div>
+                        <ins class="adsbygoogle"
+                             style="display:block;text-align:center;"
+                             data-ad-layout="in-article"
+                             data-ad-format="fluid"
+                             data-ad-client="ca-pub-1611560592421673"
+                             data-ad-slot="XXXXXXXXXX"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
                 </div>
 
                 <!-- Tags -->
-                <div class="mt-4">
-                    <h6>Tags:</h6>
-                    <div id="postTags"></div>
+                <div class="tags-section">
+                    <strong style="font-family:'Inter',sans-serif;font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.08em;">
+                        <i class="bi bi-tags me-1"></i> Etiquetas
+                    </strong>
+                    <div id="postTags" class="mt-2"></div>
                 </div>
 
                 <!-- Share Buttons -->
-                <div class="share-buttons">
-                    <a href="#" class="share-btn facebook" id="shareFacebook" target="_blank">
+                <div class="share-section">
+                    <span class="share-label"><i class="bi bi-share me-1"></i>Compartir</span>
+                    <a href="#" class="share-btn facebook" id="shareFacebook" target="_blank" title="Facebook">
                         <i class="bi bi-facebook"></i>
                     </a>
-                    <a href="#" class="share-btn twitter" id="shareTwitter" target="_blank">
-                        <i class="bi bi-twitter"></i>
+                    <a href="#" class="share-btn twitter" id="shareTwitter" target="_blank" title="X / Twitter">
+                        <i class="bi bi-twitter-x"></i>
                     </a>
-                    <a href="#" class="share-btn linkedin" id="shareLinkedin" target="_blank">
+                    <a href="#" class="share-btn linkedin" id="shareLinkedin" target="_blank" title="LinkedIn">
                         <i class="bi bi-linkedin"></i>
                     </a>
-                    <a href="#" class="share-btn whatsapp" id="shareWhatsapp" target="_blank">
+                    <a href="#" class="share-btn whatsapp" id="shareWhatsapp" target="_blank" title="WhatsApp">
                         <i class="bi bi-whatsapp"></i>
                     </a>
+                    <button class="share-btn copy" id="copyLink" title="Copiar enlace" onclick="copyArticleLink()">
+                        <i class="bi bi-link-45deg"></i>
+                    </button>
                 </div>
 
                 <!-- Related Posts -->
-                <div class="related-posts">
-                    <h4 class="mb-4">Artículos Relacionados</h4>
-                    <div class="row" id="relatedPosts">
-                        <!-- Los posts relacionados se cargan dinámicamente -->
+                <div class="related-section">
+                    <h4><i class="bi bi-collection me-2"></i>Artículos Relacionados</h4>
+                    <div class="row g-3" id="relatedPosts">
+                        <!-- Se carga dinámicamente -->
                     </div>
                 </div>
+
+            </div><!-- /realContent -->
+
+            <!-- Error state (oculto por defecto) -->
+            <div id="errorState" style="display:none;" class="error-state">
+                <div class="error-icon">📄</div>
+                <h2>Artículo no encontrado</h2>
+                <p>El artículo que buscas no existe o fue removido.</p>
+                <a href="blog.html" class="btn btn-primary">
+                    <i class="bi bi-arrow-left me-2"></i>Volver al Blog
+                </a>
             </div>
 
-            <!-- Sidebar -->
-            <div class="col-lg-4">
-                <div class="sidebar-ad">
-                    <!-- Sidebar Ad 1 -->
-                    <div class="ad-space">
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                             data-ad-slot="XXXXXXXXXX"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true"></ins>
-                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                    </div>
+        </main>
 
-                    <!-- Sidebar Ad 2 -->
-                    <div class="ad-space">
-                        <ins class="adsbygoogle"
-                             style="display:block"
-                             data-ad-client="ca-pub-XXXXXXXXXXXXXXXX"
-                             data-ad-slot="XXXXXXXXXX"
-                             data-ad-format="auto"
-                             data-full-width-responsive="true"></ins>
-                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-                    </div>
-                </div>
+        <!-- RIGHT AD SIDEBAR -->
+        <aside class="ad-sidebar ad-sidebar-right">
+            <div class="ad-sidebar-slot">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:160px;height:600px"
+                     data-ad-client="ca-pub-1611560592421673"
+                     data-ad-slot="XXXXXXXXXX"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
             </div>
-        </div>
-    </div>
+            <!-- Second right ad -->
+            <div class="ad-sidebar-slot" style="min-height:300px;">
+                <ins class="adsbygoogle"
+                     style="display:inline-block;width:160px;height:300px"
+                     data-ad-client="ca-pub-1611560592421673"
+                     data-ad-slot="XXXXXXXXXX"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </aside>
+
+    </div><!-- /article-layout -->
 
     <!-- Footer -->
     <div id="footer"></div>
@@ -307,168 +890,248 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-analytics-compat.js"></script>
     <script src="js/firebase-config.js"></script>
     <script src="js/scripts.js"></script>
-    
+
     <script>
-        // Firebase ya está configurado en firebase-config.js
-        // Variables disponibles: db, auth, analytics
+    /* ============================================
+       READING PROGRESS BAR
+    ============================================ */
+    window.addEventListener('scroll', () => {
+        const el = document.getElementById('readingProgress');
+        if (!el) return;
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        el.style.width = docHeight > 0 ? (scrollTop / docHeight * 100) + '%' : '0%';
+    });
 
-        // Obtener slug de la URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const slug = urlParams.get('slug');
+    /* ============================================
+       INIT
+    ============================================ */
+    const urlParams = new URLSearchParams(window.location.search);
+    const slug = urlParams.get('slug');
 
-        if (!slug) {
-            window.location.href = 'blog.html';
-        }
+    if (!slug) {
+        window.location.href = 'blog.html';
+    }
 
-        // Cargar artículo
-        async function cargarArticulo() {
-            try {
-                const snapshot = await db.collection('blog')
-                    .where('slug', '==', slug)
-                    .limit(1)
-                    .get();
-
-                if (snapshot.empty) {
-                    alert('Artículo no encontrado');
-                    window.location.href = 'blog.html';
-                    return;
-                }
-
-                const doc = snapshot.docs[0];
-                const articulo = doc.data();
-
-                // Actualizar vistas
-                await doc.ref.update({
-                    vistas: firebase.firestore.FieldValue.increment(1)
-                });
-
-                // Renderizar artículo
-                renderArticulo(articulo);
-
-                // Cargar artículos relacionados
-                cargarRelacionados(articulo.categoria, doc.id);
-
-                // Configurar botones de compartir
-                configurarCompartir(articulo);
-
-            } catch (error) {
-                console.error('Error al cargar artículo:', error);
-                alert('Error al cargar el artículo');
+    /* ============================================
+       LOAD ARTICLE
+    ============================================ */
+    async function cargarArticulo() {
+        try {
+            // Esperar que db esté disponible
+            if (typeof db === 'undefined') {
+                await new Promise(resolve => setTimeout(resolve, 800));
             }
-        }
-
-        // Render artículo
-        function renderArticulo(articulo) {
-            // SEO
-            document.getElementById('pageTitle').textContent = articulo.titulo + ' - eDark Blog';
-            document.getElementById('metaDescription').content = articulo.extracto || articulo.titulo;
-            document.getElementById('metaKeywords').content = (articulo.tags || []).join(', ');
-            document.getElementById('ogTitle').content = articulo.titulo;
-            document.getElementById('ogDescription').content = articulo.extracto || '';
-            document.getElementById('ogImage').content = articulo.imagenDestacada || '';
-
-            // Hero
-            document.getElementById('postHero').style.backgroundImage = `url(${articulo.imagenDestacada || 'https://via.placeholder.com/1200x400'})`;
-            document.getElementById('postTitulo').textContent = articulo.titulo;
-            document.getElementById('postCategoria').textContent = articulo.categoria || 'General';
-            document.getElementById('postAutor').textContent = articulo.autor?.nombre || 'Admin';
-            
-            const fecha = articulo.fechaPublicacion?.toDate ? 
-                articulo.fechaPublicacion.toDate().toLocaleDateString('es-PE', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                }) : '';
-            document.getElementById('postFecha').textContent = fecha;
-            document.getElementById('postVistas').textContent = articulo.vistas || 0;
-
-            // Autor
-            document.getElementById('postAutorDetalle').textContent = articulo.autor?.nombre || 'Admin';
-
-            // Contenido
-            document.getElementById('postContenido').innerHTML = articulo.contenido;
-
-            // Tiempo de lectura (estimación: 200 palabras por minuto)
-            const palabras = articulo.contenido.split(/\s+/).length;
-            const minutos = Math.ceil(palabras / 200);
-            document.getElementById('tiempoLectura').textContent = `${minutos} min`;
-
-            // Tags
-            if (articulo.tags && articulo.tags.length > 0) {
-                const tagsHtml = articulo.tags.map(tag => 
-                    `<span class="badge bg-secondary me-2">${tag}</span>`
-                ).join('');
-                document.getElementById('postTags').innerHTML = tagsHtml;
+            if (typeof db === 'undefined') {
+                throw new Error('Firebase no está inicializado');
             }
+
+            const snapshot = await db.collection('blog')
+                .where('slug', '==', slug)
+                .limit(1)
+                .get();
+
+            if (snapshot.empty) {
+                mostrarError();
+                return;
+            }
+
+            const doc = snapshot.docs[0];
+            const articulo = doc.data();
+
+            // Incrementar vistas de forma silenciosa
+            doc.ref.update({
+                vistas: firebase.firestore.FieldValue.increment(1)
+            }).catch(() => {});
+
+            // Renderizar
+            renderArticulo(articulo);
+            cargarRelacionados(articulo.categoria, doc.id);
+            configurarCompartir(articulo);
+
+        } catch (error) {
+            console.error('Error al cargar artículo:', error);
+            mostrarError();
+        }
+    }
+
+    /* ============================================
+       RENDER ARTICLE
+    ============================================ */
+    function renderArticulo(articulo) {
+        // SEO
+        const titulo = articulo.titulo || 'Artículo';
+        document.getElementById('pageTitle').textContent = titulo + ' — eDark Blog';
+        document.getElementById('metaDescription').content = articulo.extracto || titulo;
+        document.getElementById('metaKeywords').content = (articulo.tags || []).join(', ');
+        document.getElementById('ogTitle').content = titulo;
+        document.getElementById('ogDescription').content = articulo.extracto || '';
+        document.getElementById('ogImage').content = articulo.imagenDestacada || '';
+
+        // Hero dinámico (reemplaza skeleton)
+        const heroSection = document.getElementById('heroSection');
+        const imagenUrl = articulo.imagenDestacada
+            ? `url('${articulo.imagenDestacada}')`
+            : 'linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%)';
+
+        const fechaTexto = formatFecha(articulo.fechaPublicacion);
+
+        heroSection.innerHTML = `
+            <div class="post-hero" style="background-image: ${imagenUrl};">
+                <div class="post-hero-content">
+                    <span class="post-category-badge">${articulo.categoria || 'General'}</span>
+                    <h1 class="post-hero-title" id="postTitulo">${titulo}</h1>
+                    <div class="post-hero-meta">
+                        <span><i class="bi bi-person-circle"></i> ${articulo.autor?.nombre || 'eDark'}</span>
+                        <span><i class="bi bi-calendar3"></i> ${fechaTexto}</span>
+                        <span><i class="bi bi-eye"></i> ${(articulo.vistas || 0) + 1} vistas</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Meta bar
+        const nombreAutor = articulo.autor?.nombre || 'eDark';
+        document.getElementById('postAutorDetalle').textContent = nombreAutor;
+        document.getElementById('authorAvatar').src =
+            `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreAutor)}&background=2563eb&color=fff&size=88`;
+        document.getElementById('postFechaMeta').textContent = fechaTexto;
+        document.getElementById('postVistaMeta').textContent = (articulo.vistas || 0) + 1;
+
+        // Tiempo de lectura
+        const contenidoTexto = articulo.contenido || '';
+        const palabras = contenidoTexto.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
+        const minutos = Math.max(1, Math.ceil(palabras / 200));
+        document.getElementById('tiempoLectura').textContent = minutos;
+
+        // Contenido del artículo
+        document.getElementById('postContenido').innerHTML = contenidoTexto;
+
+        // Generar TOC
+        generarTOC();
+
+        // Tags
+        if (articulo.tags && articulo.tags.length > 0) {
+            document.getElementById('postTags').innerHTML = articulo.tags
+                .map(tag => `<a href="blog.html?tag=${encodeURIComponent(tag)}" class="tag-pill">#${tag}</a>`)
+                .join('');
         }
 
-        // Cargar artículos relacionados
-        async function cargarRelacionados(categoria, currentId) {
-            try {
-                const snapshot = await db.collection('blog')
-                    .where('publicado', '==', true)
-                    .where('categoria', '==', categoria)
-                    .limit(4)
-                    .get();
+        // Mostrar contenido real
+        document.getElementById('skeletonHero').style.display = 'none';
+        document.getElementById('skeletonContent').style.display = 'none';
+        document.getElementById('realContent').style.display = 'block';
+    }
 
-                const container = document.getElementById('relatedPosts');
-                let count = 0;
+    /* ============================================
+       TABLE OF CONTENTS
+    ============================================ */
+    function generarTOC() {
+        const content = document.getElementById('postContenido');
+        const headings = content.querySelectorAll('h2, h3');
+        if (headings.length < 2) return;
 
-                snapshot.forEach(doc => {
-                    if (doc.id !== currentId && count < 3) {
-                        const art = doc.data();
-                        const fecha = art.fechaPublicacion?.toDate ? 
-                            art.fechaPublicacion.toDate().toLocaleDateString('es-PE') : '';
-                        
-                        container.innerHTML += `
-                            <div class="col-md-4 mb-3">
-                                <div class="related-post-card">
-                                    <img src="${art.imagenDestacada || 'https://via.placeholder.com/300x150'}" alt="${art.titulo}">
-                                    <div class="p-3">
-                                        <h6>${art.titulo}</h6>
-                                        <small class="text-muted">${fecha}</small>
-                                        <div class="mt-2">
-                                            <a href="blog-post.html?slug=${art.slug}" class="btn btn-sm btn-outline-primary">Leer</a>
-                                        </div>
-                                    </div>
+        const tocList = document.getElementById('tocList');
+        const tocBox  = document.getElementById('tocBox');
+        tocBox.style.display = 'block';
+
+        headings.forEach((h, i) => {
+            const id = `section-${i}`;
+            h.id = id;
+            const li = document.createElement('li');
+            li.className = h.tagName === 'H3' ? 'toc-h3' : '';
+            li.innerHTML = `<a href="#${id}">${h.textContent.replace(/^\d+\.\s*/, '')}</a>`;
+            tocList.appendChild(li);
+        });
+    }
+
+    /* ============================================
+       RELATED POSTS
+    ============================================ */
+    async function cargarRelacionados(categoria, currentId) {
+        try {
+            const snapshot = await db.collection('blog')
+                .where('publicado', '==', true)
+                .where('categoria', '==', categoria)
+                .limit(4)
+                .get();
+
+            const container = document.getElementById('relatedPosts');
+            let count = 0;
+
+            snapshot.forEach(doc => {
+                if (doc.id !== currentId && count < 3) {
+                    const art = doc.data();
+                    const fecha = formatFecha(art.fechaPublicacion);
+                    const img = art.imagenDestacada || `https://placehold.co/600x300/1e3a5f/ffffff?text=${encodeURIComponent(art.titulo || '')}`;
+
+                    container.innerHTML += `
+                        <div class="col-md-4">
+                            <a href="blog-post.html?slug=${art.slug}" class="related-card">
+                                <img src="${img}" alt="${art.titulo || ''}">
+                                <div class="related-card-body">
+                                    <div class="related-card-title">${art.titulo || ''}</div>
+                                    <div class="related-card-meta"><i class="bi bi-calendar3 me-1"></i>${fecha}</div>
                                 </div>
-                            </div>
-                        `;
-                        count++;
-                    }
-                });
-
-                if (count === 0) {
-                    container.innerHTML = '<div class="col-12"><p class="text-muted">No hay artículos relacionados</p></div>';
+                            </a>
+                        </div>
+                    `;
+                    count++;
                 }
+            });
 
-            } catch (error) {
-                console.error('Error al cargar relacionados:', error);
+            if (count === 0) {
+                container.innerHTML = `<div class="col-12"><p style="color:var(--text-muted);font-family:'Inter',sans-serif;font-size:14px;">No hay artículos relacionados aún.</p></div>`;
             }
+
+        } catch (error) {
+            console.error('Error al cargar relacionados:', error);
         }
+    }
 
-        // Configurar botones de compartir
-        function configurarCompartir(articulo) {
-            const url = encodeURIComponent(window.location.href);
-            const titulo = encodeURIComponent(articulo.titulo);
-            const descripcion = encodeURIComponent(articulo.extracto || '');
+    /* ============================================
+       SHARE BUTTONS
+    ============================================ */
+    function configurarCompartir(articulo) {
+        const url   = encodeURIComponent(window.location.href);
+        const titulo = encodeURIComponent(articulo.titulo || '');
+        const desc  = encodeURIComponent(articulo.extracto || '');
 
-            document.getElementById('shareFacebook').href = 
-                `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-            
-            document.getElementById('shareTwitter').href = 
-                `https://twitter.com/intent/tweet?text=${titulo}&url=${url}`;
-            
-            document.getElementById('shareLinkedin').href = 
-                `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${titulo}&summary=${descripcion}`;
-            
-            document.getElementById('shareWhatsapp').href = 
-                `https://wa.me/?text=${titulo}%20${url}`;
-        }
+        document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        document.getElementById('shareTwitter').href  = `https://twitter.com/intent/tweet?text=${titulo}&url=${url}`;
+        document.getElementById('shareLinkedin').href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${titulo}&summary=${desc}`;
+        document.getElementById('shareWhatsapp').href = `https://wa.me/?text=${titulo}%20${url}`;
+    }
 
-        // Inicializar
-        cargarArticulo();
+    function copyArticleLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            const btn = document.getElementById('copyLink');
+            btn.innerHTML = '<i class="bi bi-check"></i>';
+            setTimeout(() => { btn.innerHTML = '<i class="bi bi-link-45deg"></i>'; }, 2000);
+        });
+    }
+
+    /* ============================================
+       HELPERS
+    ============================================ */
+    function formatFecha(ts) {
+        if (!ts) return '—';
+        try {
+            const d = ts.toDate ? ts.toDate() : new Date(ts);
+            return d.toLocaleDateString('es-PE', { year: 'numeric', month: 'long', day: 'numeric' });
+        } catch { return '—'; }
+    }
+
+    function mostrarError() {
+        document.getElementById('heroSection').innerHTML = '';
+        document.getElementById('skeletonContent').style.display = 'none';
+        document.getElementById('errorState').style.display = 'block';
+    }
+
+    /* ============================================
+       START
+    ============================================ */
+    if (slug) cargarArticulo();
     </script>
 </body>
 </html>
-
