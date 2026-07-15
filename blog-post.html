@@ -907,14 +907,14 @@
        INIT
     ============================================ */
     const urlParams = new URLSearchParams(window.location.search);
-    const slug = urlParams.get('slug');
+    const slug = urlParams.get('slug') || urlParams.get('id');
 
     if (!slug) {
         window.location.href = 'blog.html';
     }
 
     /* ============================================
-       LOAD ARTICLE
+       LOAD ARTICLE (WITH FLEXIBLE FALLBACKS)
     ============================================ */
     async function cargarArticulo() {
         try {
@@ -926,28 +926,68 @@
                 throw new Error('Firebase no está inicializado');
             }
 
+            let docFound = null;
+            let docRef = null;
+
+            // 1. Intento exacto por campo 'slug'
             const snapshot = await db.collection('blog')
                 .where('slug', '==', slug)
                 .limit(1)
                 .get();
 
-            if (snapshot.empty) {
+            if (!snapshot.empty) {
+                docRef = snapshot.docs[0].ref;
+                docFound = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
+            } else {
+                // 2. Intento exacto por ID de documento en Firestore
+                try {
+                    const docById = await db.collection('blog').doc(slug).get();
+                    if (docById.exists) {
+                        docRef = docById.ref;
+                        docFound = { id: docById.id, ...docById.data() };
+                    }
+                } catch (e) {}
+            }
+
+            // 3. Intento flexible/insensible a mayúsculas, guiones y espacios
+            if (!docFound) {
+                const allSnap = await db.collection('blog').get();
+                const targetClean = slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                
+                allSnap.forEach(d => {
+                    if (docFound) return;
+                    const a = d.data();
+                    const aSlugClean = (a.slug || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                    const aTitleClean = (a.titulo || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                    const aIdClean = d.id.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+                    if (aSlugClean === targetClean || aIdClean === targetClean || aTitleClean === targetClean) {
+                        docRef = d.ref;
+                        docFound = { id: d.id, ...a };
+                        // Sincronizar y reparar el slug en BD si tenía espacios o mayúsculas
+                        if (a.slug !== targetClean && targetClean) {
+                            d.ref.update({ slug: targetClean }).catch(() => {});
+                        }
+                    }
+                });
+            }
+
+            if (!docFound) {
                 mostrarError();
                 return;
             }
 
-            const doc = snapshot.docs[0];
-            const articulo = doc.data();
-
             // Incrementar vistas de forma silenciosa
-            doc.ref.update({
-                vistas: firebase.firestore.FieldValue.increment(1)
-            }).catch(() => {});
+            if (docRef) {
+                docRef.update({
+                    vistas: firebase.firestore.FieldValue.increment(1)
+                }).catch(() => {});
+            }
 
             // Renderizar
-            renderArticulo(articulo);
-            cargarRelacionados(articulo.categoria, doc.id);
-            configurarCompartir(articulo);
+            renderArticulo(docFound);
+            cargarRelacionados(docFound.categoria, docFound.id);
+            configurarCompartir(docFound);
 
         } catch (error) {
             console.error('Error al cargar artículo:', error);
@@ -961,9 +1001,10 @@
     function renderArticulo(articulo) {
         // SEO
         const titulo = articulo.titulo || 'Artículo';
+        const tagsLista = Array.isArray(articulo.tags) ? articulo.tags : (typeof articulo.tags === 'string' ? articulo.tags.split(',').map(t => t.trim()).filter(Boolean) : []);
         document.getElementById('pageTitle').textContent = titulo + ' — eDark Blog';
         document.getElementById('metaDescription').content = articulo.extracto || titulo;
-        document.getElementById('metaKeywords').content = (articulo.tags || []).join(', ');
+        document.getElementById('metaKeywords').content = tagsLista.join(', ');
         document.getElementById('ogTitle').content = titulo;
         document.getElementById('ogDescription').content = articulo.extracto || '';
         document.getElementById('ogImage').content = articulo.imagenDestacada || '';
@@ -974,7 +1015,7 @@
             ? `url('${articulo.imagenDestacada}')`
             : 'linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%)';
 
-        const fechaTexto = formatFecha(articulo.fechaPublicacion);
+        const fechaTexto = formatFecha(articulo.fechaPublicacion || articulo.fechaCreacion || articulo.fechaActualizacion);
 
         heroSection.innerHTML = `
             <div class="post-hero" style="background-image: ${imagenUrl};">
