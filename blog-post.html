@@ -1029,12 +1029,20 @@
         // SEO
         const titulo = articulo.titulo || 'Artículo';
         const tagsLista = Array.isArray(articulo.tags) ? articulo.tags : (typeof articulo.tags === 'string' ? articulo.tags.split(',').map(t => t.trim()).filter(Boolean) : []);
-        document.getElementById('pageTitle').textContent = titulo + ' — eDark Blog';
-        document.getElementById('metaDescription').content = articulo.extracto || titulo;
-        document.getElementById('metaKeywords').content = tagsLista.join(', ');
-        document.getElementById('ogTitle').content = titulo;
-        document.getElementById('ogDescription').content = articulo.extracto || '';
-        document.getElementById('ogImage').content = articulo.imagenDestacada || '';
+        const pageTitleEl = document.getElementById('pageTitle');
+        if (pageTitleEl) pageTitleEl.textContent = titulo + ' — eDark Blog';
+        const metaDescEl = document.getElementById('metaDescription');
+        if (metaDescEl) metaDescEl.content = articulo.extracto || titulo;
+        const metaKeyEl = document.getElementById('metaKeywords');
+        if (metaKeyEl) metaKeyEl.content = tagsLista.join(', ');
+        const ogTitleEl = document.getElementById('ogTitle');
+        if (ogTitleEl) ogTitleEl.content = titulo;
+        const ogDescEl = document.getElementById('ogDescription');
+        if (ogDescEl) ogDescEl.content = articulo.extracto || '';
+        const ogImgEl = document.getElementById('ogImage');
+        if (ogImgEl) ogImgEl.content = articulo.imagenDestacada || '';
+
+        const fechaTexto = formatFecha(articulo.fechaPublicacion || articulo.fechaCreacion || articulo.fechaActualizacion);
 
         // Hero dinámico (reemplaza skeleton)
         const heroSection = document.getElementById('heroSection');
@@ -1042,53 +1050,62 @@
             ? `url('${articulo.imagenDestacada}')`
             : 'linear-gradient(135deg, #1e3a5f 0%, #2563eb 50%, #7c3aed 100%)';
 
-        const fechaTexto = formatFecha(articulo.fechaPublicacion || articulo.fechaCreacion || articulo.fechaActualizacion);
-
-        heroSection.innerHTML = `
-            <div class="post-hero" style="background-image: ${imagenUrl};">
-                <div class="post-hero-content">
-                    <span class="post-category-badge">${articulo.categoria || 'General'}</span>
-                    <h1 class="post-hero-title" id="postTitulo">${titulo}</h1>
-                    <div class="post-hero-meta">
-                        <span><i class="bi bi-person-circle"></i> ${articulo.autor?.nombre || 'eDark'}</span>
-                        <span><i class="bi bi-calendar3"></i> ${fechaTexto}</span>
-                        <span><i class="bi bi-eye"></i> ${(articulo.vistas || 0) + 1} vistas</span>
+        if (heroSection) {
+            heroSection.innerHTML = `
+                <div class="post-hero" style="background-image: ${imagenUrl};">
+                    <div class="post-hero-content">
+                        <span class="post-category-badge">${articulo.categoria || 'General'}</span>
+                        <h1 class="post-hero-title" id="postTitulo">${titulo}</h1>
+                        <div class="post-hero-meta">
+                            <span><i class="bi bi-person-circle"></i> ${articulo.autor?.nombre || 'eDark'}</span>
+                            <span><i class="bi bi-calendar3"></i> ${fechaTexto}</span>
+                            <span><i class="bi bi-eye"></i> ${(articulo.vistas || 0) + 1} vistas</span>
+                        </div>
                     </div>
                 </div>
-            </div>
-        `;
+            `;
+        }
 
         // Meta bar
         const nombreAutor = articulo.autor?.nombre || 'eDark';
-        document.getElementById('postAutorDetalle').textContent = nombreAutor;
-        document.getElementById('authorAvatar').src =
-            `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreAutor)}&background=2563eb&color=fff&size=88`;
-        document.getElementById('postFechaMeta').textContent = fechaTexto;
-        document.getElementById('postVistaMeta').textContent = (articulo.vistas || 0) + 1;
+        const autorDetalleEl = document.getElementById('postAutorDetalle');
+        if (autorDetalleEl) autorDetalleEl.textContent = nombreAutor;
+        const authorAvatarEl = document.getElementById('authorAvatar');
+        if (authorAvatarEl) authorAvatarEl.src = `https://ui-avatars.com/api/?name=${encodeURIComponent(nombreAutor)}&background=2563eb&color=fff&size=88`;
+        const postFechaMetaEl = document.getElementById('postFechaMeta');
+        if (postFechaMetaEl) postFechaMetaEl.textContent = fechaTexto;
+        const postVistaMetaEl = document.getElementById('postVistaMeta');
+        if (postVistaMetaEl) postVistaMetaEl.textContent = (articulo.vistas || 0) + 1;
 
         // Tiempo de lectura
         const contenidoTexto = articulo.contenido || '';
         const palabras = contenidoTexto.replace(/<[^>]+>/g, ' ').split(/\s+/).filter(Boolean).length;
         const minutos = Math.max(1, Math.ceil(palabras / 200));
-        document.getElementById('tiempoLectura').textContent = minutos;
+        const tiempoLecturaEl = document.getElementById('tiempoLectura');
+        if (tiempoLecturaEl) tiempoLecturaEl.textContent = minutos;
 
         // Contenido del artículo
-        document.getElementById('postContenido').innerHTML = contenidoTexto;
+        const postContenidoEl = document.getElementById('postContenido');
+        if (postContenidoEl) postContenidoEl.innerHTML = contenidoTexto;
 
         // Generar TOC
         generarTOC();
 
         // Tags
-        if (articulo.tags && articulo.tags.length > 0) {
-            document.getElementById('postTags').innerHTML = articulo.tags
+        const postTagsEl = document.getElementById('postTags');
+        if (postTagsEl && articulo.tags && articulo.tags.length > 0) {
+            postTagsEl.innerHTML = articulo.tags
                 .map(tag => `<a href="blog.html?tag=${encodeURIComponent(tag)}" class="tag-pill">#${tag}</a>`)
                 .join('');
         }
 
-        // Mostrar contenido real
-        document.getElementById('skeletonHero').style.display = 'none';
-        document.getElementById('skeletonContent').style.display = 'none';
-        document.getElementById('realContent').style.display = 'block';
+        // Mostrar contenido real (de forma segura aunque skeletonHero haya sido reemplazado en el DOM)
+        const skHero = document.getElementById('skeletonHero');
+        if (skHero) skHero.style.display = 'none';
+        const skContent = document.getElementById('skeletonContent');
+        if (skContent) skContent.style.display = 'none';
+        const rlContent = document.getElementById('realContent');
+        if (rlContent) rlContent.style.display = 'block';
     }
 
     /* ============================================
@@ -1096,12 +1113,14 @@
     ============================================ */
     function generarTOC() {
         const content = document.getElementById('postContenido');
+        if (!content) return;
         const headings = content.querySelectorAll('h2, h3');
         if (headings.length < 2) return;
 
         const tocList = document.getElementById('tocList');
         const tocBox  = document.getElementById('tocBox');
-        tocBox.style.display = 'block';
+        if (tocBox) tocBox.style.display = 'block';
+        if (!tocList) return;
 
         headings.forEach((h, i) => {
             const id = `section-${i}`;
@@ -1125,6 +1144,7 @@
                 .get();
 
             const container = document.getElementById('relatedPosts');
+            if (!container) return;
             let count = 0;
 
             snapshot.forEach(doc => {
@@ -1165,17 +1185,19 @@
         const titulo = encodeURIComponent(articulo.titulo || '');
         const desc  = encodeURIComponent(articulo.extracto || '');
 
-        document.getElementById('shareFacebook').href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        document.getElementById('shareTwitter').href  = `https://twitter.com/intent/tweet?text=${titulo}&url=${url}`;
-        document.getElementById('shareLinkedin').href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${titulo}&summary=${desc}`;
-        document.getElementById('shareWhatsapp').href = `https://wa.me/?text=${titulo}%20${url}`;
+        const sf = document.getElementById('shareFacebook'); if (sf) sf.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
+        const st = document.getElementById('shareTwitter'); if (st) st.href  = `https://twitter.com/intent/tweet?text=${titulo}&url=${url}`;
+        const sl = document.getElementById('shareLinkedin'); if (sl) sl.href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${titulo}&summary=${desc}`;
+        const sw = document.getElementById('shareWhatsapp'); if (sw) sw.href = `https://wa.me/?text=${titulo}%20${url}`;
     }
 
     function copyArticleLink() {
         navigator.clipboard.writeText(window.location.href).then(() => {
             const btn = document.getElementById('copyLink');
-            btn.innerHTML = '<i class="bi bi-check"></i>';
-            setTimeout(() => { btn.innerHTML = '<i class="bi bi-link-45deg"></i>'; }, 2000);
+            if (btn) {
+                btn.innerHTML = '<i class="bi bi-check"></i>';
+                setTimeout(() => { btn.innerHTML = '<i class="bi bi-link-45deg"></i>'; }, 2000);
+            }
         });
     }
 
@@ -1191,9 +1213,9 @@
     }
 
     function mostrarError() {
-        document.getElementById('heroSection').innerHTML = '';
-        document.getElementById('skeletonContent').style.display = 'none';
-        document.getElementById('errorState').style.display = 'block';
+        const hs = document.getElementById('heroSection'); if (hs) hs.innerHTML = '';
+        const sc = document.getElementById('skeletonContent'); if (sc) sc.style.display = 'none';
+        const es = document.getElementById('errorState'); if (es) es.style.display = 'block';
     }
 
     /* ============================================
