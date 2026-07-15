@@ -1626,8 +1626,18 @@
             });
         }
 
-        // DEFINIR cambiarSeccion PRIMERO (antes de onclick)
         function cambiarSeccion(section) {
+            // Sincronizar active en sidebar
+            document.querySelectorAll('.sidebar-nav li').forEach(li => li.classList.remove('active'));
+            document.querySelectorAll('.sidebar-nav a').forEach(a => {
+                a.classList.remove('active');
+                if (a.getAttribute('data-section') === section) {
+                    a.classList.add('active');
+                    const parentLi = a.closest('li');
+                    if (parentLi) parentLi.classList.add('active');
+                }
+            });
+
             // Ocultar todas las secciones
             const sections = [
                 'dashboardSection', 'productosSection', 'categoriasSection',
@@ -2230,7 +2240,9 @@
                     if (snap.exists) configuracionCache = snap.data();
                 } catch (e) { console.warn('Error al precargar configuración:', e); }
             }
-            cambiarSeccion('dashboard');
+            const urlParams = new URLSearchParams(window.location.search);
+            const seccionParam = urlParams.get('section') || window.location.hash.replace('#', '') || 'dashboard';
+            cambiarSeccion(seccionParam);
         });
 
         // === GESTIÓN DE CATEGORÍAS ===
