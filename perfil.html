@@ -456,34 +456,41 @@
             try {
                 let pedidosUsuario = [];
                 // 1. Consultar ventas en nube por email
-                if (typeof db !== 'undefined' && db.collection) {
-                    const snapEmail = await db.collection('ventas').where('cliente.email', '==', usuarioLogueadoActual.email).get();
-                    snapEmail.forEach(doc => {
-                        const d = doc.data();
-                        pedidosUsuario.push({
-                            id: d.id || doc.id,
-                            fecha: d.fecha || 'Reciente',
-                            total: parseFloat(d.total || d.montoTotal || 0),
-                            estado: d.estado || 'Recibido',
-                            productos: d.productos || []
-                        });
-                    });
-                    // Intentar también consulta alternativa con usuarioEmail
-                    const snapUser = await db.collection('ventas').where('usuarioEmail', '==', usuarioLogueadoActual.email).get();
-                    const idsSet = new Set(pedidosUsuario.map(p => p.id));
-                    snapUser.forEach(doc => {
-                        const d = doc.data();
-                        const pid = d.id || doc.id;
-                        if (!idsSet.has(pid)) {
+                if (typeof db !== 'undefined' && db.collection && usuarioLogueadoActual.email) {
+                    try {
+                        const snapEmail = await db.collection('ventas').where('cliente.email', '==', usuarioLogueadoActual.email).get();
+                        snapEmail.forEach(doc => {
+                            const d = doc.data();
                             pedidosUsuario.push({
-                                id: pid,
+                                id: d.id || doc.id,
                                 fecha: d.fecha || 'Reciente',
                                 total: parseFloat(d.total || d.montoTotal || 0),
                                 estado: d.estado || 'Recibido',
                                 productos: d.productos || []
                             });
-                        }
-                    });
+                        });
+                    } catch (err1) {
+                        console.warn('Consulta por cliente.email arrojó aviso o permiso insuficiente:', err1.message);
+                    }
+                    try {
+                        const snapUser = await db.collection('ventas').where('usuarioEmail', '==', usuarioLogueadoActual.email).get();
+                        const idsSet = new Set(pedidosUsuario.map(p => p.id));
+                        snapUser.forEach(doc => {
+                            const d = doc.data();
+                            const pid = d.id || doc.id;
+                            if (!idsSet.has(pid)) {
+                                pedidosUsuario.push({
+                                    id: pid,
+                                    fecha: d.fecha || 'Reciente',
+                                    total: parseFloat(d.total || d.montoTotal || 0),
+                                    estado: d.estado || 'Recibido',
+                                    productos: d.productos || []
+                                });
+                            }
+                        });
+                    } catch (err2) {
+                        console.warn('Consulta por usuarioEmail arrojó aviso o permiso insuficiente:', err2.message);
+                    }
                 }
 
                 // 2. Comprobar localStorage (si hizo compras como invitado en esta PC antes de registrarse)

@@ -27,7 +27,12 @@ service cloud.firestore {
     // Ventas - crear autenticado, leer/actualizar solo admin o propietario
     match /ventas/{venta} {
       allow create: if true; // Permitir crear ventas sin login para checkout rápido
-      allow read, update: if isAdmin();
+      allow read, update: if isAdmin() || 
+                             (request.auth != null && request.auth.token.email != null &&
+                              ((resource.data.cliente != null && resource.data.cliente.email != null && resource.data.cliente.email.lower() == request.auth.token.email.lower()) ||
+                               (resource.data.usuarioEmail != null && resource.data.usuarioEmail.lower() == request.auth.token.email.lower()) ||
+                               (resource.data.userId != null && resource.data.userId == request.auth.uid) ||
+                               (resource.data.usuarioId != null && resource.data.usuarioId == request.auth.uid)));
       allow delete: if isAdmin();
     }
     

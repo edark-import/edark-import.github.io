@@ -766,7 +766,7 @@ function renderProductosPaginados(shouldScroll = false) {
                                 <button type="button" class="btn btn-primary btn-sm rounded-pill px-3 fw-semibold transition-all d-flex align-items-center justify-content-center gap-1 shadow-sm" onclick="agregarAlCarritoDesdeCard('${prod.id}', event)" title="Agregar al Carrito" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none;">
                                     <i class="bi bi-cart-plus-fill fs-6"></i>
                                 </button>
-                                ${user ? `<button class="btn btn-sm btn-outline-secondary rounded-circle btn-editar-producto d-flex align-items-center justify-content-center flex-shrink-0" data-id="${prod.id}" title="Editar" style="width:32px;height:32px;"><i class="bi bi-pencil"></i></button>` : ''}
+                                ${window.currentUserIsAdmin ? `<button class="btn btn-sm btn-outline-secondary rounded-circle btn-editar-producto d-flex align-items-center justify-content-center flex-shrink-0" data-id="${prod.id}" title="Editar" style="width:32px;height:32px;"><i class="bi bi-pencil"></i></button>` : ''}
                             </div>
                         </div>
                     </div>
@@ -1044,35 +1044,9 @@ if (adminFormEl) adminFormEl.addEventListener('submit', async function (e) {
     }
 });
 
-// Mostrar/ocultar panel según autenticación
-auth.onAuthStateChanged(user => {
-    const adminContainer = document.getElementById('adminContainer');
-    if (adminContainer) {
-        if (user) {
-            adminContainer.classList.remove('d-none');
-            const loginModalEl = document.getElementById('loginModal');
-            const loginModal = loginModalEl ? bootstrap.Modal.getInstance(loginModalEl) : null;
-            if (loginModal) loginModal.hide();
-        } else {
-            adminContainer.classList.add('d-none');
-        }
-    }
-    // Renderiza productos para mostrar/ocultar botón Editar según el usuario
-    renderProductosPaginados();
-});
-
-// Botón cerrar sesión en navbar
-(function () {
-    const logoutBtnNav = document.getElementById('logoutBtnNav');
-    if (logoutBtnNav) {
-        logoutBtnNav.addEventListener('click', function () {
-            auth.signOut();
-        });
-    }
-})();
-
-// Mostrar/ocultar botones de login/logout y email
+// Mostrar/ocultar botones de login/logout, email y panel de administración según rol verificado
 auth.onAuthStateChanged(async user => {
+    const adminContainer = document.getElementById('adminContainer');
     const logoutBtn = document.getElementById('logoutBtnNav');
     const logoutLi = document.getElementById('logoutLi');
     const loginLi = document.getElementById('loginLi');
@@ -1081,37 +1055,71 @@ auth.onAuthStateChanged(async user => {
     const userEmailFull = document.getElementById('userEmailFull');
     const adminLinkLi = document.getElementById('adminLinkLi');
 
-    if (user) {
-        if (logoutBtn) logoutBtn.classList.remove('d-none');
-        if (logoutLi) logoutLi.classList.remove('d-none');
-        if (loginLi) loginLi.classList.add('d-none');
-        
-        if (userEmail) { userEmail.textContent = user.email || ''; }
-        if (userEmailShort) userEmailShort.textContent = user.email || 'Usuario';
-        if (userEmailFull) userEmailFull.textContent = user.email || 'Usuario Activo';
-        
-        if (adminLinkLi) {
-            try {
-                const idTokenResult = await user.getIdTokenResult();
-                if (idTokenResult.claims && idTokenResult.claims.admin) {
-                    adminLinkLi.classList.remove('d-none');
-                } else {
-                    adminLinkLi.classList.add('d-none');
-                }
-            } catch (e) {
-                adminLinkLi.classList.add('d-none');
-            }
-        }
-    } else {
+    if (!user) {
+        window.currentUserIsAdmin = false;
+        if (adminContainer) adminContainer.classList.add('d-none');
         if (logoutBtn) logoutBtn.classList.add('d-none');
         if (logoutLi) logoutLi.classList.add('d-none');
         if (loginLi) loginLi.classList.remove('d-none');
-        
         if (userEmail) userEmail.classList.add('d-none');
         if (userEmailShort) userEmailShort.textContent = 'Ingresar';
         if (userEmailFull) userEmailFull.textContent = 'Invitado';
         if (adminLinkLi) adminLinkLi.classList.add('d-none');
+        renderProductosPaginados();
+        return;
     }
+
+    if (logoutBtn) logoutBtn.classList.remove('d-none');
+    if (logoutLi) logoutLi.classList.remove('d-none');
+    if (loginLi) loginLi.classList.add('d-none');
+    if (userEmail) { userEmail.textContent = user.email || ''; userEmail.classList.remove('d-none'); }
+    if (userEmailShort) userEmailShort.textContent = user.email || 'Usuario';
+    if (userEmailFull) userEmailFull.textContent = user.email || 'Usuario Activo';
+
+    const loginModalEl = document.getElementById('loginModal');
+    const loginModal = loginModalEl ? bootstrap.Modal.getInstance(loginModalEl) : null;
+    if (loginModal) loginModal.hide();
+
+    let esAdmin = false;
+    const EMAIL_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+    if (EMAIL_WHITELIST.includes((user.email || '').toLowerCase())) esAdmin = true;
+
+    try {
+        const token = await user.getIdTokenResult();
+        const c = token.claims || {};
+        if (c.admin === true || c.rol === 'admin' || c.role === 'admin' || c.isAdmin === true) esAdmin = true;
+    } catch (e) {}
+
+    if (!esAdmin && typeof db !== 'undefined' && db.collection) {
+        try {
+            const snap = await db.collection('usuarios').doc(user.uid).get();
+            if (snap.exists) {
+                const u = snap.data();
+                if (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true) esAdmin = true;
+            }
+        } catch (e) {}
+        if (!esAdmin && user.email) {
+            try {
+                const snapEmail = await db.collection('usuarios').where('email', '==', user.email.toLowerCase()).get();
+                if (!snapEmail.empty) {
+                    const u = snapEmail.docs[0].data();
+                    if (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true) esAdmin = true;
+                }
+            } catch (e) {}
+        }
+    }
+
+    window.currentUserIsAdmin = esAdmin;
+
+    if (esAdmin) {
+        if (adminContainer) adminContainer.classList.remove('d-none');
+        if (adminLinkLi) adminLinkLi.classList.remove('d-none');
+    } else {
+        if (adminContainer) adminContainer.classList.add('d-none');
+        if (adminLinkLi) adminLinkLi.classList.add('d-none');
+    }
+
+    renderProductosPaginados();
 });
 
 // Handler login modal
