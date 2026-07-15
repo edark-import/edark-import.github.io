@@ -929,47 +929,74 @@
             let docFound = null;
             let docRef = null;
 
-            // 1. Intento exacto por campo 'slug'
-            const snapshot = await db.collection('blog')
-                .where('slug', '==', slug)
-                .limit(1)
-                .get();
+            // 1. Intento exacto por campo 'slug' (cumpliendo la regla pública: publicado == true)
+            let snapshot = null;
+            try {
+                snapshot = await db.collection('blog')
+                    .where('slug', '==', slug)
+                    .where('publicado', '==', true)
+                    .limit(1)
+                    .get();
+            } catch (e) {}
 
-            if (!snapshot.empty) {
+            // Si no se encontró (o el usuario es admin accediendo a un borrador), intentar sin filtro de publicado
+            if (!snapshot || snapshot.empty) {
+                try {
+                    const snapAll = await db.collection('blog')
+                        .where('slug', '==', slug)
+                        .limit(1)
+                        .get();
+                    if (!snapAll.empty) snapshot = snapAll;
+                } catch (e) {}
+            }
+
+            if (snapshot && !snapshot.empty) {
                 docRef = snapshot.docs[0].ref;
                 docFound = { id: snapshot.docs[0].id, ...snapshot.docs[0].data() };
             } else {
                 // 2. Intento exacto por ID de documento en Firestore
                 try {
                     const docById = await db.collection('blog').doc(slug).get();
-                    if (docById.exists) {
+                    if (docById.exists && (docById.data().publicado === true || window.currentUserIsAdmin)) {
                         docRef = docById.ref;
                         docFound = { id: docById.id, ...docById.data() };
                     }
                 } catch (e) {}
             }
 
-            // 3. Intento flexible/insensible a mayúsculas, guiones y espacios
+            // 3. Intento flexible/insensible a mayúsculas y espacios (usando .where('publicado', '==', true))
             if (!docFound) {
-                const allSnap = await db.collection('blog').get();
-                const targetClean = slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                
-                allSnap.forEach(d => {
-                    if (docFound) return;
-                    const a = d.data();
-                    const aSlugClean = (a.slug || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    const aTitleClean = (a.titulo || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-                    const aIdClean = d.id.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
-
-                    if (aSlugClean === targetClean || aIdClean === targetClean || aTitleClean === targetClean) {
-                        docRef = d.ref;
-                        docFound = { id: d.id, ...a };
-                        // Sincronizar y reparar el slug en BD si tenía espacios o mayúsculas
-                        if (a.slug !== targetClean && targetClean) {
-                            d.ref.update({ slug: targetClean }).catch(() => {});
-                        }
+                try {
+                    let allSnap = null;
+                    try {
+                        allSnap = await db.collection('blog').where('publicado', '==', true).get();
+                    } catch (e) {
+                        allSnap = await db.collection('blog').get();
                     }
-                });
+
+                    if (allSnap && !allSnap.empty) {
+                        const targetClean = slug.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                        
+                        allSnap.forEach(d => {
+                            if (docFound) return;
+                            const a = d.data();
+                            const aSlugClean = (a.slug || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                            const aTitleClean = (a.titulo || '').toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+                            const aIdClean = d.id.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+
+                            if (aSlugClean === targetClean || aIdClean === targetClean || aTitleClean === targetClean) {
+                                docRef = d.ref;
+                                docFound = { id: d.id, ...a };
+                                // Sincronizar y reparar el slug en BD si tenía espacios o mayúsculas
+                                if (a.slug !== targetClean && targetClean) {
+                                    d.ref.update({ slug: targetClean }).catch(() => {});
+                                }
+                            }
+                        });
+                    }
+                } catch (e) {
+                    console.warn('Error en búsqueda flexible:', e.message);
+                }
             }
 
             if (!docFound) {

@@ -23,6 +23,11 @@ if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
 if (window.top !== window.self) window.top.location = window.self.location;
 
 // --- VARIABLES GLOBALES ---
+var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
+var auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
+var storage = window.storage || (typeof firebase !== 'undefined' && firebase.storage ? firebase.storage() : null);
+var carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
 let tipoCambioGlobal = 3.8; // Tipo de cambio SUNAT global
 let configGeneral = null;   // Configuración global desde Firestore
 // Número de WhatsApp para pedidos. Cambia aquí tu número en formato internacional, sin espacios ni signos.
@@ -1045,7 +1050,9 @@ if (adminFormEl) adminFormEl.addEventListener('submit', async function (e) {
 });
 
 // Mostrar/ocultar botones de login/logout, email y panel de administración según rol verificado
-auth.onAuthStateChanged(async user => {
+const _auth = typeof auth !== 'undefined' && auth ? auth : (window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null));
+if (_auth) {
+_auth.onAuthStateChanged(async user => {
     const adminContainer = document.getElementById('adminContainer');
     const logoutBtn = document.getElementById('logoutBtnNav');
     const logoutLi = document.getElementById('logoutLi');
@@ -1121,6 +1128,7 @@ auth.onAuthStateChanged(async user => {
 
     renderProductosPaginados();
 });
+}
 
 // Handler login modal
 // No login form on index: admin login must be used on the admin page only.

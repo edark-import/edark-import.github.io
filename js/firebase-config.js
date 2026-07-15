@@ -23,6 +23,9 @@ if (typeof firebase !== 'undefined') {
     window.db = firebase.firestore();
     window.auth = firebase.auth();
     window.storage = firebase.storage();
+    var db = window.db;
+    var auth = window.auth;
+    var storage = window.storage;
   } catch (e) {
     // Ignorar si algún servicio no está disponible en la página
   }
