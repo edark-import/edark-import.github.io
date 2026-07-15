@@ -384,6 +384,15 @@
                         fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true); 
                     }
                 } catch { }
+                if (!fsAdmin && user.email) {
+                    try {
+                        const snapEmail = await db.collection('usuarios').where('email', '==', user.email.toLowerCase()).get();
+                        if (!snapEmail.empty) {
+                            const u = snapEmail.docs[0].data();
+                            fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true);
+                        }
+                    } catch { }
+                }
                 const wl = EMAIL_ADMIN_WHITELIST.includes((user.email || '').toLowerCase());
                 
                 // Si el usuario es de la lista blanca pero no tiene documento de administrador en Firestore, crearlo de forma reactiva
@@ -394,7 +403,10 @@
                             await db.collection('usuarios').doc(user.uid).set({
                                 email: user.email,
                                 nombre: "Administrador",
+                                rol: "admin",
                                 role: "admin",
+                                admin: true,
+                                isAdmin: true,
                                 activo: true,
                                 fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
                             });
@@ -732,6 +744,21 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Estado de configuración</label>
                             <div id="cfgStatus" class="mt-2"><small class="text-muted">Sin cambios</small></div>
+                        </div>
+                    </div>
+                    <hr class="my-4 border-secondary border-opacity-25">
+                    <h5 class="text-primary fw-bold mb-3"><i class="bi bi-truck me-2"></i>Tiempos y Costos de Envío (Global)</h5>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <textarea class="form-control" id="cfgTextoEnvio" rows="2" placeholder="Realizamos envíos diarios a Lima Metropolitana (entrega de 24 a 48 horas en días hábiles) y a provincias mediante Olva Courier o agencias de transporte (2 a 4 días hábiles)."></textarea>
+                            <small class="text-muted">Este texto se mostrará en la pestaña 'Envío y Garantía' de todos los productos del catálogo.</small>
+                        </div>
+                    </div>
+                    <h5 class="text-success fw-bold mb-3"><i class="bi bi-shield-check me-2"></i>Garantía del Producto (Global)</h5>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <textarea class="form-control" id="cfgTextoGarantia" rows="2" placeholder="Todos nuestros equipos e importaciones cuentan con garantía contra defectos de fábrica. Se requiere conservar el comprobante de pago y empaque original para cualquier trámite de cambio o servicio técnico."></textarea>
+                            <small class="text-muted">Este texto se mostrará como la política general de garantía y devoluciones.</small>
                         </div>
                     </div>
                 </form>
@@ -1940,7 +1967,8 @@
                 }
 
                 usuariosGlobales.forEach(u => {
-                    const rolBadge = u.rol === 'admin' 
+                    const esAdmin = u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true || EMAIL_ADMIN_WHITELIST.includes((u.email || '').toLowerCase());
+                    const rolBadge = esAdmin 
                         ? '<span class="badge bg-primary rounded-pill px-3 py-1"><i class="bi bi-shield-lock me-1"></i> Admin</span>'
                         : '<span class="badge bg-secondary rounded-pill px-3 py-1"><i class="bi bi-person me-1"></i> Cliente</span>';
                     const estadoBadge = u.activo !== false 
@@ -1995,7 +2023,7 @@
                     document.getElementById('usuarioId').value = u.id || '';
                     document.getElementById('usuarioNombre').value = u.nombre || '';
                     document.getElementById('usuarioEmail').value = u.email || '';
-                    document.getElementById('usuarioRol').value = u.rol || 'cliente';
+                    document.getElementById('usuarioRol').value = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true || EMAIL_ADMIN_WHITELIST.includes((u.email || '').toLowerCase())) ? 'admin' : 'cliente';
                     document.getElementById('usuarioTelefono').value = u.telefono || '';
                     document.getElementById('usuarioDireccion').value = u.direccion || '';
                     document.getElementById('modalUsuarioTitulo').innerHTML = '<i class="bi bi-person-gear me-2"></i> Editar Usuario / Cliente';
@@ -2020,8 +2048,14 @@
                 return;
             }
 
+            const esAdminRol = (rol === 'admin' || EMAIL_ADMIN_WHITELIST.includes(email));
             const data = {
-                nombre, email, rol, telefono, direccion,
+                nombre, email, 
+                rol: esAdminRol ? 'admin' : 'cliente', 
+                role: esAdminRol ? 'admin' : 'cliente',
+                admin: esAdminRol,
+                isAdmin: esAdminRol,
+                telefono, direccion,
                 activo: true,
                 fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
             };
@@ -2031,9 +2065,15 @@
                     await db.collection('usuarios').doc(id).set(data, { merge: true });
                     alert('Usuario actualizado exitosamente');
                 } else {
-                    data.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
-                    await db.collection('usuarios').add(data);
-                    alert('Usuario registrado exitosamente');
+                    const snapExist = await db.collection('usuarios').where('email', '==', email).get();
+                    if (!snapExist.empty) {
+                        await db.collection('usuarios').doc(snapExist.docs[0].id).set(data, { merge: true });
+                        alert('El usuario ya existía y su rol ha sido actualizado exitosamente');
+                    } else {
+                        data.fechaCreacion = firebase.firestore.FieldValue.serverTimestamp();
+                        await db.collection('usuarios').add(data);
+                        alert('Usuario registrado exitosamente');
+                    }
                 }
                 modalUsuarioInstance.hide();
                 cargarClientes();
@@ -3258,6 +3298,10 @@
                 document.getElementById('cfgMargen').value = (configuracionCache.margen != null) ? configuracionCache.margen : 30;
                 document.getElementById('cfgTipoCambioManual').value = (configuracionCache.tipoCambioManual != null) ? configuracionCache.tipoCambioManual : '';
                 document.getElementById('cfgUsarTcManual').checked = configuracionCache.usarTcManual === true;
+                const elEnv = document.getElementById('cfgTextoEnvio');
+                if (elEnv) elEnv.value = configuracionCache.textoEnvio || 'Realizamos envíos diarios a Lima Metropolitana (entrega de 24 a 48 horas en días hábiles) y a provincias mediante Olva Courier o agencias de transporte (2 a 4 días hábiles).';
+                const elGar = document.getElementById('cfgTextoGarantia');
+                if (elGar) elGar.value = configuracionCache.textoGarantia || 'Todos nuestros equipos e importaciones cuentan con garantía contra defectos de fábrica. Se requiere conservar el comprobante de pago y empaque original para cualquier trámite de cambio o servicio técnico.';
                 if (statusEl) statusEl.innerHTML = '<small class="text-success">Configuración cargada</small>';
             } catch (e) {
                 console.error('Error cargando configuración', e);
@@ -3267,6 +3311,8 @@
         async function guardarConfiguracion() {
             const statusEl = document.getElementById('cfgStatus');
             if (statusEl) statusEl.innerHTML = '<small class="text-primary">Guardando...</small>';
+            const elEnv = document.getElementById('cfgTextoEnvio');
+            const elGar = document.getElementById('cfgTextoGarantia');
             const data = {
                 nombreTienda: document.getElementById('cfgNombreTienda').value.trim() || 'eDark',
                 paypalClientId: document.getElementById('cfgPayPalClientId').value.trim(),
@@ -3275,6 +3321,8 @@
                 margen: parseFloat(document.getElementById('cfgMargen').value) || 30,
                 tipoCambioManual: parseFloat(document.getElementById('cfgTipoCambioManual').value) || null,
                 usarTcManual: document.getElementById('cfgUsarTcManual').checked,
+                textoEnvio: elEnv ? elEnv.value.trim() : '',
+                textoGarantia: elGar ? elGar.value.trim() : '',
                 fechaActualizacion: firebase.firestore.FieldValue.serverTimestamp()
             };
             try {

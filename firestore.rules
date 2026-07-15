@@ -6,8 +6,11 @@ service cloud.firestore {
     function isAdmin() {
       return request.auth != null && 
              (request.auth.token.admin == true ||
-              get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'admin' ||
-              get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role == 'admin');
+              (request.auth.token.email != null && request.auth.token.email.lower() == 'edark.import@gmail.com') ||
+              (exists(/databases/$(database)/documents/usuarios/$(request.auth.uid)) && 
+               (get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'admin' ||
+                get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role == 'admin' ||
+                get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.admin == true)));
     }
     
     // Función para verificar autenticación
@@ -28,12 +31,16 @@ service cloud.firestore {
       allow delete: if isAdmin();
     }
     
-    // Usuarios - solo el usuario puede leer sus datos
+    // Usuarios - solo el usuario puede leer sus datos, impedir auto-promoción a admin
     match /usuarios/{userId} {
       allow read: if isAuthenticated() && 
                     (request.auth.uid == userId || isAdmin());
-      allow create: if request.auth.uid == userId;
-      allow update: if request.auth.uid == userId || isAdmin();
+      allow create: if request.auth.uid == userId && 
+                    (!request.resource.data.keys().hasAny(['rol', 'role', 'admin', 'isAdmin']) || 
+                     (request.resource.data.rol != 'admin' && request.resource.data.role != 'admin' && request.resource.data.admin != true && request.resource.data.isAdmin != true));
+      allow update: if isAdmin() || 
+                    (request.auth.uid == userId && 
+                     (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['rol', 'role', 'admin', 'isAdmin'])));
       allow delete: if isAdmin();
     }
     

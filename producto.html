@@ -71,6 +71,142 @@
             box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.25);
         }
 
+        /* Etiquetas Ultra-Premium (Badges) */
+        .product-tags-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .product-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        }
+        .tag-category {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.14), rgba(37, 99, 235, 0.18));
+            color: #2563eb;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .tag-category:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.18);
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.25));
+        }
+        .tag-brand {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.14), rgba(79, 70, 229, 0.18));
+            color: #4f46e5;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        .tag-brand:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.18);
+        }
+        .tag-subcat {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.14), rgba(5, 150, 105, 0.18));
+            color: #059669;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        body.modo-oscuro .tag-category {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.2), rgba(37, 99, 235, 0.3));
+            color: #60a5fa;
+            border-color: rgba(96, 165, 250, 0.35);
+        }
+        body.modo-oscuro .tag-brand {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(79, 70, 229, 0.3));
+            color: #818cf8;
+            border-color: rgba(129, 140, 248, 0.35);
+        }
+        body.modo-oscuro .tag-subcat {
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(5, 150, 105, 0.3));
+            color: #34d399;
+            border-color: rgba(52, 211, 153, 0.35);
+        }
+        .stock-badge-custom {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 9999px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+            z-index: 5;
+            backdrop-filter: blur(8px);
+        }
+        .stock-badge-warning {
+            background: linear-gradient(135deg, #f59e0b, #d97706);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+            animation: pulse-badge 2s infinite;
+        }
+        .stock-badge-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        .stock-badge-danger {
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: #fff;
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+        @keyframes pulse-badge {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.6); }
+            70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
+
+        /* Estrellas interactivas para comentarios */
+        .star-rating-select {
+            display: inline-flex;
+            flex-direction: row-reverse;
+            gap: 6px;
+            cursor: pointer;
+        }
+        .star-rating-select input {
+            display: none;
+        }
+        .star-rating-select label {
+            font-size: 1.8rem;
+            color: #cbd5e1;
+            transition: color 0.2s, transform 0.2s;
+            cursor: pointer;
+        }
+        .star-rating-select label:hover,
+        .star-rating-select label:hover ~ label,
+        .star-rating-select input:checked ~ label {
+            color: #f59e0b;
+            transform: scale(1.15);
+        }
+        .comment-card {
+            background: #fff;
+            border: 1px solid #f1f5f9;
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.03);
+            transition: all 0.2s;
+        }
+        .comment-card:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.06);
+            border-color: #e2e8f0;
+        }
+        body.modo-oscuro .comment-card {
+            background: #1e293b;
+            border-color: #334155;
+            color: #f8fafc;
+        }
+
         .price-tag {
             font-size: 2.6rem;
             font-weight: 800;
@@ -212,23 +348,26 @@
 
             <!-- Info Column -->
             <div class="col-lg-6">
-                <div class="d-flex align-items-center gap-2 mb-2">
-                    <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-semibold" id="productCategoryBadge">Categoría</span>
-                    <span class="badge bg-secondary bg-opacity-10 text-secondary px-3 py-2 rounded-pill fw-semibold" id="productBrandBadge">Marca</span>
+                <div class="product-tags-wrapper" id="tagsWrapper">
+                    <span class="product-tag tag-category" id="productCategoryBadge"><i class="bi bi-tag-fill me-1"></i>Categoría</span>
+                    <span class="product-tag tag-brand" id="productBrandBadge"><i class="bi bi-patch-check-fill me-1"></i>Marca</span>
                 </div>
 
                 <h1 class="fw-bolder mb-3 display-6" id="productName">Nombre del Producto</h1>
                 
-                <div class="d-flex align-items-center gap-3 text-muted mb-4 pb-3 border-bottom">
+                <div class="d-flex align-items-center gap-3 text-muted mb-4 pb-3 border-bottom flex-wrap">
                     <span><i class="bi bi-upc-scan me-1"></i>Modelo: <strong id="productModel" class="text-dark">-</strong></span>
                     <span>|</span>
-                    <span class="text-warning d-flex align-items-center">
-                        <i class="bi bi-star-fill me-1"></i>
-                        <i class="bi bi-star-fill me-1"></i>
-                        <i class="bi bi-star-fill me-1"></i>
-                        <i class="bi bi-star-fill me-1"></i>
-                        <i class="bi bi-star-fill me-1"></i>
-                        <span class="text-muted ms-1">(5.0)</span>
+                    <span class="text-warning d-flex align-items-center" style="cursor:pointer;" onclick="document.getElementById('reviews-tab').click(); document.getElementById('reviews-tab').scrollIntoView({behavior:'smooth'});" title="Ver o dejar comentarios">
+                        <span id="productStarsDisplay">
+                            <i class="bi bi-star-fill me-1"></i>
+                            <i class="bi bi-star-fill me-1"></i>
+                            <i class="bi bi-star-fill me-1"></i>
+                            <i class="bi bi-star-fill me-1"></i>
+                            <i class="bi bi-star-fill me-1"></i>
+                        </span>
+                        <span class="text-dark fw-bold ms-1" id="productRatingNum">(5.0)</span>
+                        <span class="text-muted small ms-1" id="productCommentsCount">· 0 opiniones</span>
                     </span>
                 </div>
 
@@ -295,6 +434,9 @@
                     <li class="nav-item" role="presentation">
                         <button class="nav-link" id="shipping-tab" data-bs-toggle="tab" data-bs-target="#shipping-pane" type="button" role="tab"><i class="bi bi-box-seam me-1"></i>Envío y Garantía</button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="reviews-tab" data-bs-toggle="tab" data-bs-target="#reviews-pane" type="button" role="tab"><i class="bi bi-star-fill text-warning me-1"></i>Valoraciones</button>
+                    </li>
                 </ul>
 
                 <div class="tab-content p-3 border rounded-3 bg-white shadow-sm mb-5" id="productTabsContent">
@@ -306,9 +448,57 @@
                     </div>
                     <div class="tab-pane fade" id="shipping-pane" role="tabpanel">
                         <h6 class="fw-bold"><i class="bi bi-truck text-primary me-2"></i>Tiempos y Costos de Envío</h6>
-                        <p class="small text-muted mb-3">Realizamos envíos diarios a Lima Metropolitana (entrega de 24 a 48 horas en días hábiles) y a provincias mediante Olva Courier o agencias de transporte (2 a 4 días hábiles).</p>
+                        <p class="small text-muted mb-3" id="shippingPaneText">Realizamos envíos diarios a Lima Metropolitana (entrega de 24 a 48 horas en días hábiles) y a provincias mediante Olva Courier o agencias de transporte (2 a 4 días hábiles).</p>
                         <h6 class="fw-bold"><i class="bi bi-shield-check text-success me-2"></i>Garantía del Producto</h6>
-                        <p class="small text-muted mb-0">Todos nuestros equipos e importaciones cuentan con garantía contra defectos de fábrica. Se requiere conservar el comprobante de pago y empaque original para cualquier trámite de cambio o servicio técnico.</p>
+                        <p class="small text-muted mb-0" id="warrantyPaneText">Todos nuestros equipos e importaciones cuentan con garantía contra defectos de fábrica. Se requiere conservar el comprobante de pago y empaque original para cualquier trámite de cambio o servicio técnico.</p>
+                    </div>
+                    <div class="tab-pane fade" id="reviews-pane" role="tabpanel">
+                        <!-- Sección de Comentarios y Estrellas Interactivas -->
+                        <div class="d-flex justify-content-between align-items-center mb-4 pb-3 border-bottom flex-wrap gap-2">
+                            <div>
+                                <h5 class="fw-bold mb-1"><i class="bi bi-chat-right-quote-fill text-primary me-2"></i>Opiniones de Clientes</h5>
+                                <p class="small text-muted mb-0">Comparte tu experiencia real con este producto</p>
+                            </div>
+                            <div class="text-end">
+                                <span class="display-6 fw-bold text-dark" id="avgRatingScore">5.0</span>
+                                <span class="text-warning fs-5 ms-1" id="avgRatingStars"><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i><i class="bi bi-star-fill"></i></span>
+                            </div>
+                        </div>
+
+                        <!-- Formulario de Reseña (Solo logueados) -->
+                        <div id="reviewFormContainer" class="p-3 bg-light rounded-3 border mb-4">
+                            <div id="loggedOutMsg" class="text-center py-3">
+                                <i class="bi bi-person-lock fs-2 text-muted d-block mb-2"></i>
+                                <h6 class="fw-bold">¿Ya compraste o probaste este producto?</h6>
+                                <p class="small text-muted mb-3">Debes iniciar sesión en tu cuenta para calificar con estrellas y dejar tu opinión.</p>
+                                <a href="login.html" class="btn btn-outline-primary btn-sm px-4 rounded-pill fw-semibold"><i class="bi bi-box-arrow-in-right me-1"></i>Iniciar Sesión para Calificar</a>
+                            </div>
+
+                            <form id="formNuevaResenia" class="d-none" onsubmit="enviarReseniaProducto(event)">
+                                <h6 class="fw-bold mb-2"><i class="bi bi-star me-2 text-warning"></i>Tu calificación:</h6>
+                                <div class="star-rating-select mb-3">
+                                    <input type="radio" id="star5" name="rating" value="5" checked><label for="star5" title="5 estrellas - Excelente">★</label>
+                                    <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 estrellas - Muy bueno">★</label>
+                                    <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 estrellas - Bueno">★</label>
+                                    <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 estrellas - Regular">★</label>
+                                    <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 estrella - Malo">★</label>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold small text-muted">TU OPINIÓN:</label>
+                                    <textarea class="form-control" id="reviewCommentText" rows="3" placeholder="¿Qué te pareció la calidad, el rendimiento o el envío de este producto? Escribe tu reseña..." required></textarea>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="submit" class="btn btn-primary px-4 fw-semibold rounded-pill shadow-sm" id="btnSubmitReview">
+                                        <i class="bi bi-send-fill me-2"></i>Publicar Opinión y Estrellas
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <!-- Lista de Reseñas -->
+                        <div id="reviewsListContainer">
+                            <div class="text-center py-4 text-muted small">Cargando opiniones del producto...</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -504,8 +694,8 @@
             const stockInfo = document.getElementById('stockInfoText');
 
             if (prod.stock <= 0) {
-                stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-danger fs-6 shadow-sm';
-                stockBadge.textContent = 'Agotado';
+                stockBadge.className = 'position-absolute top-0 start-0 m-3 stock-badge-custom stock-badge-danger';
+                stockBadge.innerHTML = '<i class="bi bi-x-circle-fill"></i> Agotado';
                 stockInfo.textContent = 'Sin stock disponible actualmente';
                 stockInfo.className = 'text-danger fw-bold small';
                 document.getElementById('btnAddToCart').disabled = true;
@@ -515,8 +705,11 @@
                 qtyInput.max = prod.stock;
                 stockInfo.textContent = `Stock disponible: ${prod.stock} unidades`;
                 if (prod.stock < 5) {
-                    stockBadge.className = 'position-absolute top-0 start-0 m-3 badge bg-warning text-dark fs-6 shadow-sm';
-                    stockBadge.textContent = '¡Últimas unidades!';
+                    stockBadge.className = 'position-absolute top-0 start-0 m-3 stock-badge-custom stock-badge-warning';
+                    stockBadge.innerHTML = '<i class="bi bi-exclamation-triangle-fill"></i> ¡Últimas unidades!';
+                } else {
+                    stockBadge.className = 'position-absolute top-0 start-0 m-3 stock-badge-custom stock-badge-success';
+                    stockBadge.innerHTML = '<i class="bi bi-check-circle-fill"></i> En Stock';
                 }
             }
 
@@ -554,7 +747,189 @@
                 }
             }
             specsHtml += '</table></div>';
+            specsHtml += '</table></div>';
             specsContainer.innerHTML = specsHtml;
+
+            // Envío y Garantía personalizado o global
+            const shippingEl = document.getElementById('shippingPaneText');
+            const warrantyEl = document.getElementById('warrantyPaneText');
+            if (shippingEl) {
+                if (prod.textoEnvio && prod.textoEnvio.trim()) {
+                    shippingEl.textContent = prod.textoEnvio;
+                } else if (window.configuracionGeneral && window.configuracionGeneral.textoEnvio) {
+                    shippingEl.textContent = window.configuracionGeneral.textoEnvio;
+                }
+            }
+            if (warrantyEl) {
+                if (prod.textoGarantia && prod.textoGarantia.trim()) {
+                    warrantyEl.textContent = prod.textoGarantia;
+                } else if (window.configuracionGeneral && window.configuracionGeneral.textoGarantia) {
+                    warrantyEl.textContent = window.configuracionGeneral.textoGarantia;
+                }
+            }
+
+            // Cargar reseñas y comentarios
+            cargarYRenderizarResenias(prod.id);
+        }
+
+        // Auth state listener para mostrar formulario de reseña
+        if (typeof firebase !== 'undefined' && firebase.auth) {
+            firebase.auth().onAuthStateChanged(user => {
+                const loggedOutMsg = document.getElementById('loggedOutMsg');
+                const formResenia = document.getElementById('formNuevaResenia');
+                if (!loggedOutMsg || !formResenia) return;
+                if (user) {
+                    loggedOutMsg.classList.add('d-none');
+                    formResenia.classList.remove('d-none');
+                } else {
+                    loggedOutMsg.classList.remove('d-none');
+                    formResenia.classList.add('d-none');
+                }
+            });
+        }
+
+        async function cargarYRenderizarResenias(productId) {
+            if (!productId || !db) return;
+            const container = document.getElementById('reviewsListContainer');
+            try {
+                const snap = await db.collection('productos').doc(productId).collection('comentarios').orderBy('fecha', 'desc').get();
+                let suma = 0;
+                let total = snap.size;
+                let resenias = [];
+
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    const estrellas = parseInt(d.estrellas) || 5;
+                    suma += estrellas;
+                    resenias.push({ id: doc.id, ...d, estrellas });
+                });
+
+                let promedio = total > 0 ? (suma / total).toFixed(1) : (currentProduct.valoracionPromedio || 5.0).toFixed(1);
+                
+                // Actualizar contadores visuales en el header del producto y en la pestaña de valoraciones
+                document.getElementById('productRatingNum').textContent = `(${promedio})`;
+                document.getElementById('avgRatingScore').textContent = promedio;
+                document.getElementById('productCommentsCount').textContent = `· ${total} ${total === 1 ? 'opinión' : 'opiniones'}`;
+
+                // Generar estrellas visuales
+                const generarEstrellasHtml = (num) => {
+                    let sHtml = '';
+                    const red = Math.round(num);
+                    for (let i = 1; i <= 5; i++) {
+                        if (i <= red) sHtml += '<i class="bi bi-star-fill me-1"></i>';
+                        else sHtml += '<i class="bi bi-star me-1 text-secondary"></i>';
+                    }
+                    return sHtml;
+                };
+
+                document.getElementById('productStarsDisplay').innerHTML = generarEstrellasHtml(promedio);
+                document.getElementById('avgRatingStars').innerHTML = generarEstrellasHtml(promedio);
+
+                if (total === 0) {
+                    container.innerHTML = `
+                        <div class="text-center py-5 text-muted">
+                            <i class="bi bi-chat-heart fs-1 d-block mb-2 text-secondary opacity-50"></i>
+                            <h6 class="fw-bold">Aún no hay opiniones para este producto</h6>
+                            <p class="small mb-0">Sé el primero en dejar una valoración y ayudar a otros clientes.</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                container.innerHTML = resenias.map(r => {
+                    let fechaStr = 'Hace un momento';
+                    if (r.fecha && r.fecha.toDate) {
+                        fechaStr = r.fecha.toDate().toLocaleDateString('es-PE', { year: 'numeric', month: 'short', day: 'numeric' });
+                    }
+                    const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(r.nombre || 'Usuario')}&background=0D8ABC&color=fff&rounded=true&bold=true`;
+                    return `
+                        <div class="comment-card">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <div class="d-flex align-items-center gap-2">
+                                    <img src="${avatarUrl}" alt="${r.nombre || 'Usuario'}" class="rounded-circle" style="width:38px;height:38px;object-fit:cover;">
+                                    <div>
+                                        <h6 class="fw-bold mb-0 text-dark">${sanitize(r.nombre || 'Usuario eDark')}</h6>
+                                        <small class="text-muted" style="font-size:0.75rem;"><i class="bi bi-calendar3 me-1"></i>${fechaStr}</small>
+                                    </div>
+                                </div>
+                                <span class="text-warning fs-6" title="${r.estrellas} estrellas">
+                                    ${generarEstrellasHtml(r.estrellas)}
+                                </span>
+                            </div>
+                            <p class="mb-0 text-secondary mt-2 small" style="line-height:1.6;">
+                                ${sanitize(r.comentario || '')}
+                            </p>
+                        </div>
+                    `;
+                }).join('');
+
+            } catch (err) {
+                console.warn('Error cargando reseñas:', err);
+                container.innerHTML = '<div class="text-center py-4 text-muted small">No se pudieron cargar los comentarios en este momento.</div>';
+            }
+        }
+
+        async function enviarReseniaProducto(event) {
+            event.preventDefault();
+            if (!currentProduct || !currentProduct.id) return;
+            const user = firebase.auth().currentUser;
+            if (!user) {
+                alert('Debes iniciar sesión para publicar una valoración.');
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmitReview');
+            const commentInput = document.getElementById('reviewCommentText');
+            const ratingEl = document.querySelector('input[name="rating"]:checked');
+            const estrellas = ratingEl ? parseInt(ratingEl.value) : 5;
+            const comentario = commentInput.value.trim();
+
+            if (!comentario) {
+                alert('Por favor escribe tu comentario o reseña.');
+                return;
+            }
+
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Publicando...';
+
+            try {
+                const reseniaData = {
+                    usuarioId: user.uid,
+                    nombre: user.displayName || user.email.split('@')[0] || 'Cliente eDark',
+                    email: user.email || '',
+                    estrellas: estrellas,
+                    comentario: comentario,
+                    fecha: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('productos').doc(currentProduct.id).collection('comentarios').add(reseniaData);
+
+                // Recalcular promedio en el documento padre
+                const snap = await db.collection('productos').doc(currentProduct.id).collection('comentarios').get();
+                let sum = 0;
+                snap.forEach(doc => {
+                    const st = parseInt(doc.data().estrellas) || 5;
+                    sum += st;
+                });
+                const newTotal = snap.size;
+                const newPromedio = parseFloat((sum / newTotal).toFixed(1));
+
+                await db.collection('productos').doc(currentProduct.id).update({
+                    valoracionPromedio: newPromedio,
+                    totalComentarios: newTotal
+                });
+
+                commentInput.value = '';
+                alert('¡Gracias por tu valoración! Tu comentario ha sido publicado.');
+                await cargarYRenderizarResenias(currentProduct.id);
+            } catch (err) {
+                console.error('Error al enviar reseña:', err);
+                alert('Ocurrió un error al publicar tu opinión: ' + (err.message || 'Inténtalo nuevamente'));
+            } finally {
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<i class="bi bi-send-fill me-2"></i>Publicar Opinión y Estrellas';
+            }
         }
 
         function cambiarImagenPrincipal(url, thumbEl) {

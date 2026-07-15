@@ -420,6 +420,7 @@ function generarHtmlFiltros() {
     if (filterContainer) {
         filterContainer.innerHTML = html;
         asignarEventosFiltros();
+        actualizarFiltrosDinamicos();
     }
 }
 
@@ -434,7 +435,6 @@ function asignarEventosFiltros() {
                 if (!filtrosSeleccionados[campo].includes(valor)) {
                     filtrosSeleccionados[campo].push(valor);
                 }
-                if (campo === 'categoria') mostrarSubcategorias(valor);
             } else {
                 filtrosSeleccionados[campo] = filtrosSeleccionados[campo].filter(v => v !== valor);
                 if (campo === 'categoria') ocultarYLimpiarSubcategorias(valor);
@@ -459,6 +459,7 @@ function asignarEventosFiltros() {
             }
             precioFiltroMin = min;
             document.getElementById('precioMinLabel').textContent = min;
+            actualizarFiltrosDinamicos();
             renderProductosPaginados();
         });
     }
@@ -473,6 +474,7 @@ function asignarEventosFiltros() {
             }
             precioFiltroMax = max;
             document.getElementById('precioMaxLabel').textContent = max;
+            actualizarFiltrosDinamicos();
             renderProductosPaginados();
         });
     }
@@ -480,19 +482,16 @@ function asignarEventosFiltros() {
 
     // Funciones auxiliares para mostrar/ocultar subcategorías
     function mostrarSubcategorias(categoria) {
-        document.querySelectorAll(`[data-parent="${categoria}"]`).forEach(subcatCheckbox => {
-            subcatCheckbox.closest('.form-check').style.display = 'block';
-        });
+        actualizarFiltrosDinamicos();
     }
 
     function ocultarYLimpiarSubcategorias(categoria) {
         document.querySelectorAll(`[data-parent="${categoria}"]`).forEach(subcatCheckbox => {
             subcatCheckbox.checked = false;
-            subcatCheckbox.closest('.form-check').style.display = 'none';
-            // Remover de filtros seleccionados
             const valor = subcatCheckbox.value;
-            filtrosSeleccionados['subcategoria'] = filtrosSeleccionados['subcategoria'].filter(v => v !== valor);
+            filtrosSeleccionados['subcategoria'] = (filtrosSeleccionados['subcategoria'] || []).filter(v => v !== valor);
         });
+        actualizarFiltrosDinamicos();
     }
 
     // Ocultar todas las subcategorías inicialmente
@@ -500,68 +499,90 @@ function asignarEventosFiltros() {
         subcatCheckbox.closest('.form-check').style.display = 'none';
     });
 
-    // Función para actualizar filtros dinámicamente
+    // Función para actualizar filtros dinámicamente y anidados en base a los productos registrados
     function actualizarFiltrosDinamicos() {
-        // Obtener productos que coinciden con los filtros actuales (excepto el campo que estamos actualizando)
+        if (!productosCache || !Array.isArray(productosCache)) return;
+
+        // Obtener productos que coinciden con los filtros actuales
         const productosFiltrados = productosCache.filter(producto => {
+            // Validar filtro de precio
+            const p = parseFloat(window.calcularPrecioProducto ? window.calcularPrecioProducto(producto) : (producto.precioVenta || producto.precio || 0));
+            if (!isNaN(p) && (p < precioFiltroMin || p > precioFiltroMax)) {
+                return false;
+            }
+
             for (const campo of Object.keys(filtrosSeleccionados)) {
                 const valores = filtrosSeleccionados[campo];
                 if (valores && valores.length > 0) {
                     if (campo === 'subcategoria') {
                         const categoriasSeleccionadas = filtrosSeleccionados['categoria'] || [];
                         if (categoriasSeleccionadas.length > 0) {
-                            if (!categoriasSeleccionadas.includes(producto.categoria)) {
-                                return false;
-                            }
-                            if (!valores.includes(producto.subcategoria)) {
-                                return false;
-                            }
-                        } else {
-                            if (!valores.includes(producto.subcategoria)) {
-                                return false;
-                            }
+                            if (!categoriasSeleccionadas.includes(producto.categoria)) return false;
                         }
+                        if (!valores.includes(producto.subcategoria)) return false;
                     } else if (campo === 'categoria') {
-                        if (!valores.includes(producto.categoria)) {
-                            return false;
-                        }
+                        if (!valores.includes(producto.categoria)) return false;
                     } else {
                         const productoValor = producto[campo] || '';
-                        if (!valores.includes(productoValor)) {
-                            return false;
-                        }
+                        if (!valores.includes(productoValor)) return false;
                     }
                 }
             }
             return true;
         });
 
-        // Calcular valores disponibles para cada campo basado en productos filtrados
+        // Calcular valores y conteos disponibles para cada campo
         const valoresDisponibles = {};
-        camposFiltro.forEach(f => valoresDisponibles[f.campo] = new Set());
+        const conteos = {};
+        camposFiltro.forEach(f => {
+            valoresDisponibles[f.campo] = new Set();
+            conteos[f.campo] = {};
+        });
 
         productosFiltrados.forEach(prod => {
             camposFiltro.forEach(f => {
-                if (prod[f.campo]) valoresDisponibles[f.campo].add(prod[f.campo]);
+                const val = prod[f.campo];
+                if (val) {
+                    valoresDisponibles[f.campo].add(val);
+                    conteos[f.campo][val] = (conteos[f.campo][val] || 0) + 1;
+                }
             });
         });
 
-        // Actualizar las opciones de cada filtro
-        camposFiltro.forEach(campo => {
-            if (campo.campo === 'categoria' || campo.campo === 'subcategoria') return; // Estos ya se manejan especialmente
+        const catSeleccionadas = filtrosSeleccionados['categoria'] || [];
 
-            const checkboxes = document.querySelectorAll(`[data-campo="${campo.campo}"]`);
+        // Actualizar visibilidad, habilitación y conteo dinámico en la interfaz
+        camposFiltro.forEach(campoObj => {
+            const campo = campoObj.campo;
+            const checkboxes = document.querySelectorAll(`[data-campo="${campo}"]`);
+
             checkboxes.forEach(cb => {
                 const valor = cb.value;
-                const estaDisponible = valoresDisponibles[campo.campo].has(valor);
-                const estaSeleccionado = filtrosSeleccionados[campo.campo].includes(valor);
+                const estaDisponible = valoresDisponibles[campo].has(valor);
+                const estaSeleccionado = (filtrosSeleccionados[campo] || []).includes(valor);
 
-                cb.closest('.form-check').style.display = estaDisponible || estaSeleccionado ? 'block' : 'none';
-                cb.disabled = !estaDisponible && !estaSeleccionado;
+                if (campo === 'subcategoria') {
+                    const parentCat = cb.dataset.parent;
+                    const parentActivo = catSeleccionadas.length === 0 || catSeleccionadas.includes(parentCat);
+                    const visible = parentActivo && (estaDisponible || estaSeleccionado);
+                    cb.closest('.form-check').style.display = visible ? 'block' : 'none';
+                    cb.disabled = !estaDisponible && !estaSeleccionado;
+                } else {
+                    cb.closest('.form-check').style.display = (estaDisponible || estaSeleccionado) ? 'block' : 'none';
+                    cb.disabled = !estaDisponible && !estaSeleccionado;
+                }
 
-                if (!estaDisponible && !estaSeleccionado) {
+                // Actualizar contadores de productos en cada opción
+                const label = document.querySelector(`label[for="${cb.id}"]`);
+                if (label) {
+                    const count = conteos[campo][valor] || 0;
+                    let cleanText = label.textContent.replace(/\(\d+\)$/, '').trim();
+                    label.innerHTML = `${cleanText} <span class="badge bg-secondary bg-opacity-10 text-secondary ms-1 fw-normal" style="font-size:0.75em;">(${count})</span>`;
+                }
+
+                if (!estaDisponible && !estaSeleccionado && cb.checked) {
                     cb.checked = false;
-                    filtrosSeleccionados[campo.campo] = filtrosSeleccionados[campo.campo].filter(v => v !== valor);
+                    filtrosSeleccionados[campo] = (filtrosSeleccionados[campo] || []).filter(v => v !== valor);
                 }
             });
         });

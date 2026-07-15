@@ -334,7 +334,8 @@
                                     document.getElementById('perfilTelefono').value = uData.telefono || '';
                                     document.getElementById('perfilDni').value = uData.dni || '';
                                     document.getElementById('perfilDireccion').value = uData.direccion || '';
-                                    if (uData.rol === 'admin') {
+                                    const esAdminPerfil = uData.rol === 'admin' || uData.role === 'admin' || uData.admin === true || uData.isAdmin === true || (user.email && user.email.toLowerCase() === 'edark.import@gmail.com');
+                                    if (esAdminPerfil) {
                                         document.getElementById('userRoleBadge').className = 'badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold';
                                         document.getElementById('userRoleBadge').innerHTML = '<i class="bi bi-shield-lock-fill me-1"></i> Administrador eDark';
                                         document.getElementById('adminDashboardTabLi').classList.remove('d-none');
@@ -348,7 +349,8 @@
                                         document.getElementById('perfilNombre').value = uData.nombre || '';
                                         document.getElementById('perfilTelefono').value = uData.telefono || '';
                                         document.getElementById('perfilDireccion').value = uData.direccion || '';
-                                        if (uData.rol === 'admin') {
+                                        const esAdminPerfilEmail = uData.rol === 'admin' || uData.role === 'admin' || uData.admin === true || uData.isAdmin === true || (user.email && user.email.toLowerCase() === 'edark.import@gmail.com');
+                                        if (esAdminPerfilEmail) {
                                             document.getElementById('userRoleBadge').className = 'badge bg-warning text-dark rounded-pill px-3 py-2 fw-bold';
                                             document.getElementById('userRoleBadge').innerHTML = '<i class="bi bi-shield-lock-fill me-1"></i> Administrador eDark';
                                             document.getElementById('adminDashboardTabLi').classList.remove('d-none');

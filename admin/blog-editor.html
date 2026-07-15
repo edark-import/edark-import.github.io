@@ -1012,9 +1012,57 @@
     const auth = firebase.auth();
     const db   = firebase.firestore();
 
-    // Auth guard
-    auth.onAuthStateChanged(user => {
-        if (!user) { window.location.href = 'login.html'; }
+    // Auth guard (Admin verification)
+    const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+    let currentUserIsAdmin = false;
+
+    auth.onAuthStateChanged(async user => {
+        if (!user) { 
+            window.location.href = 'login.html'; 
+            return; 
+        }
+        try {
+            const token = await user.getIdTokenResult();
+            const c = token.claims || {};
+            const claimAdmin = c.admin === true || c.rol === 'admin' || c.role === 'admin' || c.isAdmin === true;
+            
+            let fsAdmin = false;
+            try {
+                const snap = await db.collection('usuarios').doc(user.uid).get();
+                if (snap.exists) { 
+                    const u = snap.data(); 
+                    fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true); 
+                }
+            } catch (err) { }
+
+            if (!fsAdmin && user.email) {
+                try {
+                    const snapEmail = await db.collection('usuarios').where('email', '==', user.email.toLowerCase()).get();
+                    if (!snapEmail.empty) {
+                        const u = snapEmail.docs[0].data();
+                        fsAdmin = (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true);
+                    }
+                } catch (err) { }
+            }
+
+            const wl = EMAIL_ADMIN_WHITELIST.includes((user.email || '').toLowerCase());
+            currentUserIsAdmin = claimAdmin || fsAdmin || wl;
+
+            if (!currentUserIsAdmin) {
+                alert('Acceso denegado: Se requiere rol de Administrador para ingresar al Editor del Blog.');
+                await auth.signOut();
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const editId = new URLSearchParams(window.location.search).get('edit');
+            if (editId) {
+                editarArticulo(editId);
+            }
+        } catch (e) {
+            console.error('Error verificando rol administrador en blog editor:', e);
+            window.location.href = 'login.html';
+        }
     });
 
     /* ============================================
@@ -1511,13 +1559,7 @@
     actualizarUrlPreview();
     actualizarContador();
 
-    // Auto-cargar artículo si viene con ?edit=ID desde el dashboard
-    const editId = new URLSearchParams(window.location.search).get('edit');
-    if (editId) {
-        auth.onAuthStateChanged(user => {
-            if (user) { editarArticulo(editId); }
-        });
-    }
+    // (editId procesado en el guard de administración principal)
     </script>
 </body>
 </html>

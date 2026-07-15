@@ -262,9 +262,18 @@
                         const docSnap = await db.collection('usuarios').doc(user.uid).get();
                         if (docSnap.exists) {
                             const u = docSnap.data();
-                            if (u.rol === 'admin' || u.role === 'admin' || u.admin === true) isAdmin = true;
+                            if (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true) isAdmin = true;
                         }
                     } catch (e) { }
+                    if (!isAdmin && user.email) {
+                        try {
+                            const snapEmail = await db.collection('usuarios').where('email', '==', user.email.toLowerCase()).get();
+                            if (!snapEmail.empty) {
+                                const u = snapEmail.docs[0].data();
+                                if (u.rol === 'admin' || u.role === 'admin' || u.admin === true || u.isAdmin === true) isAdmin = true;
+                            }
+                        } catch (e) { }
+                    }
                 }
 
                 if (isAdmin) {
@@ -275,7 +284,10 @@
                             await db.collection('usuarios').doc(user.uid).set({
                                 email: user.email,
                                 nombre: "Administrador",
+                                rol: "admin",
                                 role: "admin",
+                                admin: true,
+                                isAdmin: true,
                                 activo: true,
                                 fechaCreacion: firebase.firestore.FieldValue.serverTimestamp()
                             });
