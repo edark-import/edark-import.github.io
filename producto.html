@@ -263,54 +263,60 @@
         }
 
         /* Glassmorphism for Zoom Modal */
+        #modalZoomImagen .modal-dialog {
+            max-width: 92vw;
+            width: fit-content;
+            margin: auto;
+        }
         #modalZoomImagen .modal-content {
             background: rgba(255, 255, 255, 0.15) !important;
             backdrop-filter: blur(25px);
             -webkit-backdrop-filter: blur(25px);
             border: 1px solid rgba(255, 255, 255, 0.3) !important;
             border-radius: 20px;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            padding: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            padding: 12px;
+            position: relative;
         }
         body.modo-oscuro #modalZoomImagen .modal-content {
-            background: rgba(15, 20, 25, 0.45) !important;
-            border-color: rgba(255, 255, 255, 0.1) !important;
+            background: rgba(15, 20, 25, 0.65) !important;
+            border-color: rgba(255, 255, 255, 0.15) !important;
         }
-        #modalZoomImagen .modal-header {
+        #modalZoomImagen .btn-close-zoom {
             position: absolute;
-            top: -15px;
-            right: -15px;
-            z-index: 10;
-            padding: 0;
-            border: none;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 50%;
+            top: -16px;
+            right: -16px;
+            z-index: 1060;
             width: 44px;
             height: 44px;
+            border-radius: 50%;
+            background: #ef4444;
+            color: #ffffff;
+            border: 2px solid #ffffff;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.45);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            transition: all 0.2s ease;
-        }
-        #modalZoomImagen .modal-header:hover {
-            background: rgba(255, 255, 255, 0.45);
-            transform: scale(1.08);
+            font-size: 1.1rem;
             cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        #modalZoomImagen .btn-close {
-            margin: 0;
-            opacity: 0.8;
-            filter: none !important;
-            transition: opacity 0.2s ease;
+        #modalZoomImagen .btn-close-zoom:hover {
+            background: #dc2626;
+            transform: scale(1.12) rotate(90deg);
+            box-shadow: 0 6px 20px rgba(239, 68, 68, 0.65);
         }
-        #modalZoomImagen .modal-header:hover .btn-close {
-            opacity: 1;
+        body.modo-oscuro #modalZoomImagen .btn-close-zoom {
+            border-color: #1f2937;
         }
-        body.modo-oscuro #modalZoomImagen .modal-header {
-            background: rgba(0, 0, 0, 0.45);
+        @media (max-width: 768px) {
+            #modalZoomImagen .btn-close-zoom {
+                top: 10px;
+                right: 10px;
+                width: 38px;
+                height: 38px;
+                font-size: 0.95rem;
+            }
         }
     </style>
 </head>
@@ -521,13 +527,13 @@
 
     <!-- Modal de Zoom de Imagen -->
     <div class="modal fade" id="modalZoomImagen" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-xl">
-            <div class="modal-content bg-transparent border-0">
-                <div class="modal-header border-0 pb-0 justify-content-end">
-                    <button type="button" class="btn-close btn-close-white fs-4" data-bs-dismiss="modal" aria-label="Cerrar"></button>
-                </div>
-                <div class="modal-body text-center p-2">
-                    <img id="imgZoomModal" src="" alt="Zoom" class="img-fluid rounded shadow" style="max-height: 85vh; object-fit: contain;">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg position-relative">
+                <button type="button" class="btn-close-zoom shadow" data-bs-dismiss="modal" aria-label="Cerrar modal">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+                <div class="modal-body text-center p-0 d-flex align-items-center justify-content-center">
+                    <img id="imgZoomModal" src="" alt="Zoom" class="img-fluid rounded-3 shadow" style="max-height: 85vh; max-width: 100%; object-fit: contain;">
                 </div>
             </div>
         </div>

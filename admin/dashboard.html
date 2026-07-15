@@ -955,54 +955,6 @@
                         <tbody id="tablaClientes"></tbody>
                     </table>
                 </div>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- Modal de Gestión de Usuario -->
-        <div class="modal fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered">
-                <div class="modal-content border-0 shadow-lg rounded-4">
-                    <div class="modal-header bg-primary bg-opacity-10 border-bottom-0 p-4">
-                        <h5 class="modal-title fw-bold text-primary" id="modalUsuarioTitulo"><i class="bi bi-person-gear me-2"></i> Gestión de Perfil de Usuario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar modal"></button>
-                    </div>
-                    <div class="modal-body p-4">
-                        <form id="formUsuario">
-                            <input type="hidden" id="usuarioId">
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold" for="usuarioNombre">Nombre Completo *</label>
-                                <input type="text" class="form-control rounded-3" id="usuarioNombre" required placeholder="Ej: Juan Pérez">
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold" for="usuarioEmail">Correo Electrónico (Email) *</label>
-                                <input type="email" class="form-control rounded-3" id="usuarioEmail" required placeholder="ejemplo@correo.com">
-                            </div>
-                            <div class="row g-3 mb-3">
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold" for="usuarioRol">Rol de Sistema</label>
-                                    <select class="form-select rounded-3" id="usuarioRol">
-                                        <option value="cliente">Cliente (Estándar)</option>
-                                        <option value="admin">Administrador (Total)</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label class="form-label fw-semibold" for="usuarioTelefono">Teléfono</label>
-                                    <input type="tel" class="form-control rounded-3" id="usuarioTelefono" placeholder="987654321">
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-semibold" for="usuarioDireccion">Dirección Principal de Envío</label>
-                                <input type="text" class="form-control rounded-3" id="usuarioDireccion" placeholder="Av. Principal 123, Lima">
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer border-top-0 p-4 pt-0">
-                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" onclick="guardarUsuario()"><i class="bi bi-save me-1"></i> Guardar Usuario</button>
-                    </div>
-                </div>
             </div>
         </div>
 
@@ -1174,6 +1126,52 @@
             </div>
         </div>
         </div> <!-- /dashboard-container -->
+
+        <!-- Modal de Gestión de Usuario -->
+        <div class="modal fade" id="modalUsuario" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content border-0 shadow-lg rounded-4">
+                    <div class="modal-header bg-primary bg-opacity-10 border-bottom-0 p-4">
+                        <h5 class="modal-title fw-bold text-primary" id="modalUsuarioTitulo"><i class="bi bi-person-gear me-2"></i> Gestión de Perfil de Usuario</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar modal"></button>
+                    </div>
+                    <div class="modal-body p-4">
+                        <form id="formUsuario">
+                            <input type="hidden" id="usuarioId">
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="usuarioNombre">Nombre Completo *</label>
+                                <input type="text" class="form-control rounded-3" id="usuarioNombre" required placeholder="Ej: Juan Pérez">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="usuarioEmail">Correo Electrónico (Email) *</label>
+                                <input type="email" class="form-control rounded-3" id="usuarioEmail" required placeholder="ejemplo@correo.com">
+                            </div>
+                            <div class="row g-3 mb-3">
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" for="usuarioRol">Rol de Sistema</label>
+                                    <select class="form-select rounded-3" id="usuarioRol">
+                                        <option value="cliente">Cliente (Estándar)</option>
+                                        <option value="admin">Administrador (Total)</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label class="form-label fw-semibold" for="usuarioTelefono">Teléfono</label>
+                                    <input type="tel" class="form-control rounded-3" id="usuarioTelefono" placeholder="987654321">
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-semibold" for="usuarioDireccion">Dirección Principal de Envío</label>
+                                <input type="text" class="form-control rounded-3" id="usuarioDireccion" placeholder="Av. Principal 123, Lima">
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer border-top-0 p-4 pt-0">
+                        <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary rounded-pill px-4 shadow-sm" onclick="guardarUsuario()"><i class="bi bi-save me-1"></i> Guardar Usuario</button>
+                    </div>
+                </div>
+            </div>
+        </div>
 
         <!-- Modal Blog -->
         <div class="modal fade" id="modalBlog" tabindex="-1">
