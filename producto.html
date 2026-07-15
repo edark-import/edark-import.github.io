@@ -248,9 +248,9 @@
                     <label class="form-label fw-bold mb-2">Cantidad deseada:</label>
                     <div class="d-flex flex-wrap gap-3 align-items-center mb-3">
                         <div class="input-group qty-selector">
-                            <button class="btn btn-outline-secondary" type="button" onclick="cambiarCantidad(-1)"><i class="bi bi-dash"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="cambiarCantidad(-1)" aria-label="Disminuir cantidad" title="Disminuir cantidad"><i class="bi bi-dash"></i></button>
                             <input type="number" class="form-control text-center" value="1" min="1" max="99" id="qtyInput" aria-label="Cantidad">
-                            <button class="btn btn-outline-secondary" type="button" onclick="cambiarCantidad(1)"><i class="bi bi-plus"></i></button>
+                            <button class="btn btn-outline-secondary" type="button" onclick="cambiarCantidad(1)" aria-label="Aumentar cantidad" title="Aumentar cantidad"><i class="bi bi-plus"></i></button>
                         </div>
                         <span class="text-muted small" id="stockInfoText">Unidades disponibles en almacén</span>
                     </div>

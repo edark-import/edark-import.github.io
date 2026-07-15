@@ -731,7 +731,7 @@
                     <!-- Toolbar -->
                     <div class="toolbar" id="editorToolbar">
                         <!-- Headings -->
-                        <select class="toolbar-select" onchange="formatHeading(this.value); this.value='';">
+                        <select class="toolbar-select" title="Formato de encabezados y párrafos" aria-label="Formato de encabezados y párrafos" onchange="formatHeading(this.value); this.value='';">
                             <option value="">Párrafo / Heading</option>
                             <option value="h1">Título H1</option>
                             <option value="h2">Sección H2</option>
@@ -752,10 +752,10 @@
 
                         <!-- Color -->
                         <div class="toolbar-color-btn" title="Color de texto">
-                            <input type="color" id="textColor" value="#2563eb" onchange="execCmd('foreColor', this.value)">
+                            <input type="color" id="textColor" value="#2563eb" title="Color de texto" aria-label="Color de texto" onchange="execCmd('foreColor', this.value)">
                         </div>
                         <div class="toolbar-color-btn" title="Color de fondo">
-                            <input type="color" id="bgColor" value="#fef9c3" onchange="execCmd('hiliteColor', this.value)">
+                            <input type="color" id="bgColor" value="#fef9c3" title="Color de fondo" aria-label="Color de fondo" onchange="execCmd('hiliteColor', this.value)">
                         </div>
 
                         <div class="toolbar-sep"></div>
@@ -900,8 +900,8 @@
                     <div class="card-header"><i class="bi bi-folder2"></i> Clasificación</div>
                     <div class="card-body">
                         <div class="form-field">
-                            <label>Categoría</label>
-                            <select id="edCategoria" class="form-select">
+                            <label for="edCategoria">Categoría</label>
+                            <select id="edCategoria" class="form-select" title="Seleccionar categoría" aria-label="Seleccionar categoría">
                                 <option value="Tecnología">Tecnología</option>
                                 <option value="Hardware">Hardware</option>
                                 <option value="Software">Software</option>
