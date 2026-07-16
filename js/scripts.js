@@ -101,7 +101,44 @@ async function inicializarTipoCambioSunat() {
 }
 
 // --- FALLBACK HTML UNIVERSAL PARA NAVBAR Y FOOTER ---
-const NAVBAR_FALLBACK_HTML = `<!-- Navigation-->
+const NAVBAR_FALLBACK_HTML = `<!-- Navigation Styles -->
+<style>
+/* CSS Responsive para Navbar #adminNav: evita que se vea amontonado y usa íconos si falta espacio */
+#adminNav {
+    flex-wrap: nowrap !important;
+}
+@media (max-width: 1250px) {
+    #adminNav .nav-btn-text,
+    #adminNav #userEmailShort {
+        display: none !important;
+    }
+    #adminNav .btn,
+    #adminNav .dropdown-toggle {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+    }
+    #adminNav .nav-pill-indicator span {
+        display: none !important;
+    }
+    #adminNav .nav-pill-indicator {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+    }
+}
+@media (max-width: 1350px) {
+    #navLiveSearchInput {
+        width: 150px !important;
+    }
+}
+@media (max-width: 991px) {
+    #adminNav {
+        margin-top: 1rem !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+    }
+}
+</style>
+<!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light glass-navbar fixed-top py-2 shadow-sm transition-all" id="mainNavbar">
     <div class="container-fluid px-4 px-lg-5">
         <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
@@ -138,7 +175,7 @@ const NAVBAR_FALLBACK_HTML = `<!-- Navigation-->
             </ul>
             
             <!-- Acciones Derecha -->
-            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end mt-2 mt-lg-0" id="adminNav">
+            <div class="d-flex align-items-center gap-1.5 gap-lg-2 flex-nowrap justify-content-end mt-2 mt-lg-0" id="adminNav">
                 <!-- Búsqueda predictiva universal en Navbar -->
                 <div class="position-relative d-none d-xl-block" style="width: 230px;">
                     <div class="input-group input-group-sm rounded-pill border bg-white shadow-sm overflow-hidden px-2 py-1 d-flex align-items-center">
@@ -156,22 +193,22 @@ const NAVBAR_FALLBACK_HTML = `<!-- Navigation-->
                 </div>
 
                 <!-- Mis Pedidos botón rápido -->
-                <a href="mis-pedidos.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm transition-all" style="height: 36px;">
+                <a href="mis-pedidos.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm transition-all" style="height: 36px;" title="Mis Pedidos">
                     <i class="bi bi-box-seam"></i>
-                    <span class="d-none d-sm-inline">Pedidos</span>
+                    <span class="nav-btn-text d-none d-sm-inline">Pedidos</span>
                 </a>
 
                 <!-- Botón de Carrito en Navbar -->
-                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none; height: 36px;">
+                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none; height: 36px;" title="Carrito de Compras">
                     <i class="bi bi-cart3 fs-6"></i>
                     <span class="badge bg-danger rounded-pill px-2 py-0.5" id="cartCount" style="font-size:0.75rem;">0</span>
                 </button>
 
                 <!-- Menú Usuario / Cuenta -->
                 <div class="dropdown">
-                    <button class="btn btn-light btn-sm rounded-pill border px-3 py-1 fw-semibold d-flex align-items-center gap-2 shadow-sm dropdown-toggle transition-all" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;">
+                    <button class="btn btn-light btn-sm rounded-pill border px-3 py-1 fw-semibold d-flex align-items-center gap-2 shadow-sm dropdown-toggle transition-all" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;" title="Cuenta de Usuario">
                         <i class="bi bi-person-circle text-primary fs-6"></i>
-                        <span id="userEmailShort" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ingresar</span>
+                        <span id="userEmailShort" class="nav-btn-text" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ingresar</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2 glass-dropdown" aria-labelledby="userMenuBtn" style="min-width: 220px; z-index: 1070;">
                         <li class="px-3 py-2 text-muted small border-bottom mb-1 d-flex flex-column">
@@ -400,6 +437,7 @@ async function cargarNavbarYFooterGlobal() {
             if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
             if (typeof inicializarBusquedaPredictiva === 'function') inicializarBusquedaPredictiva();
             if (typeof inicializarChimueloIA === 'function') inicializarChimueloIA();
+            if (typeof window.sincronizarEstadoNavbarUsuario === 'function') window.sincronizarEstadoNavbarUsuario();
         }
     }
 
@@ -1342,11 +1380,9 @@ if (adminFormEl) adminFormEl.addEventListener('submit', async function (e) {
     }
 });
 
-// Mostrar/ocultar botones de login/logout, email y panel de administración según rol verificado
-const _auth = typeof auth !== 'undefined' && auth ? auth : (window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null));
-if (_auth) {
-_auth.onAuthStateChanged(async user => {
-    const adminContainer = document.getElementById('adminContainer');
+// Función global para sincronizar sesión y estado del navbar de forma inmediata y resiliente
+window.sincronizarEstadoNavbarUsuario = function(userObj) {
+    const user = userObj !== undefined ? userObj : (window.currentFirebaseUser || (typeof auth !== 'undefined' && auth && auth.currentUser ? auth.currentUser : null));
     const logoutBtn = document.getElementById('logoutBtnNav');
     const logoutLi = document.getElementById('logoutLi');
     const loginLi = document.getElementById('loginLi');
@@ -1355,26 +1391,62 @@ _auth.onAuthStateChanged(async user => {
     const userEmailFull = document.getElementById('userEmailFull');
     const adminLinkLi = document.getElementById('adminLinkLi');
 
-    if (!user) {
-        window.currentUserIsAdmin = false;
-        if (adminContainer) adminContainer.classList.add('d-none');
+    const cachedEmail = localStorage.getItem('edark_user_email_cache');
+    const cachedName = localStorage.getItem('edark_user_name_cache');
+    const activeEmail = user ? user.email : cachedEmail;
+    const activeName = user ? (user.displayName ? user.displayName.split(' ')[0] : (user.email ? user.email.split('@')[0] : 'Usuario')) : cachedName;
+
+    if (user || cachedEmail) {
+        if (logoutBtn) logoutBtn.classList.remove('d-none');
+        if (logoutLi) logoutLi.classList.remove('d-none');
+        if (loginLi) loginLi.classList.add('d-none');
+        if (userEmail) { userEmail.textContent = activeEmail || ''; userEmail.classList.add('d-none'); }
+        if (userEmailShort) userEmailShort.textContent = activeName || 'Usuario';
+        if (userEmailFull) userEmailFull.textContent = activeEmail || 'Usuario Activo';
+
+        const EMAIL_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());
+        if (activeEmail && EMAIL_WHITELIST.includes(activeEmail.toLowerCase())) {
+            if (adminLinkLi) adminLinkLi.classList.remove('d-none');
+            window.currentUserIsAdmin = true;
+        }
+    } else {
         if (logoutBtn) logoutBtn.classList.add('d-none');
         if (logoutLi) logoutLi.classList.add('d-none');
         if (loginLi) loginLi.classList.remove('d-none');
-        if (userEmail) userEmail.classList.add('d-none');
+        if (userEmail) { userEmail.textContent = ''; userEmail.classList.add('d-none'); }
         if (userEmailShort) userEmailShort.textContent = 'Ingresar';
         if (userEmailFull) userEmailFull.textContent = 'Invitado';
         if (adminLinkLi) adminLinkLi.classList.add('d-none');
+    }
+};
+
+// Mostrar/ocultar botones de login/logout, email y panel de administración según rol verificado
+const _auth = typeof auth !== 'undefined' && auth ? auth : (window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null));
+if (_auth) {
+_auth.onAuthStateChanged(async user => {
+    if (user) {
+        window.currentFirebaseUser = user;
+        try {
+            localStorage.setItem('edark_user_email_cache', user.email || '');
+            localStorage.setItem('edark_user_name_cache', user.displayName ? user.displayName.split(' ')[0] : (user.email ? user.email.split('@')[0] : 'Usuario'));
+        } catch(e) {}
+    } else {
+        window.currentFirebaseUser = null;
+        try {
+            localStorage.removeItem('edark_user_email_cache');
+            localStorage.removeItem('edark_user_name_cache');
+        } catch(e) {}
+    }
+
+    window.sincronizarEstadoNavbarUsuario(user);
+
+    if (!user) {
+        const adminContainer = document.getElementById('adminContainer');
+        if (adminContainer) adminContainer.classList.add('d-none');
+        window.currentUserIsAdmin = false;
         renderProductosPaginados();
         return;
     }
-
-    if (logoutBtn) logoutBtn.classList.remove('d-none');
-    if (logoutLi) logoutLi.classList.remove('d-none');
-    if (loginLi) loginLi.classList.add('d-none');
-    if (userEmail) { userEmail.textContent = user.email || ''; userEmail.classList.remove('d-none'); }
-    if (userEmailShort) userEmailShort.textContent = user.email || 'Usuario';
-    if (userEmailFull) userEmailFull.textContent = user.email || 'Usuario Activo';
 
     const loginModalEl = document.getElementById('loginModal');
     const loginModal = loginModalEl ? bootstrap.Modal.getInstance(loginModalEl) : null;

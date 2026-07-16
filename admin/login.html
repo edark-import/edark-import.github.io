@@ -141,7 +141,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-    <script src="../js/firebase-config.js?v=20260709"></script>
+    <script src="../js/firebase-config.js?v=20260716"></script>
 </head>
 
 <body>
@@ -306,12 +306,12 @@
                 }
 
             } catch (error) {
-                console.error(error);
-                let msg = 'Error al iniciar sesión';
-                if (error.code === 'auth/wrong-password') msg = 'Contraseña incorrecta';
-                if (error.code === 'auth/user-not-found') msg = 'Usuario no encontrado';
-                if (error.code === 'auth/too-many-requests') msg = 'Demasiados intentos. intente más tarde.';
-                showAlert(msg);
+                console.error('Login error:', error);
+                let msg = `Error: ${error.message || 'No se pudo iniciar sesión'}`;
+                if (error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') msg = 'Contraseña incorrecta o credenciales inválidas';
+                if (error.code === 'auth/user-not-found') msg = 'Usuario no encontrado en Firebase';
+                if (error.code === 'auth/too-many-requests') msg = 'Demasiados intentos fallidos. Intente más tarde.';
+                showAlert(msg, 'danger');
                 toggleLoading(false);
             }
         });

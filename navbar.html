@@ -1,3 +1,40 @@
+<!-- Navigation Styles -->
+<style>
+/* CSS Responsive para Navbar #adminNav: evita que se vea amontonado y usa íconos si falta espacio */
+#adminNav {
+    flex-wrap: nowrap !important;
+}
+@media (max-width: 1250px) {
+    #adminNav .nav-btn-text,
+    #adminNav #userEmailShort {
+        display: none !important;
+    }
+    #adminNav .btn,
+    #adminNav .dropdown-toggle {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+    }
+    #adminNav .nav-pill-indicator span {
+        display: none !important;
+    }
+    #adminNav .nav-pill-indicator {
+        padding-left: 0.6rem !important;
+        padding-right: 0.6rem !important;
+    }
+}
+@media (max-width: 1350px) {
+    #navLiveSearchInput {
+        width: 150px !important;
+    }
+}
+@media (max-width: 991px) {
+    #adminNav {
+        margin-top: 1rem !important;
+        justify-content: flex-start !important;
+        flex-wrap: wrap !important;
+    }
+}
+</style>
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light glass-navbar fixed-top py-2 shadow-sm transition-all" id="mainNavbar">
     <div class="container-fluid px-4 px-lg-5">
@@ -35,7 +72,7 @@
             </ul>
             
             <!-- Acciones Derecha -->
-            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end mt-2 mt-lg-0" id="adminNav">
+            <div class="d-flex align-items-center gap-1.5 gap-lg-2 flex-nowrap justify-content-end mt-2 mt-lg-0" id="adminNav">
                 <!-- Búsqueda predictiva universal en Navbar -->
                 <div class="position-relative d-none d-xl-block" style="width: 230px;">
                     <div class="input-group input-group-sm rounded-pill border bg-white shadow-sm overflow-hidden px-2 py-1 d-flex align-items-center">
@@ -53,22 +90,22 @@
                 </div>
 
                 <!-- Mis Pedidos botón rápido -->
-                <a href="mis-pedidos.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm transition-all" style="height: 36px;">
+                <a href="mis-pedidos.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm transition-all" style="height: 36px;" title="Mis Pedidos">
                     <i class="bi bi-box-seam"></i>
-                    <span class="d-none d-sm-inline">Pedidos</span>
+                    <span class="nav-btn-text d-none d-sm-inline">Pedidos</span>
                 </a>
 
                 <!-- Botón de Carrito en Navbar -->
-                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none; height: 36px;">
+                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none; height: 36px;" title="Carrito de Compras">
                     <i class="bi bi-cart3 fs-6"></i>
                     <span class="badge bg-danger rounded-pill px-2 py-0.5" id="cartCount" style="font-size:0.75rem;">0</span>
                 </button>
 
                 <!-- Menú Usuario / Cuenta -->
                 <div class="dropdown">
-                    <button class="btn btn-light btn-sm rounded-pill border px-3 py-1 fw-semibold d-flex align-items-center gap-2 shadow-sm dropdown-toggle transition-all" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;">
+                    <button class="btn btn-light btn-sm rounded-pill border px-3 py-1 fw-semibold d-flex align-items-center gap-2 shadow-sm dropdown-toggle transition-all" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;" title="Cuenta de Usuario">
                         <i class="bi bi-person-circle text-primary fs-6"></i>
-                        <span id="userEmailShort" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ingresar</span>
+                        <span id="userEmailShort" class="nav-btn-text" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ingresar</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2 glass-dropdown" aria-labelledby="userMenuBtn" style="min-width: 220px; z-index: 1070;">
                         <li class="px-3 py-2 text-muted small border-bottom mb-1 d-flex flex-column">
