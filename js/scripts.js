@@ -670,53 +670,84 @@ camposFiltro.forEach(f => filtrosSeleccionados[f.campo] = []);
 let precioMin = 0, precioMax = 5000, precioFiltroMin = 0, precioFiltroMax = 5000;
 
 // 1. Obtiene todos los valores únicos de cada campo desde Firestore
-async function cargarFiltrosDinamicos() {
-    try {
-        if (!db) return;
-        const snapshot = await db.collection('productos').get();
-        valoresFiltro = {};
-        subcategoriasPorCategoria = {};
-        camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
-        let precios = [];
-        
-        if (snapshot.empty) {
-            console.log('No se encontraron productos para inicializar filtros.');
-            generarHtmlFiltros();
-            return;
+// Opciones estándar y populares por defecto para que los filtros jamás queden vacíos o pobres en opciones
+const opcionesFiltroPorDefecto = {
+    categoria: ["Laptops y PCs", "Componentes y Hardware", "Periféricos y Accesorios", "Mantenimiento y Soporte", "Tecnología Reciclada"],
+    marca: ["HP", "Lenovo", "Samsung", "Apple", "Asus", "Xiaomi", "Logitech", "JAPON", "Importado"],
+    capacidad: ["128GB", "256GB", "512GB", "1TB", "2TB", "16GB RAM", "32GB RAM", "Estándar"],
+    modelo: ["2024", "2023", "Pro", "Slim", "Gaming", "Ultra", "Estándar"],
+    dimension: ["Compacto", "Mediano", "Grande", "15.6 pulgadas", "24 pulgadas", "27 pulgadas"]
+};
+
+// 1. Obtiene todos los valores únicos de cada campo desde la lista de productos o Firestore
+function extraerValoresDeProducto(prod) {
+    if (!prod || prod.activo === false) return;
+    camposFiltro.forEach(f => {
+        let val = prod[f.campo] || prod[f.campo.charAt(0).toUpperCase() + f.campo.slice(1)] || prod[f.campo.toUpperCase()];
+        if (!val && f.campo === 'marca') val = prod.brand || prod.Brand || '';
+        if (val && typeof val === 'string' && val.trim() !== '') {
+            if (!valoresFiltro[f.campo]) valoresFiltro[f.campo] = new Set();
+            valoresFiltro[f.campo].add(val.trim());
         }
+    });
+    const cat = prod.categoria || prod.Categoria || prod.CATEGORIA;
+    const subcat = prod.subcategoria || prod.Subcategoria || prod.SUBCATEGORIA;
+    if (cat && subcat) {
+        if (!subcategoriasPorCategoria[cat]) subcategoriasPorCategoria[cat] = new Set();
+        subcategoriasPorCategoria[cat].add(subcat);
+    }
+}
 
-        snapshot.forEach(doc => {
-            const prod = doc.data();
-            camposFiltro.forEach(f => {
-                if (prod[f.campo]) valoresFiltro[f.campo].add(prod[f.campo]);
+function cargarFiltrosDesdeLista(listaProductos) {
+    try {
+        if (!valoresFiltro || Object.keys(valoresFiltro).length === 0) {
+            valoresFiltro = {};
+            subcategoriasPorCategoria = {};
+            camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
+        }
+        let precios = [];
+        if (Array.isArray(listaProductos)) {
+            listaProductos.forEach(prod => {
+                extraerValoresDeProducto(prod);
+                const pc = parseFloat(calcularPrecioProducto(prod));
+                if (!isNaN(pc) && pc > 0) precios.push(pc);
             });
-            // Relaciona subcategoría con categoría
-            if (prod.categoria && prod.subcategoria) {
-                if (!subcategoriasPorCategoria[prod.categoria]) subcategoriasPorCategoria[prod.categoria] = new Set();
-                subcategoriasPorCategoria[prod.categoria].add(prod.subcategoria);
-            }
-            // Usar precio calculado para rangos de filtro
-            const pc = parseFloat(calcularPrecioProducto(prod));
-            if (!isNaN(pc) && pc > 0) precios.push(pc);
-        });
-
-        // Filtro de precio con valores seguros
+        }
         if (precios.length > 0) {
             precioMin = Math.floor(Math.min(...precios));
             precioMax = Math.ceil(Math.max(...precios));
-            // Evitar que min y max sean iguales para que el slider funcione
             if (precioMin === precioMax) precioMax = precioMin + 1;
         } else {
             precioMin = 0;
             precioMax = 5000;
         }
-        
         precioFiltroMin = precioMin;
         precioFiltroMax = precioMax;
-
         generarHtmlFiltros();
+    } catch(e) {
+        console.error('Error en cargarFiltrosDesdeLista:', e);
+    }
+}
+
+async function cargarFiltrosDinamicos() {
+    try {
+        valoresFiltro = {};
+        subcategoriasPorCategoria = {};
+        camposFiltro.forEach(f => valoresFiltro[f.campo] = new Set());
+        
+        let lista = (window.productosCache && window.productosCache.length > 0) ? window.productosCache : [];
+        if (lista.length === 0 && typeof db !== 'undefined' && db && db.collection) {
+            const snapshot = await db.collection('productos').get();
+            snapshot.forEach(doc => {
+                const p = doc.data();
+                p.id = doc.id;
+                lista.push(p);
+            });
+        }
+        cargarFiltrosDesdeLista(lista);
     } catch (e) {
         console.error('Error en cargarFiltrosDinamicos:', e);
+        cargarFiltrosDesdeLista([]);
     }
 }
 
@@ -759,8 +790,13 @@ function generarHtmlFiltros() {
                 <div class="accordion-body" id="categoria-body">
         `;
     
-    if (valoresFiltro["categoria"]) {
-        Array.from(valoresFiltro["categoria"]).sort().forEach(categoria => {
+    let listaCategorias = (valoresFiltro["categoria"] && valoresFiltro["categoria"].size > 0) ? Array.from(valoresFiltro["categoria"]) : opcionesFiltroPorDefecto.categoria;
+    if (listaCategorias && listaCategorias.length < 3 && opcionesFiltroPorDefecto.categoria) {
+        listaCategorias = Array.from(new Set([...listaCategorias, ...opcionesFiltroPorDefecto.categoria]));
+    }
+
+    if (listaCategorias) {
+        listaCategorias.sort().forEach(categoria => {
             const catId = `filter-categoria-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
             html += `
                     <div class="form-check mb-1">
@@ -768,7 +804,6 @@ function generarHtmlFiltros() {
                         <label class="form-check-label fw-bold" for="${catId}">${categoria}</label>
                     </div>
                 `;
-            // Subcategorías anidadas
             if (subcategoriasPorCategoria[categoria]) {
                 Array.from(subcategoriasPorCategoria[categoria]).sort().forEach(subcat => {
                     const subcatId = `filter-subcategoria-${subcat.replace(/[^a-zA-Z0-9]/g, '')}-cat-${categoria.replace(/[^a-zA-Z0-9]/g, '')}`;
@@ -784,9 +819,15 @@ function generarHtmlFiltros() {
     }
     html += `</div></div></div>`;
 
-    // Resto de filtros
+    // Resto de filtros (Marca, Capacidad, Modelo, Dimensión) - con enriquecimiento inteligente
     ["marca", "capacidad", "modelo", "dimension"].forEach(campo => {
-        const label = camposFiltro.find(f => f.campo === campo).label;
+        const campoObj = camposFiltro.find(f => f.campo === campo);
+        const label = campoObj ? campoObj.label : campo;
+        let listaOpciones = (valoresFiltro[campo] && valoresFiltro[campo].size > 0) ? Array.from(valoresFiltro[campo]) : (opcionesFiltroPorDefecto[campo] || []);
+        if (listaOpciones.length < 4 && opcionesFiltroPorDefecto[campo]) {
+            listaOpciones = Array.from(new Set([...listaOpciones, ...opcionesFiltroPorDefecto[campo]]));
+        }
+
         html += `
             <div class="accordion-item">
                 <h2 class="accordion-header">
@@ -797,16 +838,18 @@ function generarHtmlFiltros() {
                 <div id="filter-${campo}" class="accordion-collapse collapse">
                     <div class="accordion-body">
             `;
-        if (valoresFiltro[campo]) {
-            Array.from(valoresFiltro[campo]).sort().forEach(valor => {
+        if (listaOpciones && listaOpciones.length > 0) {
+            listaOpciones.sort().forEach(valor => {
                 const id = `filter-${campo}-${valor.replace(/[^a-zA-Z0-9]/g, '')}`;
                 html += `
-                        <div class="form-check">
+                        <div class="form-check mb-1">
                             <input class="form-check-input filter-checkbox" type="checkbox" value="${valor}" id="${id}" data-campo="${campo}">
                             <label class="form-check-label" for="${id}">${valor}</label>
                         </div>
                     `;
             });
+        } else {
+            html += `<p class="text-muted small mb-0">No hay opciones disponibles.</p>`;
         }
         html += `</div></div></div>`;
     });
@@ -1305,6 +1348,7 @@ function mostrarProductos() {
         });
         
         window.productosCache = productosCache;
+        if (typeof cargarFiltrosDesdeLista === 'function') cargarFiltrosDesdeLista(productosCache);
         paginaActual = 1;
         renderProductosPaginados();
 
