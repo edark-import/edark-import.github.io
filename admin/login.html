@@ -199,8 +199,8 @@
 
     <script>
         // Init Firebase handles from global if available (firebase-config.js should run first)
-        const auth = firebase.auth();
-        const db = firebase.firestore();
+        var auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
+        var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 
         // Whitelist con todas las variaciones de correo de administración
         const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());

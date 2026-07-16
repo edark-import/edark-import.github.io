@@ -1513,9 +1513,9 @@
 
     <script>
         // Tomar las referencias globales de Firebase v8 inicializadas en <head>
-        const db = window.db;
-        const auth = window.auth;
-        const storage = window.storage;
+        var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
+        var auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
+        var storage = window.storage || (typeof firebase !== 'undefined' && firebase.storage ? firebase.storage() : null);
 
         // Variables globales
         let ventasChart, metodoPagoChart;

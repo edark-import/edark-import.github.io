@@ -978,8 +978,8 @@
     if (!firebase.apps.length) {
         firebase.initializeApp(window.firebaseConfig);
     }
-    const auth = firebase.auth();
-    const db   = firebase.firestore();
+    var auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
+    var db   = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 
     // Auth guard (Admin verification)
     const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());

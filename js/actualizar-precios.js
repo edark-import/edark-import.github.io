@@ -15,7 +15,7 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
+var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 
 // Obtiene el tipo de cambio SUNAT, si falla retorna 3.8
 async function getTipoCambio() {

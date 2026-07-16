@@ -265,7 +265,7 @@
             measurementId: "G-E7QS4JDK5C"
         };
         firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 
         let filtrosSeleccionados = {
             categoria: [],

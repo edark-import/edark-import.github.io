@@ -554,7 +554,7 @@
 
     <script>
         let currentProduct = null;
-        let db = firebase.firestore();
+        var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 
         function cambiarCantidad(delta) {
             const input = document.getElementById('qtyInput');
