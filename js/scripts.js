@@ -100,55 +100,333 @@ async function inicializarTipoCambioSunat() {
     if (tcText) tcText.textContent = `S/ ${tipoCambioGlobal.toFixed(2)}`;
 }
 
+// --- FALLBACK HTML UNIVERSAL PARA NAVBAR Y FOOTER ---
+const NAVBAR_FALLBACK_HTML = `<!-- Navigation-->
+<nav class="navbar navbar-expand-lg navbar-light glass-navbar fixed-top py-2 shadow-sm transition-all" id="mainNavbar">
+    <div class="container-fluid px-4 px-lg-5">
+        <a class="navbar-brand d-flex align-items-center gap-2" href="index.html">
+            <img width="90" class="d-flex transition-all logo-img" alt="edark_logo" src="img/Logo/logo_2.png">
+        </a>
+        <button class="navbar-toggler border-0 shadow-none p-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-1 fw-semibold align-items-lg-center">
+                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="index.html"><i class="bi bi-house-door me-1"></i>Inicio</a></li> 
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle px-3 rounded-pill transition-all" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-briefcase me-1"></i>Servicios</a>
+                    <ul class="dropdown-menu shadow-lg border-0 rounded-4 p-2 mt-2 glass-dropdown" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="consultoria.html"><i class="bi bi-lightbulb text-primary me-2"></i>Consultoría tecnológica</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="soporte.html"><i class="bi bi-tools text-primary me-2"></i>Soporte técnico</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li class="dropdown-submenu position-relative">
+                            <a class="dropdown-item dropdown-toggle rounded-3 py-2 fw-medium d-flex justify-content-between align-items-center" href="#"><span class="d-flex align-items-center"><i class="bi bi-people text-info me-2"></i>Asesoramiento Tecnológico</span></a>
+                            <ul class="dropdown-menu shadow-lg border-0 rounded-4 p-2">
+                                <li><a class="dropdown-item rounded-3 py-2" href="asesoramiento-hogar.html"><i class="bi bi-house-door text-success me-2"></i>Hogar</a></li>
+                                <li><a class="dropdown-item rounded-3 py-2" href="asesoramiento-empresa.html"><i class="bi bi-building text-primary me-2"></i>Empresa</a></li>
+                            </ul>
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="mantenimiento.html"><i class="bi bi-gear-wide-connected text-secondary me-2"></i>Mantenimiento y reparación</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="recicla.html"><i class="bi bi-recycle text-success me-2"></i>Recicla tecnología</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="pc-personalizada.html"><i class="bi bi-pc-display-horizontal text-warning me-2"></i>PC Personalizada</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="blog.html"><i class="bi bi-journal-text me-1"></i>Blog</a></li>
+                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="nosotros.html"><i class="bi bi-info-circle me-1"></i>Nosotros</a></li>
+                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="contactanos.html"><i class="bi bi-envelope me-1"></i>Contáctanos</a></li>
+            </ul>
+            
+            <!-- Acciones Derecha -->
+            <div class="d-flex align-items-center gap-2 flex-wrap justify-content-end mt-2 mt-lg-0" id="adminNav">
+                <!-- Búsqueda predictiva universal en Navbar -->
+                <div class="position-relative d-none d-xl-block" style="width: 230px;">
+                    <div class="input-group input-group-sm rounded-pill border bg-white shadow-sm overflow-hidden px-2 py-1 d-flex align-items-center">
+                        <i class="bi bi-search text-muted ms-1"></i>
+                        <input type="text" class="form-control border-0 bg-transparent ps-2 py-0 live-search-input shadow-none" id="navLiveSearchInput" placeholder="Buscar en eDark..." aria-label="Buscar en eDark" autocomplete="off" style="font-size:0.85rem;">
+                    </div>
+                    <!-- Dropdown flotante predictivo -->
+                    <div class="live-search-dropdown shadow-lg position-absolute start-0 w-100 bg-white border mt-2 rounded-4 p-2 d-none" id="navLiveSearchDropdown" style="z-index: 1060; max-height: 380px; overflow-y: auto; min-width: 310px;"></div>
+                </div>
+
+                <!-- Tipo de Cambio Indicador elegante -->
+                <div class="nav-pill-indicator d-none d-md-flex align-items-center px-3 py-1 rounded-pill border shadow-sm bg-light text-dark fw-bold" style="font-size: 0.8rem; cursor: default; height: 36px;" title="Tipo de Cambio SUNAT (Soporte Manual/Automático)">
+                    <i class="bi bi-currency-exchange text-success me-1.5"></i>
+                    <span id="tipoCambioText">TC: S/ 3.80</span>
+                </div>
+
+                <!-- Mis Pedidos botón rápido -->
+                <a href="mis-pedidos.html" class="btn btn-outline-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-1 shadow-sm transition-all" style="height: 36px;">
+                    <i class="bi bi-box-seam"></i>
+                    <span class="d-none d-sm-inline">Pedidos</span>
+                </a>
+
+                <!-- Botón de Carrito en Navbar -->
+                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none; height: 36px;">
+                    <i class="bi bi-cart3 fs-6"></i>
+                    <span class="badge bg-danger rounded-pill px-2 py-0.5" id="cartCount" style="font-size:0.75rem;">0</span>
+                </button>
+
+                <!-- Menú Usuario / Cuenta -->
+                <div class="dropdown">
+                    <button class="btn btn-light btn-sm rounded-pill border px-3 py-1 fw-semibold d-flex align-items-center gap-2 shadow-sm dropdown-toggle transition-all" type="button" id="userMenuBtn" data-bs-toggle="dropdown" aria-expanded="false" style="height: 36px;">
+                        <i class="bi bi-person-circle text-primary fs-6"></i>
+                        <span id="userEmailShort" style="max-width: 100px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">Ingresar</span>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-4 p-2 mt-2 glass-dropdown" aria-labelledby="userMenuBtn" style="min-width: 220px; z-index: 1070;">
+                        <li class="px-3 py-2 text-muted small border-bottom mb-1 d-flex flex-column">
+                            <span class="fw-bold text-dark">Sesión activa como:</span>
+                            <span id="userEmailFull" class="text-truncate text-primary fw-semibold">Invitado</span>
+                        </li>
+                        <li id="adminLinkLi" class="d-none"><a class="dropdown-item rounded-3 py-2 fw-semibold text-dark" href="admin/dashboard.html"><i class="bi bi-speedometer2 text-primary me-2"></i>Panel Administrador</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 fw-semibold text-dark" href="perfil.html"><i class="bi bi-person-badge text-primary me-2"></i>Mi Perfil de Usuario</a></li>
+                        <li><a class="dropdown-item rounded-3 py-2 fw-semibold text-dark" href="mis-pedidos.html"><i class="bi bi-box-seam text-success me-2"></i>Mis Pedidos</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li id="loginLi"><a class="dropdown-item rounded-3 py-2 fw-semibold text-primary" href="perfil.html"><i class="bi bi-person-plus me-2"></i>Registro / Iniciar Sesión</a></li>
+                        <li id="logoutLi" class="d-none"><button class="dropdown-item rounded-3 py-2 fw-semibold text-danger w-100 text-start" type="button" id="logoutBtnNav"><i class="bi bi-box-arrow-right me-2"></i>Cerrar Sesión</button></li>
+                    </ul>
+                </div>
+
+                <span id="userEmail" class="d-none"></span>
+
+                <!-- Switch modo oscuro/claro -->
+                <div class="form-check form-switch m-0 d-flex align-items-center ps-2">
+                    <input class="form-check-input ms-0 me-1 shadow-none" type="checkbox" role="switch" id="modoOscuroSwitch" aria-label="Alternar modo oscuro" title="Alternar modo oscuro" style="cursor: pointer; width: 2.3em; height: 1.25em;">
+                    <label class="form-check-label m-0 d-flex align-items-center" for="modoOscuroSwitch" id="modoOscuroLabel" aria-label="Alternar modo oscuro" style="color: inherit; cursor: pointer; font-size:1.15rem;"><i class="bi bi-moon"></i><span class="visually-hidden">Alternar modo oscuro</span></label>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<script>
+// Script integrado y auto-ejecutado para Navbar moderna
+(function() {
+    function actualizarLogoNav() {
+        const logo = document.querySelector('.navbar-brand img');
+        if (!logo) return;
+        if (document.body.classList.contains('modo-oscuro')) {
+            logo.src = 'img/Logo/logo_1.png';
+        } else {
+            logo.src = 'img/Logo/logo_2.png';
+        }
+    }
+
+    function initDarkModeSwitch() {
+        const switchOscuro = document.getElementById('modoOscuroSwitch');
+        const labelOscuro = document.getElementById('modoOscuroLabel');
+        
+        if (!switchOscuro) return;
+
+        const dark = localStorage.getItem('modoOscuro') !== 'false';
+        if (dark) {
+            document.body.classList.add('modo-oscuro');
+            document.documentElement.classList.add('modo-oscuro');
+            switchOscuro.checked = true;
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun text-warning"></i><span class="visually-hidden">Alternar modo oscuro</span>';
+        } else {
+            switchOscuro.checked = false;
+            if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon text-primary"></i><span class="visually-hidden">Alternar modo oscuro</span>';
+        }
+
+        switchOscuro.addEventListener('change', function() {
+            if (this.checked) {
+                document.body.classList.add('modo-oscuro');
+                document.documentElement.classList.add('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'true');
+                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun text-warning"></i><span class="visually-hidden">Alternar modo oscuro</span>';
+            } else {
+                document.body.classList.remove('modo-oscuro');
+                document.documentElement.classList.remove('modo-oscuro');
+                localStorage.setItem('modoOscuro', 'false');
+                if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon text-primary"></i><span class="visually-hidden">Alternar modo oscuro</span>';
+            }
+            actualizarLogoNav();
+        });
+
+        actualizarLogoNav();
+    }
+
+    function destacarEnlaceActivo() {
+        try {
+            const path = window.location.pathname;
+            const page = path.split('/').pop() || 'index.html';
+            const links = document.querySelectorAll('.nav-link, .dropdown-item');
+            links.forEach(link => {
+                const href = link.getAttribute('href');
+                if (href && (href === page || href.includes(page))) {
+                    link.classList.add('active');
+                    const parentDropdown = link.closest('.dropdown-menu');
+                    if (parentDropdown && parentDropdown.parentElement) {
+                        const toggle = parentDropdown.parentElement.querySelector('.dropdown-toggle');
+                        if (toggle) toggle.classList.add('active');
+                    }
+                }
+            });
+        } catch (e) {
+            console.error(e);
+        }
+    }
+
+    function initUserMenuState() {
+        if (typeof auth !== 'undefined' && auth.onAuthStateChanged) {
+            auth.onAuthStateChanged(user => {
+                const userEmailShort = document.getElementById('userEmailShort');
+                const userEmailFull = document.getElementById('userEmailFull');
+                const adminLinkLi = document.getElementById('adminLinkLi');
+                const loginLi = document.getElementById('loginLi');
+                const logoutLi = document.getElementById('logoutLi');
+
+                if (user) {
+                    if (userEmailShort) userEmailShort.textContent = user.email ? user.email.split('@')[0] : 'Admin';
+                    if (userEmailFull) userEmailFull.textContent = user.email || 'Admin eDark';
+                    if (adminLinkLi) adminLinkLi.classList.remove('d-none');
+                    if (loginLi) loginLi.classList.add('d-none');
+                    if (logoutLi) logoutLi.classList.remove('d-none');
+                } else {
+                    if (userEmailShort) userEmailShort.textContent = 'Ingresar';
+                    if (userEmailFull) userEmailFull.textContent = 'Invitado';
+                    if (adminLinkLi) adminLinkLi.classList.add('d-none');
+                    if (loginLi) loginLi.classList.remove('d-none');
+                    if (logoutLi) logoutLi.classList.add('d-none');
+                }
+            });
+        }
+    }
+
+    initDarkModeSwitch();
+    destacarEnlaceActivo();
+    setTimeout(initUserMenuState, 100);
+})();
+</script>`;
+
+const FOOTER_FALLBACK_HTML = `<footer class="py-5 bg-dark text-white">
+    <div class="container">
+        <div class="row gy-4">
+            <div class="col-md-4">
+                <a href="index.html" class="d-inline-block mb-2">
+                    <img src="img/Logo/logo_1.png" alt="eDark Logo" width="100">
+                </a>
+                <p class="small">
+                    eDark E.I.R.L. - Soluciones tecnológicas, soporte, consultoría y reciclaje responsable. Innovando para tu hogar y empresa.
+                </p>
+            </div>
+            <div class="col-md-2">
+                <h6 class="text-uppercase fw-bold mb-3">Enlaces</h6>
+                <ul class="list-unstyled">
+                    <li><a href="index.html" class="text-white text-decoration-none">Inicio</a></li>
+                    <li><a href="blog.html" class="text-white text-decoration-none">Blog</a></li>
+                    <li><a href="nosotros.html" class="text-white text-decoration-none">Nosotros</a></li>
+                    <li><a href="contactanos.html" class="text-white text-decoration-none">Contáctanos</a></li>
+                    <li><a href="recicla.html" class="text-white text-decoration-none">Recicla tecnología</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-uppercase fw-bold mb-3">Servicios</h6>
+                <ul class="list-unstyled">
+                    <li><a href="consultoria.html" class="text-white text-decoration-none">Consultoría tecnológica</a></li>
+                    <li><a href="soporte.html" class="text-white text-decoration-none">Soporte técnico</a></li>
+                    <li><a href="mantenimiento.html" class="text-white text-decoration-none">Mantenimiento y reparación</a></li>
+                    <li><a href="asesoramiento-hogar.html" class="text-white text-decoration-none">Asesoramiento hogar</a></li>
+                    <li><a href="asesoramiento-empresa.html" class="text-white text-decoration-none">Asesoramiento empresa</a></li>
+                </ul>
+            </div>
+            <div class="col-md-3">
+                <h6 class="text-uppercase fw-bold mb-3">Contacto</h6>
+                <ul class="list-unstyled small">
+                    <li><i class="bi bi-envelope"></i> <a href="mailto:edark-import@gmail.com" class="text-white text-decoration-none">edark-import@gmail.com</a></li>
+                    <li><i class="bi bi-telephone"></i> <a href="tel:+51916907657" class="text-white text-decoration-none">+51 916 907 657</a></li>
+                    <li><i class="bi bi-geo-alt"></i> Lima, Perú</li>
+                </ul>
+                <div class="mt-3">
+                    <a href="https://www.facebook.com/profile.php?id=61578651951463" target="_blank" rel="noopener noreferrer" class="text-white me-3 fs-5"><i class="bi bi-facebook"></i></a>
+                    <a href="https://www.instagram.com/edarkperu/" target="_blank" rel="noopener noreferrer" class="text-white me-3 fs-5"><i class="bi bi-instagram"></i></a>
+                    <a href="https://wa.me/51916907657" target="_blank" rel="noopener noreferrer" class="text-white me-3 fs-5"><i class="bi bi-whatsapp"></i></a>
+                    <a href="https://www.tiktok.com/@edark_peru?lang=es" target="_blank" rel="noopener noreferrer" class="text-white me-3 fs-5"><i class="bi bi-tiktok"></i></a>
+                </div>
+            </div>
+        </div>
+        <hr class="border-secondary my-4">
+        <div class="row">
+            <div class="col text-center small">
+                &copy; EDARK E.I.R.L. 2024 &mdash; Todos los derechos reservados.
+                <a href="politica-privacidad.html" class="text-white text-decoration-underline ms-2">Política de privacidad</a>
+                <a href="terminos-condiciones.html" class="text-white text-decoration-underline ms-2">Términos y condiciones</a>
+            </div>
+        </div>
+    </div>
+</footer>`;
+
 // --- CARGA DINÁMICA GLOBAL DE NAVBAR Y FOOTER ---
 async function cargarNavbarYFooterGlobal() {
     const navbarTarget = document.getElementById('navbar') || document.getElementById('navbar-container');
     const footerTarget = document.getElementById('footer') || document.getElementById('footer-container');
 
     if (navbarTarget && navbarTarget.innerHTML.trim() === '') {
+        let html = null;
         try {
             const res = await fetch('navbar.html');
             if (res.ok) {
-                const html = await res.text();
-                navbarTarget.innerHTML = html;
-                // Ejecutar scripts del navbar
-                const scripts = navbarTarget.querySelectorAll('script');
-                scripts.forEach(oldScript => {
-                    const newScript = document.createElement('script');
-                    if (oldScript.src) {
-                        newScript.src = oldScript.src;
-                    } else {
-                        newScript.textContent = oldScript.textContent;
-                    }
-                    document.body.appendChild(newScript);
-                    oldScript.remove();
-                });
-                console.log('Navbar dinámico cargado.');
-                actualizarContadorCarrito();
-                if (typeof inicializarBusquedaPredictiva === 'function') inicializarBusquedaPredictiva();
-                if (typeof inicializarChimueloIA === 'function') inicializarChimueloIA();
+                html = await res.text();
+            } else {
+                const resAlt = await fetch('../navbar.html');
+                if (resAlt.ok) html = await resAlt.text();
             }
         } catch (e) {
-            console.warn('Fallo al cargar navbar dinámico:', e.message);
+            console.warn('Fetch de navbar falló (probablemente file:// o ruta alterada), usando fallback integrado:', e.message);
+        }
+
+        if (!html) {
+            html = NAVBAR_FALLBACK_HTML;
+        }
+
+        if (html && navbarTarget.innerHTML.trim() === '') {
+            navbarTarget.innerHTML = html;
+            // Ejecutar scripts del navbar
+            const scripts = navbarTarget.querySelectorAll('script');
+            scripts.forEach(oldScript => {
+                const newScript = document.createElement('script');
+                if (oldScript.src) {
+                    newScript.src = oldScript.src;
+                } else {
+                    newScript.textContent = oldScript.textContent;
+                }
+                document.body.appendChild(newScript);
+                oldScript.remove();
+            });
+            console.log('Navbar dinámico cargado.');
+            if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
+            if (typeof inicializarBusquedaPredictiva === 'function') inicializarBusquedaPredictiva();
+            if (typeof inicializarChimueloIA === 'function') inicializarChimueloIA();
         }
     }
 
     if (footerTarget && footerTarget.innerHTML.trim() === '') {
+        let htmlFooter = null;
         try {
             const res = await fetch('footer.html');
             if (res.ok) {
-                const html = await res.text();
-                footerTarget.innerHTML = html;
-                console.log('Footer dinámico cargado.');
+                htmlFooter = await res.text();
+            } else {
+                const resAlt = await fetch('../footer.html');
+                if (resAlt.ok) htmlFooter = await resAlt.text();
             }
         } catch (e) {
-            console.warn('Fallo al cargar footer dinámico:', e.message);
+            console.warn('Fetch de footer falló, usando fallback integrado:', e.message);
+        }
+
+        if (!htmlFooter) {
+            htmlFooter = FOOTER_FALLBACK_HTML;
+        }
+
+        if (htmlFooter && footerTarget.innerHTML.trim() === '') {
+            footerTarget.innerHTML = htmlFooter;
+            console.log('Footer dinámico cargado.');
         }
     }
 }
 
-document.addEventListener('DOMContentLoaded', async function () {
-    // Cargar navbar y footer primero
+async function inicializarAppYCargarComponentes() {
     await cargarNavbarYFooterGlobal();
 
     // Asegurar que Firebase esté inicializado antes de proceder
@@ -164,7 +442,13 @@ document.addEventListener('DOMContentLoaded', async function () {
         return;
     }
     await iniciarTodo();
-});
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', inicializarAppYCargarComponentes);
+} else {
+    inicializarAppYCargarComponentes();
+}
 
 async function iniciarTodo() {
     console.log('Iniciando carga de la aplicación...');

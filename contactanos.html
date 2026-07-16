@@ -38,33 +38,6 @@
     </script>
     
 </head>
-<script>
-fetch('footer.html')
-  .then(res => res.text())
-  .then(html => {
-    document.getElementById('footer').innerHTML = html;
-  });
-
-fetch('navbar.html')
-    .then(res => res.text())
-    .then(html => {
-        const navbarContainer = document.getElementById('navbar');
-        navbarContainer.innerHTML = html;
-    
-        // Ejecutar scripts insertados dinámicamente
-        const scripts = navbarContainer.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-            document.body.appendChild(newScript);
-            oldScript.remove();
-        });
-    });
-</script>
 <body>
     <!-- Navigation-->
     <div id="navbar"></div>
@@ -330,15 +303,7 @@ Preferencia de contacto: ${preferencias.join(', ')}`;
         });
     });
     </script>
-<script>
-fetch('dark-mode.html')
-  .then(res => res.text())
-  .then(html => {
-    const script = document.createElement('div');
-    script.innerHTML = html;
-    document.body.appendChild(script);
-  });
-</script>
+    <script src="js/scripts.js"></script>
 </body>
 </html>
 

@@ -56,37 +56,6 @@
     </main>
     <div id="footer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-    fetch('footer.html').then(res => res.text()).then(html => { document.getElementById('footer').innerHTML = html; });
-
-fetch('navbar.html')
-  .then(res => res.text())
-  .then(html => {
-        const navbarContainer = document.getElementById('navbar');
-        navbarContainer.innerHTML = html;
-    
-        // Ejecutar scripts insertados dinámicamente
-        const scripts = navbarContainer.querySelectorAll('script');
-        scripts.forEach(oldScript => {
-            const newScript = document.createElement('script');
-            if (oldScript.src) {
-                newScript.src = oldScript.src;
-            } else {
-                newScript.textContent = oldScript.textContent;
-            }
-            document.body.appendChild(newScript);
-            oldScript.remove();
-        });
-    });
-    </script>
-    <script>
-fetch('dark-mode.html')
-  .then(res => res.text())
-  .then(html => {
-    const script = document.createElement('div');
-    script.innerHTML = html;
-    document.body.appendChild(script);
-  });
-</script>
+    <script src="js/scripts.js"></script>
 </body>
 </html>

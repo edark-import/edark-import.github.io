@@ -296,20 +296,6 @@
     <script src="js/scripts.js?v=20251203"></script>
 
     <script>
-        // Cargar navbar y footer
-        fetch('navbar.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('navbar-container').innerHTML = html;
-                if (typeof actualizarContadorCarrito === 'function') actualizarContadorCarrito();
-            });
-
-        fetch('footer.html')
-            .then(res => res.text())
-            .then(html => {
-                document.getElementById('footer-container').innerHTML = html;
-            });
-
         let usuarioLogueadoActual = null;
 
         document.addEventListener('DOMContentLoaded', () => {
