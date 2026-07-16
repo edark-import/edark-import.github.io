@@ -26,17 +26,17 @@ if (window.top !== window.self) window.top.location = window.self.location;
 var db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
 var auth = window.auth || (typeof firebase !== 'undefined' && firebase.auth ? firebase.auth() : null);
 var storage = window.storage || (typeof firebase !== 'undefined' && firebase.storage ? firebase.storage() : null);
-var carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+var carrito = window.carrito || JSON.parse(localStorage.getItem('carrito')) || [];
 
-let tipoCambioGlobal = 3.8; // Tipo de cambio SUNAT global
-let configGeneral = null;   // Configuración global desde Firestore
+var tipoCambioGlobal = window.tipoCambioGlobal || 3.8; // Tipo de cambio SUNAT global
+var configGeneral = window.configGeneral || null;   // Configuración global desde Firestore
 // Número de WhatsApp para pedidos. Cambia aquí tu número en formato internacional, sin espacios ni signos.
-const phone = '51916907657'; // <-- Cambia este número por el tuyo
-let productosCache = [];
-let paginaActual = 1;
-const productosPorPagina = 12;
-let unsubscribe = null;
-let textoBusqueda = '';
+var phone = window.phone || '51916907657'; // <-- Cambia este número por el tuyo
+var productosCache = window.productosCache || [];
+var paginaActual = window.paginaActual || 1;
+var productosPorPagina = window.productosPorPagina || 12;
+var unsubscribe = window.unsubscribe || null;
+var textoBusqueda = window.textoBusqueda || '';
 
 // --- OBTENER Y MOSTRAR TIPO DE CAMBIO SUNAT O MANUAL ---
 async function inicializarTipoCambioSunat() {
@@ -1520,7 +1520,7 @@ function productoCoincideFiltros(producto) {
 // (Se eliminó una redefinición duplicada de asignarEventosProductos que sobrescribía el precio mostrado)
 
 // --- CARRITO DE COMPRAS ---
-let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+var carrito = window.carrito || JSON.parse(localStorage.getItem('carrito')) || [];
 
 function guardarCarrito() {
     localStorage.setItem('carrito', JSON.stringify(carrito));
