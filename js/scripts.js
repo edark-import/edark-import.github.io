@@ -15,8 +15,8 @@ function safeImageUrl(url) {
     } catch { }
     return 'https://dummyimage.com/450x300/dee2e6/6c757d.jpg';
 }
-// Forzar HTTPS
-if (location.protocol !== 'https:' && location.hostname !== 'localhost') {
+// Forzar HTTPS solo si se accede por HTTP en un servidor remoto (no en file:// ni localhost)
+if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
     location.href = 'https://' + location.hostname + location.pathname + location.search;
 }
 // Protección clickjacking
@@ -364,16 +364,18 @@ async function cargarNavbarYFooterGlobal() {
 
     if (navbarTarget && navbarTarget.innerHTML.trim() === '') {
         let html = null;
-        try {
-            const res = await fetch('navbar.html');
-            if (res.ok) {
-                html = await res.text();
-            } else {
-                const resAlt = await fetch('../navbar.html');
-                if (resAlt.ok) html = await resAlt.text();
+        if (window.location.protocol !== 'file:') {
+            try {
+                const res = await fetch('navbar.html');
+                if (res.ok) {
+                    html = await res.text();
+                } else {
+                    const resAlt = await fetch('../navbar.html');
+                    if (resAlt.ok) html = await resAlt.text();
+                }
+            } catch (e) {
+                console.warn('Fetch de navbar falló, usando fallback integrado:', e.message);
             }
-        } catch (e) {
-            console.warn('Fetch de navbar falló (probablemente file:// o ruta alterada), usando fallback integrado:', e.message);
         }
 
         if (!html) {
@@ -403,16 +405,18 @@ async function cargarNavbarYFooterGlobal() {
 
     if (footerTarget && footerTarget.innerHTML.trim() === '') {
         let htmlFooter = null;
-        try {
-            const res = await fetch('footer.html');
-            if (res.ok) {
-                htmlFooter = await res.text();
-            } else {
-                const resAlt = await fetch('../footer.html');
-                if (resAlt.ok) htmlFooter = await resAlt.text();
+        if (window.location.protocol !== 'file:') {
+            try {
+                const res = await fetch('footer.html');
+                if (res.ok) {
+                    htmlFooter = await res.text();
+                } else {
+                    const resAlt = await fetch('../footer.html');
+                    if (resAlt.ok) htmlFooter = await resAlt.text();
+                }
+            } catch (e) {
+                console.warn('Fetch de footer falló, usando fallback integrado:', e.message);
             }
-        } catch (e) {
-            console.warn('Fetch de footer falló, usando fallback integrado:', e.message);
         }
 
         if (!htmlFooter) {
@@ -426,12 +430,16 @@ async function cargarNavbarYFooterGlobal() {
     }
 }
 
+// Ejecutar inmediatamente la carga del Navbar y Footer en cuanto el script se procese
+cargarNavbarYFooterGlobal();
+setTimeout(cargarNavbarYFooterGlobal, 50);
+
 async function inicializarAppYCargarComponentes() {
     await cargarNavbarYFooterGlobal();
 
     // Asegurar que Firebase esté inicializado antes de proceder
     if (typeof db === 'undefined' || !db) {
-        console.error('Firebase DB no inicializado. Verifica firebase-config.js');
+        console.warn('Firebase DB no inicializado o en modo sin conexión/file://. Verifica firebase-config.js');
         // Reintentar brevemente si es por delay de carga
         setTimeout(async () => {
             db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
