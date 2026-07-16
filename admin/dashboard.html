@@ -369,7 +369,7 @@
             }
         }
 
-        const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+        const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());
         window.auth.onAuthStateChanged(async (user) => {
             if (!user) { window.location.href = 'login.html'; return; }
             try {

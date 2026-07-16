@@ -1381,7 +1381,7 @@ _auth.onAuthStateChanged(async user => {
     if (loginModal) loginModal.hide();
 
     let esAdmin = false;
-    const EMAIL_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+    const EMAIL_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());
     if (EMAIL_WHITELIST.includes((user.email || '').toLowerCase())) esAdmin = true;
 
     try {

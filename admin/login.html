@@ -202,8 +202,8 @@
         const auth = firebase.auth();
         const db = firebase.firestore();
 
-        // Whitelist
-        const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+        // Whitelist con todas las variaciones de correo de administración
+        const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());
 
         // UI Refs
         const loginForm = document.getElementById('loginForm');

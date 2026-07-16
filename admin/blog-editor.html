@@ -982,7 +982,7 @@
     const db   = firebase.firestore();
 
     // Auth guard (Admin verification)
-    const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com'].map(e => e.toLowerCase());
+    const EMAIL_ADMIN_WHITELIST = ['edark.import@gmail.com', 'edark-import@gmail.com', 'edarkimport@gmail.com'].map(e => e.toLowerCase());
     let currentUserIsAdmin = false;
 
     auth.onAuthStateChanged(async user => {
