@@ -152,11 +152,12 @@ document.addEventListener('DOMContentLoaded', async function () {
     await cargarNavbarYFooterGlobal();
 
     // Asegurar que Firebase esté inicializado antes de proceder
-    if (typeof db === 'undefined') {
+    if (typeof db === 'undefined' || !db) {
         console.error('Firebase DB no inicializado. Verifica firebase-config.js');
         // Reintentar brevemente si es por delay de carga
         setTimeout(async () => {
-            if (typeof db !== 'undefined') {
+            db = window.db || (typeof firebase !== 'undefined' && firebase.firestore ? firebase.firestore() : null);
+            if (db) {
                 await iniciarTodo();
             }
         }, 1000);
