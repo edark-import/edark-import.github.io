@@ -711,19 +711,14 @@ body.modo-oscuro .paso {
     overflow-x: auto;
 }
 
-/* Gradient Backgrounds */
-.gradient-bg {
-    background: #000000 !important;
-    position: relative;
-    z-index: 1;
-    border-bottom: 2px solid rgba(0, 123, 255, 0.3) !important;
-}
-
-/* Force solid black headers across all pages */
+/* Gradient Backgrounds & Solid Black Headers (Strictly above background strips) */
+.gradient-bg,
 header, 
 .blog-hero, 
 .post-hero {
     background: #000000 !important;
+    position: relative !important;
+    z-index: 6 !important;
     border-bottom: 2px solid rgba(0, 123, 255, 0.3) !important;
     color: #ffffff !important;
 }
@@ -735,6 +730,7 @@ header,
     border: 2px solid #007BFF !important;
     border-radius: 20px !important;
     box-shadow: 0 20px 50px rgba(0, 123, 255, 0.15) !important;
+    margin-top: 1.5rem !important;
 }
 
 body.modo-oscuro .banner-card {
@@ -1428,44 +1424,134 @@ body.modo-oscuro .glass-btn:hover {
     color: #ffffff !important;
 }
 
+/* Espacio en blanco al inicio (Top White Header Strip) para que la cápsula flotante resalte y se vea claramente */
+body::before {
+    content: "";
+    position: absolute !important;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 105px !important;
+    background-color: #ffffff !important;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
+    z-index: 5 !important;
+    transition: background-color 0.3s ease;
+}
+
+body.modo-oscuro::before {
+    background-color: #161b22 !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Cápsula Flotante con Estilo Apple Liquid Glass JS (Refraction & Specular Rim) */
 .glass-navbar {
     position: fixed !important;
     top: 15px !important;
     left: 24px !important;
     right: 24px !important;
     width: auto !important;
-    border-radius: 20px !important;
+    border-radius: 24px !important;
     background: rgba(255, 255, 255, 0.65) !important;
-    backdrop-filter: blur(25px) !important;
-    -webkit-backdrop-filter: blur(25px) !important;
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 123, 255, 0.06) !important;
+    backdrop-filter: blur(42px) saturate(230%) brightness(115%) !important;
+    -webkit-backdrop-filter: blur(42px) saturate(230%) brightness(115%) !important;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.98) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.85) !important;
+    border-left: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+    border-right: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.98), 
+        inset 0 -2px 5px rgba(255, 255, 255, 0.45),
+        inset 0 0 22px rgba(255, 255, 255, 0.65),
+        0 20px 45px -10px rgba(0, 123, 255, 0.22),
+        0 0 35px rgba(0, 123, 255, 0.15) !important;
     z-index: 1050 !important;
-    transition: all 0.3s ease;
-    padding: 0.5rem 1.5rem !important;
+    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    padding: 0.5rem 1.6rem !important;
+}
+
+/* Brillo de refracción líquida y reflejo diagonal superior Apple Liquid Glass */
+.glass-navbar::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 52%;
+    border-radius: 24px 24px 0 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 45%, rgba(255, 255, 255, 0.02) 100%);
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Anillo refractivo exterior (Rim lighting & edge distance) de Liquid Glass JS */
+.glass-navbar::after {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 25px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 35%, rgba(0, 123, 255, 0.15) 75%, rgba(255, 255, 255, 0.4) 100%);
+    pointer-events: none;
+    z-index: -2;
+    opacity: 0.85;
 }
 
 body.modo-oscuro .glass-navbar {
-    background: rgba(10, 14, 23, 0.6) !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    background: rgba(18, 24, 38, 0.70) !important;
+    backdrop-filter: blur(48px) saturate(240%) brightness(120%) !important;
+    -webkit-backdrop-filter: blur(48px) saturate(240%) brightness(120%) !important;
+    border-top: 1.5px solid rgba(255, 255, 255, 0.55) !important;
+    border-bottom: 2px solid rgba(255, 255, 255, 0.25) !important;
+    border-left: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+    border-right: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+    box-shadow: 
+        inset 0 2px 5px rgba(255, 255, 255, 0.5), 
+        inset 0 -2px 6px rgba(0, 0, 0, 0.7),
+        inset 0 0 25px rgba(0, 123, 255, 0.3),
+        0 20px 50px -10px rgba(0, 0, 0, 0.75),
+        0 0 45px rgba(0, 123, 255, 0.25) !important;
+}
+body.modo-oscuro .glass-navbar::before {
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0) 100%);
+}
+body.modo-oscuro .glass-navbar::after {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 40%, rgba(0, 123, 255, 0.35) 80%, rgba(255, 255, 255, 0.15) 100%);
 }
 
-/* Adjust body padding for fixed capsule navbar */
+/* Adjust body padding for fixed capsule navbar and top white static strip across ALL pages */
 body {
-    padding-top: 115px !important;
+    padding-top: 155px !important;
+}
+
+header.gradient-bg,
+.gradient-bg {
+    margin-top: 155px !important;
 }
 
 @media (max-width: 991px) {
+    body::before {
+        height: 95px !important;
+    }
     body {
-        padding-top: 105px !important;
+        padding-top: 135px !important;
+    }
+    header,
+    .gradient-bg,
+    .perfil-header,
+    .header-pedidos-banner,
+    .blog-hero,
+    .post-hero,
+    #navbar + header,
+    #navbar + main,
+    #navbar + .container,
+    #navbar + .container-fluid {
+        margin-top: 135px !important;
     }
     .glass-navbar {
         top: 10px !important;
         left: 12px !important;
         right: 12px !important;
-        border-radius: 16px !important;
-        padding: 0.3rem 0.8rem !important;
+        border-radius: 18px !important;
+        padding: 0.35rem 0.9rem !important;
     }
 }
 
