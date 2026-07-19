@@ -1290,7 +1290,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
                 </div>
                 <div class="modal-body">
-                    <form id="formProducto">
+                    <form id="formProducto" onsubmit="event.preventDefault(); guardarProducto();">
                         <input type="hidden" id="productoId">
 
                         <!-- Fila 1: Nombre -->
@@ -1499,7 +1499,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarProducto()">
+                    <button type="submit" form="formProducto" class="btn btn-primary">
                         <i class="bi bi-save"></i> Guardar
                     </button>
                 </div>
