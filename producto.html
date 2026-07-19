@@ -691,7 +691,10 @@
             }
 
             // Descripción
-            const desc = prod.descripcion || prod.especificaciones || 'Sin descripción detallada.';
+            let desc = prod.descripcion || '';
+            if (!desc.trim() || desc.trim() === (prod.especificaciones || '').trim()) {
+                desc = 'Sin descripción detallada.';
+            }
             document.getElementById('productDescription').innerHTML = desc.replace(/\n/g, '<br>');
 
             // Stock y Cantidad Max (normalización robusta de stock)
