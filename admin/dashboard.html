@@ -1473,7 +1473,17 @@
                             </div>
                         </div>
 
-                        <!-- Fila 7: Especificaciones Técnicas -->
+                        <!-- Fila 7: Descripción -->
+                        <div class="row">
+                            <div class="col-md-12 mb-3">
+                                <label class="form-label">Descripción</label>
+                                <textarea class="form-control" id="productoDescripcion" rows="4"
+                                    placeholder="Describe las características y ventajas del producto..."></textarea>
+                                <small class="text-muted">Se mostrará en la primera pestaña debajo de las imágenes.</small>
+                            </div>
+                        </div>
+
+                        <!-- Fila 8: Especificaciones Técnicas -->
                         <div class="row">
                             <div class="col-md-12 mb-3">
                                 <label class="form-label">Especificaciones Técnicas</label>
@@ -1483,7 +1493,7 @@
                             </div>
                         </div>
 
-                        <!-- Fila 8: Switches -->
+                        <!-- Fila 9: Switches -->
                         <div class="row">
                             <div class="col-md-4 mb-3">
                                 <label class="form-label">Destacado</label>
@@ -2809,6 +2819,7 @@
                 document.getElementById('productoModelo').value = producto.modelo || '';
                 document.getElementById('productoDimension').value = producto.dimension || '';
                 document.getElementById('productoStock').value = producto.stock || '';
+                document.getElementById('productoDescripcion').value = producto.descripcion || '';
                 document.getElementById('productoEspecificaciones').value = producto.especificaciones || '';
                 document.getElementById('productoDestacado').checked = producto.destacado || false;
                 document.getElementById('productoActivo').checked = producto.activo !== false;
@@ -2869,6 +2880,7 @@
                     modelo: document.getElementById('productoModelo').value.trim(),
                     dimension: document.getElementById('productoDimension').value.trim(),
                     stock: stockCalc,
+                    descripcion: document.getElementById('productoDescripcion').value.trim(),
                     especificaciones: document.getElementById('productoEspecificaciones').value.trim(),
                     destacado: document.getElementById('productoDestacado').checked,
                     activo: document.getElementById('productoActivo').checked,
