@@ -3265,12 +3265,18 @@
                     if (window.configuracionCache && window.configuracionCache.imgbbApiKey) {
                         const formData = new FormData();
                         formData.append('image', file);
-                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${window.configuracionCache.imgbbApiKey}`, { method: 'POST', body: formData });
+                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${window.configuracionCache.imgbbApiKey.trim()}`, { method: 'POST', body: formData });
                         const data = await res.json();
-                        if (data.success) return data.data.url;
+                        if (data.success) {
+                            return data.data.url;
+                        } else {
+                            alert('Error de ImgBB: ' + (data.error ? data.error.message : 'Verifica tu API Key.'));
+                            throw new Error('ImgBB error');
+                        }
                     }
                 } catch(e) {
                     console.warn('ImgBB falló', e);
+                    return await comprimirImagenCanvas(file, 900, 0.82); // Fallback directo a Canvas para evitar bloqueo de Firebase
                 }
                 
                 try {
@@ -3303,10 +3309,18 @@
                     try {
                         const formData = new FormData();
                         formData.append('image', file);
-                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${window.configuracionCache.imgbbApiKey}`, { method: 'POST', body: formData });
+                        const res = await fetch(`https://api.imgbb.com/1/upload?key=${window.configuracionCache.imgbbApiKey.trim()}`, { method: 'POST', body: formData });
                         const data = await res.json();
-                        if (data.success) finalUrl = data.data.url;
-                    } catch(e) { console.warn('ImgBB falló para galería', e); }
+                        if (data.success) {
+                            finalUrl = data.data.url;
+                        } else {
+                            if (i === 0) alert('Error ImgBB: ' + (data.error ? data.error.message : 'Revisa tu API Key.'));
+                            throw new Error('ImgBB API error');
+                        }
+                    } catch(e) { 
+                        console.warn('ImgBB falló para galería', e);
+                        finalUrl = await comprimirImagenCanvas(file, 600, 0.65); // Fallback directo
+                    }
                 }
 
                 if (!finalUrl) {
