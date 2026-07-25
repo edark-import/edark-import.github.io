@@ -625,79 +625,97 @@ body.modo-oscuro .list-group-item {
     border-color: #444 !important;
 }
 
-body.modo-oscuro .area {
-    background: rgba(30, 35, 45, 0.55) !important;
-    color: #e0e0e0 !important;
-    border: 1px solid rgba(255, 255, 255, 0.08) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.2) !important;
+/* Card de servicios moderno homogenizado */
+.card-servicio-moderno,
+.paso,
+.area,
+.soporte-beneficios-box {
+    background: #ffffff !important;
+    border: 1px solid rgba(0, 123, 255, 0.18) !important;
+    box-shadow: 0 8px 30px rgba(0, 123, 255, 0.07) !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1) !important;
+    color: #0f172a !important;
 }
 
-body.modo-oscuro .area:hover {
-    box-shadow: 0 16px 36px rgba(0, 123, 255, 0.35) !important;
-    border-color: rgba(0, 123, 255, 0.4) !important;
-}
-
-body.modo-oscuro .area .area-titulo {
-    color: #007BFF !important;
-}
-
-body.modo-oscuro .paso {
-    background-color: #23272b !important;
-    color: #e0e0e0 !important;
-    border-color: #444 !important;
-}
-
-/* Common styles for all pages */
-.icono-servicio {
-    font-size: 2.5rem;
-    color: #007BFF;
-}
-
-.paso {
-    background: #f8f9fa;
-    border-radius: 1rem;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-}
-
-.paso .bi {
-    font-size: 2rem;
-    color: #393e46;
-}
-
-.paso-num {
-    font-size: 1.2rem;
-    font-weight: bold;
-    color: #007BFF;
-}
-
-.area {
-    background: rgba(255, 255, 255, 0.45) !important;
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(255, 255, 255, 0.25) !important;
-    border-radius: 1.25rem !important;
-    padding: 1.5rem;
-    margin-bottom: 1.5rem;
-    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.04) !important;
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-}
-
+.card-servicio-moderno:hover,
+.paso:hover,
 .area:hover {
-    box-shadow: 0 16px 36px rgba(0, 123, 255, 0.2) !important;
-    border-color: rgba(0, 123, 255, 0.4) !important;
-    transform: translateY(-6px);
+    transform: translateY(-6px) !important;
+    box-shadow: 0 16px 36px rgba(0, 123, 255, 0.18) !important;
+    border-color: rgba(0, 123, 255, 0.45) !important;
 }
 
-.area .card-body {
-    color: inherit;
-}
-
+.card-servicio-moderno h3,
+.card-servicio-moderno h4,
+.card-servicio-moderno .paso-titulo,
+.card-servicio-moderno .area-titulo,
+.soporte-beneficios-box h3,
+.soporte-beneficios-box li,
+.paso-titulo,
 .area-titulo {
-    font-size: 1.1rem;
-    font-weight: bold;
-    color: #007BFF;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+.card-servicio-moderno p,
+.paso-texto,
+.area p {
+    color: #1e293b !important;
+    font-size: 1.02rem !important;
+    line-height: 1.6 !important;
+}
+
+/* Dark Mode Overrides */
+body.modo-oscuro .card-servicio-moderno,
+body.modo-oscuro .paso,
+body.modo-oscuro .area,
+body.modo-oscuro .soporte-beneficios-box,
+html.modo-oscuro body .card-servicio-moderno,
+html.modo-oscuro body .paso,
+html.modo-oscuro body .area,
+html.modo-oscuro body .soporte-beneficios-box {
+    background: rgba(23, 29, 41, 0.85) !important;
+    border: 1px solid rgba(255, 255, 255, 0.12) !important;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4) !important;
+    color: #f8fafc !important;
+}
+
+body.modo-oscuro .card-servicio-moderno:hover,
+body.modo-oscuro .paso:hover,
+body.modo-oscuro .area:hover,
+html.modo-oscuro body .card-servicio-moderno:hover,
+html.modo-oscuro body .paso:hover,
+html.modo-oscuro body .area:hover {
+    box-shadow: 0 16px 36px rgba(0, 123, 255, 0.35) !important;
+    border-color: rgba(0, 123, 255, 0.5) !important;
+}
+
+body.modo-oscuro .card-servicio-moderno h3,
+body.modo-oscuro .card-servicio-moderno h4,
+body.modo-oscuro .card-servicio-moderno .paso-titulo,
+body.modo-oscuro .card-servicio-moderno .area-titulo,
+body.modo-oscuro .soporte-beneficios-box h3,
+body.modo-oscuro .soporte-beneficios-box li,
+body.modo-oscuro .paso-titulo,
+body.modo-oscuro .area-titulo,
+html.modo-oscuro body .card-servicio-moderno h3,
+html.modo-oscuro body .card-servicio-moderno h4,
+html.modo-oscuro body .card-servicio-moderno .paso-titulo,
+html.modo-oscuro body .card-servicio-moderno .area-titulo,
+html.modo-oscuro body .soporte-beneficios-box h3,
+html.modo-oscuro body .soporte-beneficios-box li,
+html.modo-oscuro body .paso-titulo,
+html.modo-oscuro body .area-titulo {
+    color: #ffffff !important;
+}
+
+body.modo-oscuro .card-servicio-moderno p,
+body.modo-oscuro .paso-texto,
+body.modo-oscuro .area p,
+html.modo-oscuro body .card-servicio-moderno p,
+html.modo-oscuro body .paso-texto,
+html.modo-oscuro body .area p {
+    color: #cbd5e1 !important;
 }
 
 /* Copilot-inspired Code-like Styling */

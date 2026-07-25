@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -8,149 +9,119 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
-    <link href="css/styles.css?v=4.0" rel="stylesheet" />
-    <link href="css/modern-styles.css?v=4.0" rel="stylesheet" />
-        <!-- Google tag (gtag.js) -->
+    <link href="css/styles.css?v=6.0" rel="stylesheet" />
+    <link href="css/modern-styles.css?v=6.0" rel="stylesheet" />
+    <!-- Google Fonts Orbitron y Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-V89W8SCSH1"></script>
-        <script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9246515570012526" crossorigin="anonymous"></script>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1611560592421673" crossorigin="anonymous"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-V89W8SCSH1');
+    </script>
+    <!-- Apply dark mode immediately from localStorage (homogenized with index.html) -->
+    <script>
+        (function () {
             try {
                 if (localStorage.getItem('modoOscuro') !== 'false') {
                     document.documentElement.classList.add('modo-oscuro');
-                    document.body.classList.add('modo-oscuro');
+                    document.addEventListener('DOMContentLoaded', function() {
+                        if (localStorage.getItem('modoOscuro') !== 'false') {
+                            document.body.classList.add('modo-oscuro');
+                        }
+                    });
                 }
-            } catch {}
-        </script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-9246515570012526"
-     crossorigin="anonymous"></script>
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-1611560592421673"
-     crossorigin="anonymous"></script>
-    <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
-
-    gtag('config', 'G-V89W8SCSH1');
+            } catch (e) { }
+        })();
     </script>
-    
 </head>
+
 <body>
     <!-- Navigation-->
     <div id="navbar"></div>
-    <!-- Header Moderno -->
-    <header class="py-5 mb-0" style="background: #000000; border-bottom: 2px solid rgba(0, 123, 255, 0.3);">
-        <div class="container px-4 px-lg-5 my-5">
-            <div class="text-center text-white">
-                <h1 class="display-4 fw-bolder mb-3">Consultoría Tecnológica</h1>
-                <p class="lead fw-normal text-white-50 mb-0" style="font-size:1.2rem;">
-                    En <strong>eDark</strong> ponemos a tu disposición nuestra experiencia en <b>redes, informática y seguridad</b> para ayudarte a tomar las mejores decisiones tecnológicas, optimizar tus recursos y proteger tu información.
+
+    <!-- Header Moderno Homogenizado estilo index.html -->
+    <header class="gradient-bg position-relative" style="min-height: 300px; display: flex; align-items: center; padding: 2.5rem 0;">
+        <div class="container px-4 px-lg-5 d-flex justify-content-center w-100">
+            <div class="banner-card text-center p-4 p-md-5 rounded-4 shadow-lg w-100" style="max-width: 820px;">
+                <div class="sub-edark text-primary fw-bold text-uppercase mb-2" style="letter-spacing: 2px; font-size: 0.95rem;">
+                    <i class="bi bi-lightbulb me-1"></i> Asesoría Estratégica
+                </div>
+                <h1 class="display-5 fw-bolder mb-3 text-white" style="font-family: 'Orbitron', sans-serif; letter-spacing: 1px;">
+                    Consultoría Tecnológica
+                </h1>
+                <p class="lead fw-normal text-white-50 mb-0 mx-auto" style="font-size: 1.15rem; max-width: 680px; line-height: 1.6;">
+                    En <strong>eDark</strong> ponemos a tu disposición nuestra experiencia en <b>redes, informática y seguridad</b> para ayudarte a tomar las mejores decisiones tecnológicas.
                 </p>
             </div>
         </div>
     </header>
 
     <main class="container my-5">
-        <div class="row mb-4">
+        <div class="row g-4 mb-5">
             <div class="col-md-4">
-                <div class="area text-center">
-                    <div class="mb-2"><i class="bi bi-diagram-3-fill"></i></div>
-                    <div class="area-titulo mb-1">Redes y Conectividad</div>
-                    <p>
-                        <i class="bi bi-wifi text-success"></i> <i class="bi bi-router text-primary"></i>
+                <div class="area text-center h-100 p-4 border rounded-4 shadow-sm bg-white card-servicio-moderno">
+                    <div class="mb-3 fs-1 text-primary"><i class="bi bi-diagram-3-fill"></i></div>
+                    <h4 class="area-titulo mb-2 text-dark">Redes y Conectividad</h4>
+                    <p class="mb-0 text-dark">
+                        <i class="bi bi-wifi text-success me-1"></i> <i class="bi bi-router text-primary me-1"></i>
                         <br>
                         Diseño, implementación y optimización de redes cableadas e inalámbricas. <br>
-                        Diagnóstico de problemas de conectividad, mejora de velocidad y cobertura, y soluciones para empresas y hogares.
+                        Diagnóstico de conectividad, mejora de velocidad y cobertura.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="area text-center">
-                    <div class="mb-2"><i class="bi bi-pc-display-horizontal"></i></div>
-                    <div class="area-titulo mb-1">Informática y Sistemas</div>
-                    <p>
-                        <i class="bi bi-cpu text-warning"></i> <i class="bi bi-hdd-network text-secondary"></i>
+                <div class="area text-center h-100 p-4 border rounded-4 shadow-sm bg-white card-servicio-moderno">
+                    <div class="mb-3 fs-1 text-warning"><i class="bi bi-pc-display-horizontal"></i></div>
+                    <h4 class="area-titulo mb-2 text-dark">Informática y Sistemas</h4>
+                    <p class="mb-0 text-dark">
+                        <i class="bi bi-cpu text-warning me-1"></i> <i class="bi bi-hdd-network text-secondary me-1"></i>
                         <br>
                         Asesoría en adquisición, configuración y actualización de equipos. <br>
-                        Virtualización, respaldo de datos, optimización de sistemas y migración a nuevas tecnologías.
+                        Virtualización, respaldo de datos y migración de sistemas.
                     </p>
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="area text-center">
-                    <div class="mb-2"><i class="bi bi-shield-lock-fill"></i></div>
-                    <div class="area-titulo mb-1">Seguridad Informática</div>
-                    <p>
-                        <i class="bi bi-shield-check text-success"></i> <i class="bi bi-lock-fill text-danger"></i>
+                <div class="area text-center h-100 p-4 border rounded-4 shadow-sm bg-white card-servicio-moderno">
+                    <div class="mb-3 fs-1 text-danger"><i class="bi bi-shield-lock-fill"></i></div>
+                    <h4 class="area-titulo mb-2 text-dark">Seguridad Informática</h4>
+                    <p class="mb-0 text-dark">
+                        <i class="bi bi-shield-check text-success me-1"></i> <i class="bi bi-lock-fill text-danger me-1"></i>
                         <br>
-                        Análisis de vulnerabilidades, protección contra amenazas, configuración de firewalls y políticas de acceso. <br>
-                        Capacitación en buenas prácticas y respuesta ante incidentes.
+                        Análisis de vulnerabilidades, protección contra amenazas y configuración de firewalls. <br>
+                        Capacitación en buenas prácticas digitales.
                     </p>
                 </div>
             </div>
         </div>
-        <div class="my-5">
-            <h3 class="mb-3 text-center"><i class="bi bi-people-fill"></i> ¿Cómo te ayudamos?</h3>
-            <ul class="list-group list-group-flush fs-5 mb-4">
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Diagnóstico personalizado de tus necesidades tecnológicas.</li>
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Propuestas claras y adaptadas a tu presupuesto.</li>
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Acompañamiento en la implementación y soporte continuo.</li>
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Confidencialidad y ética profesional en cada proyecto.</li>
+
+        <div class="text-center my-5 py-5 px-4 rounded-4 soporte-beneficios-box shadow-sm border bg-white card-servicio-moderno">
+            <h3 class="mb-4 fw-bold text-dark" style="font-family: 'Orbitron', sans-serif; font-size: 1.6rem;">
+                <i class="bi bi-people-fill me-2 text-primary"></i>¿Cómo te ayudamos?
+            </h3>
+            <ul class="list-unstyled fs-5 d-inline-block text-start mb-4">
+                <li class="mb-3 text-dark"><i class="bi bi-check-circle-fill text-success me-2 fs-5"></i> Diagnóstico personalizado de tus necesidades tecnológicas.</li>
+                <li class="mb-3 text-dark"><i class="bi bi-check-circle-fill text-success me-2 fs-5"></i> Propuestas claras y adaptadas a tu presupuesto.</li>
+                <li class="mb-3 text-dark"><i class="bi bi-check-circle-fill text-success me-2 fs-5"></i> Acompañamiento en la implementación y soporte continuo.</li>
+                <li class="mb-3 text-dark"><i class="bi bi-check-circle-fill text-success me-2 fs-5"></i> Confidencialidad y ética profesional en cada proyecto.</li>
             </ul>
-            <div class="text-center">
-    <main class="container my-5">
-        <div class="row mb-4">
-            <div class="col-md-4">
-                <div class="area text-center">
-                    <div class="mb-2"><i class="bi bi-diagram-3-fill"></i></div>
-                    <div class="area-titulo mb-1">Redes y Conectividad</div>
-                    <p>
-                        <i class="bi bi-wifi text-success"></i> <i class="bi bi-router text-primary"></i>
-                        <br>
-                        Diseño, implementación y optimización de redes cableadas e inalámbricas. <br>
-                        Diagnóstico de problemas de conectividad, mejora de velocidad y cobertura, y soluciones para empresas y hogares.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="area text-center">
-                    <div class="mb-2"><i class="bi bi-pc-display-horizontal"></i></div>
-                    <div class="area-titulo mb-1">Informática y Sistemas</div>
-                    <p>
-                        <i class="bi bi-cpu text-warning"></i> <i class="bi bi-hdd-network text-secondary"></i>
-                        <br>
-                        Asesoría en adquisición, configuración y actualización de equipos. <br>
-                        Virtualización, respaldo de datos, optimización de sistemas y migración a nuevas tecnologías.
-                    </p>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="area text-center">
-                    <div class="mb-2"><i class="bi bi-shield-lock-fill"></i></div>
-                    <div class="area-titulo mb-1">Seguridad Informática</div>
-                    <p>
-                        <i class="bi bi-shield-check text-success"></i> <i class="bi bi-lock-fill text-danger"></i>
-                        <br>
-                        Análisis de vulnerabilidades, protección contra amenazas, configuración de firewalls y políticas de acceso. <br>
-                        Capacitación en buenas prácticas y respuesta ante incidentes.
-                    </p>
-                </div>
-            </div>
-        </div>
-        <div class="my-5">
-            <h3 class="mb-3 text-center"><i class="bi bi-people-fill"></i> ¿Cómo te ayudamos?</h3>
-            <ul class="list-group list-group-flush fs-5 mb-4">
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Diagnóstico personalizado de tus necesidades tecnológicas.</li>
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Propuestas claras y adaptadas a tu presupuesto.</li>
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Acompañamiento en la implementación y soporte continuo.</li>
-                <li class="list-group-item"><i class="bi bi-check-circle-fill text-success"></i> Confidencialidad y ética profesional en cada proyecto.</li>
-            </ul>
-            <div class="text-center">
-                <a href="contactanos.html" class="btn btn-primary btn-lg mt-3"><i class="bi bi-envelope"></i> Solicitar Consultoría</a>
+            <div class="mt-2">
+                <a href="contactanos.html" class="btn btn-primary btn-lg px-4 py-3 rounded-pill shadow-lg fw-bold transition-all">
+                    <i class="bi bi-envelope me-2"></i> Solicitar Consultoría
+                </a>
             </div>
         </div>
     </main>
+
     <!-- Footer-->
     <div id="footer"></div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="js/scripts.js"></script>
+    <script src="js/scripts.js?v=6.0"></script>
 </body>
 </html>
