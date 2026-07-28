@@ -178,7 +178,7 @@ const NAVBAR_FALLBACK_HTML = `<!-- Navigation Styles -->
         left: 10px !important;
         right: 10px !important;
         padding: 0.35rem 0.75rem !important;
-        border-radius: 18px !important;
+        border-radius: 28px !important;
     }
     #mainNavbar .container-fluid {
         padding-left: 0.25rem !important;
@@ -2573,7 +2573,7 @@ function inicializarChimueloIA() {
             </button>
             <div class="modal fade" id="chatbotModal" tabindex="-1" aria-labelledby="chatbotModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-bottom modal-sm" style="position:fixed;bottom:0;right:30px;max-width:360px;margin:0;z-index:1060;">
-                    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(16px);">
+                    <div class="modal-content shadow-lg border-0 rounded-4 overflow-hidden" style="background: rgba(255, 255, 255, 0.95); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);">
                         <div class="modal-header py-2.5 bg-primary text-white border-0">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="bg-white rounded-circle p-1 d-flex align-items-center justify-content-center shadow-sm" style="width: 32px; height: 32px;">

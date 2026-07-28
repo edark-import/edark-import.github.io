@@ -744,34 +744,39 @@ header,
 /* Banner card contrast */
 .banner-card {
     max-width: 720px;
-    background: rgba(0, 0, 0, 0.7) !important;
-    border: 2px solid #007BFF !important;
     border-radius: 20px !important;
-    box-shadow: 0 20px 50px rgba(0, 123, 255, 0.15) !important;
+    background: rgba(255, 255, 255, 0.82) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 20px 50px rgba(0, 82, 204, 0.12), inset 0 0 15px rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
     margin-top: 1.5rem !important;
 }
 
 body.modo-oscuro .banner-card {
-    background: rgba(0, 0, 0, 0.85) !important;
-    border: 2px solid #007BFF !important;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5) !important;
+    background: rgba(15, 23, 42, 0.65) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
 }
 
 #frasesCarrusel {
-    background: #000000 !important;
-    border: 1px solid rgba(0, 123, 255, 0.45) !important;
+    background: rgba(255, 255, 255, 0.75) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.25) !important;
     border-radius: 16px !important;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
     padding: 1.2rem 1.5rem !important;
     min-height: 140px !important;
     display: flex !important;
     flex-direction: column !important;
     justify-content: center !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
 }
 
 body.modo-oscuro #frasesCarrusel {
-    background: #000000 !important;
-    border: 1px solid rgba(0, 123, 255, 0.35) !important;
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
 }
 
 .frase-carrusel-texto,
@@ -1414,143 +1419,521 @@ body.modo-oscuro .glass-card-hover:hover {
     text-shadow: 0 0 30px rgba(0, 123, 255, 0.25);
 }
 
-.glass-btn {
-    background: rgba(0, 123, 255, 0.12);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
-    border: 1px solid rgba(0, 123, 255, 0.45);
+/* --------------------------------------------------------------------------
+   HYPER-REALISTIC APPLE VISIONOS 3D LIQUID GLASS (NAV & BUTTON SYSTEM)
+   -------------------------------------------------------------------------- */
+
+.glass-btn,
+.glass-liquid-btn,
+.btn-glass-liquid {
+    position: relative !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0.15) 50%, rgba(0, 123, 255, 0.12) 100%) !important;
+    backdrop-filter: blur(25px) saturate(200%) brightness(110%) !important;
+    -webkit-backdrop-filter: blur(25px) saturate(200%) brightness(110%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.8) !important;
     color: #007BFF !important;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    border-radius: 10px;
+    font-weight: 700 !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    border-radius: 50px !important;
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.7),
+        inset 0 2px 4px rgba(255, 255, 255, 0.95),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.25),
+        inset 0 0 15px rgba(255, 255, 255, 0.5),
+        0 10px 25px rgba(0, 123, 255, 0.25) !important;
+    overflow: hidden !important;
 }
 
-.glass-btn:hover {
-    background: #007BFF;
-    color: #ffffff !important;
-    box-shadow: 0 0 15px rgba(0, 123, 255, 0.45);
-    transform: translateY(-2px);
-}
-
-body.modo-oscuro .glass-btn {
-    border-color: rgba(0, 123, 255, 0.35);
-    background: rgba(0, 123, 255, 0.08);
-}
-
-body.modo-oscuro .glass-btn:hover {
-    background: #007BFF;
-    color: #ffffff !important;
-}
-
-/* Espacio en blanco al inicio (Top White Header Strip) para que la cápsula flotante resalte y se vea claramente */
-body::before {
+.glass-btn::before,
+.glass-liquid-btn::before,
+.btn-glass-liquid::before {
     content: "";
-    position: absolute !important;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 105px !important;
-    background-color: #ffffff !important;
-    border-bottom: 1px solid rgba(226, 232, 240, 0.9);
-    z-index: 5 !important;
-    transition: background-color 0.3s ease;
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    right: 2px;
+    height: 48%;
+    border-radius: 50px 50px 0 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
 }
 
-body.modo-oscuro::before {
-    background-color: #161b22 !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+.glass-btn:hover,
+.glass-liquid-btn:hover,
+.btn-glass-liquid:hover {
+    background: linear-gradient(135deg, #007BFF 0%, #0066ff 50%, #0043a8 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 0 0 1.5px rgba(255, 255, 255, 0.95),
+        inset 0 3px 6px rgba(255, 255, 255, 0.95),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.35),
+        inset 0 0 20px rgba(255, 255, 255, 0.6),
+        0 14px 35px rgba(0, 123, 255, 0.5) !important;
+    transform: translateY(-3px) scale(1.03) !important;
 }
 
-/* Cápsula Flotante con Estilo Apple Liquid Glass JS (Refraction & Specular Rim) */
+.glass-btn:active,
+.glass-liquid-btn:active,
+.btn-glass-liquid:active {
+    transform: translateY(1px) scale(0.97) !important;
+}
+
+body.modo-oscuro .glass-btn,
+body.modo-oscuro .glass-liquid-btn,
+body.modo-oscuro .btn-glass-liquid {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(15, 23, 42, 0.6) 50%, rgba(0, 123, 255, 0.25) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.3),
+        inset 0 2px 4px rgba(255, 255, 255, 0.5),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.7),
+        0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* 3D Liquid Glass Effect on Primary & Action Buttons */
+.btn-primary,
+.btn-success {
+    position: relative !important;
+    border-radius: 50px !important;
+    backdrop-filter: blur(15px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    font-weight: 700 !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+    overflow: hidden !important;
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 50%, #003d80 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.6),
+        inset 0 2px 4px rgba(255, 255, 255, 0.85),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3),
+        inset 0 0 12px rgba(255, 255, 255, 0.35),
+        0 8px 24px rgba(0, 123, 255, 0.35) !important;
+}
+
+.btn-primary::before,
+.btn-success::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    right: 2px;
+    height: 48%;
+    border-radius: 50px 50px 0 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.2) 60%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.btn-primary:hover {
+    transform: translateY(-3px) scale(1.03) !important;
+    box-shadow: 
+        0 0 0 1.5px rgba(255, 255, 255, 0.95),
+        inset 0 3px 6px rgba(255, 255, 255, 0.95),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.35),
+        inset 0 0 20px rgba(255, 255, 255, 0.6),
+        0 14px 35px rgba(0, 123, 255, 0.55) !important;
+}
+
+.btn-primary:active {
+    transform: translateY(1px) scale(0.97) !important;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #10b981 0%, #059669 50%, #047857 100%) !important;
+    color: #ffffff !important;
+    box-shadow: 
+        0 0 0 1px rgba(255, 255, 255, 0.6),
+        inset 0 2px 4px rgba(255, 255, 255, 0.85),
+        inset 0 -3px 6px rgba(0, 0, 0, 0.3),
+        0 8px 24px rgba(16, 185, 129, 0.35) !important;
+}
+
+.btn-success:hover {
+    transform: translateY(-3px) scale(1.03) !important;
+    box-shadow: 
+        0 0 0 1.5px rgba(255, 255, 255, 0.95),
+        inset 0 3px 6px rgba(255, 255, 255, 0.95),
+        inset 0 -3px 8px rgba(0, 0, 0, 0.35),
+        0 14px 35px rgba(16, 185, 129, 0.55) !important;
+}
+
+/* --------------------------------------------------------------------------
+   HYPER-REALISTIC APPLE VISIONOS 3D LIQUID GLASS SYSTEM
+   -------------------------------------------------------------------------- */
+
+/* Ambient Header Background with Light Halos for Glass Refraction */
+header,
+.gradient-bg,
+.blog-hero,
+.post-hero {
+    background: radial-gradient(circle at 50% -10%, #1e3a8a 0%, #0f172a 50%, #020617 100%) !important;
+    position: relative !important;
+    z-index: 6 !important;
+    border-bottom: 1px solid rgba(56, 189, 248, 0.25) !important;
+    color: #ffffff !important;
+}
+
+/* Remove opaque block behind navbar to restore full true backdrop glass transparency */
+body::before {
+    display: none !important;
+}
+
+/* ==========================================================================
+   AETHER CSS LIQUID GLASS CARD, NAVBAR & BUTTON SYSTEM
+   ========================================================================== */
+
+.liquid-glass-card,
+.glass-navbar,
+.banner-card {
+    position: relative;
+    isolation: isolate;
+    border-radius: 28px;
+    box-shadow: 0px 0px 21px -8px rgba(255, 255, 255, 0.3) !important;
+}
+
 .glass-navbar {
     position: fixed !important;
     top: 15px !important;
     left: 24px !important;
     right: 24px !important;
     width: auto !important;
-    border-radius: 24px !important;
-    background: rgba(255, 255, 255, 0.65) !important;
-    backdrop-filter: blur(42px) saturate(230%) brightness(115%) !important;
-    -webkit-backdrop-filter: blur(42px) saturate(230%) brightness(115%) !important;
-    border-top: 1.5px solid rgba(255, 255, 255, 0.98) !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.85) !important;
-    border-left: 1.5px solid rgba(255, 255, 255, 0.9) !important;
-    border-right: 1.5px solid rgba(255, 255, 255, 0.9) !important;
-    box-shadow: 
-        inset 0 2px 4px rgba(255, 255, 255, 0.98), 
-        inset 0 -2px 5px rgba(255, 255, 255, 0.45),
-        inset 0 0 22px rgba(255, 255, 255, 0.65),
-        0 20px 45px -10px rgba(0, 123, 255, 0.22),
-        0 0 35px rgba(0, 123, 255, 0.15) !important;
+    border-radius: 50px !important;
     z-index: 1050 !important;
-    transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     padding: 0.5rem 1.6rem !important;
+    background: transparent !important;
 }
 
-/* Brillo de refracción líquida y reflejo diagonal superior Apple Liquid Glass */
-.glass-navbar::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 52%;
-    border-radius: 24px 24px 0 0;
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.35) 45%, rgba(255, 255, 255, 0.02) 100%);
-    pointer-events: none;
-    z-index: -1;
+/* Ensure inner elements sit cleanly above glass layers */
+.liquid-glass-card > *,
+.glass-navbar > *,
+.banner-card > * {
+    position: relative !important;
+    z-index: 10 !important;
 }
 
-/* Anillo refractivo exterior (Rim lighting & edge distance) de Liquid Glass JS */
-.glass-navbar::after {
-    content: "";
-    position: absolute;
-    inset: -1px;
-    border-radius: 25px;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0) 35%, rgba(0, 123, 255, 0.15) 75%, rgba(255, 255, 255, 0.4) 100%);
-    pointer-events: none;
-    z-index: -2;
-    opacity: 0.85;
+/* Tint and inner shadow layer */
+.liquid-glass-card::before,
+.glass-navbar::before,
+.banner-card::before {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: 0 !important;
+    border-radius: inherit !important;
+    box-shadow: inset 0 0 15px rgba(255, 255, 255, 0.95), 0 10px 35px rgba(0, 0, 0, 0.1) !important;
+    background-color: rgba(255, 255, 255, 0.82) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+    pointer-events: none !important;
+    display: block !important;
 }
 
-body.modo-oscuro .glass-navbar {
-    background: rgba(18, 24, 38, 0.70) !important;
-    backdrop-filter: blur(48px) saturate(240%) brightness(120%) !important;
-    -webkit-backdrop-filter: blur(48px) saturate(240%) brightness(120%) !important;
-    border-top: 1.5px solid rgba(255, 255, 255, 0.55) !important;
-    border-bottom: 2px solid rgba(255, 255, 255, 0.25) !important;
-    border-left: 1.5px solid rgba(255, 255, 255, 0.35) !important;
-    border-right: 1.5px solid rgba(255, 255, 255, 0.35) !important;
+/* Backdrop blur and distortion layer */
+.liquid-glass-card::after,
+.glass-navbar::after,
+.banner-card::after {
+    content: '' !important;
+    position: absolute !important;
+    inset: 0 !important;
+    z-index: -1 !important;
+    border-radius: inherit !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+    filter: url(#glass-distortion) !important;
+    -webkit-filter: url(#glass-distortion) !important;
+    isolation: isolate !important;
+    clip-path: inset(0 round inherit) !important;
+    -webkit-clip-path: inset(0 round inherit) !important;
+    pointer-events: none !important;
+}
+
+body.modo-oscuro .liquid-glass-card::before,
+body.modo-oscuro .glass-navbar::before,
+body.modo-oscuro .banner-card::before {
+    box-shadow: inset 0 0 20px rgba(255, 255, 255, 0.15), 0 15px 40px rgba(0, 0, 0, 0.5) !important;
+    background-color: rgba(15, 23, 42, 0.65) !important;
+    border-color: rgba(255, 255, 255, 0.25) !important;
+}
+
+/* ==========================================================================
+   HIGH-CONTRAST CONTEXT-AWARE 3D LIQUID GLASS BUTTON SYSTEM
+   ========================================================================== */
+
+/* Primary Action & CTA Buttons (Light Mode: Electric Blue Glass with Crisp White Text) */
+.glass-button,
+.btn-glass-liquid,
+.btn-primary,
+.btn-servicio-cta,
+.btn-cta,
+#btnSolicitarSoporte,
+#btnSolicitarConsultoria {
+    background: linear-gradient(135deg, #0d6efd 0%, #0052cc 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    padding: 0.6rem 1.4rem !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    cursor: pointer !important;
+    backdrop-filter: blur(12px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(12px) saturate(200%) !important;
     box-shadow: 
-        inset 0 2px 5px rgba(255, 255, 255, 0.5), 
-        inset 0 -2px 6px rgba(0, 0, 0, 0.7),
-        inset 0 0 25px rgba(0, 123, 255, 0.3),
-        0 20px 50px -10px rgba(0, 0, 0, 0.75),
-        0 0 45px rgba(0, 123, 255, 0.25) !important;
-}
-body.modo-oscuro .glass-navbar::before {
-    background: linear-gradient(180deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.12) 50%, rgba(255, 255, 255, 0) 100%);
-}
-body.modo-oscuro .glass-navbar::after {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0) 40%, rgba(0, 123, 255, 0.35) 80%, rgba(255, 255, 255, 0.15) 100%);
+        inset 0 2px 3px rgba(255, 255, 255, 0.6),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+        0 6px 20px rgba(13, 110, 253, 0.35) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
-/* Adjust body padding for fixed capsule navbar and top white static strip across ALL pages */
+.glass-button:hover,
+.btn-glass-liquid:hover,
+.btn-primary:hover,
+.btn-servicio-cta:hover,
+.btn-cta:hover {
+    background: linear-gradient(135deg, #1572e8 0%, #0043a8 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        0 10px 28px rgba(13, 110, 253, 0.5) !important;
+}
+
+/* Secondary & Outline Glass Buttons (Light Mode: Translucent Ice Blue with Dark Text) */
+.btn-outline-primary,
+.btn-secondary,
+.btn-action-pill {
+    background: rgba(13, 110, 253, 0.08) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.35) !important;
+    color: #0d6efd !important;
+    padding: 0.55rem 1.2rem !important;
+    border-radius: 50px !important;
+    font-weight: 600 !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.btn-outline-primary:hover,
+.btn-secondary:hover,
+.btn-action-pill:hover {
+    background: #0d6efd !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 22px rgba(13, 110, 253, 0.35) !important;
+}
+
+/* Chatbot Floating Glass Button */
+#chatbotBtn {
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.45) !important;
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    z-index: 1060 !important;
+}
+
+/* Dark Mode Overrides for Buttons */
+body.modo-oscuro .glass-button,
+body.modo-oscuro .btn-glass-liquid,
+body.modo-oscuro .btn-primary,
+body.modo-oscuro .btn-servicio-cta {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.85) 0%, rgba(56, 189, 248, 0.9) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    box-shadow: 0 8px 25px rgba(56, 189, 248, 0.3) !important;
+}
+
+body.modo-oscuro .btn-outline-primary,
+body.modo-oscuro .btn-secondary,
+body.modo-oscuro .btn-action-pill {
+    background: rgba(255, 255, 255, 0.1) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.3) !important;
+    color: #ffffff !important;
+}
+
+body.modo-oscuro .btn-outline-primary:hover,
+body.modo-oscuro .btn-secondary:hover,
+body.modo-oscuro .btn-action-pill:hover {
+    background: rgba(255, 255, 255, 0.25) !important;
+    color: #38bdf8 !important;
+}
+
+/* Carousel Buttons: Strict Left & Right Placement with 3D Glass Lens Look */
+#frasePrev {
+    position: absolute !important;
+    left: 28px !important;
+    right: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+    backdrop-filter: blur(15px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+    box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.85),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        0 8px 20px rgba(0, 0, 0, 0.3) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 20 !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#fraseNext {
+    position: absolute !important;
+    right: 28px !important;
+    left: auto !important;
+    top: 50% !important;
+    transform: translateY(-50%) !important;
+    width: 48px !important;
+    height: 48px !important;
+    min-width: 48px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.25) 0%, rgba(255, 255, 255, 0.08) 100%) !important;
+    backdrop-filter: blur(15px) saturate(200%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(200%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.65) !important;
+    box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.85),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.3),
+        0 8px 20px rgba(0, 0, 0, 0.3) !important;
+    color: #ffffff !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 20 !important;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#frasePrev::before,
+#fraseNext::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    right: 2px;
+    height: 45%;
+    border-radius: 50px 50px 0 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+}
+
+#frasePrev:hover,
+#fraseNext:hover {
+    background: linear-gradient(135deg, #007BFF 0%, #0056b3 100%) !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
+    transform: translateY(-50%) scale(1.12) !important;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.95),
+        0 0 30px rgba(0, 123, 255, 0.7) !important;
+}
+
+/* 3D Liquid Glass Action Buttons in Navbar */
+#cartBtn {
+    position: relative !important;
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.45) 0%, rgba(13, 110, 253, 0.2) 100%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+    color: #ffffff !important;
+    backdrop-filter: blur(15px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+    border-radius: 50px !important;
+    height: 36px !important;
+    box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.85),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.25),
+        0 4px 15px rgba(13, 110, 253, 0.3) !important;
+    transition: all 0.25s ease !important;
+    overflow: hidden !important;
+}
+
+#cartBtn::before,
+#userMenuBtn::before,
+#adminNav .btn-outline-primary::before {
+    content: "";
+    position: absolute;
+    top: 1px;
+    left: 2px;
+    right: 2px;
+    height: 48%;
+    border-radius: 50px 50px 0 0;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.15) 100%);
+    pointer-events: none;
+    z-index: 1;
+}
+
+#cartBtn:hover {
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%) !important;
+    border-color: rgba(255, 255, 255, 0.9) !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.95), 0 8px 22px rgba(13, 110, 253, 0.5) !important;
+}
+
+#userMenuBtn,
+.nav-pill-indicator,
+#adminNav .btn-outline-primary {
+    position: relative !important;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.15) 100%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.75) !important;
+    color: #0f172a !important;
+    backdrop-filter: blur(15px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(15px) saturate(180%) !important;
+    border-radius: 50px !important;
+    height: 36px !important;
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.85), inset 0 -2px 4px rgba(0, 0, 0, 0.15), 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.25s ease !important;
+    overflow: hidden !important;
+}
+
+body.modo-oscuro #userMenuBtn,
+body.modo-oscuro .nav-pill-indicator,
+body.modo-oscuro #adminNav .btn-outline-primary {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.45) !important;
+    color: #ffffff !important;
+    box-shadow: inset 0 2px 3px rgba(255, 255, 255, 0.45), inset 0 -2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+#userMenuBtn:hover,
+#adminNav .btn-outline-primary:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.25) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.95) !important;
+    transform: translateY(-2px) scale(1.03) !important;
+}
+
+body.modo-oscuro #userMenuBtn:hover,
+body.modo-oscuro #adminNav .btn-outline-primary:hover {
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.3) 0%, rgba(255, 255, 255, 0.12) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.75) !important;
+}
+
+/* Ensure header starts at top 0 of page behind floating navbar */
 body {
-    padding-top: 155px !important;
+    padding-top: 0 !important;
 }
 
+header,
 header.gradient-bg,
 .gradient-bg {
-    margin-top: 155px !important;
+    margin-top: 0 !important;
+    padding-top: 110px !important;
 }
 
 @media (max-width: 991px) {
-    body::before {
-        height: 95px !important;
-    }
     body {
-        padding-top: 135px !important;
+        padding-top: 0 !important;
     }
     header,
     .gradient-bg,
@@ -1562,7 +1945,8 @@ header.gradient-bg,
     #navbar + main,
     #navbar + .container,
     #navbar + .container-fluid {
-        margin-top: 135px !important;
+        margin-top: 0 !important;
+        padding-top: 90px !important;
     }
     .glass-navbar {
         top: 10px !important;
@@ -1581,51 +1965,54 @@ header.gradient-bg,
     font-weight: 900;
     font-size: clamp(2.5rem, 7vw, 5rem);
     margin-bottom: 0.2em !important;
-    color: #ffffff !important;
-    text-shadow: 0 0 25px rgba(0, 123, 255, 0.55), 0 2px 16px rgba(0,0,0,0.6) !important;
+    color: #0f172a !important;
+    -webkit-text-fill-color: #0f172a !important;
+    text-shadow: 0 4px 15px rgba(2, 132, 199, 0.25) !important;
 }
 
 body.modo-oscuro .logo-edark {
     color: #ffffff !important;
-    text-shadow: 0 0 25px rgba(0, 123, 255, 0.55), 0 2px 16px rgba(0,0,0,0.6) !important;
+    -webkit-text-fill-color: #ffffff !important;
+    text-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 2px 16px rgba(0, 0, 0, 0.8) !important;
 }
 
 .sub-edark {
     font-family: 'Montserrat', Arial, sans-serif !important;
-    font-weight: 600 !important;
+    font-weight: 700 !important;
     font-size: clamp(1.1rem, 3vw, 2.2rem);
-    color: #007BFF !important;
+    color: #0284c7 !important;
     letter-spacing: 0.08em;
     margin-bottom: 1.2em !important;
-    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+    text-shadow: none !important;
 }
 
 body.modo-oscuro .sub-edark {
-    color: #007BFF !important;
+    color: #38bdf8 !important;
 }
 
-/* Quotes readability - always white text inside black block */
+/* Quotes readability inside liquid glass container */
 .frase-carrusel-texto {
     font-family: 'Montserrat', sans-serif !important;
     font-size: clamp(1.1rem, 2vw, 1.4rem) !important;
-    color: #ffffff !important;
+    color: #0f172a !important;
     font-weight: 600 !important;
     line-height: 1.6 !important;
-    text-shadow: 0 2px 8px rgba(0,0,0,0.5);
+    text-shadow: none !important;
 }
 
 body.modo-oscuro .frase-carrusel-texto {
     color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
 }
 
 .frase-carrusel-autor {
     font-family: 'Montserrat', sans-serif !important;
-    color: #007BFF !important;
-    font-weight: 600 !important;
+    color: #0284c7 !important;
+    font-weight: 700 !important;
 }
 
 body.modo-oscuro .frase-carrusel-autor {
-    color: #007BFF !important;
+    color: #38bdf8 !important;
 }
 
 /* Unify all page header main titles to use the Orbitron/Montserrat premium brand styling */
@@ -1670,6 +2057,8 @@ body.modo-oscuro .post-hero p {
 .glass-navbar .nav-link {
     position: relative;
     padding: 0.5rem 1rem !important;
+    color: #0f172a !important;
+    font-weight: 600 !important;
     transition: color 0.3s ease;
 }
 
@@ -1680,7 +2069,7 @@ body.modo-oscuro .post-hero p {
     left: 50%;
     width: 0;
     height: 3px;
-    background: #007BFF;
+    background: #0284c7;
     border-radius: 2px;
     transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     transform: translateX(-50%);
@@ -1689,21 +2078,27 @@ body.modo-oscuro .post-hero p {
 .glass-navbar .nav-link:hover::after,
 .glass-navbar .nav-link.active::after {
     width: 80%;
-    box-shadow: 0 0 10px rgba(0, 123, 255, 0.8);
+    box-shadow: 0 0 10px rgba(2, 132, 199, 0.8);
 }
 
 .glass-navbar .nav-link:hover,
 .glass-navbar .nav-link.active {
-    color: #007BFF !important;
+    color: #0284c7 !important;
+}
+
+body.modo-oscuro .glass-navbar .nav-link {
+    color: #ffffff !important;
+    font-weight: 500 !important;
 }
 
 body.modo-oscuro .glass-navbar .nav-link:hover,
 body.modo-oscuro .glass-navbar .nav-link.active {
-    color: #ffffff !important;
+    color: #38bdf8 !important;
 }
 
 body.modo-oscuro .glass-navbar .nav-link::after {
-    background: #007BFF;
+    background: #38bdf8;
+    box-shadow: 0 0 10px rgba(56, 189, 248, 0.8);
 }
 
 /* Glassmorphic List Groups for service pages */
@@ -2209,12 +2604,33 @@ body.modo-oscuro .live-search-item:hover, body.modo-oscuro .live-search-item.act
    ASISTENTE VIRTUAL CHIMUELO IA (CHATBOT)
 ========================================================= */
 #chatbotBtn {
-    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.4) !important;
+    position: fixed !important;
+    bottom: 25px !important;
+    right: 25px !important;
+    left: auto !important;
+    z-index: 1060 !important;
+    width: 58px !important;
+    height: 58px !important;
+    border-radius: 50% !important;
+    background: linear-gradient(135deg, #0d6efd 0%, #0043a8 100%) !important;
+    border: 2px solid rgba(255, 255, 255, 0.8) !important;
+    box-shadow: 0 8px 25px rgba(13, 110, 253, 0.45) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    padding: 0 !important;
+    transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) !important;
 }
+
+#chatbotBtn img {
+    width: 34px !important;
+    height: 34px !important;
+    object-fit: contain !important;
+}
+
 #chatbotBtn:hover {
-    transform: scale(1.12) rotate(-5deg);
-    box-shadow: 0 12px 30px rgba(13, 110, 253, 0.6) !important;
+    transform: scale(1.12) rotate(-5deg) !important;
+    box-shadow: 0 12px 30px rgba(13, 110, 253, 0.65) !important;
 }
 
 #chatbotMessages {
@@ -2368,19 +2784,6 @@ body.modo-oscuro .cart-item-card img {
    DISEÑO ARMÓNICO Y ALTA ESTÉTICA (REDISEÑO VISUAL PREMIUM)
 ========================================================= */
 
-/* Navbar Premium Glassmorphism */
-.glass-navbar {
-    background: rgba(255, 255, 255, 0.88) !important;
-    backdrop-filter: blur(20px) saturate(180%);
-    -webkit-backdrop-filter: blur(20px) saturate(180%);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8) !important;
-    min-height: 72px;
-}
-body.modo-oscuro .glass-navbar {
-    background: rgba(15, 23, 42, 0.90) !important;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
-}
-
 /* Dropdown Glass */
 .glass-dropdown {
     background: rgba(255, 255, 255, 0.95) !important;
@@ -2479,12 +2882,6 @@ body.modo-oscuro .pagination-modern .page-link:hover {
    SUPERIOR RESPONSIVE NAVBAR SYSTEM (PRO-LEVEL FLUID LAYOUT)
    ========================================================================== */
 
-/* 1. Prevenir desbordes y cortes en el contenedor cápsula .glass-navbar */
-.glass-navbar {
-    overflow: visible !important;
-    transition: all 0.3s ease !important;
-}
-
 /* 2. Mantener enlaces principales EN UNA SOLA LÍNEA HORIZONTAL siempre (sin amontonar el ícono arriba del texto) */
 #mainNavbar .navbar-nav .nav-link {
     display: flex !important;
@@ -2563,7 +2960,7 @@ body.modo-oscuro .pagination-modern .page-link:hover {
         left: 10px !important;
         right: 10px !important;
         padding: 0.35rem 0.75rem !important;
-        border-radius: 18px !important;
+        border-radius: 28px !important;
     }
     #mainNavbar .container-fluid {
         padding-left: 0.25rem !important;
@@ -2618,4 +3015,272 @@ html, body {
         padding: 1rem !important;
         border-radius: 0.85rem !important;
     }
+}
+
+/* ==========================================================================
+   ARTICLE CARD & BLOG "LEER MÁS" HIGH-CONTRAST BUTTON SYSTEM
+   ========================================================================== */
+.article-card {
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(226, 232, 240, 0.9);
+    transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.article-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.14);
+}
+
+.article-content {
+    padding: 1.6rem;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+}
+
+.article-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #0f172a;
+    margin-top: 0.75rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.35;
+}
+
+.article-excerpt {
+    color: #475569;
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.article-meta {
+    font-size: 0.85rem;
+    color: #64748b;
+    margin-bottom: 0.75rem;
+    font-weight: 500;
+}
+
+/* Explicit Read More / Action Button for Article Cards & Light Containers */
+.article-card .btn,
+.article-card .btn-outline-primary,
+.card .btn-outline-primary,
+a.btn-outline-primary {
+    background: linear-gradient(135deg, #0d6efd 0%, #0052cc 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.4) !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+    padding: 0.55rem 1.35rem !important;
+    border-radius: 50px !important;
+    box-shadow: 0 4px 15px rgba(13, 110, 253, 0.35) !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 0.5rem !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    width: fit-content !important;
+    margin-top: auto !important;
+}
+
+.article-card .btn:hover,
+.article-card .btn-outline-primary:hover,
+.card .btn-outline-primary:hover,
+a.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #1572e8 0%, #0043a8 100%) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 24px rgba(13, 110, 253, 0.5) !important;
+}
+
+/* Dark Mode Article Card Overrides */
+body.modo-oscuro .article-card {
+    background: #1e293b !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+body.modo-oscuro .article-title {
+    color: #f8f9fa !important;
+}
+
+body.modo-oscuro .article-excerpt {
+    color: #cbd5e1 !important;
+}
+
+body.modo-oscuro .article-meta {
+    color: #94a3b8 !important;
+}
+
+body.modo-oscuro .article-card .btn-outline-primary {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(56, 189, 248, 0.95) 100%) !important;
+    color: #ffffff !important;
+}
+
+/* ==========================================================================
+   AETHER CSS LIQUID GLASS NAVBAR RIGHT-SIDE ACTION PILLS
+   ========================================================================== */
+
+/* 1. Search Bar Capsule in Navbar */
+#adminNav .input-group {
+    background: rgba(255, 255, 255, 0.15) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border-radius: 50px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#adminNav .input-group:focus-within {
+    background: rgba(255, 255, 255, 0.28) !important;
+    border-color: rgba(56, 189, 248, 0.7) !important;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.35) !important;
+}
+
+#navLiveSearchInput {
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+#navLiveSearchInput::placeholder {
+    color: rgba(255, 255, 255, 0.75) !important;
+}
+
+body:not(.modo-oscuro) #navLiveSearchInput {
+    color: #0f172a !important;
+}
+
+body:not(.modo-oscuro) #navLiveSearchInput::placeholder {
+    color: #64748b !important;
+}
+
+/* 2. Exchange Rate Pill (TC: S/ 3.80) */
+.nav-pill-indicator {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    border-radius: 50px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
+    font-weight: 600 !important;
+}
+
+/* 2. Exchange Rate Pill ("TC: S/ 3.80") */
+.nav-pill-indicator {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    border-radius: 50px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
+    font-weight: 600 !important;
+}
+
+body:not(.modo-oscuro) .nav-pill-indicator {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.3) !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+/* 3. Orders Button ("Pedidos") */
+#adminNav a.btn-outline-primary {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    border-radius: 50px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#adminNav a.btn-outline-primary:hover {
+    background: rgba(56, 189, 248, 0.35) !important;
+    border-color: rgba(56, 189, 248, 0.7) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 22px rgba(56, 189, 248, 0.35) !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.35) !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary i {
+    color: #0d6efd !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #0d6efd 0%, #0052cc 100%) !important;
+    border-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary:hover i {
+    color: #ffffff !important;
+}
+
+/* 4. Cart Button ("Carrito") */
+#cartBtn {
+    background: linear-gradient(135deg, rgba(13, 110, 253, 0.85) 0%, rgba(0, 82, 204, 0.95) 100%) !important;
+    border: 1px solid rgba(255, 255, 255, 0.45) !important;
+    color: #ffffff !important;
+    border-radius: 50px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 
+        inset 0 1.5px 2px rgba(255, 255, 255, 0.7),
+        0 4px 18px rgba(13, 110, 253, 0.4) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#cartBtn:hover {
+    background: linear-gradient(135deg, rgba(21, 114, 232, 0.95) 0%, rgba(0, 67, 168, 1) 100%) !important;
+    transform: translateY(-2px) scale(1.04) !important;
+    box-shadow: 
+        inset 0 2px 3px rgba(255, 255, 255, 0.9),
+        0 8px 25px rgba(13, 110, 253, 0.6) !important;
+}
+
+/* 5. User Account Button ("Ingresar") */
+#userMenuBtn {
+    background: rgba(255, 255, 255, 0.18) !important;
+    border: 1px solid rgba(255, 255, 255, 0.35) !important;
+    color: #ffffff !important;
+    border-radius: 50px !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12) !important;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+#userMenuBtn:hover {
+    background: rgba(255, 255, 255, 0.3) !important;
+    border-color: rgba(255, 255, 255, 0.6) !important;
+    color: #ffffff !important;
+    transform: translateY(-2px) scale(1.03) !important;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.25) !important;
+}
+
+body:not(.modo-oscuro) #userMenuBtn {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.35) !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+body:not(.modo-oscuro) #userMenuBtn i {
+    color: #0d6efd !important;
 }

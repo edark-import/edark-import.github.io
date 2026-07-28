@@ -3,16 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" id="metaDescription" content="">
-    <meta name="keywords" id="metaKeywords" content="">
-    <meta property="og:title" id="ogTitle" content="">
-    <meta property="og:description" id="ogDescription" content="">
-    <meta property="og:image" id="ogImage" content="">
+    <meta name="description" id="metaDescription" content="Noticias, ciberseguridad, ensamblaje de PC y consultoría tecnológica en Perú con eDark Alpha Technologies.">
+    <meta name="keywords" id="metaKeywords" content="eDark, Blog, Tecnología, Ciberseguridad, Perú, Hacking, Soporte Técnico">
+    <meta property="og:title" id="ogTitle" content="eDark Blog — Tecnología & Ciberseguridad en Perú">
+    <meta property="og:description" id="ogDescription" content="Noticias, ciberseguridad, ensamblaje de PC y consultoría tecnológica en Perú con eDark Alpha Technologies.">
+    <meta property="og:image" id="ogImage" content="https://edark-import.github.io/img/Logo/logo_2.png">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:url" id="ogUrl" content="https://edark-import.github.io/blog-post.html">
+    <meta property="og:type" content="article">
+    <meta property="og:site_name" content="eDark Alpha Technologies">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" id="twitterTitle" content="eDark Blog — Tecnología & Ciberseguridad en Perú">
+    <meta name="twitter:description" id="twitterDescription" content="Noticias, ciberseguridad, ensamblaje de PC y consultoría tecnológica en Perú con eDark Alpha Technologies.">
+    <meta name="twitter:image" id="twitterImage" content="https://edark-import.github.io/img/Logo/logo_2.png">
     <meta name="google-adsense-account" content="ca-pub-1611560592421673">
-    <title id="pageTitle">Blog - eDark</title>
+    <title id="pageTitle">eDark Blog — Tecnología & Ciberseguridad en Perú</title>
     <link rel="icon" type="image/x-icon" href="img/Logo/isotipo_Negro.png" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link href="css/styles.css?v=4.0" rel="stylesheet">
     <link href="css/modern-styles.css?v=4.0" rel="stylesheet">
@@ -548,10 +557,34 @@
         }
 
         .share-btn.facebook { background: #1877f2; }
-        .share-btn.twitter  { background: #1da1f2; }
+        .share-btn.twitter  { background: #000000; border: 1px solid rgba(255,255,255,0.2); }
+        .share-btn.twitter svg { fill: #ffffff !important; width: 16px; height: 16px; }
         .share-btn.linkedin { background: #0a66c2; }
         .share-btn.whatsapp { background: #25d366; }
         .share-btn.copy     { background: #64748b; }
+        
+        .share-btn.preview-btn {
+            width: auto;
+            height: 38px;
+            padding: 0 16px;
+            border-radius: 50px;
+            background: linear-gradient(135deg, rgba(2, 132, 199, 0.9) 0%, rgba(13, 110, 253, 0.9) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: white;
+            font-size: 13px;
+            font-weight: 600;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 4px 14px rgba(2, 132, 199, 0.3);
+            cursor: pointer;
+        }
+
+        .share-btn.preview-btn:hover {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 1) 0%, rgba(13, 110, 253, 1) 100%);
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 8px 22px rgba(2, 132, 199, 0.5);
+            color: white;
+        }
 
         /* ============================================
            RELATED POSTS
@@ -832,19 +865,19 @@
                 <!-- Share Buttons -->
                 <div class="share-section">
                     <span class="share-label"><i class="bi bi-share me-1"></i>Compartir</span>
-                    <a href="#" class="share-btn facebook" id="shareFacebook" target="_blank" title="Facebook">
+                    <a href="#" class="share-btn facebook" id="shareFacebook" onclick="abrirPopUpCompartir(event, 'facebook')" title="Compartir en Facebook">
                         <i class="bi bi-facebook"></i>
                     </a>
-                    <a href="#" class="share-btn twitter" id="shareTwitter" target="_blank" title="X / Twitter">
-                        <i class="bi bi-twitter-x"></i>
+                    <a href="#" class="share-btn twitter" id="shareTwitter" onclick="abrirPopUpCompartir(event, 'twitter')" title="Compartir en X / Twitter">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                     </a>
-                    <a href="#" class="share-btn linkedin" id="shareLinkedin" target="_blank" title="LinkedIn">
+                    <a href="#" class="share-btn linkedin" id="shareLinkedin" onclick="abrirPopUpCompartir(event, 'linkedin')" title="Compartir en LinkedIn">
                         <i class="bi bi-linkedin"></i>
                     </a>
-                    <a href="#" class="share-btn whatsapp" id="shareWhatsapp" target="_blank" title="WhatsApp">
+                    <a href="#" class="share-btn whatsapp" id="shareWhatsapp" onclick="abrirPopUpCompartir(event, 'whatsapp')" title="Compartir en WhatsApp">
                         <i class="bi bi-whatsapp"></i>
                     </a>
-                    <button class="share-btn copy" id="copyLink" title="Copiar enlace" onclick="copyArticleLink()">
+                    <button class="share-btn copy" id="copyLink" title="Copiar enlace directo" onclick="copyArticleLink()">
                         <i class="bi bi-link-45deg"></i>
                     </button>
                 </div>
@@ -863,10 +896,8 @@
             <div id="errorState" style="display:none;" class="error-state">
                 <div class="error-icon">📄</div>
                 <h2>Artículo no encontrado</h2>
-                <p>El artículo que buscas no existe o fue removido.</p>
-                <a href="blog.html" class="btn btn-primary">
-                    <i class="bi bi-arrow-left me-2"></i>Volver al Blog
-                </a>
+                <p>El artículo que buscas no existe o ha sido movido.</p>
+                <a href="blog.html" class="btn btn-primary rounded-pill px-4">Volver al Blog</a>
             </div>
 
         </main>
@@ -1190,24 +1221,121 @@
     }
 
     /* ============================================
-       SHARE BUTTONS
+       INSTANT POPUP SHARE SYSTEM (NO LOCALHOST BREAKAGE)
     ============================================ */
-    function configurarCompartir(articulo) {
-        const url   = encodeURIComponent(window.location.href);
-        const titulo = encodeURIComponent(articulo.titulo || '');
-        const desc  = encodeURIComponent(articulo.extracto || '');
+    let currentArticuloGlobal = null;
 
-        const sf = document.getElementById('shareFacebook'); if (sf) sf.href = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
-        const st = document.getElementById('shareTwitter'); if (st) st.href  = `https://twitter.com/intent/tweet?text=${titulo}&url=${url}`;
-        const sl = document.getElementById('shareLinkedin'); if (sl) sl.href = `https://www.linkedin.com/shareArticle?mini=true&url=${url}&title=${titulo}&summary=${desc}`;
-        const sw = document.getElementById('shareWhatsapp'); if (sw) sw.href = `https://wa.me/?text=${titulo}%20${url}`;
+    function getPublicShareUrl() {
+        const currentSlug = slug || 'hackers-phishing';
+        // En GitHub Pages, usamos la ruta estática p/${currentSlug}.html que contiene los metadatos Open Graph dedicados (Título, Imagen y Extracto real) para que los rastreadores de Facebook, LinkedIn, Twitter y WhatsApp muestren la tarjeta completa idéntica a El Comercio
+        return `https://edark-import.github.io/p/${currentSlug}.html`;
+    }
+
+    function configurarCompartir(articulo) {
+        currentArticuloGlobal = articulo;
+        const publicUrl = getPublicShareUrl();
+        const tituloTexto = articulo?.titulo || 'eDark Blog';
+        const extractoTexto = articulo?.extracto || 'Descubre las últimas novedades en tecnología y consultoría en eDark.';
+        
+        let imagenUrl = articulo?.imagenDestacada || articulo?.imagenUrl || 'img/Logo/logo_2.png';
+        if (imagenUrl && !imagenUrl.startsWith('http')) {
+            imagenUrl = 'https://edark-import.github.io/' + imagenUrl.replace(/^\//, '');
+        }
+
+        // Meta etiquetas Open Graph y Twitter Cards en el <head>
+        const ogTitle = document.getElementById('ogTitle'); if (ogTitle) ogTitle.content = tituloTexto;
+        const ogDesc = document.getElementById('ogDescription'); if (ogDesc) ogDesc.content = extractoTexto;
+        const ogImg = document.getElementById('ogImage'); if (ogImg) ogImg.content = imagenUrl;
+        const ogUrl = document.getElementById('ogUrl'); if (ogUrl) ogUrl.content = publicUrl;
+        const twTitle = document.getElementById('twitterTitle'); if (twTitle) twTitle.content = tituloTexto;
+        const twDesc = document.getElementById('twitterDescription'); if (twDesc) twDesc.content = extractoTexto;
+        const twImg = document.getElementById('twitterImage'); if (twImg) twImg.content = imagenUrl;
+
+        // Asignar los eventos onclick para abrir en Ventana Emergente Centrada (PopUp) manteniendo la sesión activa del usuario sin sacarlo de la web
+        const sf = document.getElementById('shareFacebook'); 
+        if (sf) { 
+            sf.onclick = (e) => abrirPopUpCompartir(e, 'facebook');
+            sf.removeAttribute('target');
+        }
+        const st = document.getElementById('shareTwitter'); 
+        if (st) { 
+            st.onclick = (e) => abrirPopUpCompartir(e, 'twitter');
+            st.removeAttribute('target');
+        }
+        const sl = document.getElementById('shareLinkedin'); 
+        if (sl) { 
+            sl.onclick = (e) => abrirPopUpCompartir(e, 'linkedin');
+            sl.removeAttribute('target');
+        }
+        const sw = document.getElementById('shareWhatsapp'); 
+        if (sw) { 
+            sw.onclick = (e) => abrirPopUpCompartir(e, 'whatsapp');
+            sw.removeAttribute('target');
+        }
+    }
+
+    function abrirPopUpCompartir(e, redSocial) {
+        if (e) e.preventDefault();
+        
+        const publicUrl = getPublicShareUrl();
+        const rawUrlEncoded = encodeURIComponent(publicUrl);
+        const tituloTexto = currentArticuloGlobal?.titulo || document.title.replace(' — eDark Blog', '');
+        const extractoTexto = currentArticuloGlobal?.extracto || '';
+
+        // Si el usuario está en móvil y el navegador soporta Web Share API nativo, usa el menú nativo del celular
+        if (navigator.share && /Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+            navigator.share({
+                title: tituloTexto,
+                text: extractoTexto,
+                url: publicUrl
+            }).catch(() => {});
+            return;
+        }
+
+        let targetUrl = '';
+        let w = 620;
+        let h = 580;
+
+        switch (redSocial) {
+            case 'facebook':
+                targetUrl = `https://www.facebook.com/sharer/sharer.php?u=${rawUrlEncoded}&quote=${encodeURIComponent('📰 ' + tituloTexto + '\n\n' + extractoTexto)}`;
+                w = 650; h = 600;
+                break;
+            case 'twitter':
+            case 'x':
+                const twText = encodeURIComponent(`📰 ${tituloTexto}\n\n${extractoTexto.length > 110 ? extractoTexto.substring(0, 107) + '...' : extractoTexto}`);
+                targetUrl = `https://twitter.com/intent/tweet?text=${twText}&url=${rawUrlEncoded}&hashtags=eDark,Tecnologia,Peru`;
+                w = 600; h = 500;
+                break;
+            case 'linkedin':
+                const liText = encodeURIComponent(`📰 ${tituloTexto}\n\n${extractoTexto}\n\n👉 ${publicUrl}`);
+                targetUrl = `https://www.linkedin.com/feed/?shareActive=true&text=${liText}`;
+                w = 750; h = 650;
+                break;
+            case 'whatsapp':
+                const waText = encodeURIComponent(`📰 *${tituloTexto}*\n\n${extractoTexto}\n\n👉 ${publicUrl}`);
+                targetUrl = `https://api.whatsapp.com/send?text=${waText}`;
+                w = 780; h = 650;
+                break;
+        }
+
+        if (targetUrl) {
+            const left = (window.screen.width - w) / 2;
+            const top = (window.screen.height - h) / 2;
+            window.open(
+                targetUrl,
+                'eDarkCompartir',
+                `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=yes, resizable=yes, copyhistory=no, width=${w}, height=${h}, top=${top}, left=${left}`
+            );
+        }
     }
 
     function copyArticleLink() {
-        navigator.clipboard.writeText(window.location.href).then(() => {
+        const publicUrl = getPublicShareUrl();
+        navigator.clipboard.writeText(publicUrl).then(() => {
             const btn = document.getElementById('copyLink');
             if (btn) {
-                btn.innerHTML = '<i class="bi bi-check"></i>';
+                btn.innerHTML = '<i class="bi bi-check text-success fs-5"></i>';
                 setTimeout(() => { btn.innerHTML = '<i class="bi bi-link-45deg"></i>'; }, 2000);
             }
         });

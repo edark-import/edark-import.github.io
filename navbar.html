@@ -1,17 +1,70 @@
+<!-- SVG Filter for Real Liquid Glass Refraction & Distortion (Aether CSS) -->
+<svg width="0" height="0" style="position: absolute; pointer-events: none; visibility: hidden;">
+  <defs>
+    <filter id="glass-distortion" x="0%" y="0%" width="100%" height="100%">
+      <feTurbulence 
+        type="fractalNoise" 
+        baseFrequency="0.015 0.015"
+        numOctaves="2" 
+        seed="92" 
+        result="noise" 
+      />
+      <feGaussianBlur 
+        in="noise" 
+        stdDeviation="2" 
+        result="blurred" 
+      />
+      <feDisplacementMap 
+        in="SourceGraphic" 
+        in2="blurred" 
+        scale="95"
+        xChannelSelector="R" 
+        yChannelSelector="G" 
+      />
+    </filter>
+  </defs>
+</svg>
+
 <!-- Navigation Styles -->
 <style>
 /* ==========================================================================
    SUPERIOR RESPONSIVE NAVBAR SYSTEM (PRO-LEVEL FLUID LAYOUT)
    ========================================================================== */
-.glass-navbar {
-    overflow: visible !important;
-    transition: all 0.3s ease !important;
-}
-#mainNavbar .navbar-nav .nav-link {
+#mainNavbar a.nav-link,
+#mainNavbar .nav-link,
+.glass-navbar a.nav-link,
+.glass-navbar .nav-link {
     display: flex !important;
     align-items: center !important;
     white-space: nowrap !important;
     gap: 0.35rem !important;
+    color: #000000 !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+    transition: color 0.2s ease !important;
+}
+#mainNavbar a.nav-link:hover,
+#mainNavbar a.nav-link.active,
+.glass-navbar a.nav-link:hover,
+.glass-navbar a.nav-link.active {
+    color: #0d6efd !important;
+    opacity: 1 !important;
+}
+body.modo-oscuro #mainNavbar a.nav-link,
+body.modo-oscuro #mainNavbar .nav-link,
+body.modo-oscuro .glass-navbar a.nav-link,
+body.modo-oscuro .glass-navbar .nav-link {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+body.modo-oscuro #mainNavbar a.nav-link:hover,
+body.modo-oscuro #mainNavbar a.nav-link.active,
+body.modo-oscuro .glass-navbar a.nav-link:hover,
+body.modo-oscuro .glass-navbar a.nav-link.active {
+    color: #38bdf8 !important;
+    opacity: 1 !important;
 }
 #mainNavbar .navbar-nav .nav-link i {
     margin-right: 0 !important;
@@ -75,7 +128,7 @@
         left: 10px !important;
         right: 10px !important;
         padding: 0.35rem 0.75rem !important;
-        border-radius: 18px !important;
+        border-radius: 28px !important;
     }
     #mainNavbar .container-fluid {
         padding-left: 0.25rem !important;
@@ -105,9 +158,9 @@
         </button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4 gap-1 fw-semibold align-items-lg-center">
-                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="index.html"><i class="bi bi-house-door me-1"></i>Inicio</a></li> 
+                <li class="nav-item"><a class="nav-link nav-link-edark px-3 rounded-pill transition-all" href="index.html" style="color: #000000 !important; font-weight: 700 !important;"><i class="bi bi-house-door me-1"></i>Inicio</a></li> 
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle px-3 rounded-pill transition-all" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="bi bi-briefcase me-1"></i>Servicios</a>
+                    <a class="nav-link nav-link-edark dropdown-toggle px-3 rounded-pill transition-all" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #000000 !important; font-weight: 700 !important;"><i class="bi bi-briefcase me-1"></i>Servicios</a>
                     <ul class="dropdown-menu shadow-lg border-0 rounded-4 p-2 mt-2 glass-dropdown" aria-labelledby="navbarDropdown">
                         <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="consultoria.html"><i class="bi bi-lightbulb text-primary me-2"></i>Consultoría tecnológica</a></li>
                         <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="soporte.html"><i class="bi bi-tools text-primary me-2"></i>Soporte técnico</a></li>
@@ -125,9 +178,9 @@
                         <li><a class="dropdown-item rounded-3 py-2 fw-medium" href="pc-personalizada.html"><i class="bi bi-pc-display-horizontal text-warning me-2"></i>PC Personalizada</a></li>
                     </ul>
                 </li>
-                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="blog.html"><i class="bi bi-journal-text me-1"></i>Blog</a></li>
-                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="nosotros.html"><i class="bi bi-info-circle me-1"></i>Nosotros</a></li>
-                <li class="nav-item"><a class="nav-link px-3 rounded-pill transition-all" href="contactanos.html"><i class="bi bi-envelope me-1"></i>Contáctanos</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-edark px-3 rounded-pill transition-all" href="blog.html" style="color: #000000 !important; font-weight: 700 !important;"><i class="bi bi-journal-text me-1"></i>Blog</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-edark px-3 rounded-pill transition-all" href="nosotros.html" style="color: #000000 !important; font-weight: 700 !important;"><i class="bi bi-info-circle me-1"></i>Nosotros</a></li>
+                <li class="nav-item"><a class="nav-link nav-link-edark px-3 rounded-pill transition-all" href="contactanos.html" style="color: #000000 !important; font-weight: 700 !important;"><i class="bi bi-envelope me-1"></i>Contáctanos</a></li>
             </ul>
             
             <!-- Acciones Derecha -->
@@ -155,7 +208,7 @@
                 </a>
 
                 <!-- Botón de Carrito en Navbar -->
-                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="background: linear-gradient(135deg, #0d6efd, #0043a8); border:none; height: 36px;" title="Carrito de Compras">
+                <button class="btn btn-primary btn-sm rounded-pill px-3 py-1 fw-bold d-flex align-items-center gap-2 shadow-sm position-relative transition-all" type="button" id="cartBtn" style="height: 36px;" title="Carrito de Compras">
                     <i class="bi bi-cart3 fs-6"></i>
                     <span class="badge bg-danger rounded-pill px-2 py-0.5" id="cartCount" style="font-size:0.75rem;">0</span>
                 </button>
@@ -182,10 +235,10 @@
 
                 <span id="userEmail" class="d-none"></span>
 
-                <!-- Switch modo oscuro/claro -->
+                <!-- Switch modo oscuro/claro (Predeterminado: Modo Nocturno/Oscuro) -->
                 <div class="form-check form-switch m-0 d-flex align-items-center ps-2">
-                    <input class="form-check-input ms-0 me-1 shadow-none" type="checkbox" role="switch" id="modoOscuroSwitch" aria-label="Alternar modo oscuro" title="Alternar modo oscuro" style="cursor: pointer; width: 2.3em; height: 1.25em;">
-                    <label class="form-check-label m-0 d-flex align-items-center" for="modoOscuroSwitch" id="modoOscuroLabel" aria-label="Alternar modo oscuro" style="color: inherit; cursor: pointer; font-size:1.15rem;"><i class="bi bi-moon"></i><span class="visually-hidden">Alternar modo oscuro</span></label>
+                    <input class="form-check-input ms-0 me-1 shadow-none" type="checkbox" role="switch" id="modoOscuroSwitch" checked aria-label="Alternar modo oscuro" title="Alternar modo oscuro" style="cursor: pointer; width: 2.3em; height: 1.25em;">
+                    <label class="form-check-label m-0 d-flex align-items-center" for="modoOscuroSwitch" id="modoOscuroLabel" aria-label="Alternar modo oscuro" style="color: inherit; cursor: pointer; font-size:1.15rem;"><i class="bi bi-sun text-warning"></i><span class="visually-hidden">Alternar modo oscuro</span></label>
                 </div>
             </div>
         </div>
@@ -211,16 +264,30 @@
         
         if (!switchOscuro) return;
 
-        const dark = localStorage.getItem('modoOscuro') !== 'false';
-        if (dark) {
+        const esModoOscuroGuardado = localStorage.getItem('modoOscuro') !== 'false';
+        function actualizarColorEnlacesNav() {
+            const esOscuro = document.body.classList.contains('modo-oscuro');
+            document.querySelectorAll('.nav-link-edark').forEach(el => {
+                if (esOscuro) {
+                    el.style.setProperty('color', '#ffffff', 'important');
+                } else {
+                    el.style.setProperty('color', '#000000', 'important');
+                }
+            });
+        }
+
+        if (esModoOscuroGuardado) {
             document.body.classList.add('modo-oscuro');
             document.documentElement.classList.add('modo-oscuro');
             switchOscuro.checked = true;
             if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-sun text-warning"></i><span class="visually-hidden">Alternar modo oscuro</span>';
         } else {
+            document.body.classList.remove('modo-oscuro');
+            document.documentElement.classList.remove('modo-oscuro');
             switchOscuro.checked = false;
             if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon text-primary"></i><span class="visually-hidden">Alternar modo oscuro</span>';
         }
+        actualizarColorEnlacesNav();
 
         switchOscuro.addEventListener('change', function() {
             if (this.checked) {
@@ -234,6 +301,7 @@
                 localStorage.setItem('modoOscuro', 'false');
                 if (labelOscuro) labelOscuro.innerHTML = '<i class="bi bi-moon text-primary"></i><span class="visually-hidden">Alternar modo oscuro</span>';
             }
+            actualizarColorEnlacesNav();
             actualizarLogoNav();
         });
 

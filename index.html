@@ -58,14 +58,17 @@
   </script>
 </head>
 
-<body>
+<body class="modo-oscuro">
   <!-- Navigation-->
   <div id="navbar"></div>
 
   <!-- Header-->
   <!-- Banner Mejorado eDark -->
-  <header class="gradient-bg position-relative" style="min-height: 340px; display: flex; align-items: center; padding: 2rem 0;">
-    <div class="container px-4 px-lg-5 d-flex justify-content-center w-100">
+  <header class="gradient-bg position-relative overflow-hidden" style="min-height: 340px; display: flex; align-items: center; padding: 2rem 0;">
+    <!-- Ambient Light Halos for Liquid Glass Refraction -->
+    <div class="position-absolute rounded-circle" style="top: -120px; left: 15%; width: 450px; height: 450px; background: rgba(56, 189, 248, 0.18); filter: blur(100px); pointer-events: none; z-index: 1;"></div>
+    <div class="position-absolute rounded-circle" style="top: -80px; right: 15%; width: 450px; height: 450px; background: rgba(139, 92, 246, 0.18); filter: blur(100px); pointer-events: none; z-index: 1;"></div>
+    <div class="container px-4 px-lg-5 d-flex justify-content-center w-100 position-relative" style="z-index: 2;">
       <div class="banner-card text-center p-4 rounded-3 shadow-lg w-100" style="max-width:720px; min-height: 240px; display: flex; flex-direction: column; justify-content: center;">
         <div class="logo-edark">EDARK</div>
         <div class="sub-edark">Alpha Technologies</div>

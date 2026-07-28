@@ -103,6 +103,7 @@ body {
   text-align: var(--bs-body-text-align);
   background-color: var(--bs-body-bg);
   -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
 }
 
@@ -361,6 +362,7 @@ caption {
 th {
   text-align: inherit;
   text-align: -webkit-match-parent;
+  text-align: match-parent;
 }
 
 thead,
@@ -12921,8 +12923,16 @@ body.modo-oscuro #frasesCarrusel {
   letter-spacing: 0.12em;
   font-weight: 900;
   font-size: clamp(2.5rem, 7vw, 5rem);
-  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.18), 0 1px 0 #222;
+  color: #0f172a !important;
+  -webkit-text-fill-color: #0f172a !important;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.15) !important;
   margin-bottom: 0.2em !important;
+}
+
+body.modo-oscuro .logo-edark {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+  text-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 2px 16px rgba(0, 0, 0, 0.8) !important;
 }
 
 .logo-edark span {
@@ -12931,11 +12941,15 @@ body.modo-oscuro #frasesCarrusel {
 
 .sub-edark {
   font-family: 'Montserrat', Arial, sans-serif;
-  font-weight: 400;
+  font-weight: 700;
   font-size: clamp(1.1rem, 3vw, 2.2rem);
-  color: #e0e0e0;
+  color: #0284c7 !important;
   letter-spacing: 0.08em;
   margin-bottom: 1.2em !important;
+}
+
+body.modo-oscuro .sub-edark {
+  color: #38bdf8 !important;
 }
 
 @media (max-width: 768px) {
@@ -12946,4 +12960,134 @@ body.modo-oscuro #frasesCarrusel {
   .sub-edark {
     font-size: 1.1rem !important;
   }
+}
+
+/* HIGH CONTRAST NAV LINK COLOR OVERRIDES FOR LIQUID GLASS NAVBAR */
+#mainNavbar a.nav-link,
+#mainNavbar .nav-link,
+.glass-navbar a.nav-link,
+.glass-navbar .nav-link {
+    color: #000000 !important;
+    opacity: 1 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+#mainNavbar a.nav-link:hover,
+#mainNavbar a.nav-link.active,
+.glass-navbar a.nav-link:hover,
+.glass-navbar a.nav-link.active {
+    color: #0d6efd !important;
+    opacity: 1 !important;
+}
+
+body.modo-oscuro #mainNavbar a.nav-link,
+body.modo-oscuro #mainNavbar .nav-link,
+body.modo-oscuro .glass-navbar a.nav-link,
+body.modo-oscuro .glass-navbar .nav-link {
+    color: #ffffff !important;
+    opacity: 1 !important;
+    font-weight: 600 !important;
+}
+
+body.modo-oscuro #mainNavbar a.nav-link:hover,
+body.modo-oscuro #mainNavbar a.nav-link.active,
+body.modo-oscuro .glass-navbar a.nav-link:hover,
+body.modo-oscuro .glass-navbar a.nav-link.active {
+    color: #38bdf8 !important;
+    opacity: 1 !important;
+}
+
+/* BANNER CARD & LOGO CONTRAST FIXES FOR LIGHT MODE AND DARK MODE */
+.banner-card {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.95) !important;
+    box-shadow: 0 20px 50px rgba(0, 82, 204, 0.12), inset 0 0 15px rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(16px) saturate(180%) !important;
+    -webkit-backdrop-filter: blur(16px) saturate(180%) !important;
+}
+
+.logo-edark {
+    color: #0f172a !important;
+    font-weight: 900 !important;
+    text-shadow: 0 4px 15px rgba(2, 132, 199, 0.25) !important;
+}
+
+.sub-edark {
+    color: #0284c7 !important;
+    font-weight: 700 !important;
+    text-shadow: none !important;
+}
+
+#frasesCarrusel {
+    background: rgba(255, 255, 255, 0.8) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.25) !important;
+    border-radius: 16px !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08), inset 0 1px 2px rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+}
+
+.frase-carrusel-texto {
+    color: #0f172a !important;
+    font-weight: 600 !important;
+    text-shadow: none !important;
+}
+
+.frase-carrusel-autor {
+    color: #0284c7 !important;
+    font-weight: 700 !important;
+}
+
+/* DARK MODE OVERRIDES */
+body.modo-oscuro .banner-card {
+    background: rgba(15, 23, 42, 0.65) !important;
+    border: 1.5px solid rgba(255, 255, 255, 0.25) !important;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6) !important;
+}
+
+body.modo-oscuro .logo-edark {
+    color: #ffffff !important;
+    text-shadow: 0 0 25px rgba(56, 189, 248, 0.6), 0 2px 16px rgba(0, 0, 0, 0.8) !important;
+}
+
+body.modo-oscuro .sub-edark {
+    color: #38bdf8 !important;
+}
+
+body.modo-oscuro #frasesCarrusel {
+    background: rgba(15, 23, 42, 0.8) !important;
+    border: 1.5px solid rgba(56, 189, 248, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.modo-oscuro .frase-carrusel-texto {
+    color: #ffffff !important;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.modo-oscuro .frase-carrusel-autor {
+    color: #38bdf8 !important;
+}
+
+/* RIGHT SIDE NAVBAR PILLS IN LIGHT MODE */
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary {
+    background: rgba(255, 255, 255, 0.85) !important;
+    border: 1.5px solid rgba(13, 110, 253, 0.35) !important;
+    color: #0f172a !important;
+    font-weight: 700 !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary i {
+    color: #0d6efd !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary:hover {
+    background: linear-gradient(135deg, #0d6efd 0%, #0052cc 100%) !important;
+    border-color: #0d6efd !important;
+    color: #ffffff !important;
+}
+
+body:not(.modo-oscuro) #adminNav a.btn-outline-primary:hover i {
+    color: #ffffff !important;
 }
