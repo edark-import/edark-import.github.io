@@ -707,12 +707,7 @@
                             <label class="form-label">Nombre de la tienda</label>
                             <input type="text" class="form-control" id="cfgNombreTienda" placeholder="eDark" />
                         </div>
-                        <div class="col-md-4 mb-3">
-                            <label class="form-label">PayPal Client ID (LIVE)</label>
-                            <input type="text" class="form-control" id="cfgPayPalClientId" placeholder="AXXX..." />
-                            <small class="text-muted">No compartas tu secret; solo el client-id público.</small>
-                        </div>
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-6 mb-3">
                             <label class="form-label">ImgBB API Key (Hosting gratis)</label>
                             <input type="text" class="form-control" id="cfgImgbbApiKey" placeholder="Ej: 80f3... (Requerido para fotos)" />
                             <small class="text-muted"><a href="https://api.imgbb.com/" target="_blank" rel="noopener noreferrer">Obtener gratis aquí</a></small>
@@ -749,6 +744,120 @@
                         <div class="col-md-4 mb-3">
                             <label class="form-label">Estado de configuración</label>
                             <div id="cfgStatus" class="mt-2"><small class="text-muted">Sin cambios</small></div>
+                        </div>
+                    </div>
+                    <hr class="my-4 border-secondary border-opacity-25">
+                    <h5 class="text-primary fw-bold mb-3"><i class="bi bi-credit-card-2-front me-2"></i>Pasarelas y Métodos de Pago</h5>
+                    <div class="row bg-light p-3 rounded border mb-3 text-dark">
+                        <!-- PayPal -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-primary border-opacity-25 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 text-primary"><i class="bi bi-paypal me-2"></i>PayPal</h6>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cfgPaypalHabilitado" checked>
+                                            <label class="form-check-label fw-semibold" for="cfgPaypalHabilitado">Activar PayPal</label>
+                                        </div>
+                                    </div>
+                                    <label class="form-label small text-muted">PayPal Client ID (LIVE / Sandbox)</label>
+                                    <input type="text" class="form-control form-control-sm" id="cfgPayPalClientId" placeholder="AXXX..." />
+                                    <small class="text-muted d-block mt-1">Desactiva este interruptor si tu cuenta PayPal está suspendida o en revisión.</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Culqi (Perú / LATAM) -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-info border-opacity-25 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 text-info"><i class="bi bi-credit-card me-2"></i>Culqi (Tarjetas / Yape / PagoEfectivo)</h6>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cfgCulqiHabilitado">
+                                            <label class="form-check-label fw-semibold" for="cfgCulqiHabilitado">Activar Culqi</label>
+                                        </div>
+                                    </div>
+                                    <label class="form-label small text-muted">Culqi Llave Pública (pk_live_... / pk_test_...)</label>
+                                    <input type="text" class="form-control form-control-sm" id="cfgCulqiPublicKey" placeholder="pk_live_xxxx" />
+                                    <small class="text-muted d-block mt-1">Obtenla desde tu panel de Culqi (Integración -> Llaves).</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Openpay (BBVA) -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-success border-opacity-25 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 text-success"><i class="bi bi-shield-check me-2"></i>Openpay (BBVA)</h6>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cfgOpenpayHabilitado">
+                                            <label class="form-check-label fw-semibold" for="cfgOpenpayHabilitado">Activar Openpay</label>
+                                        </div>
+                                    </div>
+                                    <div class="row g-2">
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted">Merchant ID</label>
+                                            <input type="text" class="form-control form-control-sm" id="cfgOpenpayMerchantId" placeholder="mxxx..." />
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label small text-muted">Public Key</label>
+                                            <input type="text" class="form-control form-control-sm" id="cfgOpenpayPublicKey" placeholder="pk_xxx..." />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Mercado Pago -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-warning border-opacity-25 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 text-dark"><i class="bi bi-bag-check me-2"></i>Mercado Pago</h6>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cfgMercadoPagoHabilitado">
+                                            <label class="form-check-label fw-semibold" for="cfgMercadoPagoHabilitado">Activar Mercado Pago</label>
+                                        </div>
+                                    </div>
+                                    <label class="form-label small text-muted">Public Key de Mercado Pago</label>
+                                    <input type="text" class="form-control form-control-sm" id="cfgMercadoPagoPublicKey" placeholder="APP_USR-xxxx..." />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Niubiz / Visa Perú -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-secondary border-opacity-25 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 text-secondary"><i class="bi bi-card-heading me-2"></i>Niubiz / Visa Perú</h6>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cfgNiubizHabilitado">
+                                            <label class="form-check-label fw-semibold" for="cfgNiubizHabilitado">Activar Niubiz</label>
+                                        </div>
+                                    </div>
+                                    <label class="form-label small text-muted">Código de Comercio Niubiz</label>
+                                    <input type="text" class="form-control form-control-sm" id="cfgNiubizMerchantCode" placeholder="456789012" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- WhatsApp / Yape Directo -->
+                        <div class="col-md-6 mb-3">
+                            <div class="card h-100 border-success border-opacity-25 shadow-sm">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <h6 class="fw-bold mb-0 text-success"><i class="bi bi-whatsapp me-2"></i>WhatsApp / Yape / Plin Directo</h6>
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="cfgYapeHabilitado" checked>
+                                            <label class="form-check-label fw-semibold" for="cfgYapeHabilitado">Activar Pedidos WhatsApp</label>
+                                        </div>
+                                    </div>
+                                    <small class="text-muted d-block">Permite a los clientes pedir directamente vía WhatsApp coordinando transferencia o Yape.</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <hr class="my-4 border-secondary border-opacity-25">
@@ -3406,6 +3515,18 @@
                 configuracionCache = snap.exists ? snap.data() : {};
                 document.getElementById('cfgNombreTienda').value = configuracionCache.nombreTienda || 'eDark';
                 document.getElementById('cfgPayPalClientId').value = configuracionCache.paypalClientId || '';
+                document.getElementById('cfgPaypalHabilitado').checked = configuracionCache.paypalHabilitado !== false;
+                document.getElementById('cfgCulqiHabilitado').checked = configuracionCache.culqiHabilitado === true;
+                document.getElementById('cfgCulqiPublicKey').value = configuracionCache.culqiPublicKey || '';
+                document.getElementById('cfgOpenpayHabilitado').checked = configuracionCache.openpayHabilitado === true;
+                document.getElementById('cfgOpenpayMerchantId').value = configuracionCache.openpayMerchantId || '';
+                document.getElementById('cfgOpenpayPublicKey').value = configuracionCache.openpayPublicKey || '';
+                document.getElementById('cfgMercadoPagoHabilitado').checked = configuracionCache.mercadoPagoHabilitado === true;
+                document.getElementById('cfgMercadoPagoPublicKey').value = configuracionCache.mercadoPagoPublicKey || '';
+                document.getElementById('cfgNiubizHabilitado').checked = configuracionCache.niubizHabilitado === true;
+                document.getElementById('cfgNiubizMerchantCode').value = configuracionCache.niubizMerchantCode || '';
+                document.getElementById('cfgYapeHabilitado').checked = configuracionCache.yapeHabilitado !== false;
+
                 document.getElementById('cfgImgbbApiKey').value = configuracionCache.imgbbApiKey || '';
                 document.getElementById('cfgBannerMsg').value = configuracionCache.bannerMsg || '';
                 document.getElementById('cfgIgv').value = (configuracionCache.igv != null) ? configuracionCache.igv : 18;
@@ -3430,6 +3551,17 @@
             const data = {
                 nombreTienda: document.getElementById('cfgNombreTienda').value.trim() || 'eDark',
                 paypalClientId: document.getElementById('cfgPayPalClientId').value.trim(),
+                paypalHabilitado: document.getElementById('cfgPaypalHabilitado').checked,
+                culqiHabilitado: document.getElementById('cfgCulqiHabilitado').checked,
+                culqiPublicKey: document.getElementById('cfgCulqiPublicKey').value.trim(),
+                openpayHabilitado: document.getElementById('cfgOpenpayHabilitado').checked,
+                openpayMerchantId: document.getElementById('cfgOpenpayMerchantId').value.trim(),
+                openpayPublicKey: document.getElementById('cfgOpenpayPublicKey').value.trim(),
+                mercadoPagoHabilitado: document.getElementById('cfgMercadoPagoHabilitado').checked,
+                mercadoPagoPublicKey: document.getElementById('cfgMercadoPagoPublicKey').value.trim(),
+                niubizHabilitado: document.getElementById('cfgNiubizHabilitado').checked,
+                niubizMerchantCode: document.getElementById('cfgNiubizMerchantCode').value.trim(),
+                yapeHabilitado: document.getElementById('cfgYapeHabilitado').checked,
                 imgbbApiKey: document.getElementById('cfgImgbbApiKey').value.trim(),
                 bannerMsg: document.getElementById('cfgBannerMsg').value.trim(),
                 igv: parseFloat(document.getElementById('cfgIgv').value) || 18,

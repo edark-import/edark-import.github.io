@@ -2023,14 +2023,23 @@ function calcularTotalCarritoSoles() {
 }
 
 function initPayPalButton() {
+    const containerSelector = '#paypal-button-container';
+    const cont = document.querySelector(containerSelector);
+    if (!cont) return;
+
+    if (paypalScriptEstado === 'deshabilitado') {
+        cont.innerHTML = '';
+        cont.style.display = 'none';
+        return;
+    }
+
     if (typeof paypal === 'undefined') {
         console.warn('PayPal SDK no cargado');
         return;
     }
 
-    const containerSelector = '#paypal-button-container';
-    const cont = document.querySelector(containerSelector);
-    if (cont) cont.innerHTML = '';
+    cont.style.display = 'block';
+    cont.innerHTML = '';
 
     paypal.Buttons({
         createOrder: function (data, actions) {
@@ -2107,10 +2116,20 @@ let paypalScriptEstado = 'no-cargado';
 // Fallback público (client id de PayPal, no es secreto). Usa el tuyo si config/general no está disponible.
 const PAYPAL_CLIENT_ID_FALLBACK = 'AQfZy0lnnXz1a9EfXJ588is9ZeAADGiFGp3nxrg-wAbdEqG-mykhKDkrP8wlDfmpVw3VLgaJtPIM7NBo';
 async function cargarPayPalDesdeConfig() {
-    if (paypalScriptEstado === 'cargando' || paypalScriptEstado === 'cargado') return;
+    if (paypalScriptEstado === 'cargando' || paypalScriptEstado === 'cargado' || paypalScriptEstado === 'deshabilitado') return;
     try {
         const snap = await db.collection('config').doc('general').get();
         const cfg = snap.exists ? snap.data() : {};
+        if (cfg && cfg.paypalHabilitado === false) {
+            paypalScriptEstado = 'deshabilitado';
+            console.log('PayPal está deshabilitado por configuración del administrador.');
+            const cont = document.querySelector('#paypal-button-container');
+            if (cont) {
+                cont.innerHTML = '';
+                cont.style.display = 'none';
+            }
+            return;
+        }
         const clientId = (cfg && cfg.paypalClientId) ? cfg.paypalClientId : PAYPAL_CLIENT_ID_FALLBACK;
         if (!clientId) {
             console.warn('Sin clientId PayPal. No se cargará el SDK.');
