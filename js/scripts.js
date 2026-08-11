@@ -2027,9 +2027,11 @@ function initPayPalButton() {
     const cont = document.querySelector(containerSelector);
     if (!cont) return;
 
-    if (paypalScriptEstado === 'deshabilitado') {
-        cont.innerHTML = '';
-        cont.style.display = 'none';
+    if (paypalScriptEstado === 'deshabilitado' || (configGeneral && configGeneral.paypalHabilitado === false)) {
+        document.querySelectorAll(containerSelector).forEach(c => {
+            c.innerHTML = '';
+            c.style.display = 'none';
+        });
         return;
     }
 
@@ -2120,14 +2122,15 @@ async function cargarPayPalDesdeConfig() {
     try {
         const snap = await db.collection('config').doc('general').get();
         const cfg = snap.exists ? snap.data() : {};
+        if (cfg) configGeneral = cfg;
         if (cfg && cfg.paypalHabilitado === false) {
             paypalScriptEstado = 'deshabilitado';
             console.log('PayPal está deshabilitado por configuración del administrador.');
-            const cont = document.querySelector('#paypal-button-container');
-            if (cont) {
+            const conts = document.querySelectorAll('#paypal-button-container');
+            conts.forEach(cont => {
                 cont.innerHTML = '';
                 cont.style.display = 'none';
-            }
+            });
             return;
         }
         const clientId = (cfg && cfg.paypalClientId) ? cfg.paypalClientId : PAYPAL_CLIENT_ID_FALLBACK;
