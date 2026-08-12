@@ -437,16 +437,16 @@
         let costoGraf = preciosPCMapa[graf] || 0;
         let total = costoProc + costoRam + costoAlm + costoGraf;
 
-        let mensaje = `*Hola eDark! Soy ${nombre} y solicito una cotización formal para mi PC Personalizada:*%0A%0A` +
-            `*Procesador:* ${proc} (S/ ${costoProc.toFixed(2)})%0A` +
-            `*RAM:* ${ram} (S/ ${costoRam.toFixed(2)})%0A` +
-            `*Almacenamiento:* ${alm} (S/ ${costoAlm.toFixed(2)})%0A` +
-            `*Tarjeta Gráfica:* ${graf} (S/ ${costoGraf.toFixed(2)})%0A` +
-            `*Complementos:* ${complementos.length ? complementos.join(', ') : 'Ninguno'}%0A%0A` +
-            `*TOTAL ESTIMADO:* S/ ${total.toFixed(2)}%0A` +
+        let mensaje = `*Hola eDark! Soy ${nombre} y solicito una cotización formal para mi PC Personalizada:*\n\n` +
+            `*Procesador:* ${proc} (S/ ${costoProc.toFixed(2)})\n` +
+            `*RAM:* ${ram} (S/ ${costoRam.toFixed(2)})\n` +
+            `*Almacenamiento:* ${alm} (S/ ${costoAlm.toFixed(2)})\n` +
+            `*Tarjeta Gráfica:* ${graf} (S/ ${costoGraf.toFixed(2)})\n` +
+            `*Complementos:* ${complementos.length ? complementos.join(', ') : 'Ninguno'}\n\n` +
+            `*TOTAL ESTIMADO:* S/ ${total.toFixed(2)}\n` +
             `_Por favor confirmar disponibilidad y tiempo de entrega._`;
 
-        window.open(`https://wa.me/51916907657?text=${mensaje}`, '_blank');
+        window.open(`https://wa.me/51916907657?text=${encodeURIComponent(mensaje)}`, '_blank');
     });
     </script>
 </body>

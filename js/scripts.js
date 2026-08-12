@@ -1858,7 +1858,10 @@ function guardarHistorialPedido(ventaData) {
 window.guardarHistorialPedido = guardarHistorialPedido;
 
 function procesarPedidoWhatsApp() {
-    if (carrito.length === 0) return;
+    if (carrito.length === 0) {
+        alert('El carrito está vacío');
+        return;
+    }
     const totalSoles = carrito.reduce((acc, item) => acc + Number(item.precio) * Number(item.cantidad), 0);
 
     const pedido = guardarHistorialPedido({
@@ -1874,23 +1877,28 @@ function procesarPedidoWhatsApp() {
         metodoPago: 'WhatsApp'
     });
 
-    let mensaje = `¡Hola eDark Import! 🐉 Quiero realizar el pedido *#${pedido.id}* con lo siguiente:%0A%0A`;
+    let mensaje = `¡Hola eDark Import! 🐉 Quiero realizar el pedido *#${pedido.id}* con lo siguiente:\n\n`;
     carrito.forEach(item => {
-        mensaje += `• *${item.nombre}*%0A  Cantidad: ${item.cantidad} x S/ ${Number(item.precio).toFixed(2)} = S/ ${(Number(item.precio) * Number(item.cantidad)).toFixed(2)}%0A`;
+        const p = Number(item.precio) || 0;
+        const sub = p * Number(item.cantidad);
+        mensaje += `• *${item.nombre}*\n  Cantidad: ${item.cantidad} x S/ ${p.toFixed(2)} = S/ ${sub.toFixed(2)}\n`;
     });
-    mensaje += `%0A*TOTAL A PAGAR: S/ ${totalSoles.toFixed(2)}*%0A`;
+    mensaje += `\n*TOTAL A PAGAR: S/ ${totalSoles.toFixed(2)}*\n`;
     mensaje += `Método de envío/pago a coordinar. ¡Quedo atento!`;
 
-    window.open(`https://wa.me/${typeof phone !== 'undefined' ? phone : '51999999999'}?text=${mensaje}`, '_blank');
+    const targetPhone = (typeof phone !== 'undefined' && phone) ? phone : '51916907657';
+    window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(mensaje)}`, '_blank');
 
     setTimeout(() => {
         if (confirm('¿Tu pedido se abrió en WhatsApp correctamente? Presiona Aceptar para vaciar el carrito y guardar en tu historial.')) {
             carrito = [];
             guardarCarrito();
             renderCarrito();
+            if (typeof renderCartPage === 'function') renderCartPage();
         }
     }, 1200);
 }
+window.procesarPedidoWhatsApp = procesarPedidoWhatsApp;
 
 function abrirCarritoOffcanvas() {
     let offcanvasEl = document.getElementById('offcanvasCarrito');
@@ -2006,13 +2014,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const btnWhatsapp = document.getElementById('btnEnviarWhatsapp');
     if (btnWhatsapp) {
         btnWhatsapp.addEventListener('click', function () {
-            if (carrito.length === 0) return;
-            let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
-            carrito.forEach(item => {
-                mensaje += `• ${item.nombre} %0A(S/ ${item.precio} x ${item.cantidad} UND)%0A`;
-            });
-            mensaje += `%0ATotal: S/ ${carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0)}`;
-            window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
+            procesarPedidoWhatsApp();
         });
     }
 });

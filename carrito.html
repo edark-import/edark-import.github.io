@@ -259,23 +259,27 @@
         }
 
         function finalizarCompraWhatsApp() {
-            let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
-            if (carrito.length === 0) {
-                alert('El carrito está vacío');
-                return;
+            if (typeof window.procesarPedidoWhatsApp === 'function') {
+                window.procesarPedidoWhatsApp();
+            } else {
+                let carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+                if (carrito.length === 0) {
+                    alert('El carrito está vacío');
+                    return;
+                }
+                let mensaje = '¡Hola eDark Import! Quiero pedir lo siguiente:\n\n';
+                let total = 0;
+                carrito.forEach(item => {
+                    const price = parseFloat(item.precio) || parseFloat(item.precioVenta) || 0;
+                    const sub = price * item.cantidad;
+                    total += sub;
+                    mensaje += `• *${item.nombre}*\n  Cantidad: ${item.cantidad} x S/ ${price.toFixed(2)} = S/ ${sub.toFixed(2)}\n`;
+                });
+                mensaje += `\n*TOTAL A PAGAR: S/ ${total.toFixed(2)}*\n`;
+                mensaje += `Método de envío/pago a coordinar. ¡Quedo atento!`;
+                const targetPhone = (typeof phone !== 'undefined' && phone) ? phone : '51916907657';
+                window.open(`https://wa.me/${targetPhone}?text=${encodeURIComponent(mensaje)}`, '_blank');
             }
-            let mensaje = '¡Hola! Quiero pedir lo siguiente:%0A';
-            carrito.forEach(item => {
-                const price = parseFloat(item.precio) || parseFloat(item.precioVenta) || 0;
-                mensaje += `• ${item.nombre} %0A(S/ ${price.toFixed(2)} x ${item.cantidad} UND)%0A`;
-            });
-            const total = carrito.reduce((acc, item) => {
-                const price = parseFloat(item.precio) || parseFloat(item.precioVenta) || 0;
-                return acc + price * item.cantidad;
-            }, 0);
-            mensaje += `%0ATotal: S/ ${total.toFixed(2)}`;
-            const phone = '51916907657'; // Número de whatsapp
-            window.open(`https://wa.me/${phone}?text=${mensaje}`, '_blank');
         }
         window.finalizarCompraWhatsApp = finalizarCompraWhatsApp;
     </script>
