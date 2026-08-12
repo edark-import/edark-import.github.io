@@ -2780,29 +2780,89 @@ function inicializarChimueloIA() {
                     ¡Hola! 🐉 Soy <strong>Chimuelo IA</strong>, tu asistente inteligente de eDark Alpha Technologies.<br><br>
                     Estoy aquí para buscarte el mejor hardware, responder tus dudas o ayudarte a armar tu equipo ideal. ¿Qué te gustaría consultar hoy?`;
             }
-            // G) Búsqueda en Catálogo en Vivo (Productos, Hardware, Especificaciones)
+            // G) Búsqueda inteligente en Catálogo en Vivo (Productos, Hardware, Especificaciones)
             else {
                 let cache = window.productosCache || [];
-                if (cache.length === 0 && typeof firebase !== 'undefined' && firebase && firebase.firestore) {
+                if ((!cache || cache.length === 0) && typeof firebase !== 'undefined' && firebase && firebase.firestore) {
                     try {
                         const snap = await firebase.firestore().collection('productos').where('activo', '==', true).get();
+                        cache = [];
                         snap.forEach(doc => cache.push({ id: doc.id, ...doc.data() }));
                         window.productosCache = cache;
                     } catch (err) {}
                 }
 
-                const coincidencias = cache.filter(p => {
-                    const n = (p.nombre || '').toLowerCase();
-                    const c = (p.categoria || '').toLowerCase();
-                    const s = (p.subcategoria || '').toLowerCase();
-                    const m = (p.marca || '').toLowerCase();
+                // Palabras vacías en español a filtrar del lenguaje natural
+                const SPANISH_STOPWORDS = new Set([
+                    'hola', 'buenos', 'dias', 'tardes', 'noches', 'buenas', 'saludos', 'estimado', 'amigo', 'amiga',
+                    'quiero', 'quisiera', 'busco', 'buscando', 'necesito', 'necesitaria', 'tienen', 'tendran', 'tendras',
+                    'venden', 'comprar', 'deseo', 'me', 'dame', 'dar', 'ver', 'mostrar', 'saber', 'dime', 'dinos',
+                    'una', 'un', 'unos', 'unas', 'el', 'la', 'los', 'las', 'del', 'de', 'en', 'para', 'con', 'por',
+                    'que', 'su', 'sus', 'mi', 'mis', 'favor', 'porfa', 'porfavor', 'precio', 'precios', 'cuanto',
+                    'cuesta', 'valen', 'vale', 'hay', 'algun', 'alguna', 'alguno', 'algunos', 'producto', 'productos',
+                    'articulo', 'articulos', 'stock', 'tienda', 'catalogo', 'disponible', 'disponibilidad'
+                ]);
+
+                // 1. Extraer palabras clave eliminando puntuación y palabras vacías
+                const tokens = t.replace(/[^a-z0-9áéíóúñ\s]/gi, ' ').split(/\s+/).filter(Boolean);
+                const palabrasClave = tokens.filter(tok => tok.length > 1 && !SPANISH_STOPWORDS.has(tok));
+
+                function singularizar(w) {
+                    let term = w.toLowerCase().trim();
+                    if (term.length > 3) {
+                        if (term.endsWith('es')) term = term.slice(0, -2);
+                        else if (term.endsWith('s') && !term.endsWith('is') && !term.endsWith('ss')) term = term.slice(0, -1);
+                    }
+                    return term;
+                }
+
+                const terminos = palabrasClave.length > 0 ? palabrasClave : [t];
+                const terminosSingulares = terminos.map(singularizar);
+
+                // 2. Calcular puntuación de cada producto en el catálogo
+                const productosPuntuados = cache.map(p => {
+                    const nom = (p.nombre || '').toLowerCase();
+                    const cat = (p.categoria || '').toLowerCase();
+                    const sub = (p.subcategoria || '').toLowerCase();
+                    const mar = (p.marca || '').toLowerCase();
                     const mod = (p.modelo || '').toLowerCase();
                     const cap = (p.capacidad || '').toLowerCase();
-                    return n.includes(t) || c.includes(t) || s.includes(t) || m.includes(t) || mod.includes(t) || cap.includes(t);
-                }).slice(0, 3);
+                    const desc = (p.descripcion || '').toLowerCase();
+                    const tags = Array.isArray(p.tags) ? p.tags.join(' ').toLowerCase() : (p.tags || '').toLowerCase();
+
+                    let score = 0;
+                    // Coincidencia exacta de frase original
+                    if (nom.includes(t) || cat.includes(t)) score += 100;
+
+                    // Coincidencia por palabra clave extraída
+                    terminos.forEach((term, idx) => {
+                        const termSing = terminosSingulares[idx];
+
+                        // Si coincide en Categoría o Subcategoría (ej: "tablet", "laptop", "monitor") -> Prioridad Alta (+40)
+                        if (cat.includes(term) || cat.includes(termSing) || sub.includes(term) || sub.includes(termSing)) score += 40;
+
+                        // Si coincide en Nombre (+30)
+                        if (nom.includes(term) || nom.includes(termSing)) score += 30;
+
+                        // Si coincide en Marca / Modelo (+25)
+                        if (mar.includes(term) || mar.includes(termSing) || mod.includes(term) || mod.includes(termSing)) score += 25;
+
+                        // Si coincide en Capacidad (+20)
+                        if (cap.includes(term)) score += 20;
+
+                        // Si coincide en Descripción / Tags (+15)
+                        if (desc.includes(term) || desc.includes(termSing) || tags.includes(term) || tags.includes(termSing)) score += 15;
+                    });
+
+                    return { producto: p, score };
+                }).filter(item => item.score > 0);
+
+                productosPuntuados.sort((a, b) => b.score - a.score);
+                const coincidencias = productosPuntuados.slice(0, 3).map(item => item.producto);
+                const textoBusquedaLimpio = palabrasClave.length > 0 ? palabrasClave.join(' ') : texto;
 
                 if (coincidencias.length > 0) {
-                    respuestaHtml = `¡Encontré estas opciones disponibles para "<strong>${sanitize(texto)}</strong>" en nuestro catálogo! 🐉🔥:<br><br>`;
+                    respuestaHtml = `¡Encontré estas opciones disponibles para "<strong>${sanitize(textoBusquedaLimpio)}</strong>" en nuestro catálogo! 🐉🔥:<br><br>`;
                     coincidencias.forEach(p => {
                         let pr = parseFloat(p.precioVenta) || parseFloat(p.precio) || 0;
                         if (window.calcularPrecioProducto) pr = window.calcularPrecioProducto(p);
@@ -2820,10 +2880,10 @@ function inicializarChimueloIA() {
                     });
                 } else {
                     respuestaHtml = `
-                        ¡Entendido! 🐉 No encontré un producto exacto llamado "<strong>${sanitize(texto)}</strong>" en el catálogo actual online, pero tenemos constantes ingresos en almacén y pedidos de importación a pedido.<br><br>
+                        ¡Entendido! 🐉 No encontré un producto relacionado con "<strong>${sanitize(textoBusquedaLimpio)}</strong>" en el catálogo actual online, pero tenemos constantes ingresos en almacén y pedidos de importación a pedido.<br><br>
                         ¿Deseas consultar con un asesor de ventas por WhatsApp para verificar disponibilidad inmediata?
                         <div class="mt-2 text-center">
-                            <a href="https://wa.me/51916907657?text=${encodeURIComponent('Hola, busco disponibilidad y precio de: ' + texto)}" target="_blank" class="btn btn-sm btn-success w-100 fw-bold shadow-sm"><i class="bi bi-whatsapp me-1"></i>Consultar con un Asesor (+51 916 907 657)</a>
+                            <a href="https://wa.me/51916907657?text=${encodeURIComponent('Hola, busco disponibilidad y precio de: ' + textoBusquedaLimpio)}" target="_blank" class="btn btn-sm btn-success w-100 fw-bold shadow-sm"><i class="bi bi-whatsapp me-1"></i>Consultar con un Asesor (+51 916 907 657)</a>
                         </div>`;
                 }
             }
