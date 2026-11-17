@@ -31,9 +31,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="es" className={`${jakarta.variable} ${jetbrains.variable}`}>
-      <body className="font-sans bg-[#070b14] text-slate-200 min-h-screen flex flex-col">
-        <div className="pointer-events-none fixed inset-0 bg-edark-grid opacity-60" />
+    <html lang="es" className={`${jakarta.variable} ${jetbrains.variable} dark`} suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(localStorage.getItem('edark_theme')==='light'){document.documentElement.classList.remove('dark');}}catch(e){}`,
+          }}
+        />
+      </head>
+      <body className="min-h-screen flex flex-col relative overflow-x-clip selection:bg-[#007BFF]/25">
+        <div className="pointer-events-none fixed -top-32 left-1/4 h-[28rem] w-[28rem] rounded-full bg-[#007BFF]/20 blur-[120px]" />
+        <div className="pointer-events-none fixed top-20 right-1/5 h-[26rem] w-[26rem] rounded-full bg-[#4DA3FF]/15 dark:bg-violet-500/15 blur-[120px]" />
         <Navbar />
         <main className="relative z-10 flex-1">{children}</main>
         <Footer />

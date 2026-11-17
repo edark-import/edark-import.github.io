@@ -8,6 +8,7 @@ export interface ServiceItem {
   modality: string;
   sla: string;
   startingPricePen: number;
+  ctaLabel: string;
   summary: string;
   deliverables: string[];
   benefits: string[];
@@ -20,8 +21,14 @@ export interface PcPartOption {
   pricePen: number;
 }
 
+export interface LegacyQuote {
+  texto: string;
+  autor: string;
+}
+
 export const BRAND = {
   name: "eDark",
+  subBrand: "Alpha Technologies",
   legalName: "eDark E.I.R.L.",
   slogan: "Soluciones Tecnológicas, Infraestructura & Servicios TI en Perú",
   email: "edark-import@gmail.com",
@@ -35,26 +42,78 @@ export const BRAND = {
   },
 };
 
+export const LEGACY_QUOTES: LegacyQuote[] = [
+  {
+    texto: "La ciencia no es sino una perversión de sí misma a menos que tenga como objetivo final el mejoramiento de la humanidad.",
+    autor: "Nikola Tesla",
+  },
+  {
+    texto: "Cualquier cosa que pueda ser conectada, será conectada.",
+    autor: "Kevin Ashton (Internet de las cosas)",
+  },
+  {
+    texto: "La mejor manera de predecir el futuro es inventarlo.",
+    autor: "Alan Kay",
+  },
+  {
+    texto: "La innovación distingue a un líder de un seguidor.",
+    autor: "Steve Jobs",
+  },
+  {
+    texto: "La web es más una invención social que técnica. La diseñé para que la gente pudiera colaborar y compartir conocimiento.",
+    autor: "Tim Berners-Lee",
+  },
+  {
+    texto: "El mayor riesgo es no asumir ningún riesgo. En un mundo que cambia rápido, la única estrategia garantizada a fallar es no asumir riesgos.",
+    autor: "Mark Zuckerberg",
+  },
+  {
+    texto: "No es la fe en la tecnología. Es la fe en las personas.",
+    autor: "Steve Jobs",
+  },
+  {
+    texto: "La imaginación es más importante que el conocimiento.",
+    autor: "Albert Einstein",
+  },
+  {
+    texto: "El avance de la tecnología es basado en hacerla encajar para que no la notes, para que forme parte de la vida cotidiana.",
+    autor: "Bill Gates",
+  },
+  {
+    texto: "El mayor enemigo del conocimiento no es la ignorancia, es la ilusión del conocimiento.",
+    autor: "Stephen Hawking",
+  },
+  {
+    texto: "El verdadero progreso es el que pone la tecnología al alcance de todos.",
+    autor: "Henry Ford",
+  },
+  {
+    texto: "La informática no trata sobre computadoras más que la astronomía sobre telescopios.",
+    autor: "Edsger Dijkstra",
+  },
+];
+
 export const SERVICES: ServiceItem[] = [
   {
     slug: "consultoria",
     title: "Consultoría Tecnológica",
-    tagline: "Decisiones de TI alineadas a presupuesto y continuidad",
+    tagline: "Soluciones y asesoría estratégica para empresas y hogares",
     audience: "empresa",
     modality: "Remoto o presencial en Lima",
     sla: "Diagnóstico en 24–48 h",
-    startingPricePen: 180,
+    startingPricePen: 220,
+    ctaLabel: "Agendar diagnóstico TI",
     summary:
-      "Evaluamos tu infraestructura de redes, sistemas y ciberseguridad para trazar un plan de modernización práctico, seguro y sin gastos innecesarios.",
+      "Evita compras equivocadas y caídas costosas: evaluamos tus redes, servidores, respaldos y ciberseguridad para entregarte un plan ejecutable con retorno claro.",
     deliverables: [
-      "Redes y conectividad: diseño y optimización cableada e inalámbrica, cobertura y velocidad",
-      "Informática y sistemas: asesoría en compra de equipos, virtualización, respaldos y migración",
-      "Seguridad informática: análisis de vulnerabilidades, firewalls y capacitación en buenas prácticas",
+      "Auditoría de redes cableadas e inalámbricas: cobertura real, cuellos de botella y segmentación",
+      "Arquitectura de sistemas: virtualización, migración segura y backups 3-2-1 automatizados",
+      "Seguridad informática: revisión de vulnerabilidades, firewalls y hardening de accesos",
     ],
     benefits: [
-      "Diagnóstico personalizado según tus objetivos reales",
-      "Propuesta técnica y económica clara por etapas",
-      "Acompañamiento en implementación y soporte posterior",
+      "Informe técnico accionable con presupuesto por prioridad",
+      "Reduce interrupciones operativas y riesgo de pérdida de información",
+      "Acompañamiento experto desde el diseño hasta la puesta en marcha",
     ],
     faqs: [
       {
@@ -70,193 +129,217 @@ export const SERVICES: ServiceItem[] = [
   {
     slug: "asesoramiento-empresa",
     title: "Asesoramiento Empresarial B2B",
-    tagline: "Infraestructura segura, datos protegidos y transformación digital",
+    tagline: "Infraestructura escalable, seguridad de datos y transformación digital",
     audience: "empresa",
     modality: "Presencial en Lima / Híbrido",
     sla: "Plan operativo en 72 h",
-    startingPricePen: 350,
+    startingPricePen: 420,
+    ctaLabel: "Solicitar plan B2B",
     summary:
-      "Ayudamos a pymes y empresas con sucursales a estandarizar redes, políticas de acceso, respaldos críticos y automatización de procesos.",
+      "Blindamos la operación de tu empresa con redes entre sucursales, control centralizado de accesos, políticas de seguridad y automatización de procesos.",
     deliverables: [
-      "Infraestructura y redes corporativas: sedes, sucursales y acceso remoto seguro (VPN/VLAN)",
-      "Seguridad y datos: auditoría de accesos, Active Directory/identidades y backups automáticos",
-      "Transformación digital: digitalización de flujos, migración a la nube y automatización",
+      "Redes corporativas y VPN/VLAN seguras para sedes, oficinas y trabajo remoto",
+      "Gobierno de identidades (Active Directory / Microsoft 365) y respaldos automáticos",
+      "Digitalización y automatización de flujos internos para reducir horas manuales",
     ],
     benefits: [
-      "Soluciones adaptadas al rubro y tamaño de tu empresa",
-      "Menor tiempo muerto operativo y mayor control de accesos",
-      "Confidencialidad y acompañamiento continuo",
+      "Continuidad operativa sin depender de soluciones improvisadas",
+      "Control estricto de quién accede a la información crítica de tu negocio",
+      "Acuerdos de confidencialidad y soporte continuo",
     ],
     faqs: [
       {
-        q: "¿Pueden trabajar con nuestra infraestructura actual?",
-        a: "Sí, auditamos y optimizamos lo existente antes de recomendar nueva inversión.",
+        q: "¿Pueden trabajar sobre nuestra red y equipos actuales?",
+        a: "Sí, optimizamos la infraestructura existente antes de proponer nueva inversión.",
       },
     ],
   },
   {
     slug: "asesoramiento-hogar",
-    title: "Asesoramiento Tecnológico para el Hogar",
-    tagline: "Wi-Fi estable, domótica y seguridad digital familiar",
+    title: "Asesoramiento Hogar",
+    tagline: "Tecnología inteligente, Wi-Fi estable y seguridad para tu familia",
     audience: "hogar",
     modality: "Visita técnica en Lima o asesoría remota",
     sla: "Atención en 24 h",
-    startingPricePen: 90,
+    startingPricePen: 110,
+    ctaLabel: "Mejorar mi red en casa",
     summary:
-      "Convierte tu casa en un espacio conectado sin zonas muertas de Wi-Fi, con dispositivos inteligentes integrados y protección para toda tu familia.",
+      "Elimina las zonas muertas de Wi-Fi para teletrabajo y estudios, integra domótica útil (cámaras, luces, asistentes) y protege la red de tu familia.",
     deliverables: [
-      "Redes en casa: cobertura Wi-Fi estable para teletrabajo, clases y streaming sin cortes",
-      "Hogar inteligente (domótica): iluminación, cámaras, asistentes de voz y automatizaciones",
-      "Seguridad familiar: control parental, protección de red doméstica y respaldo de archivos",
+      "Optimización Wi-Fi / Mesh de alta estabilidad en todos los ambientes del hogar",
+      "Instalación y configuración de domótica: cámaras, iluminación inteligente y automatización",
+      "Seguridad familiar: control parental, red aislada para invitados y respaldo de fotos/documentos",
     ],
     benefits: [
-      "Instalación y configuración ordenada y sin tecnicismos",
-      "Recomendación imparcial de routers, repetidores mesh y cámaras",
+      "Recomendación imparcial antes de comprar routers o equipos inteligentes",
+      "Configuración limpia, explicada sin tecnicismos y lista para usar",
     ],
     faqs: [
       {
         q: "¿Qué necesito antes de agendar?",
-        a: "Solo indícanos tu proveedor de internet, tamaño aproximado del hogar y tus objetivos.",
+        a: "Solo indícanos tu operador de internet, pisos/ambientes de tu vivienda y tus objetivos.",
       },
     ],
   },
   {
     slug: "soporte",
-    title: "Soporte Técnico Inmediato",
-    tagline: "Respuesta rápida ante fallas críticas de software, red o virus",
+    title: "Soporte Técnico",
+    tagline: "Atención presencial y remota, rápida y confiable ante emergencias",
     audience: "hogar",
     modality: "Remoto inmediato o presencial",
     sla: "Respuesta < 30 min",
-    startingPricePen: 60,
+    startingPricePen: 75,
+    ctaLabel: "Resolver incidencia ahora",
     summary:
-      "Tu equipo de respuesta rápida ante emergencias digitales: caídas de red, lentitud extrema, malware o sistemas que no arrancan.",
+      "Tu equipo de respuesta rápida cuando algo falla en el peor momento: computadoras lentas o bloqueadas, caída de red, virus o errores críticos de sistema.",
     deliverables: [
-      "Paso 1 — Evaluación inmediata de emergencia (red caída, virus o bloqueo)",
-      "Paso 2 — Atención directa por WhatsApp o teléfono para triaje rápido",
-      "Paso 3 — Diagnóstico transparente remoto o presencial antes de intervenir",
-      "Paso 4 — Solución verificada y recomendaciones para evitar recaídas",
+      "Triaje inmediato por WhatsApp para contener el problema sin demoras",
+      "Diagnóstico remoto seguro o visita técnica en sitio con presupuesto transparente",
+      "Limpieza de malware, recuperación de arranque, correo y conectividad",
     ],
     benefits: [
-      "Sin esperas burocráticas para incidencias urgentes",
-      "Diagnóstico claro previo a cualquier costo adicional",
+      "Atención ágil sin filas ni tickets perdidos",
+      "Sabes el costo exacto antes de autorizar cualquier reparación",
     ],
     faqs: [
       {
-        q: "¿Cómo atienden una emergencia remota?",
-        a: "Coordinamos por WhatsApp una sesión segura bajo tu autorización paso a paso.",
+        q: "¿Cómo funciona el soporte remoto?",
+        a: "Coordinamos por WhatsApp una sesión cifrada bajo tu autorización y supervisión en vivo.",
       },
     ],
   },
   {
     slug: "mantenimiento",
     title: "Mantenimiento y Reparación",
-    tagline: "Prevención, cambio de componentes y recuperación de datos",
+    tagline: "Optimización y reparación de computadoras, laptops e impresoras",
     audience: "hogar",
     modality: "Taller o a domicilio (Lima)",
     sla: "Entrega en 24–48 h",
-    startingPricePen: 80,
+    startingPricePen: 95,
+    ctaLabel: "Reservar mantenimiento",
     summary:
-      "Extendemos la vida útil de tus computadoras, laptops, impresoras y redes con mantenimiento preventivo profundo y reparaciones garantizadas.",
+      "Evita fallas por sobrecalentamiento o lentitud: realizamos mantenimiento preventivo profesional, upgrades de SSD/RAM, reparaciones y recuperación de datos.",
     deliverables: [
-      "Mantenimiento preventivo: limpieza interna profunda, pasta térmica, optimización y parches",
-      "Reparación especializada: hardware de PCs, laptops, impresoras y reemplazo de repuestos",
-      "Recuperación de datos y respaldo seguro de información crítica",
+      "Mantenimiento preventivo completo: limpieza interna, pasta térmica de alto rendimiento y optimización",
+      "Reparación especializada de PCs, laptops, impresoras y cambio de componentes garantizados",
+      "Upgrades (SSD NVMe / RAM) y recuperación segura de archivos importantes",
     ],
     benefits: [
-      "Seguimiento post-servicio y garantía por intervención",
-      "Evita recalentamientos, pérdida de información y fallas costosas",
+      "Garantía escrita por servicio y seguimiento post-atención",
+      "Alarga años la vida útil de tus equipos personales o corporativos",
     ],
     faqs: [
       {
-        q: "¿Cada cuánto recomiendan mantenimiento preventivo?",
-        a: "Cada 6 meses para equipos de uso intensivo o entornos con polvo.",
+        q: "¿Cada cuánto conviene hacer mantenimiento preventivo?",
+        a: "Cada 6 meses en equipos de uso diario para evitar daños térmicos en placa o procesador.",
       },
     ],
   },
   {
     slug: "recicla",
-    title: "Reciclaje Tecnológico R2v3",
-    tagline: "Economía circular y destrucción certificada de datos",
+    title: "Recicla Tecnología",
+    tagline: "Reciclaje responsable R2v3 y borrado seguro de datos",
     audience: "empresa",
-    modality: "Acopio programado para empresas y hogares",
-    sla: "Recojo coordinado en 48 h",
+    modality: "Acopio programado (empresas y hogares)",
+    sla: "Coordinación en 48 h",
     startingPricePen: 0,
+    ctaLabel: "Coordinar entrega / recojo",
     summary:
-      "Damos disposición segura y responsable a computadoras, laptops, impresoras y hardware en desuso garantizando trazabilidad y borrado seguro de información.",
+      "Damos disposición responsable a computadoras, laptops, impresoras y equipos en desuso aplicando destrucción segura de datos y estándares de economía circular R2v3.",
     deliverables: [
-      "Recepción y clasificación de computadoras, laptops, impresoras y periféricos en desuso",
-      "Destrucción segura de datos almacenados antes del desensamble o reuso",
-      "Procesos alineados al estándar de reciclaje electrónico responsable R2v3",
+      "Recepción y clasificación de hardware en desuso (PCs, laptops, impresoras, servidores)",
+      "Borrado seguro y destrucción de información almacenada previo al reciclaje",
+      "Trazabilidad bajo lineamientos internacionales de reciclaje electrónico responsable R2v3",
     ],
     benefits: [
-      "Libera espacio físico sin riesgo de fuga de datos corporativos",
-      "Reduce impacto ambiental mediante economía circular verificable",
+      "Desocupa almacenes y oficinas sin riesgo de fuga de datos confidenciales",
+      "Contribuye a la economía circular reduciendo residuos electrónicos tóxicos",
     ],
     faqs: [
       {
         q: "¿Tiene costo entregar equipos en desuso?",
-        a: "La evaluación y recepción básica no tiene costo; para retiros corporativos con borrado certificado coordinamos el alcance exacto.",
+        a: "La recepción y evaluación básica es gratuita; para retiros corporativos con certificado de borrado coordinamos la logística.",
       },
     ],
   },
 ];
 
+// Precios reales de VENTA AL PÚBLICO EN PERÚ (incluyen margen comercial, IGV 18% y garantía)
 export const PC_COMPONENTS: Record<string, { label: string; options: PcPartOption[] }> = {
+  plataforma: {
+    label: "Base (Placa + Fuente Certificada + Case + Ensamblaje)",
+    options: [
+      { id: "base-oficina", label: "Plataforma Oficina / Estudio (Placa Pro + Fuente 550W 80+ + Case + Armado)", pricePen: 790 },
+      { id: "base-gamer", label: "Plataforma Gaming / Ingeniería (Placa VRM + Fuente 650W 80+ Bronze + Flujo Aire + Armado)", pricePen: 1190 },
+      { id: "base-workstation", label: "Plataforma Workstation Pro (Placa ATX + Fuente 850W 80+ Gold + Refrigeración + Armado)", pricePen: 1850 },
+    ],
+  },
   procesador: {
     label: "Procesador",
     options: [
-      { id: "i3-14", label: "Intel Core i3 (14ª Gen)", pricePen: 480 },
-      { id: "i5-14", label: "Intel Core i5 (14ª Gen)", pricePen: 920 },
-      { id: "i7-14", label: "Intel Core i7 (14ª Gen)", pricePen: 1580 },
-      { id: "r5-7600", label: "AMD Ryzen 5 7600", pricePen: 890 },
-      { id: "r7-7700", label: "AMD Ryzen 7 7700X", pricePen: 1450 },
+      { id: "i3-14", label: "Intel Core i3-14100 (14ª Gen)", pricePen: 790 },
+      { id: "i5-14", label: "Intel Core i5-14400F / 14400 (14ª Gen)", pricePen: 1290 },
+      { id: "i7-14", label: "Intel Core i7-14700K (14ª Gen)", pricePen: 2150 },
+      { id: "i9-14", label: "Intel Core i9-14900K (14ª Gen)", pricePen: 2990 },
+      { id: "r5-5600g", label: "AMD Ryzen 5 5600G (Radeon integrada)", pricePen: 690 },
+      { id: "r5-7600x", label: "AMD Ryzen 5 7600X (AM5)", pricePen: 1250 },
+      { id: "r7-7800x3d", label: "AMD Ryzen 7 7800X3D", pricePen: 2290 },
+      { id: "r9-7900x", label: "AMD Ryzen 9 7900X", pricePen: 2490 },
     ],
   },
   ram: {
     label: "Memoria RAM",
     options: [
-      { id: "16gb", label: "16 GB DDR4/DDR5 (2x8 GB)", pricePen: 220 },
-      { id: "32gb", label: "32 GB DDR5 (2x16 GB)", pricePen: 440 },
-      { id: "64gb", label: "64 GB DDR5 Workstation", pricePen: 860 },
+      { id: "16gb-ddr4", label: "16 GB (2x8 GB) DDR4 3200 MHz", pricePen: 280 },
+      { id: "32gb-ddr4", label: "32 GB (2x16 GB) DDR4 3600 MHz", pricePen: 510 },
+      { id: "16gb-ddr5", label: "16 GB (2x8 GB) DDR5 5600 MHz", pricePen: 420 },
+      { id: "32gb-ddr5", label: "32 GB (2x16 GB) DDR5 6000 MHz", pricePen: 690 },
+      { id: "64gb-ddr5", label: "64 GB (2x32 GB) DDR5 6000 MHz Workstation", pricePen: 1290 },
     ],
   },
   almacenamiento: {
     label: "Almacenamiento NVMe",
     options: [
-      { id: "500gb", label: "SSD NVMe 500 GB PCIe 4.0", pricePen: 190 },
-      { id: "1tb", label: "SSD NVMe 1 TB PCIe 4.0", pricePen: 320 },
-      { id: "2tb", label: "SSD NVMe 2 TB Alta Velocidad", pricePen: 620 },
+      { id: "nvme-512", label: "M.2 NVMe 512 GB PCIe 4.0", pricePen: 290 },
+      { id: "nvme-1tb", label: "M.2 NVMe 1 TB PCIe 4.0", pricePen: 460 },
+      { id: "nvme-2tb", label: "M.2 NVMe 2 TB PCIe 4.0", pricePen: 850 },
+      { id: "nvme-4tb", label: "M.2 NVMe 4 TB PCIe 4.0", pricePen: 1690 },
     ],
   },
   grafica: {
     label: "Tarjeta Gráfica (GPU)",
     options: [
       { id: "igpu", label: "Gráficos Integrados (Oficina / Estudio)", pricePen: 0 },
-      { id: "rtx4060", label: "NVIDIA GeForce RTX 4060 8 GB", pricePen: 1380 },
-      { id: "rtx4070", label: "NVIDIA GeForce RTX 4070 Super 12 GB", pricePen: 2690 },
+      { id: "rtx3060", label: "NVIDIA GeForce RTX 3060 12 GB", pricePen: 1590 },
+      { id: "rtx4060", label: "NVIDIA GeForce RTX 4060 8 GB", pricePen: 1850 },
+      { id: "rtx4060ti", label: "NVIDIA GeForce RTX 4060 Ti 16 GB", pricePen: 2590 },
+      { id: "rtx4070s", label: "NVIDIA GeForce RTX 4070 Super 12 GB", pricePen: 3490 },
+      { id: "rtx4080s", label: "NVIDIA GeForce RTX 4080 Super 16 GB", pricePen: 5790 },
+      { id: "rx6600", label: "AMD Radeon RX 6600 8 GB", pricePen: 1190 },
+      { id: "rx7700xt", label: "AMD Radeon RX 7700 XT 12 GB", pricePen: 2590 },
     ],
   },
   pantalla: {
-    label: "Monitor",
+    label: "Monitor (Opcional)",
     options: [
-      { id: "none", label: "Sin monitor (solo torre)", pricePen: 0 },
-      { id: "fhd-24", label: 'Monitor 24" IPS Full HD 100Hz', pricePen: 460 },
-      { id: "qhd-27", label: 'Monitor 27" QHD 165Hz Profesional', pricePen: 980 },
+      { id: "none", label: "Sin monitor (solo PC ensamblada)", pricePen: 0 },
+      { id: "fhd-24", label: 'Monitor 24" IPS Full HD 100 Hz', pricePen: 590 },
+      { id: "qhd-27", label: 'Monitor 27" QHD IPS 165 Hz', pricePen: 1290 },
     ],
   },
   conectividad: {
-    label: "Wi-Fi & Bluetooth",
+    label: "Conectividad Wi-Fi & Bluetooth",
     options: [
-      { id: "lan", label: "Solo Ethernet Gigabit", pricePen: 0 },
-      { id: "wifi6", label: "Tarjeta Wi-Fi 6E + Bluetooth 5.3", pricePen: 165 },
+      { id: "lan", label: "Ethernet Gigabit integrado", pricePen: 0 },
+      { id: "wifi6e", label: "Adaptador PCIe Wi-Fi 6E + Bluetooth 5.3", pricePen: 210 },
     ],
   },
   perifericos: {
-    label: "Kit Periféricos",
+    label: "Kit Periféricos (Opcional)",
     options: [
       { id: "none", label: "Sin periféricos adicionales", pricePen: 0 },
-      { id: "office", label: "Kit Teclado + Mouse + Mousepad Oficina", pricePen: 110 },
-      { id: "pro", label: "Kit Mecánico + Mouse Óptico + Mousepad XL", pricePen: 320 },
+      { id: "office", label: "Kit Teclado + Mouse + Mousepad Corporativo", pricePen: 145 },
+      { id: "pro", label: "Kit Mecánico + Mouse Óptico Pro + Mousepad XL", pricePen: 390 },
     ],
   },
 };

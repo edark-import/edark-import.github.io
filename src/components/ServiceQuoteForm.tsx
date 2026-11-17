@@ -1,8 +1,9 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { CheckCircle2, MessageCircle, Send } from "lucide-react";
+import { CheckCircle2, Send } from "lucide-react";
 import { SERVICES } from "@/data/services";
+import { WhatsAppIcon } from "@/components/SocialIcons";
 
 interface Props {
   defaultService?: string;
@@ -11,9 +12,7 @@ interface Props {
 export function ServiceQuoteForm({ defaultService }: Props) {
   const [nombre, setNombre] = useState("");
   const [contacto, setContacto] = useState("");
-  const [servicio, setServicio] = useState(
-    defaultService || SERVICES[0].title
-  );
+  const [servicio, setServicio] = useState(defaultService || SERVICES[0].title);
   const [detalle, setDetalle] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -44,20 +43,22 @@ export function ServiceQuoteForm({ defaultService }: Props) {
     }
   }
 
+  const fieldCls =
+    "w-full rounded-2xl border border-slate-300/80 dark:border-white/15 bg-white/80 dark:bg-slate-950/75 px-3.5 py-2.5 text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-slate-500 focus:border-[#007BFF] focus:outline-none";
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="rounded-2xl border border-slate-800 bg-slate-900/60 p-6 space-y-4"
-    >
+    <form onSubmit={handleSubmit} className="liquid-glass rounded-3xl p-6 space-y-4">
       <div>
-        <h3 className="text-lg font-bold text-white">Solicitar Diagnóstico o Cotización</h3>
-        <p className="mt-1 text-xs text-slate-400">
-          Genera un ticket estructurado para acelerar tu atención técnica.
+        <h3 className="text-lg font-bold text-slate-950 dark:text-white">
+          Cotiza o Agenda tu Atención
+        </h3>
+        <p className="mt-1 text-xs text-slate-600 dark:text-slate-300">
+          Genera tu ticket al instante y envíalo directo a nuestro WhatsApp técnico.
         </p>
       </div>
 
       <div>
-        <label htmlFor="quote-nombre" className="block text-xs font-medium text-slate-300 mb-1">
+        <label htmlFor="quote-nombre" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
           Nombre o Empresa
         </label>
         <input
@@ -69,12 +70,12 @@ export function ServiceQuoteForm({ defaultService }: Props) {
           value={nombre}
           onChange={(e) => setNombre(e.target.value)}
           placeholder="Ej. Carlos Mendoza / Empresa SAC"
-          className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-cyan-400 focus:outline-none"
+          className={fieldCls}
         />
       </div>
 
       <div>
-        <label htmlFor="quote-contacto" className="block text-xs font-medium text-slate-300 mb-1">
+        <label htmlFor="quote-contacto" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
           WhatsApp o Correo Electrónico
         </label>
         <input
@@ -86,19 +87,19 @@ export function ServiceQuoteForm({ defaultService }: Props) {
           value={contacto}
           onChange={(e) => setContacto(e.target.value)}
           placeholder="+51 999 000 000 / correo@empresa.pe"
-          className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-cyan-400 focus:outline-none"
+          className={fieldCls}
         />
       </div>
 
       <div>
-        <label htmlFor="quote-servicio" className="block text-xs font-medium text-slate-300 mb-1">
+        <label htmlFor="quote-servicio" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
           Servicio requerido
         </label>
         <select
           id="quote-servicio"
           value={servicio}
           onChange={(e) => setServicio(e.target.value)}
-          className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white focus:border-cyan-400 focus:outline-none"
+          className={fieldCls}
         >
           {SERVICES.map((srv) => (
             <option key={srv.slug} value={srv.title}>
@@ -110,8 +111,8 @@ export function ServiceQuoteForm({ defaultService }: Props) {
       </div>
 
       <div>
-        <label htmlFor="quote-detalle" className="block text-xs font-medium text-slate-300 mb-1">
-          Describe brevemente tu necesidad o urgencia
+        <label htmlFor="quote-detalle" className="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">
+          ¿Qué necesitas resolver?
         </label>
         <textarea
           id="quote-detalle"
@@ -119,20 +120,20 @@ export function ServiceQuoteForm({ defaultService }: Props) {
           maxLength={1500}
           value={detalle}
           onChange={(e) => setDetalle(e.target.value)}
-          placeholder="Cantidad de equipos, problema actual, ubicación o presupuesto..."
-          className="w-full rounded-xl border border-slate-700 bg-slate-950 px-3.5 py-2.5 text-sm text-white placeholder:text-slate-600 focus:border-cyan-400 focus:outline-none"
+          placeholder="Cantidad de equipos, síntoma, distrito o requerimiento..."
+          className={fieldCls}
         />
       </div>
 
       {error && (
-        <p className="rounded-lg border border-rose-500/40 bg-rose-950/40 px-3 py-2 text-xs text-rose-300">
+        <p className="rounded-xl border border-rose-500/40 bg-rose-500/10 px-3 py-2 text-xs text-rose-600 dark:text-rose-300">
           {error}
         </p>
       )}
 
       {result ? (
-        <div className="rounded-xl border border-emerald-500/40 bg-emerald-950/30 p-4 space-y-3">
-          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-300">
+        <div className="rounded-2xl border border-emerald-500/40 bg-emerald-500/10 p-4 space-y-3">
+          <div className="flex items-center gap-2 text-sm font-semibold text-emerald-700 dark:text-emerald-300">
             <CheckCircle2 className="w-4 h-4" />
             Ticket generado: <span className="font-mono">{result.ticket}</span>
           </div>
@@ -140,20 +141,20 @@ export function ServiceQuoteForm({ defaultService }: Props) {
             href={result.whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-emerald-300"
+            className="liquid-btn inline-flex w-full items-center justify-center gap-2 bg-[#25D366] hover:bg-[#1ebe5d] px-4 py-2.5 text-sm font-bold text-slate-950"
           >
-            <MessageCircle className="w-4 h-4" />
-            Enviar ticket directo por WhatsApp
+            <WhatsAppIcon className="w-4 h-4" />
+            Enviar ticket por WhatsApp
           </a>
         </div>
       ) : (
         <button
           type="submit"
           disabled={loading}
-          className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-cyan-400 px-4 py-2.5 text-sm font-bold text-slate-950 hover:bg-cyan-300 disabled:opacity-60 cursor-pointer"
+          className="liquid-btn inline-flex w-full items-center justify-center gap-2 bg-[#007BFF] hover:bg-[#0056CC] px-4 py-3 text-sm font-bold text-white disabled:opacity-60 cursor-pointer"
         >
           <Send className="w-4 h-4" />
-          {loading ? "Generando ticket..." : "Generar ticket y continuar"}
+          {loading ? "Generando ticket..." : "Generar ticket y cotizar"}
         </button>
       )}
     </form>

@@ -11,13 +11,13 @@ export default function ServiciosPage() {
   return (
     <div className="mx-auto max-w-6xl px-6 py-16">
       <div className="max-w-2xl mb-12">
-        <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">
+        <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#007BFF] dark:text-[#4DA3FF]">
           Catálogo de Servicios
         </p>
-        <h1 className="mt-2 text-3xl sm:text-4xl font-bold text-white">
+        <h1 className="mt-2 text-3xl sm:text-4xl font-extrabold text-slate-950 dark:text-white">
           Todas nuestras líneas de atención técnica y consultoría
         </h1>
-        <p className="mt-3 text-sm sm:text-base text-slate-300">
+        <p className="mt-3 text-sm sm:text-base text-slate-600 dark:text-slate-300">
           Elige el servicio según tu necesidad para revisar entregables, tiempos de respuesta y
           solicitar una cotización inmediata.
         </p>

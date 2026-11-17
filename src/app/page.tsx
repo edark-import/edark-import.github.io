@@ -1,96 +1,88 @@
 import Link from "next/link";
-import { ArrowRight, CheckCircle2, Cpu, ShieldCheck, Wrench } from "lucide-react";
+import { CheckCircle2, Cpu, ShieldCheck, Wrench } from "lucide-react";
+import { HeroQuotes } from "@/components/HeroQuotes";
 import { ServiceCatalog } from "@/components/ServiceCatalog";
 import { ServiceQuoteForm } from "@/components/ServiceQuoteForm";
-import { BRAND } from "@/data/services";
+import { SERVICES } from "@/data/services";
 
 export default function HomePage() {
+  const marqueeItems = [
+    ...SERVICES.map((s) => ({ href: `/servicios/${s.slug}`, title: s.title, tagline: s.tagline })),
+    { href: "/pc-personalizada", title: "PC Personalizada", tagline: "Arma tu computadora a medida con garantía." },
+  ];
+
   return (
-    <div className="mx-auto max-w-6xl px-6">
-      <section className="pt-16 pb-16 sm:pt-24 sm:pb-20">
-        <div className="grid gap-12 lg:grid-cols-12 lg:items-center">
+    <div>
+      <section className="mx-auto max-w-6xl px-6 pt-12 pb-12 sm:pt-16 sm:pb-16">
+        <div className="grid gap-10 lg:grid-cols-12 lg:items-center">
           <div className="lg:col-span-7">
-            <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-500/10 px-3.5 py-1 text-xs font-mono text-cyan-300">
-              <span className="h-2 w-2 rounded-full bg-cyan-400" />
-              {BRAND.legalName} · {BRAND.location}
-            </div>
-
-            <h1 className="mt-6 text-4xl sm:text-5xl font-bold tracking-tight text-white leading-[1.08]">
-              Tecnología confiable, redes seguras y soporte inmediato para tu{" "}
-              <span className="text-cyan-300">empresa o hogar</span>.
-            </h1>
-
-            <p className="mt-5 text-base sm:text-lg text-slate-300 leading-relaxed">
-              Unificamos consultoría estratégica TI, soporte técnico de respuesta rápida,
-              mantenimiento especializado, armado de PCs a medida y reciclaje certificado R2v3
-              bajo un solo estándar de calidad y transparencia.
-            </p>
-
-            <div className="mt-8 flex flex-wrap gap-3">
-              <Link
-                href="/servicios"
-                className="inline-flex items-center gap-2 rounded-xl bg-cyan-400 px-5 py-3 text-sm font-bold text-slate-950 hover:bg-cyan-300 transition-colors"
-              >
-                Explorar servicios
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-              <Link
-                href="/pc-personalizada"
-                className="inline-flex items-center gap-2 rounded-xl border border-slate-700 bg-slate-900/70 px-5 py-3 text-sm font-semibold text-white hover:border-cyan-400/50 transition-colors"
-              >
-                Armar PC a medida
-              </Link>
-            </div>
-
-            <div className="mt-10 grid gap-4 sm:grid-cols-3 text-xs text-slate-300">
-              <div className="flex items-start gap-2.5 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5">
-                <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <span>Seguridad, respaldos y control de accesos sin improvisación</span>
-              </div>
-              <div className="flex items-start gap-2.5 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5">
-                <Wrench className="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" />
-                <span>Diagnóstico claro y garantía real en cada intervención</span>
-              </div>
-              <div className="flex items-start gap-2.5 rounded-xl border border-slate-800/80 bg-slate-900/40 p-3.5">
-                <Cpu className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
-                <span>Atención directa B2B y hogar vía ticket y WhatsApp</span>
-              </div>
-            </div>
+            <HeroQuotes />
           </div>
-
           <div className="lg:col-span-5">
             <ServiceQuoteForm />
           </div>
         </div>
       </section>
 
-      <section className="py-16 border-t border-slate-800/70">
+      <section aria-label="Carrusel de servicios" className="py-4 overflow-hidden border-y border-slate-200/70 dark:border-white/10">
+        <div className="animate-marquee gap-4 px-4">
+          {[...marqueeItems, ...marqueeItems].map((item, idx) => (
+            <Link
+              key={`${item.title}-${idx}`}
+              href={item.href}
+              className="liquid-glass rounded-2xl px-5 py-3.5 w-72 shrink-0 hover:border-[#007BFF]/50 transition-transform hover:-translate-y-0.5"
+            >
+              <div className="text-sm font-bold text-[#007BFF] dark:text-[#4DA3FF]">{item.title}</div>
+              <p className="mt-1 text-xs text-slate-600 dark:text-slate-300 line-clamp-1">
+                {item.tagline}
+              </p>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-6xl px-6 py-16">
         <ServiceCatalog />
       </section>
 
-      <section className="py-16 border-t border-slate-800/70">
-        <div className="rounded-3xl border border-slate-800 bg-slate-900/45 p-8 sm:p-10 grid gap-8 lg:grid-cols-2 lg:items-center">
+      <section className="mx-auto max-w-6xl px-6 pb-20">
+        <div className="liquid-glass rounded-3xl p-8 sm:p-10 grid gap-8 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">
-              Por qué eDark
+            <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#007BFF] dark:text-[#4DA3FF]">
+              Garantía eDark
             </p>
-            <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-white">
-              Menos parches, mayor continuidad operativa
+            <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">
+              Diagnóstico honesto, ejecución limpia y respaldo real
             </h2>
-            <p className="mt-3 text-sm text-slate-300 leading-relaxed">
-              Trabajamos desde el diagnóstico hasta la puesta en marcha documentada, evitando
-              compras innecesarias y asegurando que cada equipo, red o sistema cuente con
-              respaldo y trazabilidad.
+            <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+              No vendemos horas vacías ni componentes innecesarios: documentamos cada intervención,
+              protegemos tus datos antes de tocar un equipo y respondemos con garantía escrita.
             </p>
+            <div className="mt-6 grid gap-3 sm:grid-cols-3 text-xs font-medium text-slate-700 dark:text-slate-200">
+              <div className="flex items-center gap-2">
+                <ShieldCheck className="w-4 h-4 text-[#007BFF] shrink-0" />
+                <span>Seguridad y Backups</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Wrench className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span>Soporte en &lt; 30 min</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <Cpu className="w-4 h-4 text-[#007BFF] shrink-0" />
+                <span>Hardware con IGV</span>
+              </div>
+            </div>
           </div>
-          <ul className="space-y-3 text-sm text-slate-200">
+
+          <ul className="space-y-3 text-sm text-slate-700 dark:text-slate-200">
             {[
-              "SLA claros por tipo de atención (remota inmediata o presencial en Lima)",
-              "Precios transparentes en Soles (PEN) con referencia de tipo de cambio al día",
-              "Destrucción segura de datos y reciclaje R2v3 para equipos dados de baja",
+              "Presupuesto previo antes de iniciar cualquier reparación o implementación",
+              "Atención corporativa en Lima y consultoría/soporte remoto para todo Perú",
+              "Precios transparentes en Soles (PEN) con margen e IGV incluidos",
+              "Reciclaje responsable R2v3 con destrucción certificada de datos",
             ].map((point) => (
               <li key={point} className="flex items-start gap-2.5">
-                <CheckCircle2 className="w-4 h-4 text-emerald-400 mt-1 shrink-0" />
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 mt-1 shrink-0" />
                 <span>{point}</span>
               </li>
             ))}

@@ -23,11 +23,11 @@ export function ServiceCatalog() {
     <div>
       <div className="flex flex-col gap-5 sm:flex-row sm:items-end sm:justify-between mb-10">
         <div>
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-cyan-400">
+          <p className="font-mono text-xs uppercase tracking-[0.2em] text-[#007BFF] dark:text-[#4DA3FF]">
             Líneas de Servicio
           </p>
-          <h2 className="mt-2 text-2xl sm:text-3xl font-bold text-white">
-            Soluciones diseñadas por especialidad
+          <h2 className="mt-2 text-2xl sm:text-3xl font-extrabold text-slate-950 dark:text-white">
+            Soluciones diseñadas para resolver y escalar
           </h2>
         </div>
 
@@ -41,10 +41,10 @@ export function ServiceCatalog() {
                 role="tab"
                 aria-selected={active}
                 onClick={() => setAudience(f.id)}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors cursor-pointer ${
+                className={`liquid-btn px-4 py-2 text-xs font-bold cursor-pointer ${
                   active
-                    ? "bg-cyan-500/20 text-cyan-300 border border-cyan-400/50"
-                    : "bg-slate-900/70 text-slate-400 border border-slate-800 hover:text-slate-200"
+                    ? "bg-[#007BFF] text-white"
+                    : "bg-white/70 dark:bg-slate-900/70 text-slate-700 dark:text-slate-300"
                 }`}
               >
                 {f.label}
@@ -58,11 +58,11 @@ export function ServiceCatalog() {
         {items.map((srv) => (
           <article
             key={srv.slug}
-            className="flex flex-col justify-between rounded-2xl border border-slate-800/80 bg-slate-900/50 p-6 hover:border-cyan-500/45 transition-colors"
+            className="liquid-glass rounded-3xl p-6 flex flex-col justify-between transition-all hover:-translate-y-1 hover:border-[#007BFF]/50"
           >
             <div>
               <div className="flex items-center justify-between gap-2 text-xs font-mono">
-                <span className="inline-flex items-center gap-1.5 rounded-full border border-slate-700 bg-slate-950/70 px-2.5 py-0.5 text-cyan-300">
+                <span className="inline-flex items-center gap-1.5 rounded-full bg-[#007BFF]/10 border border-[#007BFF]/25 px-2.5 py-0.5 text-[#007BFF] dark:text-[#4DA3FF]">
                   {srv.audience === "empresa" ? (
                     <Building2 className="w-3 h-3" />
                   ) : (
@@ -70,28 +70,34 @@ export function ServiceCatalog() {
                   )}
                   {srv.audience === "empresa" ? "B2B / Empresa" : "Hogar / Personal"}
                 </span>
-                <span className="inline-flex items-center gap-1 text-slate-400">
-                  <Clock className="w-3 h-3 text-emerald-400" />
+                <span className="inline-flex items-center gap-1 text-slate-600 dark:text-slate-400">
+                  <Clock className="w-3 h-3 text-emerald-500" />
                   {srv.sla}
                 </span>
               </div>
 
-              <h3 className="mt-4 text-lg font-bold text-white">{srv.title}</h3>
-              <p className="mt-1 text-xs font-medium text-cyan-300/90">{srv.tagline}</p>
-              <p className="mt-3 text-sm text-slate-300 leading-relaxed">{srv.summary}</p>
+              <h3 className="mt-4 text-lg font-bold text-slate-950 dark:text-white">
+                {srv.title}
+              </h3>
+              <p className="mt-1 text-xs font-semibold text-[#007BFF] dark:text-[#4DA3FF]">
+                {srv.tagline}
+              </p>
+              <p className="mt-3 text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
+                {srv.summary}
+              </p>
             </div>
 
-            <div className="mt-6 pt-4 border-t border-slate-800/70 flex items-center justify-between">
-              <div className="text-xs font-mono text-slate-400">
+            <div className="mt-6 pt-4 border-t border-slate-200/70 dark:border-white/10 flex items-center justify-between">
+              <div className="text-xs font-mono font-bold text-slate-800 dark:text-slate-200">
                 {srv.startingPricePen > 0
                   ? `Desde S/ ${srv.startingPricePen}`
                   : "Recepción gratuita"}
               </div>
               <Link
                 href={`/servicios/${srv.slug}`}
-                className="inline-flex items-center gap-1.5 text-xs font-semibold text-cyan-300 hover:text-cyan-200"
+                className="inline-flex items-center gap-1.5 text-xs font-bold text-[#007BFF] dark:text-[#4DA3FF] hover:underline"
               >
-                Ver alcance y cotizar
+                {srv.ctaLabel}
                 <ArrowRight className="w-3.5 h-3.5" />
               </Link>
             </div>
@@ -99,21 +105,23 @@ export function ServiceCatalog() {
         ))}
       </div>
 
-      <div className="mt-8 rounded-2xl border border-emerald-500/30 bg-emerald-950/20 p-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mt-8 liquid-glass rounded-3xl p-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between border-[#007BFF]/35">
         <div className="flex items-start gap-3">
-          <Layers className="w-5 h-5 text-emerald-400 mt-0.5 shrink-0" />
+          <div className="h-10 w-10 rounded-2xl bg-[#007BFF]/15 text-[#007BFF] dark:text-[#4DA3FF] flex items-center justify-center shrink-0">
+            <Layers className="w-5 h-5" />
+          </div>
           <div>
-            <h3 className="text-base font-bold text-white">
-              Configurador de PC Personalizada (7ª Línea)
+            <h3 className="text-base font-bold text-slate-950 dark:text-white">
+              Configurador de PC Personalizada (Precios Reales de Venta)
             </h3>
-            <p className="text-sm text-slate-300">
-              Arma tu estación de trabajo o PC gamer paso a paso y obtén el cálculo estimado en Soles y Dólares.
+            <p className="text-sm text-slate-600 dark:text-slate-300">
+              Arma tu computadora a medida con plataforma certificada, garantía eDark y cotización directa por WhatsApp.
             </p>
           </div>
         </div>
         <Link
           href="/pc-personalizada"
-          className="inline-flex items-center justify-center gap-2 rounded-xl bg-emerald-400 px-4 py-2.5 text-xs font-bold text-slate-950 hover:bg-emerald-300 shrink-0"
+          className="liquid-btn inline-flex items-center justify-center gap-2 bg-[#007BFF] hover:bg-[#0056CC] px-5 py-2.5 text-xs font-bold text-white shrink-0"
         >
           Configurar PC ahora
           <ArrowRight className="w-4 h-4" />
