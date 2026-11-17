@@ -1,82 +1,57 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    
-    // Función auxiliar para verificar admin
-    function isAdmin() {
-      return request.auth != null && 
-             (request.auth.token.admin == true ||
-              (request.auth.token.email != null && (request.auth.token.email.lower() == 'edark.import@gmail.com' || request.auth.token.email.lower() == 'edark-import@gmail.com' || request.auth.token.email.lower() == 'edarkimport@gmail.com')) ||
-              (exists(/databases/$(database)/documents/usuarios/$(request.auth.uid)) && 
-               (get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'admin' ||
-                get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.role == 'admin' ||
-                get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.admin == true)));
-    }
-    
-    // Función para verificar autenticación
+
     function isAuthenticated() {
       return request.auth != null;
     }
-    
-    // Productos - lectura pública, escritura solo admin
+
+    function isAdmin() {
+      return isAuthenticated() && (
+        request.auth.token.admin == true ||
+        (
+          exists(/databases/$(database)/documents/usuarios/$(request.auth.uid)) &&
+          get(/databases/$(database)/documents/usuarios/$(request.auth.uid)).data.rol == 'admin'
+        )
+      );
+    }
+
     match /productos/{producto} {
       allow read: if true;
       allow create, update, delete: if isAdmin();
     }
-    
-    // Ventas - crear autenticado, leer/actualizar solo admin o propietario
+
+    // Órdenes/ventas solo mediante API server-side autenticada (evita manipulación de precios)
     match /ventas/{venta} {
-      allow create: if true; // Permitir crear ventas sin login para checkout rápido
-      allow read, update: if isAdmin() || 
-                             (request.auth != null && request.auth.token.email != null &&
-                              ((resource.data.cliente != null && resource.data.cliente.email != null && resource.data.cliente.email.lower() == request.auth.token.email.lower()) ||
-                               (resource.data.usuarioEmail != null && resource.data.usuarioEmail.lower() == request.auth.token.email.lower()) ||
-                               (resource.data.userId != null && resource.data.userId == request.auth.uid) ||
-                               (resource.data.usuarioId != null && resource.data.usuarioId == request.auth.uid)));
-      allow delete: if isAdmin();
+      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
+      allow create, update, delete: if false;
     }
-    
-    // Usuarios - solo el usuario puede leer sus datos, impedir auto-promoción a admin
-    match /usuarios/{userId} {
-      allow read: if isAuthenticated() && 
-                    (request.auth.uid == userId || isAdmin());
-      allow create: if request.auth.uid == userId && 
-                    (!request.resource.data.keys().hasAny(['rol', 'role', 'admin', 'isAdmin']) || 
-                     (request.resource.data.rol != 'admin' && request.resource.data.role != 'admin' && request.resource.data.admin != true && request.resource.data.isAdmin != true));
-      allow update: if isAdmin() || 
-                    (request.auth.uid == userId && 
-                     (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['rol', 'role', 'admin', 'isAdmin'])));
-      allow delete: if isAdmin();
-    }
-    
-    // Blog - lectura pública si está publicado, escritura solo admin
-    match /blog/{articulo} {
-      allow read: if resource.data.publicado == true || isAdmin();
-      allow create, update, delete: if isAdmin();
-    }
-    
-    // Newsletter - solo crear
-    match /newsletter/{suscripcion} {
-      allow create: if true;
+
+    match /cotizaciones/{cotizacion} {
       allow read, update, delete: if isAdmin();
+      allow create: if false;
     }
-    
-    // Espacios publicitarios - lectura pública, escritura admin
-    match /espacios_publicitarios/{espacio} {
+
+    match /usuarios/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create: if isAuthenticated() &&
+                    request.auth.uid == userId &&
+                    !request.resource.data.keys().hasAny(['rol', 'role', 'admin', 'isAdmin']);
+      allow update: if isAdmin() || (
+                    isAuthenticated() &&
+                    request.auth.uid == userId &&
+                    !request.resource.data.diff(resource.data).affectedKeys().hasAny(['rol', 'role', 'admin', 'isAdmin'])
+      );
+      allow delete: if isAdmin();
+    }
+
+    // Solo lectura pública para config/public; cualquier config privada es admin-only
+    match /config/public {
       allow read: if true;
       allow write: if isAdmin();
     }
-    
-    // Categorías - lectura pública, escritura solo admin
-    match /categorias/{categoria} {
-      allow read: if true;
-      allow create, update, delete: if isAdmin();
-    }
-    
-    // Configuración - lectura pública, escritura solo admin
-    match /config/{documento} {
-      allow read: if true;
-      allow write: if isAdmin();
+    match /config/{docId} {
+      allow read, write: if isAdmin();
     }
   }
 }
