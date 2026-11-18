@@ -13,6 +13,7 @@ export function Navbar() {
 
   const links = [
     { href: "/servicios", label: "Servicios" },
+    { href: "/productos", label: "Productos" },
     { href: "/pc-personalizada", label: "PC a Medida" },
     { href: "/nosotros", label: "Nosotros" },
     { href: "/contacto", label: "Contáctanos" },

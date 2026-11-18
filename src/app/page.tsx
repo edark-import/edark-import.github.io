@@ -8,6 +8,7 @@ import { SERVICES } from "@/data/services";
 export default function HomePage() {
   const marqueeItems = [
     ...SERVICES.map((s) => ({ href: `/servicios/${s.slug}`, title: s.title, tagline: s.tagline })),
+    { href: "/productos", title: "Catálogo de Productos", tagline: "Equipos, tablets y hardware verificado en Soles (PEN)." },
     { href: "/pc-personalizada", title: "PC Personalizada", tagline: "Arma tu computadora a medida con garantía." },
   ];
 
